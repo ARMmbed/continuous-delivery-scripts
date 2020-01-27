@@ -16,7 +16,7 @@ CONFIG_NAME = "DEFAULT"
 PRERELEASE_TOKEN = "beta"
 BUILD_TOKEN = "dev"
 TAG_TEMPLATE = "release/{version}"
-targets = [ "mbed_ci_tools/_version.py",]
+targets = [ "mbed_tools_ci/_version.py",]
 
 [AutoVersionConfig.key_aliases]
 __version__ = "VERSION_KEY"

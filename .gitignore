@@ -1,0 +1,14 @@
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+
+# Coverage.py
+.coverage
+coverage/
