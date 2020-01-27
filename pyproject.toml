@@ -1,0 +1,70 @@
+[ProjectConfig]
+# Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
+# these tokens are used to identify path variables from other variable types.
+PROJECT_NAME = "mbed-tools-ci"
+PACKAGE_NAME = "mbed-tools-ci"
+PROJECT_ROOT = "."
+NEWS_DIR = "news/"
+SOURCE_DIR = "mbed_tools_ci/"
+RELEASE_BRANCH_PATTERN = "^release.*$"
+AWS_BUCKET = "mbed-tools-ci"
+MODULE_TO_DOCUMENT = "mbed_tools_ci"
+DOCUMENTATION_DEFAULT_OUTPUT_PATH = "docs/user_docs/local_output"
+
+[AutoVersionConfig]
+CONFIG_NAME = "DEFAULT"
+PRERELEASE_TOKEN = "beta"
+BUILD_TOKEN = "dev"
+TAG_TEMPLATE = "release/{version}"
+targets = [ "mbed_ci_tools/_version.py",]
+
+[AutoVersionConfig.key_aliases]
+__version__ = "VERSION_KEY"
+MAJOR = "major"
+MINOR = "minor"
+PATCH = "patch"
+COMMIT = "COMMIT"
+
+[AutoVersionConfig.trigger_patterns]
+major = "news/*.major"
+minor = "news/*.feature"
+patch = "news/*.bugfix"
+
+[tool.towncrier]
+directory = "news"
+filename = "CHANGELOG.md"
+package = "mbed_targets"
+title_format = "{version} ({project_date})"
+start_string = """
+[//]: # (begin_release_notes)
+"""
+
+[[tool.towncrier.type]]
+directory = "major"
+name = "Major changes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "feature"
+name = "Features"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "Bugfixes"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "doc"
+name = "Improved Documentation"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removal"
+name = "Deprecations and Removals"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "misc"
+name = "Misc"
+showcontent = false
