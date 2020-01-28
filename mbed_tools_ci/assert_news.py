@@ -5,6 +5,7 @@ import os
 import re
 import sys
 from typing import List
+import pathlib
 
 from mbed_tools_ci.utils.configuration import configuration, \
     ConfigurationVariable
@@ -13,8 +14,7 @@ from mbed_tools_ci.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
 
-VALID_EXTENSIONS = ['misc', 'doc', 'removal', 'bugfix', 'feature', 'major']
-NEWS_FILE_NAME_FORMAT = r"^[0-9]+.[a-z]+$"
+NEWS_FILE_NAME_REGEX = r"^[0-9]+.(misc|doc|removal|bugfix|feature|major)$"
 
 
 class NewsFileValidator:
@@ -28,39 +28,30 @@ class NewsFileValidator:
         """
         self._news_file_path = full_path
 
-    def _verify_news_file_name(self) -> None:
+    def validate_file_name(self) -> None:
         """Ensures that the news file follows naming rules."""
-        basename = str(os.path.basename(self._news_file_path))
-        if (not basename) or (not re.search(NEWS_FILE_NAME_FORMAT, basename)):
+        basename = pathlib.Path(self._news_file_path).name
+        if re.match(NEWS_FILE_NAME_REGEX, basename) is None:
             raise ValueError(
-                f'Incorrect news file name [{basename}]. It must follow the following format: {NEWS_FILE_NAME_FORMAT}'
-            )
-        for extension in VALID_EXTENSIONS:
-            if extension in basename:
-                break
-        else:
-            raise ValueError(
-                'News file extension must be one of the following: %s' % (
-                    ', '.join(VALID_EXTENSIONS)
-                )
+                f'Incorrect news file name "{basename}".'
+                f' It doesn\'t match the following regex: "{NEWS_FILE_NAME_REGEX}".'
             )
 
-    def _verify_news_file_content(self) -> None:
-        """Ensures the news file exists and is not empty or longer than one line."""
-        if not os.path.exists(self._news_file_path):
-            raise FileNotFoundError(self._news_file_path)
-        with open(self._news_file_path, 'r') as fh:
-            file_content = fh.read()
-        if not file_content or len(file_content.strip()) == 0:
-            raise ValueError(f'Empty news file `{self._news_file_path}`')
+    def validate_file_contents(self) -> None:
+        """Ensures the news file is not empty and not longer than one line."""
+        path = pathlib.Path(self._news_file_path)
+        file_content = path.read_text()
+        basename = path.name
+        if file_content.strip() == '':
+            raise ValueError(f'Empty news file "{basename}".')
         if len(file_content.splitlines()) > 1:
-            raise ValueError('News file must only contain 1-line sentence')
+            raise ValueError(f'News file "{basename}" contains more than one line.')
 
-    def verify(self) -> None:
+    def validate(self) -> None:
         """Verifies news file follows standards."""
-        logger.info('Verifying %s' % self._news_file_path)
-        self._verify_news_file_name()
-        self._verify_news_file_content()
+        logger.info(f'Verifying {self._news_file_path}')
+        self.validate_file_name()
+        self.validate_file_contents()
 
 
 class NewsFileDiscoverer:
@@ -158,7 +149,7 @@ class NewsFileDiscoverer:
         logger.info(':: Checking news files format')
         for news_file in added_news:
             NewsFileValidator(os.path.realpath(
-                os.path.join(project_root, news_file))).verify()
+                os.path.join(project_root, news_file))).validate()
 
 
 def main() -> None:

@@ -60,21 +60,21 @@ stages:
         mypy -p mbed_tools_ci
       displayName: 'Static Analysis - type checks (mypy)'
 
-    # - script: |
-    #     pytest
-    #   displayName: 'Run unit tests (pytest)'
+    - script: |
+        pytest
+      displayName: 'Run unit tests (pytest)'
 
-    # - script: |
-    #     curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    #     chmod +x ./cc-test-reporter
-    #     ./cc-test-reporter format-coverage -t coverage.py -o coverage/codeclimate.json coverage/coverage.xml
-    #     ./cc-test-reporter upload-coverage
-    #   displayName: 'Upload test coverage to Code Climate'
-    #   condition: and(succeeded(), eq(variables['uploadCoverage'], 'true'))
-    #   env:
-    #     CC_TEST_REPORTER_ID: $(CODECLIMATE_REPORTER_ID)
-    #     GIT_BRANCH: $(Build.SourceBranchName)
-    #     GIT_COMMIT: $(Build.SourceVersion)
+    - script: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter format-coverage -t coverage.py -o coverage/codeclimate.json coverage/coverage.xml
+        ./cc-test-reporter upload-coverage
+      displayName: 'Upload test coverage to Code Climate'
+      condition: and(succeeded(), eq(variables['uploadCoverage'], 'true'))
+      env:
+        CC_TEST_REPORTER_ID: $(CODECLIMATE_REPORTER_ID)
+        GIT_BRANCH: $(Build.SourceBranchName)
+        GIT_COMMIT: $(Build.SourceVersion)
 
 - stage: DocBuild
   displayName: 'Build Documentation'
