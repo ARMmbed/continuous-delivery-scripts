@@ -13,9 +13,9 @@ from mbed_tools_ci.utils.filesystem_helpers import cd
 from mbed_tools_ci.utils.git_helpers import GitWrapper
 from mbed_tools_ci.utils.logging import log_exception, set_log_level
 
-ENVVAR_TWINE_REPOSITORY = 'TWINE_REPOSITORY'
 ENVVAR_TWINE_USERNAME = 'TWINE_USERNAME'
-ENVVAR_TWINE_REPOSITORY_URL = 'TWINE_REPOSITORY_URL'
+ENVVAR_TWINE_PASSWORD = 'TWINE_PASSWORD'
+OUTPUT_DIRECTORY = 'release-dist'
 logger = logging.getLogger(__name__)
 
 
@@ -28,18 +28,20 @@ def tag_and_release(mode: CommitType) -> None:
         mode: release mode
 
     """
-    version = version_project(mode)
+    _check_credentials()
+    is_new_version, version = version_project(mode)
     logger.info(f'Current version: {version}')
     if not version:
         raise ValueError('Undefined version.')
     if mode == CommitType.DEVELOPMENT:
         return
-    _check_credentials()
-    _update_repository(mode, version)
-    _release_to_pypi()
+    _update_repository(mode, is_new_version, version)
+    if is_new_version:
+        _release_to_pypi()
 
 
-def _update_repository(mode: CommitType, version: str) -> None:
+def _update_repository(mode: CommitType, is_new_version: bool,
+                       version: str) -> None:
     git = GitWrapper()
     git.configure_for_github()
     if mode == CommitType.RELEASE:
@@ -51,13 +53,14 @@ def _update_repository(mode: CommitType, version: str) -> None:
         git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
         time_str = datetime.datetime.utcnow().strftime(
             "%Y-%m-%d %H:%M")
-        git.commit(
-            f':checkered_flag: :newspaper: releasing version {version} @ {time_str}\n[skip ci]')
+        commit_message = f':rocket: :newspaper: releasing version {version} @ {time_str}' if is_new_version else f':gear: Automatic changes'
+        git.commit(f'{commit_message}\n[skip ci]')
         git.push()
         git.pull()
-    logger.info(f'Tagging commit')
-    git.create_tag(version, message=f'release {version}')
-    git.force_push_tag()
+    if is_new_version:
+        logger.info(f'Tagging commit')
+        git.create_tag(version, message=f'release {version}')
+        git.force_push_tag()
 
 
 def _check_credentials() -> None:
@@ -65,10 +68,8 @@ def _check_credentials() -> None:
     configuration.get_value(ConfigurationVariable.GIT_TOKEN)
     # Checks that twine username is defined
     configuration.get_value(ENVVAR_TWINE_USERNAME)
-    # Checks that twine repository is defined
-    configuration.get_value_or_default(
-        ENVVAR_TWINE_REPOSITORY_URL, configuration.get_value(
-            ENVVAR_TWINE_REPOSITORY))
+    # Checks that twine password is defined
+    configuration.get_value(ENVVAR_TWINE_PASSWORD)
 
 
 def _release_to_pypi() -> None:
@@ -77,12 +78,28 @@ def _release_to_pypi() -> None:
     root = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
     with cd(root):
         subprocess.check_call(
-            [sys.executable, 'setup.py', 'clean', '--all', 'sdist',
-             'bdist_wheel',
-             '--dist-dir', 'release-dist'])
-        logger.info('Uploading to PyPI')
-        subprocess.check_call(
-            [sys.executable, '-m', 'twine', 'upload', '/release-dist/*'])
+            [sys.executable, 'setup.py',
+             'clean', '--all',
+             'sdist', '-d', OUTPUT_DIRECTORY, '--formats=gztar',
+             'bdist_wheel', '-d', OUTPUT_DIRECTORY])
+        _upload_to_test_pypi()
+        _upload_to_pypi()
+
+
+def _upload_to_pypi() -> None:
+    logger.info('Uploading to PyPI')
+    subprocess.check_call(
+        [sys.executable, '-m', 'twine', 'upload', f'{OUTPUT_DIRECTORY}/*'])
+    logger.info('Success 👍')
+
+
+def _upload_to_test_pypi() -> None:
+    logger.info('Uploading to test PyPI')
+    subprocess.check_call(
+        [sys.executable, '-m', 'twine', 'upload',
+         '--repository-url',
+         'https://test.pypi.org/legacy/', f'{OUTPUT_DIRECTORY}/*'])
+    logger.info('Success 👍')
 
 
 def main() -> None:

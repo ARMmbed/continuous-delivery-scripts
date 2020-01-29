@@ -56,7 +56,8 @@ class GitWrapper:
         if not path:
             raise ValueError('Unspecified path.')
         if not os.path.exists(path):
-            raise FileNotFoundError(path)
+            logger.warning(f'[Git] {path} cannot be added because not found.')
+            return
         relative_path = os.path.relpath(path, start=configuration.get_value(
             ConfigurationVariable.PROJECT_ROOT))
         unix_relative_path = relative_path.replace('\\', '/')
@@ -245,6 +246,9 @@ class GitWrapper:
         Args:
             url: URL
         """
+        remote = self._get_remote()
+        if remote:
+            self.repo.delete_remote(str(remote))
         self.repo.create_remote(configuration.get_value(
             ConfigurationVariable.REMOTE_ALIAS), url=url)
 

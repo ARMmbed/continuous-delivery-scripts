@@ -13,3 +13,9 @@ __pycache__/
 .coverage
 coverage/
 htmlcov/
+
+# Package
+build/
+dist/
+release-dist/
+

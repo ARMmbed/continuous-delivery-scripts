@@ -129,7 +129,7 @@ stages:
 
           - template: steps/install-development-dependencies.yml
 
-          - bash: tag-and-release --release-type=development
+          - bash: tag-and-release --release-type=beta
             displayName: 'Beta Release'
 
 - stage: ProductionReleasePyPI

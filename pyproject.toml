@@ -1,15 +1,17 @@
 [ProjectConfig]
 # Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
 # these tokens are used to identify path variables from other variable types.
-PROJECT_NAME = "mbed-tools-ci"
-PACKAGE_NAME = "mbed-tools-ci"
+PROJECT_NAME = "mbed-tools-ci-scripts"
+PACKAGE_NAME = "mbed-tools-ci-scripts"
 PROJECT_ROOT = "."
 NEWS_DIR = "news/"
-SOURCE_DIR = "mbed_tools_ci/"
+SOURCE_DIR = "mbed_tools_ci"
 RELEASE_BRANCH_PATTERN = "^release.*$"
 AWS_BUCKET = "mbed-tools-ci"
 MODULE_TO_DOCUMENT = "mbed_tools_ci"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "docs/user_docs/local_output"
+VERSION_FILE_PATH = "mbed_tools_ci/_version.py"
+CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

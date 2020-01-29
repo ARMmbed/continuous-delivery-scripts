@@ -11,12 +11,12 @@ from mbed_tools_ci.utils.configuration import configuration, \
     ConfigurationVariable
 from mbed_tools_ci.utils.logging import log_exception, set_log_level
 from mbed_tools_ci.utils.filesystem_helpers import cd
-from typing import Optional
+from typing import Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
 
-def version_project(commit_type: CommitType) -> Optional[str]:
+def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str]]:
     """Versions the project.
 
     Args:
@@ -24,16 +24,16 @@ def version_project(commit_type: CommitType) -> Optional[str]:
 
 
     Returns:
-        the new version
+        (is new version, the new version)
     """
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    new_version = _calculate_version(commit_type, use_news_files)
+    is_new_version, new_version = _calculate_version(commit_type,
+                                                     use_news_files)
     _generate_changelog(new_version, use_news_files)
-    return new_version
+    return is_new_version, new_version
 
 
-def _calculate_version(commit_type: CommitType, use_news_files: bool) -> \
-        Optional[str]:
+def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[bool, Optional[str]]:
     """Calculates the version for the release.
 
     eg. "0.1.2"
@@ -43,7 +43,9 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -> \
         use_news_files: Should the version be dependant on changes recorded in news files
 
     Returns:
-        A semver-style version for the latest release
+        Tuple containing
+            a flag stating whether it is a new version or not
+            A semver-style version for the latest release
     """
     BUMP_TYPES = {CommitType.DEVELOPMENT: "build",
                   CommitType.BETA: "prerelease"}
@@ -53,16 +55,22 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -> \
     project_config_path = configuration.get_value(
         ConfigurationVariable.PROJECT_CONFIG)
     new_version: Optional[str] = None
+    is_new_version: bool = False
     with cd(os.path.dirname(project_config_path)):
-        old, new_version, updates = auto_version_tool.main(
+        old, _, updates = auto_version_tool.main(
             release=is_release,
             enable_file_triggers=enable_file_triggers,
             bump=bump,
             config_path=project_config_path,
         )
+        # Autoversion second returned value is not actually the new version
+        # There seem to be a bug in autoversion.
+        # This is why the following needs to be done to determine the version
+        new_version = updates['__version__']
+        is_new_version = old != new_version
     logger.info(':: Determining the new version')
     logger.info(f'Version: {new_version}')
-    return new_version
+    return is_new_version, new_version
 
 
 def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
