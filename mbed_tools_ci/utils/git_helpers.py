@@ -443,3 +443,22 @@ class GitWrapper:
         except (IndexError, ValueError) as e:
             logger.warning(e)
             return None
+
+    def list_files_added_on_current_branch(self) -> List[str]:
+        """Returns a list of files changed against master branch."""
+        master_branch_commit = self.repo.commit('master')
+        current_branch_commit = self.repo.commit(self.get_current_branch())
+        changes = self.get_changes_list(
+            self.get_branch_point(master_branch_commit, current_branch_commit),
+            current_branch_commit,
+            change_type='a'
+        )
+        return changes
+
+    def is_current_branch_feature(self) -> bool:
+        """Returns boolean indicating if current branch is considered a feature."""
+        current_branch = self.get_current_branch()
+        is_master = current_branch == self.get_master_branch()
+        is_beta = current_branch == self.get_beta_branch()
+        is_release = self.is_release_branch(current_branch)
+        return not (is_master or is_beta or is_release)
