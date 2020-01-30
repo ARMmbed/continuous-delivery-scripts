@@ -4,6 +4,8 @@ import datetime
 import logging
 import subprocess
 import sys
+import shutil
+from pathlib import Path
 
 from mbed_tools_ci.generate_news import version_project
 from mbed_tools_ci.utils.configuration import configuration, \
@@ -16,6 +18,7 @@ from mbed_tools_ci.utils.logging import log_exception, set_log_level
 ENVVAR_TWINE_USERNAME = 'TWINE_USERNAME'
 ENVVAR_TWINE_PASSWORD = 'TWINE_PASSWORD'
 OUTPUT_DIRECTORY = 'release-dist'
+
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +29,6 @@ def tag_and_release(mode: CommitType) -> None:
 
     Args:
         mode: release mode
-
     """
     _check_credentials()
     is_new_version, version = version_project(mode)
@@ -40,11 +42,45 @@ def tag_and_release(mode: CommitType) -> None:
         _release_to_pypi()
 
 
+def _remove_old_documentation(git: GitWrapper, docs_dir: Path) -> None:
+    """Remove existing docs first to make sure no stale pages left behind."""
+    if docs_dir.is_dir():
+        shutil.rmtree(str(docs_dir))
+        git.add(str(docs_dir))
+
+
+def _add_new_documentation(
+        git: GitWrapper, temp_docs_dir: Path, docs_dir: Path) -> None:
+    """Move across documentation from the temporary file and add to git."""
+    shutil.move(str(temp_docs_dir), str(docs_dir))
+    git.add(str(docs_dir))
+
+
+def _update_documentation(git: GitWrapper) -> None:
+    docs_dir = Path(configuration.get_value(
+        ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH
+    ))
+    # Pdoc nests documentation in a folder with the module's name.
+    # Only transfer the contents of this folder.
+    temp_docs_dir = Path(
+        configuration.get_value(
+            ConfigurationVariable.DOCUMENTATION_TEMP_CI_OUTPUT_PATH
+        ),
+        configuration.get_value(
+            ConfigurationVariable.MODULE_TO_DOCUMENT
+        )
+    )
+
+    _remove_old_documentation(git, docs_dir)
+    _add_new_documentation(git, temp_docs_dir, docs_dir)
+
+
 def _update_repository(mode: CommitType, is_new_version: bool,
                        version: str) -> None:
     git = GitWrapper()
     git.configure_for_github()
     if mode == CommitType.RELEASE:
+        _update_documentation(git)
         logger.info(f'Committing release [{version}]...')
         git.add(
             configuration.get_value(ConfigurationVariable.VERSION_FILE_PATH))

@@ -11,17 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 def generate_docs(output_directory: str) -> int:
-    """Triggers building the documentation.
-
-    Module to document and the output destination path
-    can be set in the mbed_tools_ci.utils.definitions config file.
-    """
+    """Triggers building the documentation."""
     command_list = [
-        "pdoc", "--html",
-        f"{configuration.get_value(ConfigurationVariable.MODULE_TO_DOCUMENT)}",
-        "--output-dir",
-        f'{output_directory}', "--force", "--config",
-        "show_type_annotations=True"
+        "pdoc",
+        "--html", f"{configuration.get_value(ConfigurationVariable.MODULE_TO_DOCUMENT)}",
+        "--output-dir", f'{output_directory}',
+        "--force",
+        "--config", "show_type_annotations=True"
     ]
 
     logger.info('Creating Pdoc documentation.')
