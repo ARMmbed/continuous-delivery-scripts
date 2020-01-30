@@ -2,27 +2,46 @@
 import argparse
 import logging
 import sys
+import shutil
 from subprocess import check_call
+from pathlib import Path
+from typing import List
 
-from mbed_tools_ci.utils.configuration import configuration, ConfigurationVariable
+from mbed_tools_ci.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from mbed_tools_ci.utils.logging import log_exception
 
 logger = logging.getLogger(__name__)
 
 
-def generate_docs(output_directory: str) -> int:
-    """Triggers building the documentation."""
-    command_list = [
+def _clear_previous_docs(output_directory: Path) -> None:
+    """Removes the existing output directory to avoid stale docs pages."""
+    if output_directory.is_dir():
+        shutil.rmtree(str(output_directory))
+
+
+def _generate_pdoc_command_list(output_directory: Path,
+                                module: str) -> List[str]:
+    return [
         "pdoc",
-        "--html", f"{configuration.get_value(ConfigurationVariable.MODULE_TO_DOCUMENT)}",
-        "--output-dir", f'{output_directory}',
+        "--html",
+        f"{module}",
+        "--output-dir",
+        f"{str(output_directory)}",
         "--force",
-        "--config", "show_type_annotations=True"
+        "--config",
+        "show_type_annotations=True",
     ]
 
-    logger.info('Creating Pdoc documentation.')
 
+def generate_docs(output_directory: Path, module: str) -> int:
+    """Triggers building the documentation."""
+    _clear_previous_docs(output_directory)
+    logger.info("Creating Pdoc documentation.")
     try:
+        command_list = _generate_pdoc_command_list(output_directory, module)
         check_call(command_list)
     except Exception as e:
         log_exception(logger, e)
@@ -37,11 +56,14 @@ def main() -> None:
         "--output_directory",
         help="Output directory for docs html files.",
         default=configuration.get_value(
-            ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH),
+            ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH
+        ),
     )
     args = parser.parse_args()
-    sys.exit(generate_docs(output_directory=args.output_directory))
+    output_directory = Path(args.output_directory)
+    module = configuration.get_value(ConfigurationVariable.MODULE_TO_DOCUMENT)
+    sys.exit(generate_docs(output_directory=output_directory, module=module))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
