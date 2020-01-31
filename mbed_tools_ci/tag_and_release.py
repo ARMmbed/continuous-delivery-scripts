@@ -12,8 +12,10 @@ from mbed_tools_ci.utils.configuration import configuration, \
     ConfigurationVariable
 from mbed_tools_ci.utils.definitions import CommitType
 from mbed_tools_ci.utils.filesystem_helpers import cd
-from mbed_tools_ci.utils.git_helpers import GitWrapper
+from mbed_tools_ci.utils.git_helpers import ProjectTempClone, GitWrapper
 from mbed_tools_ci.utils.logging import log_exception, set_log_level
+
+from typing import Optional
 
 ENVVAR_TWINE_USERNAME = 'TWINE_USERNAME'
 ENVVAR_TWINE_PASSWORD = 'TWINE_PASSWORD'
@@ -22,13 +24,17 @@ OUTPUT_DIRECTORY = 'release-dist'
 logger = logging.getLogger(__name__)
 
 
-def tag_and_release(mode: CommitType) -> None:
+def tag_and_release(mode: CommitType,
+                    current_branch: Optional[str] = None) -> None:
     """Tags and releases.
 
     Updates repository with changes and releases package to PyPI for general availability.
 
     Args:
         mode: release mode
+        current_branch: current branch in case the current branch cannot easily
+        be determined (e.g. on CI)
+
     """
     _check_credentials()
     is_new_version, version = version_project(mode)
@@ -37,7 +43,7 @@ def tag_and_release(mode: CommitType) -> None:
         raise ValueError('Undefined version.')
     if mode == CommitType.DEVELOPMENT:
         return
-    _update_repository(mode, is_new_version, version)
+    _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
         _release_to_pypi()
 
@@ -76,27 +82,29 @@ def _update_documentation(git: GitWrapper) -> None:
 
 
 def _update_repository(mode: CommitType, is_new_version: bool,
-                       version: str) -> None:
-    git = GitWrapper()
-    git.configure_for_github()
-    if mode == CommitType.RELEASE:
-        _update_documentation(git)
-        logger.info(f'Committing release [{version}]...')
-        git.add(
-            configuration.get_value(ConfigurationVariable.VERSION_FILE_PATH))
-        git.add(
-            configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH))
-        git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
-        time_str = datetime.datetime.utcnow().strftime(
-            "%Y-%m-%d %H:%M")
-        commit_message = f':rocket: :newspaper: releasing version {version} @ {time_str}' if is_new_version else f':gear: Automatic changes'
-        git.commit(f'{commit_message}\n[skip ci]')
-        git.push()
-        git.pull()
-    if is_new_version:
-        logger.info(f'Tagging commit')
-        git.create_tag(version, message=f'release {version}')
-        git.force_push_tag()
+                       version: str, current_branch: Optional[str]) -> None:
+    with ProjectTempClone(desired_branch_name=current_branch) as git:
+        git.configure_for_github()
+        if mode == CommitType.RELEASE:
+            _update_documentation(git)
+            logger.info(f'Committing release [{version}]...')
+            git.add(
+                configuration.get_value(
+                    ConfigurationVariable.VERSION_FILE_PATH))
+            git.add(
+                configuration.get_value(
+                    ConfigurationVariable.CHANGELOG_FILE_PATH))
+            git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
+            time_str = datetime.datetime.utcnow().strftime(
+                "%Y-%m-%d %H:%M")
+            commit_message = f'📰 releasing version {version} 🚀 @ {time_str}' if is_new_version else f'📰 Automatic changes ⚙'
+            git.commit(f'{commit_message}\n[skip ci]')
+            git.push()
+            git.pull()
+        if is_new_version:
+            logger.info(f'Tagging commit')
+            git.create_tag(version, message=f'release {version}')
+            git.force_push_tag()
 
 
 def _check_credentials() -> None:
@@ -150,12 +158,15 @@ def main() -> None:
                         help='type of release to perform',
                         required=True,
                         type=str, choices=CommitType.choices())
+    parser.add_argument('-b', '--current-branch',
+                        help='Name of the current branch', nargs='?')
     parser.add_argument("-v", "--verbose", action="count", default=0,
                         help="Verbosity, by default errors are reported.")
     args = parser.parse_args()
     set_log_level(args.verbose)
     try:
-        tag_and_release(CommitType.parse(args.release_type))
+        tag_and_release(CommitType.parse(args.release_type),
+                        args.current_branch)
     except Exception as e:
         log_exception(logger, e)
         sys.exit(1)

@@ -7,7 +7,7 @@ from typing import List
 import pathlib
 
 from mbed_tools_ci.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci.utils.git_helpers import GitWrapper
+from mbed_tools_ci.utils.git_helpers import ProjectTempClone, GitWrapper
 from mbed_tools_ci.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ def validate_news_file(absolute_path: str) -> None:
 
 
 def find_news_files(
-    git: GitWrapper, root_dir: str, news_dir: str
+        git: GitWrapper, root_dir: str, news_dir: str
 ) -> List[str]:
     """Determines a list of all the news files which were added as part of the PR.
 
@@ -73,12 +73,14 @@ def find_news_files(
     files_changed = git.list_files_added_on_current_branch()
     # Relies on the fact GitWrapper returns paths that are always relative
     # to the project root.
-    added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
-    return [str(pathlib.Path(root_dir, file_path)) for file_path in added_news_files]
+    added_news_files = [file_path for file_path in files_changed if
+                        file_path.startswith(news_dir)]
+    return [str(pathlib.Path(root_dir, file_path)) for file_path in
+            added_news_files]
 
 
 def validate_news_files(
-    git: GitWrapper, root_dir: str, news_dir: str
+        git: GitWrapper, root_dir: str, news_dir: str
 ) -> None:
     """Checks that news files exist and pass validation checks.
 
@@ -108,6 +110,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Check correctly formatted news files exist on feature branch."
     )
+    parser.add_argument('-b', '--current-branch',
+                        help='Name of the current branch', nargs='?')
     parser.add_argument(
         "-v",
         "--verbose",
@@ -118,20 +122,23 @@ def main() -> None:
     args = parser.parse_args()
     set_log_level(args.verbose)
 
-    git = GitWrapper()
-    if git.is_current_branch_feature():
-        root_dir = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
-        absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
-        news_dir = str(pathlib.Path(absolute_news_dir).relative_to(root_dir))
-        try:
-            validate_news_files(
-                git=git,
-                news_dir=news_dir,
-                root_dir=root_dir,
-            )
-        except Exception as e:
-            log_exception(logger, e)
-            sys.exit(1)
+    with ProjectTempClone(desired_branch_name=args.current_branch)as git:
+        if git.is_current_branch_feature():
+            root_dir = configuration.get_value(
+                ConfigurationVariable.PROJECT_ROOT)
+            absolute_news_dir = configuration.get_value(
+                ConfigurationVariable.NEWS_DIR)
+            news_dir = str(
+                pathlib.Path(absolute_news_dir).relative_to(root_dir))
+            try:
+                validate_news_files(
+                    git=git,
+                    news_dir=news_dir,
+                    root_dir=root_dir,
+                )
+            except Exception as e:
+                log_exception(logger, e)
+                sys.exit(1)
 
 
 if __name__ == "__main__":

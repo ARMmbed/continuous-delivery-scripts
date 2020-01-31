@@ -1,7 +1,11 @@
 """Helpers with regards to actions on the filesystem."""
 import os
+import tempfile
+import shutil
+import platform
+from pathlib import Path
 from contextlib import contextmanager
-from typing import Iterator, Generator, Callable
+from typing import Iterator, Generator, Callable, Any
 
 
 @contextmanager
@@ -77,3 +81,44 @@ def find_file_in_tree(file_name: str,
             f'File [{file_name}] not found anywhere in directories {"above" if top else "under"} {starting_point}'
         )
     return file_path
+
+
+class TemporaryDirectory:
+    """Creates and returns a temporary directory.
+
+    This is the same as tempfile.TemporaryDirectory in most cases.
+    However, on CI the temporary folder may not be accessible.
+    Moreover, on Windows TemporaryDirectory will fail cleaning up
+    (https://bugs.python.org/issue22107) and hence, a workaround had to be
+    implemented.
+
+    """
+
+    def __init__(self) -> None:
+        """Constructor."""
+        self._tmp_dir_context_manager = tempfile.TemporaryDirectory()
+        self._tmp_dir_path = Path(self._tmp_dir_context_manager.name).resolve()
+
+    @property
+    def path(self) -> Path:
+        """Path to the folder."""
+        return self._tmp_dir_path
+
+    def __str__(self) -> str:
+        """String representation."""
+        return str(self._tmp_dir_path)
+
+    def __enter__(self) -> Path:
+        """Context manager entry point."""
+        return self.path
+
+    def __exit__(self, exc: Any, value: Any, tb: Any) -> None:
+        """Context manager exit point."""
+        self.cleanup()
+
+    def cleanup(self) -> None:
+        """Deletes the temporary directory."""
+        if not (platform.system() == 'Windows'):
+            self._tmp_dir_context_manager.cleanup()
+        else:
+            shutil.rmtree(self._tmp_dir_path, ignore_errors=True)
