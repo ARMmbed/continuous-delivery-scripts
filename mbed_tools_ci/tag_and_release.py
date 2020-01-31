@@ -1,4 +1,4 @@
-"""Performs package releasing (part of the CI process)."""
+"""Orchestrates release process."""
 import argparse
 import datetime
 import logging

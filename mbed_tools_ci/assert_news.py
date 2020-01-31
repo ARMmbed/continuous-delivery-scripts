@@ -1,4 +1,4 @@
-"""Ensures news file are created for all new changes to the project."""
+"""Checks if valid news files are created for changes in the project."""
 import argparse
 import logging
 import re
@@ -16,19 +16,19 @@ NEWS_FILE_NAME_REGEX = r"^[0-9]+.(misc|doc|removal|bugfix|feature|major)$"
 
 
 class NewsFileValidator:
-    """Verification of the individual news files: naming, existence, content."""
+    """Verifies individual news files."""
 
     def __init__(self, absolute_path: str) -> None:
         """Creates a new instance of NewsFileValidator.
 
         Args:
-            absolute_path: the absolute path to the location of the news file
+            absolute_path: the absolute path to the news file
         """
         self._news_file_path = pathlib.Path(absolute_path)
         self._basename = self._news_file_path.name
 
     def validate_file_name(self) -> None:
-        """Ensures that the news file follows naming rules."""
+        """Ensures the news file follows the naming rules."""
         if re.match(NEWS_FILE_NAME_REGEX, self._basename) is None:
             raise ValueError(
                 f'Incorrect news file name "{self._basename}".'
@@ -46,7 +46,7 @@ class NewsFileValidator:
             )
 
     def validate(self) -> None:
-        """Verifies news file follows standards."""
+        """Runs all validators."""
         logger.info(f"Verifying {self._basename}")
         self.validate_file_name()
         self.validate_file_contents()
@@ -103,10 +103,7 @@ def validate_news_files(
 
 
 def main() -> None:
-    """Asserts the new PR comprises at least one news file and it adheres to the required standard.
-
-    An exception is raised if a problem with the news file is found.
-    """
+    """Asserts the new PR comprises at least one news file and it adheres to the required standard."""
     parser = argparse.ArgumentParser(
         description="Check correctly formatted news files exist on feature branch."
     )
