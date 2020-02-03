@@ -12,3 +12,4 @@ mbed-tools-ci-scripts = {path = ".",editable = true}
 pyfakefs = "*"
 pytest-cov = "*"
 coverage = "*"
+wheel = "*"

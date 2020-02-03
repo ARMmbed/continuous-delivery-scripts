@@ -91,6 +91,7 @@ class GitWrapper:
         Returns:
             corresponding branch if found; None otherwise.
         """
+        logger.debug(f"Checking out {branch_name}")
         local_branch = self.get_branch(branch_name)
         if local_branch:
             self.checkout(local_branch)
@@ -108,7 +109,9 @@ class GitWrapper:
     def _add_one_file_or_one_dir(self, path: str) -> None:
         if not path:
             raise ValueError('Unspecified path.')
-        path_model = Path(path)
+        self._add_one_path(Path(path))
+
+    def _add_one_path(self, path_model: Path) -> None:
         if not path_model.is_absolute():
             path_model = Path(self.root).joinpath(path_model)
         if not path_model.exists():
@@ -119,6 +122,7 @@ class GitWrapper:
         unix_relative_path = relative_path.replace('\\', '/')
         if path_model.is_dir():
             unix_relative_path = f'{unix_relative_path}/*'
+        logger.info(f"Adding {unix_relative_path} to repository.")
         self.repo.git.add(unix_relative_path)
 
     def add(self, path: Union[list, set, str]) -> None:
@@ -141,6 +145,7 @@ class GitWrapper:
             message: commit message
             **kwargs: extra parameters
         """
+        logger.info("Committing changes")
         self.repo.index.commit(
             message,
             author=self.author,
@@ -517,6 +522,7 @@ class GitWrapper:
         Returns:
              corresponding branch
         """
+        logger.info(f"Creating branch {branch_name}")
         return self.repo.create_head(branch_name)
 
     def git_version(self) -> str:
@@ -607,6 +613,57 @@ class ProjectGitWrapper(GitWrapper):
         )
 
 
+class GitClone(GitWrapper):
+    """Cloned repository.
+
+    It behaves exactly like the repository it is based on but
+    is in a completely different location.
+    """
+
+    def __init__(self, path: Path, initial_path: Path, repo: Repo) -> None:
+        """Creates an instance of GitWrapper.
+
+        Args:
+            path: path to repository.
+            repo: GitPython repository.
+            initial_path: path to the repository the clone is based on.
+        """
+        super().__init__(path, repo)
+        self._initial_path = initial_path
+
+    @staticmethod
+    def wrap(repo: GitWrapper, initial_location: Path) -> 'GitClone':
+        """Wraps around around a repository."""
+        return GitClone(repo=repo.repo, path=repo.root,
+                        initial_path=initial_location)
+
+    @property
+    def initial_location(self) -> Path:
+        """Gets the path to the repository it is based on."""
+        return self._initial_path
+
+    def _add_one_path(self, path_model: Path) -> None:
+        super()._add_one_path(self.get_corresponding_path(path_model))
+
+    def get_corresponding_path(self, path_in_initial_repo: Path) -> Path:
+        """Gets the path in cloned repository corresponding to path in initial repository.
+
+        Args:
+            path_in_initial_repo: path to a file/directory in initial repository.
+
+        Returns:
+             corresponding path.
+        """
+        if not path_in_initial_repo.is_absolute():
+            return Path(self.root).joinpath(path_in_initial_repo)
+        try:
+            # Tyring to find if the path corresponds to a file/directory present in intial repository
+            return Path(self.root).joinpath(
+                path_in_initial_repo.relative_to(self.initial_location))
+        except ValueError:
+            return path_in_initial_repo
+
+
 class GitTempClone:
     """Context manager providing a temporary cloned repository."""
 
@@ -624,11 +681,12 @@ class GitTempClone:
         _repo = repository_to_clone
         _current_branch_name = desired_branch_name if desired_branch_name else str(
             _repo.get_current_branch())
-        self._clone = _repo.clone(self._temporary_dir.path)
+        self._clone = GitClone.wrap(_repo.clone(self._temporary_dir.path),
+                                    initial_location=_repo.root)
         self._clone.checkout(_current_branch_name)
         _repo.apply_uncommitted_changes(self._clone)
 
-    def __enter__(self) -> GitWrapper:
+    def __enter__(self) -> GitClone:
         """Context manager entry point."""
         return self._clone
 

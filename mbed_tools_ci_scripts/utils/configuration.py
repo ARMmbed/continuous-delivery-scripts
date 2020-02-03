@@ -37,6 +37,7 @@ class ConfigurationVariable(enum.Enum):
     PROJECT_NAME = 20
     SOURCE_DIR = 21
     PACKAGE_NAME = 22
+    IGNORE_PYPI_TEST_UPLOAD = 23
 
     @staticmethod
     def choices() -> List[str]:
@@ -114,7 +115,7 @@ class GenericConfig(ABC):
         try:
             return self.get_value(key)
         except Undefined as e:
-            logger.warning(e)
+            logger.debug(e)
             return default_value
 
 

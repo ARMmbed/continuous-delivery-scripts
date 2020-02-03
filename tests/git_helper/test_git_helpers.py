@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
-from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitTempClone, \
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, \
+    GitTempClone, \
     GitWrapper, ProjectGitWrapper
 from uuid import uuid4
 from pathlib import Path
@@ -68,7 +69,7 @@ class TestGitTempClone(TestCase):
                 len(clone.list_files_added_on_current_branch()) == 0)
             previous_hash = clone.get_commit_hash()
             previous_count = clone.get_commit_count()
-            test_file = Path(clone.root).joinpath(f'test-{uuid4()}.txt')
+            test_file = Path(clone.root).joinpath(f'branch-test-{uuid4()}.txt')
             test_file.touch()
             uncommitted_changes = clone.uncommitted_changes
             self.assertTrue(test_file in uncommitted_changes)
@@ -79,3 +80,22 @@ class TestGitTempClone(TestCase):
             added_files = [Path(clone.root).joinpath(f) for f in
                            clone.list_files_added_on_current_branch()]
             self.assertTrue(test_file in added_files)
+
+    def test_file_addition_with_paths_to_initial_repository(self):
+        """Test basic git add on the clone."""
+        git = ProjectGitWrapper()
+        test_file = Path(git.root).joinpath(f'a_test_file-{uuid4()}.txt')
+        test_file.touch()
+        with GitTempClone(repository_to_clone=git,
+                          desired_branch_name='master') as clone:
+            test_file.unlink()
+            branch = clone.create_branch(f'branch-test-{uuid4()}')
+            clone.checkout(branch)
+            uncommitted_changes = clone.uncommitted_changes
+            self.assertTrue(
+                clone.get_corresponding_path(test_file) in uncommitted_changes)
+            clone.add(test_file)
+            clone.commit('Test commit')
+            added_files = [Path(git.root).joinpath(f) for f in
+                           clone.list_files_added_on_current_branch()]
+        self.assertTrue(test_file in added_files)

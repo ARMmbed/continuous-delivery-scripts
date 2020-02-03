@@ -5,7 +5,7 @@ steps:
   # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
   # location for development dependencies.
   - script: |
-      python -m pip install --upgrade pip
+      python -m pip install --upgrade pip wheel setuptools
       pip install pipenv
       python -m pipenv lock --dev -r > dev-requirements.txt
       pip install -r dev-requirements.txt

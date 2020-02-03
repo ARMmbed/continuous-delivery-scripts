@@ -134,6 +134,11 @@ def _upload_to_pypi() -> None:
 
 
 def _upload_to_test_pypi() -> None:
+    if configuration.get_value_or_default(
+            ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD, False):
+        logger.warning(
+            'Not testing package upload on PyPI test (https://test.pypi.org)')
+        return
     logger.info('Uploading to test PyPI')
     subprocess.check_call(
         [sys.executable, '-m', 'twine', 'upload',
