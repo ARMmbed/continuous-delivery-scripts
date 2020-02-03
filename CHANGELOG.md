@@ -10,3 +10,19 @@ beta releases are not included in this history, for a full list of all releases 
 [PyPI Release History](https://pypi.org/project/mbed-tools-ci-scripts/#history).
 
 [//]: # (begin_release_notes)
+
+"1.0.0" (2020-02-03)
+====================
+
+Major changes
+-------------
+
+- Initial release (#1)
+- Renaming package (#2)
+- Remove the need for a temporary docs configuration to be defined. DOCUMENTATION_TEMP_CI_OUTPUT_PATH is no longer used. (#20200203)
+
+
+Misc
+----
+
+- #20200131, #20200203, #202002032

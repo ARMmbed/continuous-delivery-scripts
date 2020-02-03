@@ -1,0 +1,2935 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.4" />
+<title>mbed_tools_ci_scripts.utils.git_helpers API documentation</title>
+<meta name="description" content="Utility script to abstract git operations for our CI scripts." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.git_helpers</code></h1>
+</header>
+<section id="section-intro">
+<p>Utility script to abstract git operations for our CI scripts.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Utility script to abstract git operations for our CI scripts.&#34;&#34;&#34;
+import logging
+import os
+import re
+import shutil
+from pathlib import Path
+from typing import Optional, List, Union, Any, Tuple
+
+from git import Repo, Actor
+from packaging import version
+
+from .configuration import configuration, ConfigurationVariable
+from .filesystem_helpers import TemporaryDirectory
+
+logger = logging.getLogger(__name__)
+
+
+class GitWrapper:
+    &#34;&#34;&#34;Wrapper class to provide convenient methods for performing git actions.&#34;&#34;&#34;
+
+    def __init__(self, path: Path,
+                 repo: Repo) -&gt; None:
+        &#34;&#34;&#34;Creates an instance of GitWrapper.
+
+        Args:
+            path: path to repository.
+            repo: GitPython repository.
+        &#34;&#34;&#34;
+        self._root_path = path
+        self.repo = repo
+        self.author = Actor(
+            configuration.get_value(ConfigurationVariable.BOT_USERNAME),
+            configuration.get_value(ConfigurationVariable.BOT_EMAIL))
+
+    def _git_url_ssh_to_https(self, url: str) -&gt; str:
+        &#34;&#34;&#34;Changes repository URL to use authorisation token.
+
+        Converts the git url to use the GitHub token:
+        See https://github.blog/2012-09-21-easier-builds-and-deployments-using-git-over-https-and-oauth/
+
+        Returns:
+            new URL
+        &#34;&#34;&#34;
+        path = url.split(&#39;github.com&#39;, 1)[1][1:].strip()
+        new = &#39;https://{GITHUB_TOKEN}:x-oauth-basic@github.com/%s&#39; % path
+        logger.info(&#39;rewriting git url to: %s&#39; % new)
+        return new.format(GITHUB_TOKEN=configuration.get_value(
+            ConfigurationVariable.GIT_TOKEN))
+
+    def clone(self, path: Path) -&gt; &#39;GitWrapper&#39;:
+        &#34;&#34;&#34;Clones this repository to the path.
+
+        Args:
+            path: path where to put the clone
+
+        Returns:
+            a wrapper over the cloned repository
+        &#34;&#34;&#34;
+        git_clone = self.repo.clone_from(url=self.get_remote_url(),
+                                         to_path=str(path),
+                                         multi_options=[
+                                             &#39;--recurse-submodules&#39;]
+                                         )
+        clone = GitWrapper(path=path, repo=git_clone)
+        clone.set_remote_url(self.get_remote_url())
+        clone.fetch()
+        return clone
+
+    @property
+    def root(self) -&gt; Path:
+        &#34;&#34;&#34;Gets repository root folder.
+
+        Returns:
+            repository root folder.
+        &#34;&#34;&#34;
+        return self._root_path
+
+    def configure_author(self) -&gt; None:
+        &#34;&#34;&#34;Sets the author.&#34;&#34;&#34;
+        self.repo.config_writer().set_value(&#34;user&#34;, &#34;name&#34;,
+                                            self.author.name).release()
+        self.repo.config_writer().set_value(&#34;user&#34;, &#34;email&#34;,
+                                            self.author.email).release()
+
+    def checkout_branch(self, branch_name: str) -&gt; Any:
+        &#34;&#34;&#34;Checks out a branch from its name.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            corresponding branch if found; None otherwise.
+        &#34;&#34;&#34;
+        logger.debug(f&#34;Checking out {branch_name}&#34;)
+        local_branch = self.get_branch(branch_name)
+        if local_branch:
+            self.checkout(local_branch)
+        return local_branch
+
+    def checkout(self, branch: Any) -&gt; None:
+        &#34;&#34;&#34;Checks out a branch.
+
+        Args:
+            branch: branch to check out
+
+        &#34;&#34;&#34;
+        self.repo.git.checkout(branch)
+
+    def _add_one_file_or_one_dir(self, path: str) -&gt; None:
+        if not path:
+            raise ValueError(&#39;Unspecified path.&#39;)
+        self._add_one_path(Path(path))
+
+    def _add_one_path(self, path_model: Path) -&gt; None:
+        if not path_model.is_absolute():
+            path_model = Path(self.root).joinpath(path_model)
+        if not path_model.exists():
+            logger.warning(
+                f&#39;[Git] {path_model} cannot be added because not found.&#39;)
+            return
+        relative_path = str(path_model.relative_to(self.root))
+        unix_relative_path = relative_path.replace(&#39;\\&#39;, &#39;/&#39;)
+        if path_model.is_dir():
+            unix_relative_path = f&#39;{unix_relative_path}/*&#39;
+        logger.info(f&#34;Adding {unix_relative_path} to repository.&#34;)
+        self.repo.git.add(unix_relative_path)
+
+    def add(self, path: Union[list, set, str]) -&gt; None:
+        &#34;&#34;&#34;Adds a file or a list of files.
+
+        Args:
+            path: file path or list of file paths
+        &#34;&#34;&#34;
+        if isinstance(path, list) or isinstance(path, set):
+            for element in path:
+                self.add(element)
+        else:
+            self._add_one_file_or_one_dir(path)
+
+    def commit(self, message: str,
+               **kwargs: Optional[Tuple[str, Any]]) -&gt; None:
+        &#34;&#34;&#34;Commits changes to the repository.
+
+        Args:
+            message: commit message
+            **kwargs: extra parameters
+        &#34;&#34;&#34;
+        logger.info(&#34;Committing changes&#34;)
+        self.repo.index.commit(
+            message,
+            author=self.author,
+            **kwargs
+        )
+
+    def get_master_branch(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the `master` branch.
+
+        Returns:
+            corresponding branch
+        &#34;&#34;&#34;
+        return self.get_branch(configuration.get_value(
+            ConfigurationVariable.MASTER_BRANCH))
+
+    def get_beta_branch(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the `beta` branch.
+
+        Returns:
+            corresponding branch
+        &#34;&#34;&#34;
+        return self.get_branch(configuration.get_value(
+            ConfigurationVariable.BETA_BRANCH))
+
+    def is_release_branch(self, branch_name: Optional[str]) -&gt; bool:
+        &#34;&#34;&#34;Checks whether the branch is a `release` branch or not.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            True if the branch is used for `release` code; False otherwise
+        &#34;&#34;&#34;
+        branch_pattern = configuration.get_value(
+            ConfigurationVariable.RELEASE_BRANCH_PATTERN)
+        if not branch_pattern or not branch_name:
+            return False
+        is_release: Optional[Any] = re.search(branch_pattern,
+                                              str(branch_name))
+        return True if is_release else False
+
+    def fetch(self) -&gt; None:
+        &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
+        self.repo.git.fetch(all=True, tags=True, force=True)
+
+    def get_branch(self, branch_name: str) -&gt; Any:
+        &#34;&#34;&#34;Gets a specific local branch.
+
+        Args:
+            branch_name: name of the branch to look for
+
+        Returns:
+            corresponding branch or `None`
+            if no branches with this `branch_name` were found
+        &#34;&#34;&#34;
+        branch = self._get_branch_reference(branch_name)
+        if branch:
+            return branch
+        self.fetch()
+        return self._get_branch_reference(branch_name)
+
+    def _get_branch_reference(self, branch_name: str) -&gt; Any:
+        try:
+            return self.repo.heads[str(branch_name)]
+        except (IndexError, ValueError) as e:
+            logger.warning(e)
+            return None
+
+    def get_current_branch(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the current branch.
+
+        Returns:
+            the current branch
+        &#34;&#34;&#34;
+        # Workaround  for this GitPython issue https://github.com/gitpython-developers/GitPython/issues/510
+        try:
+            return self.repo.active_branch
+        except TypeError as e:
+            logger.warning(
+                f&#39;Could not determine the branch name using GitPython: {e}&#39;
+            )
+        current_branch = self._get_branch_from_advanced_feature()
+        if not current_branch:
+            current_branch = self._get_branch_from_abbreviation(&#39;HEAD&#39;)
+        return current_branch
+
+    def _get_branch_from_advanced_feature(self) -&gt; Any:
+        if version.parse(self.git_version()) &gt;= version.parse(&#39;2.22&#39;):
+            current_branch = self.repo.git.branch(show_current=True)
+            current_branch = current_branch if isinstance(current_branch,
+                                                          str) else current_branch.decode(
+                &#39;utf-8&#39;)
+            return self.get_branch(current_branch)
+        return None
+
+    def _get_branch_from_abbreviation(self, abbreviation: str) -&gt; Any:
+        current_branch = self.repo.git.rev_parse(&#39;--abbrev-ref&#39;, abbreviation)
+        current_branch = current_branch if isinstance(current_branch,
+                                                      str) else current_branch.decode(
+            &#39;utf-8&#39;)
+        return self.get_branch(current_branch.strip())
+
+    def get_commit_count(self) -&gt; int:
+        &#34;&#34;&#34;Gets current commit count.
+
+        Gets a number stating how many commits would have been listed
+        before the current commit.
+
+        Returns:
+            number of commits before this current one.
+        &#34;&#34;&#34;
+        current_commit = self.get_current_commit()
+        return int(current_commit.count()) if current_commit else 0
+
+    def get_commit_hash(self) -&gt; str:
+        &#34;&#34;&#34;Gets the hash of the current commit.
+
+        Returns:
+             a hash.
+        &#34;&#34;&#34;
+        return str(self.get_current_commit())
+
+    def get_current_commit(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the current commit.
+
+        Returns:
+            the current commit.
+        &#34;&#34;&#34;
+        return self.repo.commit(self.get_current_branch())
+
+    def get_branch_point(self, commit1: Any, commit2: Any) -&gt; Any:
+        &#34;&#34;&#34;Finds the common ancestor.
+
+        See https://git-scm.com/docs/git-merge-base
+
+        Args:
+            commit1: commit1
+            commit2: commit2
+
+        Returns:
+            the branch point.
+        &#34;&#34;&#34;
+        return self.repo.merge_base(commit1, commit2).pop()
+
+    def merge(self, branch: Any) -&gt; None:
+        &#34;&#34;&#34;Merges `branch` to current branch.
+
+        Args:
+            branch: branch to merge
+        &#34;&#34;&#34;
+        current_branch = self.get_current_branch()
+        merge_base = self.repo.merge_base(branch, current_branch)
+        self.repo.index.merge_tree(current_branch, base=merge_base)
+        self.commit(f&#39;Merge from {str(branch)}&#39;,
+                    parent_commits=(branch.commit, current_branch.commit))
+
+    def get_remote_url(self) -&gt; str:
+        &#34;&#34;&#34;Gets the URL of the remote repository.
+
+        Returns:
+            the corresponding URL.
+        &#34;&#34;&#34;
+        remote = self._get_remote()
+        if not remote:
+            raise ValueError(&#39;Undefined remote repository&#39;)
+        url = remote.url
+        if not url:
+            raise ValueError(&#39;Undefined remote repository URL&#39;)
+        return str(url)
+
+    def cherry_pick(self, commit: Any) -&gt; None:
+        &#34;&#34;&#34;Cherry picks a specific commit.
+
+        Args:
+            commit: commit to cherry pick
+        &#34;&#34;&#34;
+        self.repo.git.cherry_pick(str(commit))
+
+    def set_remote_url(self, url: str) -&gt; None:
+        &#34;&#34;&#34;Sets the URL of the remote repository.
+
+        Args:
+            url: URL
+        &#34;&#34;&#34;
+        remote = self._get_remote()
+        if remote:
+            self.repo.delete_remote(str(remote))
+        self.repo.create_remote(configuration.get_value(
+            ConfigurationVariable.REMOTE_ALIAS), url=url)
+
+    def get_remote_branch(self, branch_name: str) -&gt; Optional[Any]:
+        &#34;&#34;&#34;Gets the branch present in the remote repository.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            corresponding branch if exists. `None` otherwise
+        &#34;&#34;&#34;
+        remote = self._get_remote()
+        if not remote:
+            return None
+        try:
+            return remote.refs[str(branch_name)]
+        except (IndexError, ValueError) as e:
+            logger.warning(e)
+            return None
+
+    def set_upstream_branch(self, branch_name: str) -&gt; None:
+        &#34;&#34;&#34;Sets the upstream branch of the current branch.
+
+        Args:
+            branch_name: name of the remote branch.
+        &#34;&#34;&#34;
+        if self.remote_branch_exists(branch_name):
+            self.repo.git.branch(
+                &#39;--set-upstream-to&#39;, self.get_remote_branch(branch_name)
+            )
+
+    def delete_branch(self, branch: Any) -&gt; None:
+        &#34;&#34;&#34;Deletes a branch.
+
+        Args:
+            branch: branch to delete
+        &#34;&#34;&#34;
+        self.repo.delete_head(branch)
+
+    def list_branches(self) -&gt; list:
+        &#34;&#34;&#34;Gets the list of branches.
+
+        Returns:
+            list of branches
+
+        &#34;&#34;&#34;
+        return [b for b in self.repo.heads]
+
+    def branch_exists(self, branch_name: str) -&gt; bool:
+        &#34;&#34;&#34;Checks whether a branch in the repository exists.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            True if there is a branch called `branch_name`; False otherwise
+        &#34;&#34;&#34;
+        return self.get_branch(branch_name) is not None
+
+    def remote_branch_exists(self, branch_name: str) -&gt; bool:
+        &#34;&#34;&#34;Checks whether a branch in the remote repository exists.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            True if there is a remote branch called `branch_name`; False otherwise
+
+        &#34;&#34;&#34;
+        return self.get_remote_branch(branch_name) is not None
+
+    def _get_specific_changes(self, change_type: Optional[str], commit1: Any,
+                              commit2: Any) -&gt; List[str]:
+        diff = commit1.diff(commit2)
+        if change_type:
+            change_type = change_type.upper()
+            change_type = change_type if change_type in diff.change_type else None
+        diff_iterator = diff.iter_change_type(
+            change_type) if change_type else diff
+        changes = [change.a_path if change.a_path else change.b_path for change
+                   in diff_iterator]
+        return changes
+
+    def get_changes_list(self, commit1: Any, commit2: Any,
+                         change_type: Optional[str] = None,
+                         dir: Optional[str] = None) -&gt; List[str]:
+        &#34;&#34;&#34;Gets change list.
+
+        Gets a list of all the changes that happened between two commits:
+        list of the paths of the files which changed
+
+        Args:
+            commit1: commit
+            commit2: other commit
+            change_type: type of change e.g. &#39;A&#39; for added files, &#39;D&#39; for deleted files
+            dir: directory of interest. if None the whole repository is considered
+
+        Returns:
+            list of paths
+        &#34;&#34;&#34;
+        changes = self._get_specific_changes(change_type, commit1, commit2)
+        if dir:
+            windows_path = dir.replace(&#39;/&#39;, &#39;\\&#39;)
+            linux_path = dir.replace(&#39;\\&#39;, &#39;/&#39;)
+            return [
+                change for change in changes if
+                (linux_path in change) or (windows_path in change)
+            ]
+        else:
+            return changes
+
+    def pull_all(self) -&gt; None:
+        &#34;&#34;&#34;Pulls all changes from all remotes.&#34;&#34;&#34;
+        self.repo.git.pull(all=True, force=True, quiet=True)
+
+    def pull(self) -&gt; None:
+        &#34;&#34;&#34;Pulls changes on current branch from the remote repository.&#34;&#34;&#34;
+        if self.remote_branch_exists(self.get_current_branch()):
+            self.repo.git.pull(self._get_remote(), self.get_current_branch(),
+                               quiet=True)
+
+    def force_pull(self) -&gt; None:
+        &#34;&#34;&#34;Force pulls changes from the remote repository.&#34;&#34;&#34;
+        self.repo.git.pull(self._get_remote(), self.get_current_branch(),
+                           quiet=True, force=True)
+
+    def push(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits.
+
+        Pushes changes to the remote repository.
+        Pushes also relevant annotated tags when pushing branches out.
+        &#34;&#34;&#34;
+        self.repo.git.push(&#39;--follow-tags&#39;, &#39;--set-upstream&#39;,
+                           self._get_remote(),
+                           self.get_current_branch())
+
+    def push_tag(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits and tags.
+
+        Pushes changes to the remote repository.
+        Tags are also pushed as part of the process
+        &#34;&#34;&#34;
+        self.repo.git.push(tags=True)
+
+    def force_push(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits with force.
+
+        Performs a force push.
+        &#34;&#34;&#34;
+        self.repo.git.push(force=True)
+
+    def force_push_tag(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits and tags with force.
+
+        Performs a force push.
+        Tags are also pushed as part of the process
+        &#34;&#34;&#34;
+        self.repo.git.push(force=True, tags=True)
+
+    def configure_for_github(self) -&gt; None:
+        &#34;&#34;&#34;Reconfigures the repository.
+
+        Configures the repository so that we can commit back to GitHub
+        &#34;&#34;&#34;
+        self.configure_author()
+        self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+
+    def create_tag(self, tag_name: str, message: Optional[str] = None) -&gt; Any:
+        &#34;&#34;&#34;Creates a new tag.
+
+        Args:
+            tag_name: name of the tag
+            message: tag annotation (https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags)
+
+        Returns:
+            corresponding tag
+        &#34;&#34;&#34;
+        return self.repo.create_tag(tag_name, message=message, force=True)
+
+    def create_branch(self, branch_name: str) -&gt; Any:
+        &#34;&#34;&#34;Creates a new branch.
+
+        Args:
+             branch_name: name of the branch
+
+        Returns:
+             corresponding branch
+        &#34;&#34;&#34;
+        logger.info(f&#34;Creating branch {branch_name}&#34;)
+        return self.repo.create_head(branch_name)
+
+    def git_version(self) -&gt; str:
+        &#34;&#34;&#34;Gets git version.
+
+        Returns:
+            the version of git in use.
+        &#34;&#34;&#34;
+        return &#39;.&#39;.join(
+            [str(element) for element in self.repo.git.version_info])
+
+    def _get_remote(self) -&gt; Optional[Any]:
+        try:
+            return self.repo.remote(
+                configuration.get_value(ConfigurationVariable.REMOTE_ALIAS))
+        except (IndexError, ValueError) as e:
+            logger.warning(e)
+            return None
+
+    def list_files_added_on_current_branch(self) -&gt; List[str]:
+        &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
+        master_branch_commit = self.repo.commit(&#39;master&#39;)
+        current_branch_commit = self.repo.commit(self.get_current_branch())
+        changes = self.get_changes_list(
+            self.get_branch_point(master_branch_commit, current_branch_commit),
+            current_branch_commit,
+            change_type=&#39;a&#39;
+        )
+        return changes
+
+    def is_current_branch_feature(self) -&gt; bool:
+        &#34;&#34;&#34;Returns boolean indicating if current branch is considered a feature.&#34;&#34;&#34;
+        current_branch = self.get_current_branch()
+        is_master = current_branch == self.get_master_branch()
+        is_beta = current_branch == self.get_beta_branch()
+        is_release = self.is_release_branch(current_branch)
+        return not (is_master or is_beta or is_release)
+
+    @property
+    def uncommitted_changes(self) -&gt; List[Path]:
+        &#34;&#34;&#34;Gets list of uncommitted files.
+
+        Returns:
+             list of uncommitted
+        &#34;&#34;&#34;
+        status = self.repo.git.status(
+            porcelain=True,
+            untracked_files=True
+        )
+        if not status:
+            return []
+
+        return [
+            Path(self.root).joinpath(
+                line.strip().split(&#39; &#39;)[-1]) for line in status.splitlines()
+        ]
+
+    def apply_uncommitted_changes(self, other_repo: &#39;GitWrapper&#39;) -&gt; None:
+        &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
+
+        Args:
+            other_repo: repository to apply changes to
+        &#34;&#34;&#34;
+        dest_root = other_repo.root
+        for f in self.uncommitted_changes:
+            destination = dest_root.joinpath(f.relative_to(self.root))
+            if f.exists():
+                logger.info(f&#34;Applying change in {f} to {destination}&#34;)
+                if not destination.parent.exists():
+                    os.makedirs(str(destination.parent), exist_ok=True)
+                shutil.copy2(src=str(f), dst=str(destination))
+            else:
+                logger.info(f&#34;Removing {destination}&#34;)
+                if destination.exists():
+                    destination.unlink()
+
+
+class ProjectGitWrapper(GitWrapper):
+    &#34;&#34;&#34;Wrapper class over project&#39;s repository.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Creates a Git Wrapper.&#34;&#34;&#34;
+        super().__init__(
+            path=Path(
+                configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
+            repo=Repo(
+                configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+        )
+
+
+class GitClone(GitWrapper):
+    &#34;&#34;&#34;Cloned repository.
+
+    It behaves exactly like the repository it is based on but
+    is in a completely different location.
+    &#34;&#34;&#34;
+
+    def __init__(self, path: Path, initial_path: Path, repo: Repo) -&gt; None:
+        &#34;&#34;&#34;Creates an instance of GitWrapper.
+
+        Args:
+            path: path to repository.
+            repo: GitPython repository.
+            initial_path: path to the repository the clone is based on.
+        &#34;&#34;&#34;
+        super().__init__(path, repo)
+        self._initial_path = initial_path
+
+    @staticmethod
+    def wrap(repo: GitWrapper, initial_location: Path) -&gt; &#39;GitClone&#39;:
+        &#34;&#34;&#34;Wraps around around a repository.&#34;&#34;&#34;
+        return GitClone(repo=repo.repo, path=repo.root,
+                        initial_path=initial_location)
+
+    @property
+    def initial_location(self) -&gt; Path:
+        &#34;&#34;&#34;Gets the path to the repository it is based on.&#34;&#34;&#34;
+        return self._initial_path
+
+    def _add_one_path(self, path_model: Path) -&gt; None:
+        super()._add_one_path(self.get_corresponding_path(path_model))
+
+    def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
+        &#34;&#34;&#34;Gets the path in cloned repository corresponding to path in initial repository.
+
+        Args:
+            path_in_initial_repo: path to a file/directory in initial repository.
+
+        Returns:
+             corresponding path.
+        &#34;&#34;&#34;
+        if not path_in_initial_repo.is_absolute():
+            return Path(self.root).joinpath(path_in_initial_repo)
+        try:
+            # Tyring to find if the path corresponds to a file/directory present in intial repository
+            return Path(self.root).joinpath(
+                path_in_initial_repo.relative_to(self.initial_location))
+        except ValueError:
+            return path_in_initial_repo
+
+
+class GitTempClone:
+    &#34;&#34;&#34;Context manager providing a temporary cloned repository.&#34;&#34;&#34;
+
+    def __init__(self, desired_branch_name: Optional[str],
+                 repository_to_clone: GitWrapper):
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            desired_branch_name: the branch to consider. I
+            repository_to_clone: the repository to clone. If not specified, the project repository will be used.
+        &#34;&#34;&#34;
+        self._temporary_dir = TemporaryDirectory()
+        logger.info(
+            f&#34;Creating a temporary repository in {self._temporary_dir}&#34;)
+        _repo = repository_to_clone
+        _current_branch_name = desired_branch_name if desired_branch_name else str(
+            _repo.get_current_branch())
+        self._clone = GitClone.wrap(_repo.clone(self._temporary_dir.path),
+                                    initial_location=_repo.root)
+        self._clone.checkout(_current_branch_name)
+        _repo.apply_uncommitted_changes(self._clone)
+
+    def __enter__(self) -&gt; GitClone:
+        &#34;&#34;&#34;Context manager entry point.&#34;&#34;&#34;
+        return self._clone
+
+    def __exit__(self, type: Any, value: Any, traceback: Any) -&gt; None:
+        &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
+        self._temporary_dir.cleanup()
+
+
+class ProjectTempClone(GitTempClone):
+    &#34;&#34;&#34;Temporary cloned repository for current project.&#34;&#34;&#34;
+
+    def __init__(self, desired_branch_name: Optional[str] = None):
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            desired_branch_name: the branch to consider. if not specified, the
+            system will try to identify the current branch in the repository which
+            will work in most cases but probably not on CI.
+        &#34;&#34;&#34;
+        super().__init__(desired_branch_name=desired_branch_name,
+                         repository_to_clone=ProjectGitWrapper())</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitClone"><code class="flex name class">
+<span>class <span class="ident">GitClone</span></span>
+<span>(</span><span>path: pathlib.Path, initial_path: pathlib.Path, repo: git.repo.base.Repo)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Cloned repository.</p>
+<p>It behaves exactly like the repository it is based on but
+is in a completely different location.</p>
+<p>Creates an instance of GitWrapper.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>path to repository.</dd>
+<dt><strong><code>repo</code></strong></dt>
+<dd>GitPython repository.</dd>
+<dt><strong><code>initial_path</code></strong></dt>
+<dd>path to the repository the clone is based on.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GitClone(GitWrapper):
+    &#34;&#34;&#34;Cloned repository.
+
+    It behaves exactly like the repository it is based on but
+    is in a completely different location.
+    &#34;&#34;&#34;
+
+    def __init__(self, path: Path, initial_path: Path, repo: Repo) -&gt; None:
+        &#34;&#34;&#34;Creates an instance of GitWrapper.
+
+        Args:
+            path: path to repository.
+            repo: GitPython repository.
+            initial_path: path to the repository the clone is based on.
+        &#34;&#34;&#34;
+        super().__init__(path, repo)
+        self._initial_path = initial_path
+
+    @staticmethod
+    def wrap(repo: GitWrapper, initial_location: Path) -&gt; &#39;GitClone&#39;:
+        &#34;&#34;&#34;Wraps around around a repository.&#34;&#34;&#34;
+        return GitClone(repo=repo.repo, path=repo.root,
+                        initial_path=initial_location)
+
+    @property
+    def initial_location(self) -&gt; Path:
+        &#34;&#34;&#34;Gets the path to the repository it is based on.&#34;&#34;&#34;
+        return self._initial_path
+
+    def _add_one_path(self, path_model: Path) -&gt; None:
+        super()._add_one_path(self.get_corresponding_path(path_model))
+
+    def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
+        &#34;&#34;&#34;Gets the path in cloned repository corresponding to path in initial repository.
+
+        Args:
+            path_in_initial_repo: path to a file/directory in initial repository.
+
+        Returns:
+             corresponding path.
+        &#34;&#34;&#34;
+        if not path_in_initial_repo.is_absolute():
+            return Path(self.root).joinpath(path_in_initial_repo)
+        try:
+            # Tyring to find if the path corresponds to a file/directory present in intial repository
+            return Path(self.root).joinpath(
+                path_in_initial_repo.relative_to(self.initial_location))
+        except ValueError:
+            return path_in_initial_repo</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitClone.wrap"><code class="name flex">
+<span>def <span class="ident">wrap</span></span>(<span>repo: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, initial_location: pathlib.Path) -> <a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone">GitClone</a></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Wraps around around a repository.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def wrap(repo: GitWrapper, initial_location: Path) -&gt; &#39;GitClone&#39;:
+    &#34;&#34;&#34;Wraps around around a repository.&#34;&#34;&#34;
+    return GitClone(repo=repo.repo, path=repo.root,
+                    initial_path=initial_location)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitClone.initial_location"><code class="name">var <span class="ident">initial_location</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the path to the repository it is based on.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def initial_location(self) -&gt; Path:
+    &#34;&#34;&#34;Gets the path to the repository it is based on.&#34;&#34;&#34;
+    return self._initial_path</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitClone.get_corresponding_path"><code class="name flex">
+<span>def <span class="ident">get_corresponding_path</span></span>(<span>self, path_in_initial_repo: pathlib.Path) -> pathlib.Path</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the path in cloned repository corresponding to path in initial repository.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path_in_initial_repo</code></strong></dt>
+<dd>path to a file/directory in initial repository.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding path.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
+    &#34;&#34;&#34;Gets the path in cloned repository corresponding to path in initial repository.
+
+    Args:
+        path_in_initial_repo: path to a file/directory in initial repository.
+
+    Returns:
+         corresponding path.
+    &#34;&#34;&#34;
+    if not path_in_initial_repo.is_absolute():
+        return Path(self.root).joinpath(path_in_initial_repo)
+    try:
+        # Tyring to find if the path corresponds to a file/directory present in intial repository
+        return Path(self.root).joinpath(
+            path_in_initial_repo.relative_to(self.initial_location))
+    except ValueError:
+        return path_in_initial_repo</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add">add</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes">apply_uncommitted_changes</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists">branch_exists</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout">checkout</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch">checkout_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick">cherry_pick</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone">clone</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit">commit</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author">configure_author</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github">configure_for_github</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch">create_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag">create_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch">delete_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch">fetch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull">force_pull</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push">force_push</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag">force_push_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch">get_beta_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch">get_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point">get_branch_point</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list">get_changes_list</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count">get_commit_count</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash">get_commit_hash</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch">get_current_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit">get_current_commit</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch">get_master_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch">get_remote_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url">get_remote_url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push">push</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag">push_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists">remote_branch_exists</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitTempClone"><code class="flex name class">
+<span>class <span class="ident">GitTempClone</span></span>
+<span>(</span><span>desired_branch_name: Union[str, NoneType], repository_to_clone: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Context manager providing a temporary cloned repository.</p>
+<p>Constructor.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>desired_branch_name</code></strong></dt>
+<dd>the branch to consider. I</dd>
+<dt><strong><code>repository_to_clone</code></strong></dt>
+<dd>the repository to clone. If not specified, the project repository will be used.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GitTempClone:
+    &#34;&#34;&#34;Context manager providing a temporary cloned repository.&#34;&#34;&#34;
+
+    def __init__(self, desired_branch_name: Optional[str],
+                 repository_to_clone: GitWrapper):
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            desired_branch_name: the branch to consider. I
+            repository_to_clone: the repository to clone. If not specified, the project repository will be used.
+        &#34;&#34;&#34;
+        self._temporary_dir = TemporaryDirectory()
+        logger.info(
+            f&#34;Creating a temporary repository in {self._temporary_dir}&#34;)
+        _repo = repository_to_clone
+        _current_branch_name = desired_branch_name if desired_branch_name else str(
+            _repo.get_current_branch())
+        self._clone = GitClone.wrap(_repo.clone(self._temporary_dir.path),
+                                    initial_location=_repo.root)
+        self._clone.checkout(_current_branch_name)
+        _repo.apply_uncommitted_changes(self._clone)
+
+    def __enter__(self) -&gt; GitClone:
+        &#34;&#34;&#34;Context manager entry point.&#34;&#34;&#34;
+        return self._clone
+
+    def __exit__(self, type: Any, value: Any, traceback: Any) -&gt; None:
+        &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
+        self._temporary_dir.cleanup()</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.git_helpers.ProjectTempClone" href="#mbed_tools_ci_scripts.utils.git_helpers.ProjectTempClone">ProjectTempClone</a></li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper"><code class="flex name class">
+<span>class <span class="ident">GitWrapper</span></span>
+<span>(</span><span>path: pathlib.Path, repo: git.repo.base.Repo)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Wrapper class to provide convenient methods for performing git actions.</p>
+<p>Creates an instance of GitWrapper.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>path to repository.</dd>
+<dt><strong><code>repo</code></strong></dt>
+<dd>GitPython repository.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GitWrapper:
+    &#34;&#34;&#34;Wrapper class to provide convenient methods for performing git actions.&#34;&#34;&#34;
+
+    def __init__(self, path: Path,
+                 repo: Repo) -&gt; None:
+        &#34;&#34;&#34;Creates an instance of GitWrapper.
+
+        Args:
+            path: path to repository.
+            repo: GitPython repository.
+        &#34;&#34;&#34;
+        self._root_path = path
+        self.repo = repo
+        self.author = Actor(
+            configuration.get_value(ConfigurationVariable.BOT_USERNAME),
+            configuration.get_value(ConfigurationVariable.BOT_EMAIL))
+
+    def _git_url_ssh_to_https(self, url: str) -&gt; str:
+        &#34;&#34;&#34;Changes repository URL to use authorisation token.
+
+        Converts the git url to use the GitHub token:
+        See https://github.blog/2012-09-21-easier-builds-and-deployments-using-git-over-https-and-oauth/
+
+        Returns:
+            new URL
+        &#34;&#34;&#34;
+        path = url.split(&#39;github.com&#39;, 1)[1][1:].strip()
+        new = &#39;https://{GITHUB_TOKEN}:x-oauth-basic@github.com/%s&#39; % path
+        logger.info(&#39;rewriting git url to: %s&#39; % new)
+        return new.format(GITHUB_TOKEN=configuration.get_value(
+            ConfigurationVariable.GIT_TOKEN))
+
+    def clone(self, path: Path) -&gt; &#39;GitWrapper&#39;:
+        &#34;&#34;&#34;Clones this repository to the path.
+
+        Args:
+            path: path where to put the clone
+
+        Returns:
+            a wrapper over the cloned repository
+        &#34;&#34;&#34;
+        git_clone = self.repo.clone_from(url=self.get_remote_url(),
+                                         to_path=str(path),
+                                         multi_options=[
+                                             &#39;--recurse-submodules&#39;]
+                                         )
+        clone = GitWrapper(path=path, repo=git_clone)
+        clone.set_remote_url(self.get_remote_url())
+        clone.fetch()
+        return clone
+
+    @property
+    def root(self) -&gt; Path:
+        &#34;&#34;&#34;Gets repository root folder.
+
+        Returns:
+            repository root folder.
+        &#34;&#34;&#34;
+        return self._root_path
+
+    def configure_author(self) -&gt; None:
+        &#34;&#34;&#34;Sets the author.&#34;&#34;&#34;
+        self.repo.config_writer().set_value(&#34;user&#34;, &#34;name&#34;,
+                                            self.author.name).release()
+        self.repo.config_writer().set_value(&#34;user&#34;, &#34;email&#34;,
+                                            self.author.email).release()
+
+    def checkout_branch(self, branch_name: str) -&gt; Any:
+        &#34;&#34;&#34;Checks out a branch from its name.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            corresponding branch if found; None otherwise.
+        &#34;&#34;&#34;
+        logger.debug(f&#34;Checking out {branch_name}&#34;)
+        local_branch = self.get_branch(branch_name)
+        if local_branch:
+            self.checkout(local_branch)
+        return local_branch
+
+    def checkout(self, branch: Any) -&gt; None:
+        &#34;&#34;&#34;Checks out a branch.
+
+        Args:
+            branch: branch to check out
+
+        &#34;&#34;&#34;
+        self.repo.git.checkout(branch)
+
+    def _add_one_file_or_one_dir(self, path: str) -&gt; None:
+        if not path:
+            raise ValueError(&#39;Unspecified path.&#39;)
+        self._add_one_path(Path(path))
+
+    def _add_one_path(self, path_model: Path) -&gt; None:
+        if not path_model.is_absolute():
+            path_model = Path(self.root).joinpath(path_model)
+        if not path_model.exists():
+            logger.warning(
+                f&#39;[Git] {path_model} cannot be added because not found.&#39;)
+            return
+        relative_path = str(path_model.relative_to(self.root))
+        unix_relative_path = relative_path.replace(&#39;\\&#39;, &#39;/&#39;)
+        if path_model.is_dir():
+            unix_relative_path = f&#39;{unix_relative_path}/*&#39;
+        logger.info(f&#34;Adding {unix_relative_path} to repository.&#34;)
+        self.repo.git.add(unix_relative_path)
+
+    def add(self, path: Union[list, set, str]) -&gt; None:
+        &#34;&#34;&#34;Adds a file or a list of files.
+
+        Args:
+            path: file path or list of file paths
+        &#34;&#34;&#34;
+        if isinstance(path, list) or isinstance(path, set):
+            for element in path:
+                self.add(element)
+        else:
+            self._add_one_file_or_one_dir(path)
+
+    def commit(self, message: str,
+               **kwargs: Optional[Tuple[str, Any]]) -&gt; None:
+        &#34;&#34;&#34;Commits changes to the repository.
+
+        Args:
+            message: commit message
+            **kwargs: extra parameters
+        &#34;&#34;&#34;
+        logger.info(&#34;Committing changes&#34;)
+        self.repo.index.commit(
+            message,
+            author=self.author,
+            **kwargs
+        )
+
+    def get_master_branch(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the `master` branch.
+
+        Returns:
+            corresponding branch
+        &#34;&#34;&#34;
+        return self.get_branch(configuration.get_value(
+            ConfigurationVariable.MASTER_BRANCH))
+
+    def get_beta_branch(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the `beta` branch.
+
+        Returns:
+            corresponding branch
+        &#34;&#34;&#34;
+        return self.get_branch(configuration.get_value(
+            ConfigurationVariable.BETA_BRANCH))
+
+    def is_release_branch(self, branch_name: Optional[str]) -&gt; bool:
+        &#34;&#34;&#34;Checks whether the branch is a `release` branch or not.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            True if the branch is used for `release` code; False otherwise
+        &#34;&#34;&#34;
+        branch_pattern = configuration.get_value(
+            ConfigurationVariable.RELEASE_BRANCH_PATTERN)
+        if not branch_pattern or not branch_name:
+            return False
+        is_release: Optional[Any] = re.search(branch_pattern,
+                                              str(branch_name))
+        return True if is_release else False
+
+    def fetch(self) -&gt; None:
+        &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
+        self.repo.git.fetch(all=True, tags=True, force=True)
+
+    def get_branch(self, branch_name: str) -&gt; Any:
+        &#34;&#34;&#34;Gets a specific local branch.
+
+        Args:
+            branch_name: name of the branch to look for
+
+        Returns:
+            corresponding branch or `None`
+            if no branches with this `branch_name` were found
+        &#34;&#34;&#34;
+        branch = self._get_branch_reference(branch_name)
+        if branch:
+            return branch
+        self.fetch()
+        return self._get_branch_reference(branch_name)
+
+    def _get_branch_reference(self, branch_name: str) -&gt; Any:
+        try:
+            return self.repo.heads[str(branch_name)]
+        except (IndexError, ValueError) as e:
+            logger.warning(e)
+            return None
+
+    def get_current_branch(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the current branch.
+
+        Returns:
+            the current branch
+        &#34;&#34;&#34;
+        # Workaround  for this GitPython issue https://github.com/gitpython-developers/GitPython/issues/510
+        try:
+            return self.repo.active_branch
+        except TypeError as e:
+            logger.warning(
+                f&#39;Could not determine the branch name using GitPython: {e}&#39;
+            )
+        current_branch = self._get_branch_from_advanced_feature()
+        if not current_branch:
+            current_branch = self._get_branch_from_abbreviation(&#39;HEAD&#39;)
+        return current_branch
+
+    def _get_branch_from_advanced_feature(self) -&gt; Any:
+        if version.parse(self.git_version()) &gt;= version.parse(&#39;2.22&#39;):
+            current_branch = self.repo.git.branch(show_current=True)
+            current_branch = current_branch if isinstance(current_branch,
+                                                          str) else current_branch.decode(
+                &#39;utf-8&#39;)
+            return self.get_branch(current_branch)
+        return None
+
+    def _get_branch_from_abbreviation(self, abbreviation: str) -&gt; Any:
+        current_branch = self.repo.git.rev_parse(&#39;--abbrev-ref&#39;, abbreviation)
+        current_branch = current_branch if isinstance(current_branch,
+                                                      str) else current_branch.decode(
+            &#39;utf-8&#39;)
+        return self.get_branch(current_branch.strip())
+
+    def get_commit_count(self) -&gt; int:
+        &#34;&#34;&#34;Gets current commit count.
+
+        Gets a number stating how many commits would have been listed
+        before the current commit.
+
+        Returns:
+            number of commits before this current one.
+        &#34;&#34;&#34;
+        current_commit = self.get_current_commit()
+        return int(current_commit.count()) if current_commit else 0
+
+    def get_commit_hash(self) -&gt; str:
+        &#34;&#34;&#34;Gets the hash of the current commit.
+
+        Returns:
+             a hash.
+        &#34;&#34;&#34;
+        return str(self.get_current_commit())
+
+    def get_current_commit(self) -&gt; Any:
+        &#34;&#34;&#34;Gets the current commit.
+
+        Returns:
+            the current commit.
+        &#34;&#34;&#34;
+        return self.repo.commit(self.get_current_branch())
+
+    def get_branch_point(self, commit1: Any, commit2: Any) -&gt; Any:
+        &#34;&#34;&#34;Finds the common ancestor.
+
+        See https://git-scm.com/docs/git-merge-base
+
+        Args:
+            commit1: commit1
+            commit2: commit2
+
+        Returns:
+            the branch point.
+        &#34;&#34;&#34;
+        return self.repo.merge_base(commit1, commit2).pop()
+
+    def merge(self, branch: Any) -&gt; None:
+        &#34;&#34;&#34;Merges `branch` to current branch.
+
+        Args:
+            branch: branch to merge
+        &#34;&#34;&#34;
+        current_branch = self.get_current_branch()
+        merge_base = self.repo.merge_base(branch, current_branch)
+        self.repo.index.merge_tree(current_branch, base=merge_base)
+        self.commit(f&#39;Merge from {str(branch)}&#39;,
+                    parent_commits=(branch.commit, current_branch.commit))
+
+    def get_remote_url(self) -&gt; str:
+        &#34;&#34;&#34;Gets the URL of the remote repository.
+
+        Returns:
+            the corresponding URL.
+        &#34;&#34;&#34;
+        remote = self._get_remote()
+        if not remote:
+            raise ValueError(&#39;Undefined remote repository&#39;)
+        url = remote.url
+        if not url:
+            raise ValueError(&#39;Undefined remote repository URL&#39;)
+        return str(url)
+
+    def cherry_pick(self, commit: Any) -&gt; None:
+        &#34;&#34;&#34;Cherry picks a specific commit.
+
+        Args:
+            commit: commit to cherry pick
+        &#34;&#34;&#34;
+        self.repo.git.cherry_pick(str(commit))
+
+    def set_remote_url(self, url: str) -&gt; None:
+        &#34;&#34;&#34;Sets the URL of the remote repository.
+
+        Args:
+            url: URL
+        &#34;&#34;&#34;
+        remote = self._get_remote()
+        if remote:
+            self.repo.delete_remote(str(remote))
+        self.repo.create_remote(configuration.get_value(
+            ConfigurationVariable.REMOTE_ALIAS), url=url)
+
+    def get_remote_branch(self, branch_name: str) -&gt; Optional[Any]:
+        &#34;&#34;&#34;Gets the branch present in the remote repository.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            corresponding branch if exists. `None` otherwise
+        &#34;&#34;&#34;
+        remote = self._get_remote()
+        if not remote:
+            return None
+        try:
+            return remote.refs[str(branch_name)]
+        except (IndexError, ValueError) as e:
+            logger.warning(e)
+            return None
+
+    def set_upstream_branch(self, branch_name: str) -&gt; None:
+        &#34;&#34;&#34;Sets the upstream branch of the current branch.
+
+        Args:
+            branch_name: name of the remote branch.
+        &#34;&#34;&#34;
+        if self.remote_branch_exists(branch_name):
+            self.repo.git.branch(
+                &#39;--set-upstream-to&#39;, self.get_remote_branch(branch_name)
+            )
+
+    def delete_branch(self, branch: Any) -&gt; None:
+        &#34;&#34;&#34;Deletes a branch.
+
+        Args:
+            branch: branch to delete
+        &#34;&#34;&#34;
+        self.repo.delete_head(branch)
+
+    def list_branches(self) -&gt; list:
+        &#34;&#34;&#34;Gets the list of branches.
+
+        Returns:
+            list of branches
+
+        &#34;&#34;&#34;
+        return [b for b in self.repo.heads]
+
+    def branch_exists(self, branch_name: str) -&gt; bool:
+        &#34;&#34;&#34;Checks whether a branch in the repository exists.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            True if there is a branch called `branch_name`; False otherwise
+        &#34;&#34;&#34;
+        return self.get_branch(branch_name) is not None
+
+    def remote_branch_exists(self, branch_name: str) -&gt; bool:
+        &#34;&#34;&#34;Checks whether a branch in the remote repository exists.
+
+        Args:
+            branch_name: name of the branch
+
+        Returns:
+            True if there is a remote branch called `branch_name`; False otherwise
+
+        &#34;&#34;&#34;
+        return self.get_remote_branch(branch_name) is not None
+
+    def _get_specific_changes(self, change_type: Optional[str], commit1: Any,
+                              commit2: Any) -&gt; List[str]:
+        diff = commit1.diff(commit2)
+        if change_type:
+            change_type = change_type.upper()
+            change_type = change_type if change_type in diff.change_type else None
+        diff_iterator = diff.iter_change_type(
+            change_type) if change_type else diff
+        changes = [change.a_path if change.a_path else change.b_path for change
+                   in diff_iterator]
+        return changes
+
+    def get_changes_list(self, commit1: Any, commit2: Any,
+                         change_type: Optional[str] = None,
+                         dir: Optional[str] = None) -&gt; List[str]:
+        &#34;&#34;&#34;Gets change list.
+
+        Gets a list of all the changes that happened between two commits:
+        list of the paths of the files which changed
+
+        Args:
+            commit1: commit
+            commit2: other commit
+            change_type: type of change e.g. &#39;A&#39; for added files, &#39;D&#39; for deleted files
+            dir: directory of interest. if None the whole repository is considered
+
+        Returns:
+            list of paths
+        &#34;&#34;&#34;
+        changes = self._get_specific_changes(change_type, commit1, commit2)
+        if dir:
+            windows_path = dir.replace(&#39;/&#39;, &#39;\\&#39;)
+            linux_path = dir.replace(&#39;\\&#39;, &#39;/&#39;)
+            return [
+                change for change in changes if
+                (linux_path in change) or (windows_path in change)
+            ]
+        else:
+            return changes
+
+    def pull_all(self) -&gt; None:
+        &#34;&#34;&#34;Pulls all changes from all remotes.&#34;&#34;&#34;
+        self.repo.git.pull(all=True, force=True, quiet=True)
+
+    def pull(self) -&gt; None:
+        &#34;&#34;&#34;Pulls changes on current branch from the remote repository.&#34;&#34;&#34;
+        if self.remote_branch_exists(self.get_current_branch()):
+            self.repo.git.pull(self._get_remote(), self.get_current_branch(),
+                               quiet=True)
+
+    def force_pull(self) -&gt; None:
+        &#34;&#34;&#34;Force pulls changes from the remote repository.&#34;&#34;&#34;
+        self.repo.git.pull(self._get_remote(), self.get_current_branch(),
+                           quiet=True, force=True)
+
+    def push(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits.
+
+        Pushes changes to the remote repository.
+        Pushes also relevant annotated tags when pushing branches out.
+        &#34;&#34;&#34;
+        self.repo.git.push(&#39;--follow-tags&#39;, &#39;--set-upstream&#39;,
+                           self._get_remote(),
+                           self.get_current_branch())
+
+    def push_tag(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits and tags.
+
+        Pushes changes to the remote repository.
+        Tags are also pushed as part of the process
+        &#34;&#34;&#34;
+        self.repo.git.push(tags=True)
+
+    def force_push(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits with force.
+
+        Performs a force push.
+        &#34;&#34;&#34;
+        self.repo.git.push(force=True)
+
+    def force_push_tag(self) -&gt; None:
+        &#34;&#34;&#34;Pushes commits and tags with force.
+
+        Performs a force push.
+        Tags are also pushed as part of the process
+        &#34;&#34;&#34;
+        self.repo.git.push(force=True, tags=True)
+
+    def configure_for_github(self) -&gt; None:
+        &#34;&#34;&#34;Reconfigures the repository.
+
+        Configures the repository so that we can commit back to GitHub
+        &#34;&#34;&#34;
+        self.configure_author()
+        self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+
+    def create_tag(self, tag_name: str, message: Optional[str] = None) -&gt; Any:
+        &#34;&#34;&#34;Creates a new tag.
+
+        Args:
+            tag_name: name of the tag
+            message: tag annotation (https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags)
+
+        Returns:
+            corresponding tag
+        &#34;&#34;&#34;
+        return self.repo.create_tag(tag_name, message=message, force=True)
+
+    def create_branch(self, branch_name: str) -&gt; Any:
+        &#34;&#34;&#34;Creates a new branch.
+
+        Args:
+             branch_name: name of the branch
+
+        Returns:
+             corresponding branch
+        &#34;&#34;&#34;
+        logger.info(f&#34;Creating branch {branch_name}&#34;)
+        return self.repo.create_head(branch_name)
+
+    def git_version(self) -&gt; str:
+        &#34;&#34;&#34;Gets git version.
+
+        Returns:
+            the version of git in use.
+        &#34;&#34;&#34;
+        return &#39;.&#39;.join(
+            [str(element) for element in self.repo.git.version_info])
+
+    def _get_remote(self) -&gt; Optional[Any]:
+        try:
+            return self.repo.remote(
+                configuration.get_value(ConfigurationVariable.REMOTE_ALIAS))
+        except (IndexError, ValueError) as e:
+            logger.warning(e)
+            return None
+
+    def list_files_added_on_current_branch(self) -&gt; List[str]:
+        &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
+        master_branch_commit = self.repo.commit(&#39;master&#39;)
+        current_branch_commit = self.repo.commit(self.get_current_branch())
+        changes = self.get_changes_list(
+            self.get_branch_point(master_branch_commit, current_branch_commit),
+            current_branch_commit,
+            change_type=&#39;a&#39;
+        )
+        return changes
+
+    def is_current_branch_feature(self) -&gt; bool:
+        &#34;&#34;&#34;Returns boolean indicating if current branch is considered a feature.&#34;&#34;&#34;
+        current_branch = self.get_current_branch()
+        is_master = current_branch == self.get_master_branch()
+        is_beta = current_branch == self.get_beta_branch()
+        is_release = self.is_release_branch(current_branch)
+        return not (is_master or is_beta or is_release)
+
+    @property
+    def uncommitted_changes(self) -&gt; List[Path]:
+        &#34;&#34;&#34;Gets list of uncommitted files.
+
+        Returns:
+             list of uncommitted
+        &#34;&#34;&#34;
+        status = self.repo.git.status(
+            porcelain=True,
+            untracked_files=True
+        )
+        if not status:
+            return []
+
+        return [
+            Path(self.root).joinpath(
+                line.strip().split(&#39; &#39;)[-1]) for line in status.splitlines()
+        ]
+
+    def apply_uncommitted_changes(self, other_repo: &#39;GitWrapper&#39;) -&gt; None:
+        &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
+
+        Args:
+            other_repo: repository to apply changes to
+        &#34;&#34;&#34;
+        dest_root = other_repo.root
+        for f in self.uncommitted_changes:
+            destination = dest_root.joinpath(f.relative_to(self.root))
+            if f.exists():
+                logger.info(f&#34;Applying change in {f} to {destination}&#34;)
+                if not destination.parent.exists():
+                    os.makedirs(str(destination.parent), exist_ok=True)
+                shutil.copy2(src=str(f), dst=str(destination))
+            else:
+                logger.info(f&#34;Removing {destination}&#34;)
+                if destination.exists():
+                    destination.unlink()</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone">GitClone</a></li>
+<li><a title="mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper">ProjectGitWrapper</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root"><code class="name">var <span class="ident">root</span></code></dt>
+<dd>
+<section class="desc"><p>Gets repository root folder.</p>
+<h2 id="returns">Returns</h2>
+<p>repository root folder.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def root(self) -&gt; Path:
+    &#34;&#34;&#34;Gets repository root folder.
+
+    Returns:
+        repository root folder.
+    &#34;&#34;&#34;
+    return self._root_path</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes"><code class="name">var <span class="ident">uncommitted_changes</span></code></dt>
+<dd>
+<section class="desc"><p>Gets list of uncommitted files.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code>uncommitted</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def uncommitted_changes(self) -&gt; List[Path]:
+    &#34;&#34;&#34;Gets list of uncommitted files.
+
+    Returns:
+         list of uncommitted
+    &#34;&#34;&#34;
+    status = self.repo.git.status(
+        porcelain=True,
+        untracked_files=True
+    )
+    if not status:
+        return []
+
+    return [
+        Path(self.root).joinpath(
+            line.strip().split(&#39; &#39;)[-1]) for line in status.splitlines()
+    ]</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Adds a file or a list of files.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>file path or list of file paths</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, path: Union[list, set, str]) -&gt; None:
+    &#34;&#34;&#34;Adds a file or a list of files.
+
+    Args:
+        path: file path or list of file paths
+    &#34;&#34;&#34;
+    if isinstance(path, list) or isinstance(path, set):
+        for element in path:
+            self.add(element)
+    else:
+        self._add_one_file_or_one_dir(path)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes"><code class="name flex">
+<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Applies the uncommitted changes found in current repository to another.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>other_repo</code></strong></dt>
+<dd>repository to apply changes to</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def apply_uncommitted_changes(self, other_repo: &#39;GitWrapper&#39;) -&gt; None:
+    &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
+
+    Args:
+        other_repo: repository to apply changes to
+    &#34;&#34;&#34;
+    dest_root = other_repo.root
+    for f in self.uncommitted_changes:
+        destination = dest_root.joinpath(f.relative_to(self.root))
+        if f.exists():
+            logger.info(f&#34;Applying change in {f} to {destination}&#34;)
+            if not destination.parent.exists():
+                os.makedirs(str(destination.parent), exist_ok=True)
+            shutil.copy2(src=str(f), dst=str(destination))
+        else:
+            logger.info(f&#34;Removing {destination}&#34;)
+            if destination.exists():
+                destination.unlink()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists"><code class="name flex">
+<span>def <span class="ident">branch_exists</span></span>(<span>self, branch_name: str) -> bool</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks whether a branch in the repository exists.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>True if there is a branch called <code>branch_name</code>; False otherwise</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def branch_exists(self, branch_name: str) -&gt; bool:
+    &#34;&#34;&#34;Checks whether a branch in the repository exists.
+
+    Args:
+        branch_name: name of the branch
+
+    Returns:
+        True if there is a branch called `branch_name`; False otherwise
+    &#34;&#34;&#34;
+    return self.get_branch(branch_name) is not None</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout"><code class="name flex">
+<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks out a branch.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch</code></strong></dt>
+<dd>branch to check out</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def checkout(self, branch: Any) -&gt; None:
+    &#34;&#34;&#34;Checks out a branch.
+
+    Args:
+        branch: branch to check out
+
+    &#34;&#34;&#34;
+    self.repo.git.checkout(branch)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch"><code class="name flex">
+<span>def <span class="ident">checkout_branch</span></span>(<span>self, branch_name: str) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks out a branch from its name.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding branch if found; None otherwise.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def checkout_branch(self, branch_name: str) -&gt; Any:
+    &#34;&#34;&#34;Checks out a branch from its name.
+
+    Args:
+        branch_name: name of the branch
+
+    Returns:
+        corresponding branch if found; None otherwise.
+    &#34;&#34;&#34;
+    logger.debug(f&#34;Checking out {branch_name}&#34;)
+    local_branch = self.get_branch(branch_name)
+    if local_branch:
+        self.checkout(local_branch)
+    return local_branch</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick"><code class="name flex">
+<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Cherry picks a specific commit.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>commit</code></strong></dt>
+<dd>commit to cherry pick</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cherry_pick(self, commit: Any) -&gt; None:
+    &#34;&#34;&#34;Cherry picks a specific commit.
+
+    Args:
+        commit: commit to cherry pick
+    &#34;&#34;&#34;
+    self.repo.git.cherry_pick(str(commit))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone"><code class="name flex">
+<span>def <span class="ident">clone</span></span>(<span>self, path: pathlib.Path) -> <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Clones this repository to the path.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>path where to put the clone</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>a</code> <code>wrapper</code> <code>over</code> <code>the</code> <code>cloned</code> <code>repository</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clone(self, path: Path) -&gt; &#39;GitWrapper&#39;:
+    &#34;&#34;&#34;Clones this repository to the path.
+
+    Args:
+        path: path where to put the clone
+
+    Returns:
+        a wrapper over the cloned repository
+    &#34;&#34;&#34;
+    git_clone = self.repo.clone_from(url=self.get_remote_url(),
+                                     to_path=str(path),
+                                     multi_options=[
+                                         &#39;--recurse-submodules&#39;]
+                                     )
+    clone = GitWrapper(path=path, repo=git_clone)
+    clone.set_remote_url(self.get_remote_url())
+    clone.fetch()
+    return clone</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit"><code class="name flex">
+<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Union[Tuple[str, Any], NoneType]) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Commits changes to the repository.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>message</code></strong></dt>
+<dd>commit message</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>extra parameters</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def commit(self, message: str,
+           **kwargs: Optional[Tuple[str, Any]]) -&gt; None:
+    &#34;&#34;&#34;Commits changes to the repository.
+
+    Args:
+        message: commit message
+        **kwargs: extra parameters
+    &#34;&#34;&#34;
+    logger.info(&#34;Committing changes&#34;)
+    self.repo.index.commit(
+        message,
+        author=self.author,
+        **kwargs
+    )</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author"><code class="name flex">
+<span>def <span class="ident">configure_author</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Sets the author.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_author(self) -&gt; None:
+    &#34;&#34;&#34;Sets the author.&#34;&#34;&#34;
+    self.repo.config_writer().set_value(&#34;user&#34;, &#34;name&#34;,
+                                        self.author.name).release()
+    self.repo.config_writer().set_value(&#34;user&#34;, &#34;email&#34;,
+                                        self.author.email).release()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github"><code class="name flex">
+<span>def <span class="ident">configure_for_github</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Reconfigures the repository.</p>
+<p>Configures the repository so that we can commit back to GitHub</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def configure_for_github(self) -&gt; None:
+    &#34;&#34;&#34;Reconfigures the repository.
+
+    Configures the repository so that we can commit back to GitHub
+    &#34;&#34;&#34;
+    self.configure_author()
+    self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch"><code class="name flex">
+<span>def <span class="ident">create_branch</span></span>(<span>self, branch_name: str) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a new branch.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>branch</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_branch(self, branch_name: str) -&gt; Any:
+    &#34;&#34;&#34;Creates a new branch.
+
+    Args:
+         branch_name: name of the branch
+
+    Returns:
+         corresponding branch
+    &#34;&#34;&#34;
+    logger.info(f&#34;Creating branch {branch_name}&#34;)
+    return self.repo.create_head(branch_name)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag"><code class="name flex">
+<span>def <span class="ident">create_tag</span></span>(<span>self, tag_name: str, message: Union[str, NoneType] = None) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a new tag.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tag_name</code></strong></dt>
+<dd>name of the tag</dd>
+<dt><strong><code>message</code></strong></dt>
+<dd>tag annotation (<a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags">https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags</a>)</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>tag</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_tag(self, tag_name: str, message: Optional[str] = None) -&gt; Any:
+    &#34;&#34;&#34;Creates a new tag.
+
+    Args:
+        tag_name: name of the tag
+        message: tag annotation (https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags)
+
+    Returns:
+        corresponding tag
+    &#34;&#34;&#34;
+    return self.repo.create_tag(tag_name, message=message, force=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch"><code class="name flex">
+<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Deletes a branch.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch</code></strong></dt>
+<dd>branch to delete</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def delete_branch(self, branch: Any) -&gt; None:
+    &#34;&#34;&#34;Deletes a branch.
+
+    Args:
+        branch: branch to delete
+    &#34;&#34;&#34;
+    self.repo.delete_head(branch)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch"><code class="name flex">
+<span>def <span class="ident">fetch</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Fetches latest changes.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch(self) -&gt; None:
+    &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
+    self.repo.git.fetch(all=True, tags=True, force=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull"><code class="name flex">
+<span>def <span class="ident">force_pull</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Force pulls changes from the remote repository.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def force_pull(self) -&gt; None:
+    &#34;&#34;&#34;Force pulls changes from the remote repository.&#34;&#34;&#34;
+    self.repo.git.pull(self._get_remote(), self.get_current_branch(),
+                       quiet=True, force=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push"><code class="name flex">
+<span>def <span class="ident">force_push</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pushes commits with force.</p>
+<p>Performs a force push.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def force_push(self) -&gt; None:
+    &#34;&#34;&#34;Pushes commits with force.
+
+    Performs a force push.
+    &#34;&#34;&#34;
+    self.repo.git.push(force=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag"><code class="name flex">
+<span>def <span class="ident">force_push_tag</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pushes commits and tags with force.</p>
+<p>Performs a force push.
+Tags are also pushed as part of the process</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def force_push_tag(self) -&gt; None:
+    &#34;&#34;&#34;Pushes commits and tags with force.
+
+    Performs a force push.
+    Tags are also pushed as part of the process
+    &#34;&#34;&#34;
+    self.repo.git.push(force=True, tags=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch"><code class="name flex">
+<span>def <span class="ident">get_beta_branch</span></span>(<span>self) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the <code>beta</code> branch.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>branch</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_beta_branch(self) -&gt; Any:
+    &#34;&#34;&#34;Gets the `beta` branch.
+
+    Returns:
+        corresponding branch
+    &#34;&#34;&#34;
+    return self.get_branch(configuration.get_value(
+        ConfigurationVariable.BETA_BRANCH))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch"><code class="name flex">
+<span>def <span class="ident">get_branch</span></span>(<span>self, branch_name: str) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets a specific local branch.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch to look for</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding branch or <code>None</code>
+if no branches with this <code>branch_name</code> were found</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_branch(self, branch_name: str) -&gt; Any:
+    &#34;&#34;&#34;Gets a specific local branch.
+
+    Args:
+        branch_name: name of the branch to look for
+
+    Returns:
+        corresponding branch or `None`
+        if no branches with this `branch_name` were found
+    &#34;&#34;&#34;
+    branch = self._get_branch_reference(branch_name)
+    if branch:
+        return branch
+    self.fetch()
+    return self._get_branch_reference(branch_name)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point"><code class="name flex">
+<span>def <span class="ident">get_branch_point</span></span>(<span>self, commit1: Any, commit2: Any) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Finds the common ancestor.</p>
+<p>See <a href="https://git-scm.com/docs/git-merge-base">https://git-scm.com/docs/git-merge-base</a></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>commit1</code></strong></dt>
+<dd>commit1</dd>
+<dt><strong><code>commit2</code></strong></dt>
+<dd>commit2</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>the branch point.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_branch_point(self, commit1: Any, commit2: Any) -&gt; Any:
+    &#34;&#34;&#34;Finds the common ancestor.
+
+    See https://git-scm.com/docs/git-merge-base
+
+    Args:
+        commit1: commit1
+        commit2: commit2
+
+    Returns:
+        the branch point.
+    &#34;&#34;&#34;
+    return self.repo.merge_base(commit1, commit2).pop()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list"><code class="name flex">
+<span>def <span class="ident">get_changes_list</span></span>(<span>self, commit1: Any, commit2: Any, change_type: Union[str, NoneType] = None, dir: Union[str, NoneType] = None) -> List[str]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets change list.</p>
+<p>Gets a list of all the changes that happened between two commits:
+list of the paths of the files which changed</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>commit1</code></strong></dt>
+<dd>commit</dd>
+<dt><strong><code>commit2</code></strong></dt>
+<dd>other commit</dd>
+<dt><strong><code>change_type</code></strong></dt>
+<dd>type of change e.g. 'A' for added files, 'D' for deleted files</dd>
+<dt><strong><code>dir</code></strong></dt>
+<dd>directory of interest. if None the whole repository is considered</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code>paths</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_changes_list(self, commit1: Any, commit2: Any,
+                     change_type: Optional[str] = None,
+                     dir: Optional[str] = None) -&gt; List[str]:
+    &#34;&#34;&#34;Gets change list.
+
+    Gets a list of all the changes that happened between two commits:
+    list of the paths of the files which changed
+
+    Args:
+        commit1: commit
+        commit2: other commit
+        change_type: type of change e.g. &#39;A&#39; for added files, &#39;D&#39; for deleted files
+        dir: directory of interest. if None the whole repository is considered
+
+    Returns:
+        list of paths
+    &#34;&#34;&#34;
+    changes = self._get_specific_changes(change_type, commit1, commit2)
+    if dir:
+        windows_path = dir.replace(&#39;/&#39;, &#39;\\&#39;)
+        linux_path = dir.replace(&#39;\\&#39;, &#39;/&#39;)
+        return [
+            change for change in changes if
+            (linux_path in change) or (windows_path in change)
+        ]
+    else:
+        return changes</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count"><code class="name flex">
+<span>def <span class="ident">get_commit_count</span></span>(<span>self) -> int</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets current commit count.</p>
+<p>Gets a number stating how many commits would have been listed
+before the current commit.</p>
+<h2 id="returns">Returns</h2>
+<p>number of commits before this current one.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_commit_count(self) -&gt; int:
+    &#34;&#34;&#34;Gets current commit count.
+
+    Gets a number stating how many commits would have been listed
+    before the current commit.
+
+    Returns:
+        number of commits before this current one.
+    &#34;&#34;&#34;
+    current_commit = self.get_current_commit()
+    return int(current_commit.count()) if current_commit else 0</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash"><code class="name flex">
+<span>def <span class="ident">get_commit_hash</span></span>(<span>self) -> str</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the hash of the current commit.</p>
+<h2 id="returns">Returns</h2>
+<p>a hash.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_commit_hash(self) -&gt; str:
+    &#34;&#34;&#34;Gets the hash of the current commit.
+
+    Returns:
+         a hash.
+    &#34;&#34;&#34;
+    return str(self.get_current_commit())</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch"><code class="name flex">
+<span>def <span class="ident">get_current_branch</span></span>(<span>self) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the current branch.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>the</code> <code>current</code> <code>branch</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_current_branch(self) -&gt; Any:
+    &#34;&#34;&#34;Gets the current branch.
+
+    Returns:
+        the current branch
+    &#34;&#34;&#34;
+    # Workaround  for this GitPython issue https://github.com/gitpython-developers/GitPython/issues/510
+    try:
+        return self.repo.active_branch
+    except TypeError as e:
+        logger.warning(
+            f&#39;Could not determine the branch name using GitPython: {e}&#39;
+        )
+    current_branch = self._get_branch_from_advanced_feature()
+    if not current_branch:
+        current_branch = self._get_branch_from_abbreviation(&#39;HEAD&#39;)
+    return current_branch</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit"><code class="name flex">
+<span>def <span class="ident">get_current_commit</span></span>(<span>self) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the current commit.</p>
+<h2 id="returns">Returns</h2>
+<p>the current commit.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_current_commit(self) -&gt; Any:
+    &#34;&#34;&#34;Gets the current commit.
+
+    Returns:
+        the current commit.
+    &#34;&#34;&#34;
+    return self.repo.commit(self.get_current_branch())</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch"><code class="name flex">
+<span>def <span class="ident">get_master_branch</span></span>(<span>self) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the <code>master</code> branch.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>branch</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_master_branch(self) -&gt; Any:
+    &#34;&#34;&#34;Gets the `master` branch.
+
+    Returns:
+        corresponding branch
+    &#34;&#34;&#34;
+    return self.get_branch(configuration.get_value(
+        ConfigurationVariable.MASTER_BRANCH))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch"><code class="name flex">
+<span>def <span class="ident">get_remote_branch</span></span>(<span>self, branch_name: str) -> Union[Any, NoneType]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the branch present in the remote repository.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding branch if exists. <code>None</code> otherwise</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_remote_branch(self, branch_name: str) -&gt; Optional[Any]:
+    &#34;&#34;&#34;Gets the branch present in the remote repository.
+
+    Args:
+        branch_name: name of the branch
+
+    Returns:
+        corresponding branch if exists. `None` otherwise
+    &#34;&#34;&#34;
+    remote = self._get_remote()
+    if not remote:
+        return None
+    try:
+        return remote.refs[str(branch_name)]
+    except (IndexError, ValueError) as e:
+        logger.warning(e)
+        return None</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url"><code class="name flex">
+<span>def <span class="ident">get_remote_url</span></span>(<span>self) -> str</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the URL of the remote repository.</p>
+<h2 id="returns">Returns</h2>
+<p>the corresponding URL.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_remote_url(self) -&gt; str:
+    &#34;&#34;&#34;Gets the URL of the remote repository.
+
+    Returns:
+        the corresponding URL.
+    &#34;&#34;&#34;
+    remote = self._get_remote()
+    if not remote:
+        raise ValueError(&#39;Undefined remote repository&#39;)
+    url = remote.url
+    if not url:
+        raise ValueError(&#39;Undefined remote repository URL&#39;)
+    return str(url)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version"><code class="name flex">
+<span>def <span class="ident">git_version</span></span>(<span>self) -> str</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets git version.</p>
+<h2 id="returns">Returns</h2>
+<p>the version of git in use.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def git_version(self) -&gt; str:
+    &#34;&#34;&#34;Gets git version.
+
+    Returns:
+        the version of git in use.
+    &#34;&#34;&#34;
+    return &#39;.&#39;.join(
+        [str(element) for element in self.repo.git.version_info])</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature"><code class="name flex">
+<span>def <span class="ident">is_current_branch_feature</span></span>(<span>self) -> bool</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns boolean indicating if current branch is considered a feature.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_current_branch_feature(self) -&gt; bool:
+    &#34;&#34;&#34;Returns boolean indicating if current branch is considered a feature.&#34;&#34;&#34;
+    current_branch = self.get_current_branch()
+    is_master = current_branch == self.get_master_branch()
+    is_beta = current_branch == self.get_beta_branch()
+    is_release = self.is_release_branch(current_branch)
+    return not (is_master or is_beta or is_release)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch"><code class="name flex">
+<span>def <span class="ident">is_release_branch</span></span>(<span>self, branch_name: Union[str, NoneType]) -> bool</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks whether the branch is a <code>release</code> branch or not.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>True if the branch is used for <code>release</code> code; False otherwise</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_release_branch(self, branch_name: Optional[str]) -&gt; bool:
+    &#34;&#34;&#34;Checks whether the branch is a `release` branch or not.
+
+    Args:
+        branch_name: name of the branch
+
+    Returns:
+        True if the branch is used for `release` code; False otherwise
+    &#34;&#34;&#34;
+    branch_pattern = configuration.get_value(
+        ConfigurationVariable.RELEASE_BRANCH_PATTERN)
+    if not branch_pattern or not branch_name:
+        return False
+    is_release: Optional[Any] = re.search(branch_pattern,
+                                          str(branch_name))
+    return True if is_release else False</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches"><code class="name flex">
+<span>def <span class="ident">list_branches</span></span>(<span>self) -> list</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets the list of branches.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code> of <code>branches</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_branches(self) -&gt; list:
+    &#34;&#34;&#34;Gets the list of branches.
+
+    Returns:
+        list of branches
+
+    &#34;&#34;&#34;
+    return [b for b in self.repo.heads]</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch"><code class="name flex">
+<span>def <span class="ident">list_files_added_on_current_branch</span></span>(<span>self) -> List[str]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns a list of files changed against master branch.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_files_added_on_current_branch(self) -&gt; List[str]:
+    &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
+    master_branch_commit = self.repo.commit(&#39;master&#39;)
+    current_branch_commit = self.repo.commit(self.get_current_branch())
+    changes = self.get_changes_list(
+        self.get_branch_point(master_branch_commit, current_branch_commit),
+        current_branch_commit,
+        change_type=&#39;a&#39;
+    )
+    return changes</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge"><code class="name flex">
+<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Merges <code>branch</code> to current branch.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch</code></strong></dt>
+<dd>branch to merge</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def merge(self, branch: Any) -&gt; None:
+    &#34;&#34;&#34;Merges `branch` to current branch.
+
+    Args:
+        branch: branch to merge
+    &#34;&#34;&#34;
+    current_branch = self.get_current_branch()
+    merge_base = self.repo.merge_base(branch, current_branch)
+    self.repo.index.merge_tree(current_branch, base=merge_base)
+    self.commit(f&#39;Merge from {str(branch)}&#39;,
+                parent_commits=(branch.commit, current_branch.commit))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull"><code class="name flex">
+<span>def <span class="ident">pull</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pulls changes on current branch from the remote repository.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pull(self) -&gt; None:
+    &#34;&#34;&#34;Pulls changes on current branch from the remote repository.&#34;&#34;&#34;
+    if self.remote_branch_exists(self.get_current_branch()):
+        self.repo.git.pull(self._get_remote(), self.get_current_branch(),
+                           quiet=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all"><code class="name flex">
+<span>def <span class="ident">pull_all</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pulls all changes from all remotes.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def pull_all(self) -&gt; None:
+    &#34;&#34;&#34;Pulls all changes from all remotes.&#34;&#34;&#34;
+    self.repo.git.pull(all=True, force=True, quiet=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push"><code class="name flex">
+<span>def <span class="ident">push</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pushes commits.</p>
+<p>Pushes changes to the remote repository.
+Pushes also relevant annotated tags when pushing branches out.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def push(self) -&gt; None:
+    &#34;&#34;&#34;Pushes commits.
+
+    Pushes changes to the remote repository.
+    Pushes also relevant annotated tags when pushing branches out.
+    &#34;&#34;&#34;
+    self.repo.git.push(&#39;--follow-tags&#39;, &#39;--set-upstream&#39;,
+                       self._get_remote(),
+                       self.get_current_branch())</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag"><code class="name flex">
+<span>def <span class="ident">push_tag</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pushes commits and tags.</p>
+<p>Pushes changes to the remote repository.
+Tags are also pushed as part of the process</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def push_tag(self) -&gt; None:
+    &#34;&#34;&#34;Pushes commits and tags.
+
+    Pushes changes to the remote repository.
+    Tags are also pushed as part of the process
+    &#34;&#34;&#34;
+    self.repo.git.push(tags=True)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists"><code class="name flex">
+<span>def <span class="ident">remote_branch_exists</span></span>(<span>self, branch_name: str) -> bool</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks whether a branch in the remote repository exists.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the branch</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>True if there is a remote branch called <code>branch_name</code>; False otherwise</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def remote_branch_exists(self, branch_name: str) -&gt; bool:
+    &#34;&#34;&#34;Checks whether a branch in the remote repository exists.
+
+    Args:
+        branch_name: name of the branch
+
+    Returns:
+        True if there is a remote branch called `branch_name`; False otherwise
+
+    &#34;&#34;&#34;
+    return self.get_remote_branch(branch_name) is not None</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url"><code class="name flex">
+<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Sets the URL of the remote repository.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>url</code></strong></dt>
+<dd>URL</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_remote_url(self, url: str) -&gt; None:
+    &#34;&#34;&#34;Sets the URL of the remote repository.
+
+    Args:
+        url: URL
+    &#34;&#34;&#34;
+    remote = self._get_remote()
+    if remote:
+        self.repo.delete_remote(str(remote))
+    self.repo.create_remote(configuration.get_value(
+        ConfigurationVariable.REMOTE_ALIAS), url=url)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch"><code class="name flex">
+<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Sets the upstream branch of the current branch.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>branch_name</code></strong></dt>
+<dd>name of the remote branch.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_upstream_branch(self, branch_name: str) -&gt; None:
+    &#34;&#34;&#34;Sets the upstream branch of the current branch.
+
+    Args:
+        branch_name: name of the remote branch.
+    &#34;&#34;&#34;
+    if self.remote_branch_exists(branch_name):
+        self.repo.git.branch(
+            &#39;--set-upstream-to&#39;, self.get_remote_branch(branch_name)
+        )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper"><code class="flex name class">
+<span>class <span class="ident">ProjectGitWrapper</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Wrapper class over project's repository.</p>
+<p>Creates a Git Wrapper.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProjectGitWrapper(GitWrapper):
+    &#34;&#34;&#34;Wrapper class over project&#39;s repository.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Creates a Git Wrapper.&#34;&#34;&#34;
+        super().__init__(
+            path=Path(
+                configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
+            repo=Repo(
+                configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add">add</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes">apply_uncommitted_changes</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists">branch_exists</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout">checkout</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch">checkout_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick">cherry_pick</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone">clone</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit">commit</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author">configure_author</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github">configure_for_github</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch">create_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag">create_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch">delete_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch">fetch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull">force_pull</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push">force_push</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag">force_push_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch">get_beta_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch">get_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point">get_branch_point</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list">get_changes_list</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count">get_commit_count</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash">get_commit_hash</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch">get_current_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit">get_current_commit</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch">get_master_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch">get_remote_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url">get_remote_url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push">push</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag">push_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists">remote_branch_exists</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.ProjectTempClone"><code class="flex name class">
+<span>class <span class="ident">ProjectTempClone</span></span>
+<span>(</span><span>desired_branch_name: Union[str, NoneType] = None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Temporary cloned repository for current project.</p>
+<p>Constructor.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>desired_branch_name</code></strong></dt>
+<dd>the branch to consider. if not specified, the</dd>
+</dl>
+<p>system will try to identify the current branch in the repository which
+will work in most cases but probably not on CI.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProjectTempClone(GitTempClone):
+    &#34;&#34;&#34;Temporary cloned repository for current project.&#34;&#34;&#34;
+
+    def __init__(self, desired_branch_name: Optional[str] = None):
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            desired_branch_name: the branch to consider. if not specified, the
+            system will try to identify the current branch in the repository which
+            will work in most cases but probably not on CI.
+        &#34;&#34;&#34;
+        super().__init__(desired_branch_name=desired_branch_name,
+                         repository_to_clone=ProjectGitWrapper())</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.git_helpers.GitTempClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitTempClone">GitTempClone</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone">GitClone</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone.get_corresponding_path" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone.get_corresponding_path">get_corresponding_path</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone.initial_location" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone.initial_location">initial_location</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone.wrap" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone.wrap">wrap</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitTempClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitTempClone">GitTempClone</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add">add</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes">apply_uncommitted_changes</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists">branch_exists</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout">checkout</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch">checkout_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick">cherry_pick</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone">clone</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit">commit</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author">configure_author</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github">configure_for_github</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch">create_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag">create_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch">delete_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch">fetch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull">force_pull</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push">force_push</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag">force_push_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch">get_beta_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch">get_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point">get_branch_point</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list">get_changes_list</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count">get_commit_count</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash">get_commit_hash</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch">get_current_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit">get_current_commit</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch">get_master_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch">get_remote_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url">get_remote_url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push">push</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag">push_tag</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists">remote_branch_exists</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper">ProjectGitWrapper</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.ProjectTempClone" href="#mbed_tools_ci_scripts.utils.git_helpers.ProjectTempClone">ProjectTempClone</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

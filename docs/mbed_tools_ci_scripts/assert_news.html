@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.4" />
+<title>mbed_tools_ci_scripts.assert_news API documentation</title>
+<meta name="description" content="Checks if valid news files are created for changes in the project." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.assert_news</code></h1>
+</header>
+<section id="section-intro">
+<p>Checks if valid news files are created for changes in the project.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Checks if valid news files are created for changes in the project.&#34;&#34;&#34;
+import argparse
+import logging
+import re
+import sys
+from typing import List
+import pathlib
+
+from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
+
+logger = logging.getLogger(__name__)
+
+NEWS_FILE_NAME_REGEX = r&#34;^[0-9]+.(misc|doc|removal|bugfix|feature|major)$&#34;
+
+
+class NewsFileValidator:
+    &#34;&#34;&#34;Verifies individual news files.&#34;&#34;&#34;
+
+    def __init__(self, absolute_path: str) -&gt; None:
+        &#34;&#34;&#34;Creates a new instance of NewsFileValidator.
+
+        Args:
+            absolute_path: the absolute path to the news file
+        &#34;&#34;&#34;
+        self._news_file_path = pathlib.Path(absolute_path)
+        self._basename = self._news_file_path.name
+
+    def validate_file_name(self) -&gt; None:
+        &#34;&#34;&#34;Ensures the news file follows the naming rules.&#34;&#34;&#34;
+        if re.match(NEWS_FILE_NAME_REGEX, self._basename) is None:
+            raise ValueError(
+                f&#39;Incorrect news file name &#34;{self._basename}&#34;.&#39;
+                f&#39; It doesn\&#39;t match the following regex: &#34;{NEWS_FILE_NAME_REGEX}&#34;.&#39;
+            )
+
+    def validate_file_contents(self) -&gt; None:
+        &#34;&#34;&#34;Ensures the news file is not empty and not longer than one line.&#34;&#34;&#34;
+        file_content = self._news_file_path.read_text()
+        if file_content.strip() == &#34;&#34;:
+            raise ValueError(f&#39;Empty news file &#34;{self._basename}&#34;.&#39;)
+        if len(file_content.splitlines()) &gt; 1:
+            raise ValueError(
+                f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;
+            )
+
+    def validate(self) -&gt; None:
+        &#34;&#34;&#34;Runs all validators.&#34;&#34;&#34;
+        logger.info(f&#34;Verifying {self._basename}&#34;)
+        self.validate_file_name()
+        self.validate_file_contents()
+
+
+def validate_news_file(absolute_path: str) -&gt; None:
+    &#34;&#34;&#34;Applies NewsFileValidator validation logic to news file.&#34;&#34;&#34;
+    NewsFileValidator(absolute_path).validate()
+
+
+def find_news_files(
+        git: GitWrapper, root_dir: str, news_dir: str
+) -&gt; List[str]:
+    &#34;&#34;&#34;Determines a list of all the news files which were added as part of the PR.
+
+    Args:
+        git: Instance of GitWrapper.
+        root_dir: Root directory of the project.
+        news_dir: Relative path to news directory.
+
+    Returns:
+        list: list of absolute paths to news files
+    &#34;&#34;&#34;
+    files_changed = git.list_files_added_on_current_branch()
+    # Relies on the fact GitWrapper returns paths that are always relative
+    # to the project root.
+    added_news_files = [file_path for file_path in files_changed if
+                        file_path.startswith(news_dir)]
+    return [str(pathlib.Path(root_dir, file_path)) for file_path in
+            added_news_files]
+
+
+def validate_news_files(
+        git: GitWrapper, root_dir: str, news_dir: str
+) -&gt; None:
+    &#34;&#34;&#34;Checks that news files exist and pass validation checks.
+
+    Args:
+        git: Instance of GitWrapper.
+        root_dir: Root directory of the project.
+        news_dir: Relative path to news directory.
+    &#34;&#34;&#34;
+    added_news_files = find_news_files(
+        git=git,
+        news_dir=news_dir,
+        root_dir=root_dir,
+    )
+    if not added_news_files:
+        raise FileNotFoundError(
+            f&#34;PR must contain a news file in {news_dir}. See README.md.&#34;
+        )
+    for absolute_file_path in added_news_files:
+        validate_news_file(absolute_file_path)
+
+
+def main() -&gt; None:
+    &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
+    parser = argparse.ArgumentParser(
+        description=&#34;Check correctly formatted news files exist on feature branch.&#34;
+    )
+    parser.add_argument(&#39;-b&#39;, &#39;--current-branch&#39;,
+                        help=&#39;Name of the current branch&#39;, nargs=&#39;?&#39;)
+    parser.add_argument(
+        &#34;-v&#34;,
+        &#34;--verbose&#34;,
+        action=&#34;count&#34;,
+        default=0,
+        help=&#34;Verbosity, by default errors are reported.&#34;,
+    )
+    args = parser.parse_args()
+    set_log_level(args.verbose)
+
+    with ProjectTempClone(desired_branch_name=args.current_branch)as git:
+        if git.is_current_branch_feature():
+            root_dir = configuration.get_value(
+                ConfigurationVariable.PROJECT_ROOT)
+            absolute_news_dir = configuration.get_value(
+                ConfigurationVariable.NEWS_DIR)
+            news_dir = str(
+                pathlib.Path(absolute_news_dir).relative_to(root_dir))
+            try:
+                validate_news_files(
+                    git=git,
+                    news_dir=news_dir,
+                    root_dir=root_dir,
+                )
+            except Exception as e:
+                log_exception(logger, e)
+                sys.exit(1)
+
+
+if __name__ == &#34;__main__&#34;:
+    main()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.assert_news.find_news_files"><code class="name flex">
+<span>def <span class="ident">find_news_files</span></span>(<span>git: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="utils/git_helpers.html#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, root_dir: str, news_dir: str) -> List[str]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Determines a list of all the news files which were added as part of the PR.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>git</code></strong></dt>
+<dd>Instance of GitWrapper.</dd>
+<dt><strong><code>root_dir</code></strong></dt>
+<dd>Root directory of the project.</dd>
+<dt><strong><code>news_dir</code></strong></dt>
+<dd>Relative path to news directory.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>list</code></strong></dt>
+<dd>list of absolute paths to news files</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_news_files(
+        git: GitWrapper, root_dir: str, news_dir: str
+) -&gt; List[str]:
+    &#34;&#34;&#34;Determines a list of all the news files which were added as part of the PR.
+
+    Args:
+        git: Instance of GitWrapper.
+        root_dir: Root directory of the project.
+        news_dir: Relative path to news directory.
+
+    Returns:
+        list: list of absolute paths to news files
+    &#34;&#34;&#34;
+    files_changed = git.list_files_added_on_current_branch()
+    # Relies on the fact GitWrapper returns paths that are always relative
+    # to the project root.
+    added_news_files = [file_path for file_path in files_changed if
+                        file_path.startswith(news_dir)]
+    return [str(pathlib.Path(root_dir, file_path)) for file_path in
+            added_news_files]</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.assert_news.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Asserts the new PR comprises at least one news file and it adheres to the required standard.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main() -&gt; None:
+    &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
+    parser = argparse.ArgumentParser(
+        description=&#34;Check correctly formatted news files exist on feature branch.&#34;
+    )
+    parser.add_argument(&#39;-b&#39;, &#39;--current-branch&#39;,
+                        help=&#39;Name of the current branch&#39;, nargs=&#39;?&#39;)
+    parser.add_argument(
+        &#34;-v&#34;,
+        &#34;--verbose&#34;,
+        action=&#34;count&#34;,
+        default=0,
+        help=&#34;Verbosity, by default errors are reported.&#34;,
+    )
+    args = parser.parse_args()
+    set_log_level(args.verbose)
+
+    with ProjectTempClone(desired_branch_name=args.current_branch)as git:
+        if git.is_current_branch_feature():
+            root_dir = configuration.get_value(
+                ConfigurationVariable.PROJECT_ROOT)
+            absolute_news_dir = configuration.get_value(
+                ConfigurationVariable.NEWS_DIR)
+            news_dir = str(
+                pathlib.Path(absolute_news_dir).relative_to(root_dir))
+            try:
+                validate_news_files(
+                    git=git,
+                    news_dir=news_dir,
+                    root_dir=root_dir,
+                )
+            except Exception as e:
+                log_exception(logger, e)
+                sys.exit(1)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.assert_news.validate_news_file"><code class="name flex">
+<span>def <span class="ident">validate_news_file</span></span>(<span>absolute_path: str) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Applies NewsFileValidator validation logic to news file.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_news_file(absolute_path: str) -&gt; None:
+    &#34;&#34;&#34;Applies NewsFileValidator validation logic to news file.&#34;&#34;&#34;
+    NewsFileValidator(absolute_path).validate()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.assert_news.validate_news_files"><code class="name flex">
+<span>def <span class="ident">validate_news_files</span></span>(<span>git: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="utils/git_helpers.html#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, root_dir: str, news_dir: str) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks that news files exist and pass validation checks.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>git</code></strong></dt>
+<dd>Instance of GitWrapper.</dd>
+<dt><strong><code>root_dir</code></strong></dt>
+<dd>Root directory of the project.</dd>
+<dt><strong><code>news_dir</code></strong></dt>
+<dd>Relative path to news directory.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_news_files(
+        git: GitWrapper, root_dir: str, news_dir: str
+) -&gt; None:
+    &#34;&#34;&#34;Checks that news files exist and pass validation checks.
+
+    Args:
+        git: Instance of GitWrapper.
+        root_dir: Root directory of the project.
+        news_dir: Relative path to news directory.
+    &#34;&#34;&#34;
+    added_news_files = find_news_files(
+        git=git,
+        news_dir=news_dir,
+        root_dir=root_dir,
+    )
+    if not added_news_files:
+        raise FileNotFoundError(
+            f&#34;PR must contain a news file in {news_dir}. See README.md.&#34;
+        )
+    for absolute_file_path in added_news_files:
+        validate_news_file(absolute_file_path)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.assert_news.NewsFileValidator"><code class="flex name class">
+<span>class <span class="ident">NewsFileValidator</span></span>
+<span>(</span><span>absolute_path: str)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Verifies individual news files.</p>
+<p>Creates a new instance of NewsFileValidator.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>absolute_path</code></strong></dt>
+<dd>the absolute path to the news file</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NewsFileValidator:
+    &#34;&#34;&#34;Verifies individual news files.&#34;&#34;&#34;
+
+    def __init__(self, absolute_path: str) -&gt; None:
+        &#34;&#34;&#34;Creates a new instance of NewsFileValidator.
+
+        Args:
+            absolute_path: the absolute path to the news file
+        &#34;&#34;&#34;
+        self._news_file_path = pathlib.Path(absolute_path)
+        self._basename = self._news_file_path.name
+
+    def validate_file_name(self) -&gt; None:
+        &#34;&#34;&#34;Ensures the news file follows the naming rules.&#34;&#34;&#34;
+        if re.match(NEWS_FILE_NAME_REGEX, self._basename) is None:
+            raise ValueError(
+                f&#39;Incorrect news file name &#34;{self._basename}&#34;.&#39;
+                f&#39; It doesn\&#39;t match the following regex: &#34;{NEWS_FILE_NAME_REGEX}&#34;.&#39;
+            )
+
+    def validate_file_contents(self) -&gt; None:
+        &#34;&#34;&#34;Ensures the news file is not empty and not longer than one line.&#34;&#34;&#34;
+        file_content = self._news_file_path.read_text()
+        if file_content.strip() == &#34;&#34;:
+            raise ValueError(f&#39;Empty news file &#34;{self._basename}&#34;.&#39;)
+        if len(file_content.splitlines()) &gt; 1:
+            raise ValueError(
+                f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;
+            )
+
+    def validate(self) -&gt; None:
+        &#34;&#34;&#34;Runs all validators.&#34;&#34;&#34;
+        logger.info(f&#34;Verifying {self._basename}&#34;)
+        self.validate_file_name()
+        self.validate_file_contents()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate"><code class="name flex">
+<span>def <span class="ident">validate</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Runs all validators.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate(self) -&gt; None:
+    &#34;&#34;&#34;Runs all validators.&#34;&#34;&#34;
+    logger.info(f&#34;Verifying {self._basename}&#34;)
+    self.validate_file_name()
+    self.validate_file_contents()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_contents"><code class="name flex">
+<span>def <span class="ident">validate_file_contents</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Ensures the news file is not empty and not longer than one line.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_file_contents(self) -&gt; None:
+    &#34;&#34;&#34;Ensures the news file is not empty and not longer than one line.&#34;&#34;&#34;
+    file_content = self._news_file_path.read_text()
+    if file_content.strip() == &#34;&#34;:
+        raise ValueError(f&#39;Empty news file &#34;{self._basename}&#34;.&#39;)
+    if len(file_content.splitlines()) &gt; 1:
+        raise ValueError(
+            f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;
+        )</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_name"><code class="name flex">
+<span>def <span class="ident">validate_file_name</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Ensures the news file follows the naming rules.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def validate_file_name(self) -&gt; None:
+    &#34;&#34;&#34;Ensures the news file follows the naming rules.&#34;&#34;&#34;
+    if re.match(NEWS_FILE_NAME_REGEX, self._basename) is None:
+        raise ValueError(
+            f&#39;Incorrect news file name &#34;{self._basename}&#34;.&#39;
+            f&#39; It doesn\&#39;t match the following regex: &#34;{NEWS_FILE_NAME_REGEX}&#34;.&#39;
+        )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts" href="index.html">mbed_tools_ci_scripts</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.assert_news.find_news_files" href="#mbed_tools_ci_scripts.assert_news.find_news_files">find_news_files</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.assert_news.main" href="#mbed_tools_ci_scripts.assert_news.main">main</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.assert_news.validate_news_file" href="#mbed_tools_ci_scripts.assert_news.validate_news_file">validate_news_file</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.assert_news.validate_news_files" href="#mbed_tools_ci_scripts.assert_news.validate_news_files">validate_news_files</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.assert_news.NewsFileValidator" href="#mbed_tools_ci_scripts.assert_news.NewsFileValidator">NewsFileValidator</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate" href="#mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate">validate</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_contents" href="#mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_contents">validate_file_contents</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_name" href="#mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_name">validate_file_name</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

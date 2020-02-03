@@ -1,0 +1,1188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.4" />
+<title>mbed_tools_ci_scripts.utils.configuration API documentation</title>
+<meta name="description" content="Utilities in charge of fetching configuration values for the ci scripts." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.configuration</code></h1>
+</header>
+<section id="section-intro">
+<p>Utilities in charge of fetching configuration values for the ci scripts.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Utilities in charge of fetching configuration values for the ci scripts.&#34;&#34;&#34;
+import enum
+import logging
+import os
+from abc import ABC, abstractmethod
+from typing import Any, List, Union, Optional, Dict
+
+import dotenv
+import toml
+
+from .filesystem_helpers import find_file_in_tree
+
+logger = logging.getLogger(__name__)
+
+
+class ConfigurationVariable(enum.Enum):
+    &#34;&#34;&#34;Project&#39;s configuration variables.&#34;&#34;&#34;
+    PROJECT_ROOT = 1
+    PROJECT_CONFIG = 2
+    NEWS_DIR = 3
+    VERSION_FILE_PATH = 4
+    CHANGELOG_FILE_PATH = 5
+    MODULE_TO_DOCUMENT = 6
+    DOCUMENTATION_DEFAULT_OUTPUT_PATH = 7
+    DOCUMENTATION_PRODUCTION_OUTPUT_PATH = 8
+    GIT_TOKEN = 9
+    BETA_BRANCH = 10
+    MASTER_BRANCH = 11
+    RELEASE_BRANCH_PATTERN = 12
+    REMOTE_ALIAS = 13
+    LOGGER_FORMAT = 14
+    BOT_USERNAME = 15
+    BOT_EMAIL = 16
+    ORGANISATION = 17
+    ORGANISATION_EMAIL = 18
+    AWS_BUCKET = 19
+    PROJECT_NAME = 20
+    SOURCE_DIR = 21
+    PACKAGE_NAME = 22
+    IGNORE_PYPI_TEST_UPLOAD = 23
+
+    @staticmethod
+    def choices() -&gt; List[str]:
+        &#34;&#34;&#34;Gets a list of all possible configuration variables.
+
+        Returns:
+            a list of configuration variables
+        &#34;&#34;&#34;
+        return [t.name.upper() for t in ConfigurationVariable]
+
+    @staticmethod
+    def parse(type_str: str) -&gt; &#39;ConfigurationVariable&#39;:
+        &#34;&#34;&#34;Determines the configuration variable from a string.
+
+        Args:
+            type_str: string to parse.
+
+        Returns:
+            corresponding configuration variable.
+        &#34;&#34;&#34;
+        try:
+            return ConfigurationVariable[type_str.upper()]
+        except KeyError as e:
+            raise ValueError(
+                f&#39;Unknown configuration variable: {type_str}. {e}&#39;)
+
+
+class Undefined(Exception):
+    &#34;&#34;&#34;Exception raised when a configuration value is not defined.&#34;&#34;&#34;
+    pass
+
+
+class GenericConfig(ABC):
+    &#34;&#34;&#34;Abstract Class for determining configuration values.&#34;&#34;&#34;
+
+    @abstractmethod
+    def _fetch_value(self, key: str) -&gt; Any:
+        self._raise_undefined(key)
+
+    def _raise_undefined(self, key: Optional[str]) -&gt; None:
+        raise Undefined(f&#39;Undefined key: {key}&#39;)
+
+    def get_value(self, key: Union[str, ConfigurationVariable]) -&gt; Any:
+        &#34;&#34;&#34;Gets a configuration value.
+
+        If the variable was not defined, an exception is raised.
+
+        Args:
+            key: variable key. This can be a string or a ConfigurationVariable
+            element.
+
+        Returns:
+            configuration value corresponding to the key.
+        &#34;&#34;&#34;
+        if not key:
+            raise KeyError(key)
+        key_str = key.name if isinstance(key, ConfigurationVariable) else key
+        return self._fetch_value(key_str)
+
+    def get_value_or_default(self, key: Union[str, ConfigurationVariable],
+                             default_value: Any) -&gt; Any:
+        &#34;&#34;&#34;Gets a configuration value.
+
+        If the variable was not defined, the default value is returned.
+
+        Args:
+            key: variable key. This can be a string or a ConfigurationVariable
+            element.
+            default_value: value to default to if the variable was not defined.
+
+        Returns:
+            configuration value corresponding to the key.
+            default value if the variable is not defined.
+        &#34;&#34;&#34;
+        try:
+            return self.get_value(key)
+        except Undefined as e:
+            logger.debug(e)
+            return default_value
+
+
+class StaticConfig(GenericConfig):
+    &#34;&#34;&#34;Configuration with default values.
+
+    Only variables which are not likely do be different from a project to
+    another are defined here. They can be overridden by values in the
+    configuration file though. This should simply the number of variables
+    defined in toml.
+    &#34;&#34;&#34;
+
+    BETA_BRANCH = &#39;beta&#39;
+    MASTER_BRANCH = &#39;master&#39;
+    RELEASE_BRANCH_PATTERN = r&#34;^release.*$&#34;
+    REMOTE_ALIAS = &#39;origin&#39;
+    LOGGER_FORMAT = &#39;%(levelname)s: %(message)s&#39;
+    BOT_USERNAME = &#39;Monty Bot&#39;
+    BOT_EMAIL = &#39;monty-bot@arm.com&#39;
+    ORGANISATION = &#39;Arm Mbed&#39;
+    ORGANISATION_EMAIL = &#39;support@mbed.com&#39;
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        try:
+            return getattr(self, key)
+        except AttributeError:
+            self._raise_undefined(key)
+
+
+class EnvironmentConfig(GenericConfig):
+    &#34;&#34;&#34;Configuration set in environment variables.
+
+    This also uses dotEnv mechanism.
+    &#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        dotenv.load_dotenv(
+            dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        environment_value = os.getenv(key)
+        if not environment_value:
+            self._raise_undefined(key)
+        return environment_value
+
+
+class FileConfig(GenericConfig):
+    &#34;&#34;&#34;Configuration set in toml file.
+
+    Note: any variable which relates to a PATH
+    i.e. variable comprising one of the tokens in (PATH_TOKEN)
+     will be modified and transformed in order to become absolute paths
+     rather than relative paths as relative paths in the file are relative to
+     the file location whereas relative paths when used by tools are relative .
+     to current directory (i.e. os.getcwd()).
+    &#34;&#34;&#34;
+
+    CONFIG_SECTION = &#39;ProjectConfig&#39;
+    PATH_TOKEN = {&#39;DIR&#39;, &#39;ROOT&#39;, &#39;PATH&#39;}
+    CONFIG_FILE_NAME = &#39;pyproject.toml&#39;
+
+    def __init__(self, file_path: str = None) -&gt; None:
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            file_path: path to the toml configuration file.
+        &#34;&#34;&#34;
+        self._file_path: Optional[str] = file_path
+        self._config: Optional[dict] = None
+
+    def _adjust_path_values(self, variable_name: str, value: str) -&gt; str:
+        &#34;&#34;&#34;Works out the correct values for path variables.
+
+        Paths in the configuration file are relative to the configuration
+        file location. This method ensures the path values are therefore
+        evaluated properly
+        Args:
+            variable_name: name of the variable in the configuration file
+            value: variable value
+
+        Returns:
+            a valid path or the value unchanged if the variable is not a path
+
+        &#34;&#34;&#34;
+        if not self._file_path:
+            return value
+        for token in FileConfig.PATH_TOKEN:
+            if token in variable_name:
+                config_file_dir = os.path.dirname(self._file_path)
+                resolved_path = os.path.join(config_file_dir, value)
+                value = os.path.realpath(resolved_path)
+                break
+        return value
+
+    @staticmethod
+    def _look_for_config_file_walking_up_tree() -&gt; Optional[str]:
+        try:
+            return find_file_in_tree(
+                FileConfig.CONFIG_FILE_NAME, top=True)
+        except FileNotFoundError as e:
+            logger.warning(e)
+        return None
+
+    @staticmethod
+    def _find_config_file(file_path: Optional[str]) -&gt; Optional[str]:
+        if file_path and os.path.exists(file_path):
+            return file_path
+        try:
+            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME)
+        except FileNotFoundError:
+            return FileConfig._look_for_config_file_walking_up_tree()
+
+    @staticmethod
+    def _load_config_from_file(file_path: str) -&gt; Dict[str, Any]:
+        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION,
+                                                dict())
+        config[
+            ConfigurationVariable.PROJECT_CONFIG.name
+        ] = file_path
+        return config
+
+    @property
+    def config(self) -&gt; dict:
+        &#34;&#34;&#34;Gets the file configuration.&#34;&#34;&#34;
+        if not self._config:
+            self._file_path = FileConfig._find_config_file(self._file_path)
+            self._config = FileConfig._load_config_from_file(
+                self._file_path) if self._file_path else dict()
+        return self._config
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        try:
+            return self._adjust_path_values(key, self.config[key])
+        except KeyError:
+            self._raise_undefined(key)
+
+
+class ProjectConfiguration(GenericConfig):
+    &#34;&#34;&#34;Overall project&#39;s configuration.&#34;&#34;&#34;
+
+    def __init__(self, sources: List[GenericConfig]):
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            sources: list of configuration sources
+        &#34;&#34;&#34;
+        self._config_sources: list = sources
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        for config in self._config_sources:
+            try:
+                return config.get_value(key)
+            except Undefined:
+                pass
+        else:
+            self._raise_undefined(key)
+
+
+# Project configuration
+configuration: GenericConfig = ProjectConfiguration(
+    [
+        FileConfig(),
+        EnvironmentConfig(),
+        StaticConfig()
+    ]
+)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable"><code class="flex name class">
+<span>class <span class="ident">ConfigurationVariable</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ConfigurationVariable(enum.Enum):
+    &#34;&#34;&#34;Project&#39;s configuration variables.&#34;&#34;&#34;
+    PROJECT_ROOT = 1
+    PROJECT_CONFIG = 2
+    NEWS_DIR = 3
+    VERSION_FILE_PATH = 4
+    CHANGELOG_FILE_PATH = 5
+    MODULE_TO_DOCUMENT = 6
+    DOCUMENTATION_DEFAULT_OUTPUT_PATH = 7
+    DOCUMENTATION_PRODUCTION_OUTPUT_PATH = 8
+    GIT_TOKEN = 9
+    BETA_BRANCH = 10
+    MASTER_BRANCH = 11
+    RELEASE_BRANCH_PATTERN = 12
+    REMOTE_ALIAS = 13
+    LOGGER_FORMAT = 14
+    BOT_USERNAME = 15
+    BOT_EMAIL = 16
+    ORGANISATION = 17
+    ORGANISATION_EMAIL = 18
+    AWS_BUCKET = 19
+    PROJECT_NAME = 20
+    SOURCE_DIR = 21
+    PACKAGE_NAME = 22
+    IGNORE_PYPI_TEST_UPLOAD = 23
+
+    @staticmethod
+    def choices() -&gt; List[str]:
+        &#34;&#34;&#34;Gets a list of all possible configuration variables.
+
+        Returns:
+            a list of configuration variables
+        &#34;&#34;&#34;
+        return [t.name.upper() for t in ConfigurationVariable]
+
+    @staticmethod
+    def parse(type_str: str) -&gt; &#39;ConfigurationVariable&#39;:
+        &#34;&#34;&#34;Determines the configuration variable from a string.
+
+        Args:
+            type_str: string to parse.
+
+        Returns:
+            corresponding configuration variable.
+        &#34;&#34;&#34;
+        try:
+            return ConfigurationVariable[type_str.upper()]
+        except KeyError as e:
+            raise ValueError(
+                f&#39;Unknown configuration variable: {type_str}. {e}&#39;)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH"><code class="name">var <span class="ident">CHANGELOG_FILE_PATH</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_DEFAULT_OUTPUT_PATH</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN"><code class="name">var <span class="ident">GIT_TOKEN</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_PYPI_TEST_UPLOAD</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT"><code class="name">var <span class="ident">MODULE_TO_DOCUMENT</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR"><code class="name">var <span class="ident">NEWS_DIR</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME"><code class="name">var <span class="ident">PACKAGE_NAME</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG"><code class="name">var <span class="ident">PROJECT_CONFIG</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME"><code class="name">var <span class="ident">PROJECT_NAME</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT"><code class="name">var <span class="ident">PROJECT_ROOT</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH"><code class="name">var <span class="ident">VERSION_FILE_PATH</span></code></dt>
+<dd>
+<section class="desc"><p>Project's configuration variables.</p></section>
+</dd>
+</dl>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig"><code class="flex name class">
+<span>class <span class="ident">EnvironmentConfig</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Configuration set in environment variables.</p>
+<p>This also uses dotEnv mechanism.</p>
+<p>Constructor.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class EnvironmentConfig(GenericConfig):
+    &#34;&#34;&#34;Configuration set in environment variables.
+
+    This also uses dotEnv mechanism.
+    &#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        dotenv.load_dotenv(
+            dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        environment_value = os.getenv(key)
+        if not environment_value:
+            self._raise_undefined(key)
+        return environment_value</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<ul class="hlist">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig"><code class="flex name class">
+<span>class <span class="ident">FileConfig</span></span>
+<span>(</span><span>file_path: str = None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Configuration set in toml file.</p>
+<p>Note: any variable which relates to a PATH
+i.e. variable comprising one of the tokens in (PATH_TOKEN)
+will be modified and transformed in order to become absolute paths
+rather than relative paths as relative paths in the file are relative to
+the file location whereas relative paths when used by tools are relative .
+to current directory (i.e. os.getcwd()).</p>
+<p>Constructor.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>file_path</code></strong></dt>
+<dd>path to the toml configuration file.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FileConfig(GenericConfig):
+    &#34;&#34;&#34;Configuration set in toml file.
+
+    Note: any variable which relates to a PATH
+    i.e. variable comprising one of the tokens in (PATH_TOKEN)
+     will be modified and transformed in order to become absolute paths
+     rather than relative paths as relative paths in the file are relative to
+     the file location whereas relative paths when used by tools are relative .
+     to current directory (i.e. os.getcwd()).
+    &#34;&#34;&#34;
+
+    CONFIG_SECTION = &#39;ProjectConfig&#39;
+    PATH_TOKEN = {&#39;DIR&#39;, &#39;ROOT&#39;, &#39;PATH&#39;}
+    CONFIG_FILE_NAME = &#39;pyproject.toml&#39;
+
+    def __init__(self, file_path: str = None) -&gt; None:
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            file_path: path to the toml configuration file.
+        &#34;&#34;&#34;
+        self._file_path: Optional[str] = file_path
+        self._config: Optional[dict] = None
+
+    def _adjust_path_values(self, variable_name: str, value: str) -&gt; str:
+        &#34;&#34;&#34;Works out the correct values for path variables.
+
+        Paths in the configuration file are relative to the configuration
+        file location. This method ensures the path values are therefore
+        evaluated properly
+        Args:
+            variable_name: name of the variable in the configuration file
+            value: variable value
+
+        Returns:
+            a valid path or the value unchanged if the variable is not a path
+
+        &#34;&#34;&#34;
+        if not self._file_path:
+            return value
+        for token in FileConfig.PATH_TOKEN:
+            if token in variable_name:
+                config_file_dir = os.path.dirname(self._file_path)
+                resolved_path = os.path.join(config_file_dir, value)
+                value = os.path.realpath(resolved_path)
+                break
+        return value
+
+    @staticmethod
+    def _look_for_config_file_walking_up_tree() -&gt; Optional[str]:
+        try:
+            return find_file_in_tree(
+                FileConfig.CONFIG_FILE_NAME, top=True)
+        except FileNotFoundError as e:
+            logger.warning(e)
+        return None
+
+    @staticmethod
+    def _find_config_file(file_path: Optional[str]) -&gt; Optional[str]:
+        if file_path and os.path.exists(file_path):
+            return file_path
+        try:
+            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME)
+        except FileNotFoundError:
+            return FileConfig._look_for_config_file_walking_up_tree()
+
+    @staticmethod
+    def _load_config_from_file(file_path: str) -&gt; Dict[str, Any]:
+        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION,
+                                                dict())
+        config[
+            ConfigurationVariable.PROJECT_CONFIG.name
+        ] = file_path
+        return config
+
+    @property
+    def config(self) -&gt; dict:
+        &#34;&#34;&#34;Gets the file configuration.&#34;&#34;&#34;
+        if not self._config:
+            self._file_path = FileConfig._find_config_file(self._file_path)
+            self._config = FileConfig._load_config_from_file(
+                self._file_path) if self._file_path else dict()
+        return self._config
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        try:
+            return self._adjust_path_values(key, self.config[key])
+        except KeyError:
+            self._raise_undefined(key)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME"><code class="name">var <span class="ident">CONFIG_FILE_NAME</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION"><code class="name">var <span class="ident">CONFIG_SECTION</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN"><code class="name">var <span class="ident">PATH_TOKEN</span></code></dt>
+<dd>
+<section class="desc"><p>set() -&gt; new empty set object
+set(iterable) -&gt; new set object</p>
+<p>Build an unordered collection of unique elements.</p></section>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.config"><code class="name">var <span class="ident">config</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the file configuration.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def config(self) -&gt; dict:
+    &#34;&#34;&#34;Gets the file configuration.&#34;&#34;&#34;
+    if not self._config:
+        self._file_path = FileConfig._find_config_file(self._file_path)
+        self._config = FileConfig._load_config_from_file(
+            self._file_path) if self._file_path else dict()
+    return self._config</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<ul class="hlist">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig"><code class="flex name class">
+<span>class <span class="ident">GenericConfig</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Abstract Class for determining configuration values.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GenericConfig(ABC):
+    &#34;&#34;&#34;Abstract Class for determining configuration values.&#34;&#34;&#34;
+
+    @abstractmethod
+    def _fetch_value(self, key: str) -&gt; Any:
+        self._raise_undefined(key)
+
+    def _raise_undefined(self, key: Optional[str]) -&gt; None:
+        raise Undefined(f&#39;Undefined key: {key}&#39;)
+
+    def get_value(self, key: Union[str, ConfigurationVariable]) -&gt; Any:
+        &#34;&#34;&#34;Gets a configuration value.
+
+        If the variable was not defined, an exception is raised.
+
+        Args:
+            key: variable key. This can be a string or a ConfigurationVariable
+            element.
+
+        Returns:
+            configuration value corresponding to the key.
+        &#34;&#34;&#34;
+        if not key:
+            raise KeyError(key)
+        key_str = key.name if isinstance(key, ConfigurationVariable) else key
+        return self._fetch_value(key_str)
+
+    def get_value_or_default(self, key: Union[str, ConfigurationVariable],
+                             default_value: Any) -&gt; Any:
+        &#34;&#34;&#34;Gets a configuration value.
+
+        If the variable was not defined, the default value is returned.
+
+        Args:
+            key: variable key. This can be a string or a ConfigurationVariable
+            element.
+            default_value: value to default to if the variable was not defined.
+
+        Returns:
+            configuration value corresponding to the key.
+            default value if the variable is not defined.
+        &#34;&#34;&#34;
+        try:
+            return self.get_value(key)
+        except Undefined as e:
+            logger.debug(e)
+            return default_value</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig" href="#mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig">EnvironmentConfig</a></li>
+<li><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig">FileConfig</a></li>
+<li><a title="mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration" href="#mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration">ProjectConfiguration</a></li>
+<li><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig">StaticConfig</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value"><code class="name flex">
+<span>def <span class="ident">get_value</span></span>(<span>self, key: Union[str, <a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>]) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets a configuration value.</p>
+<p>If the variable was not defined, an exception is raised.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>key</code></strong></dt>
+<dd>variable key. This can be a string or a ConfigurationVariable</dd>
+</dl>
+<p>element.</p>
+<h2 id="returns">Returns</h2>
+<p>configuration value corresponding to the key.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_value(self, key: Union[str, ConfigurationVariable]) -&gt; Any:
+    &#34;&#34;&#34;Gets a configuration value.
+
+    If the variable was not defined, an exception is raised.
+
+    Args:
+        key: variable key. This can be a string or a ConfigurationVariable
+        element.
+
+    Returns:
+        configuration value corresponding to the key.
+    &#34;&#34;&#34;
+    if not key:
+        raise KeyError(key)
+    key_str = key.name if isinstance(key, ConfigurationVariable) else key
+    return self._fetch_value(key_str)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default"><code class="name flex">
+<span>def <span class="ident">get_value_or_default</span></span>(<span>self, key: Union[str, <a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>], default_value: Any) -> Any</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets a configuration value.</p>
+<p>If the variable was not defined, the default value is returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>key</code></strong></dt>
+<dd>variable key. This can be a string or a ConfigurationVariable</dd>
+<dt>element.</dt>
+<dt><strong><code>default_value</code></strong></dt>
+<dd>value to default to if the variable was not defined.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>configuration value corresponding to the key.
+default value if the variable is not defined.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_value_or_default(self, key: Union[str, ConfigurationVariable],
+                         default_value: Any) -&gt; Any:
+    &#34;&#34;&#34;Gets a configuration value.
+
+    If the variable was not defined, the default value is returned.
+
+    Args:
+        key: variable key. This can be a string or a ConfigurationVariable
+        element.
+        default_value: value to default to if the variable was not defined.
+
+    Returns:
+        configuration value corresponding to the key.
+        default value if the variable is not defined.
+    &#34;&#34;&#34;
+    try:
+        return self.get_value(key)
+    except Undefined as e:
+        logger.debug(e)
+        return default_value</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration"><code class="flex name class">
+<span>class <span class="ident">ProjectConfiguration</span></span>
+<span>(</span><span>sources: List[<a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a>])</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Overall project's configuration.</p>
+<p>Constructor.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>sources</code></strong></dt>
+<dd>list of configuration sources</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ProjectConfiguration(GenericConfig):
+    &#34;&#34;&#34;Overall project&#39;s configuration.&#34;&#34;&#34;
+
+    def __init__(self, sources: List[GenericConfig]):
+        &#34;&#34;&#34;Constructor.
+
+        Args:
+            sources: list of configuration sources
+        &#34;&#34;&#34;
+        self._config_sources: list = sources
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        for config in self._config_sources:
+            try:
+                return config.get_value(key)
+            except Undefined:
+                pass
+        else:
+            self._raise_undefined(key)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<ul class="hlist">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig"><code class="flex name class">
+<span>class <span class="ident">StaticConfig</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Configuration with default values.</p>
+<p>Only variables which are not likely do be different from a project to
+another are defined here. They can be overridden by values in the
+configuration file though. This should simply the number of variables
+defined in toml.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StaticConfig(GenericConfig):
+    &#34;&#34;&#34;Configuration with default values.
+
+    Only variables which are not likely do be different from a project to
+    another are defined here. They can be overridden by values in the
+    configuration file though. This should simply the number of variables
+    defined in toml.
+    &#34;&#34;&#34;
+
+    BETA_BRANCH = &#39;beta&#39;
+    MASTER_BRANCH = &#39;master&#39;
+    RELEASE_BRANCH_PATTERN = r&#34;^release.*$&#34;
+    REMOTE_ALIAS = &#39;origin&#39;
+    LOGGER_FORMAT = &#39;%(levelname)s: %(message)s&#39;
+    BOT_USERNAME = &#39;Monty Bot&#39;
+    BOT_EMAIL = &#39;monty-bot@arm.com&#39;
+    ORGANISATION = &#39;Arm Mbed&#39;
+    ORGANISATION_EMAIL = &#39;support@mbed.com&#39;
+
+    def _fetch_value(self, key: str) -&gt; Any:
+        try:
+            return getattr(self, key)
+        except AttributeError:
+            self._raise_undefined(key)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
+<dd>
+<section class="desc"><p>str(object='') -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.<strong>str</strong>() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to 'strict'.</p></section>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<ul class="hlist">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.Undefined"><code class="flex name class">
+<span>class <span class="ident">Undefined</span></span>
+<span>(</span><span>...)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Exception raised when a configuration value is not defined.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Undefined(Exception):
+    &#34;&#34;&#34;Exception raised when a configuration value is not defined.&#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET">AWS_BUCKET</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH">BETA_BRANCH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL">BOT_EMAIL</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME">BOT_USERNAME</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH">CHANGELOG_FILE_PATH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH">DOCUMENTATION_DEFAULT_OUTPUT_PATH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD">IGNORE_PYPI_TEST_UPLOAD</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT">MODULE_TO_DOCUMENT</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR">NEWS_DIR</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION">ORGANISATION</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME">PACKAGE_NAME</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG">PROJECT_CONFIG</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME">PROJECT_NAME</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT">PROJECT_ROOT</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH">VERSION_FILE_PATH</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig" href="#mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig">EnvironmentConfig</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig">FileConfig</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME">CONFIG_FILE_NAME</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION">CONFIG_SECTION</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN">PATH_TOKEN</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.config" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.config">config</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration" href="#mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration">ProjectConfiguration</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig">StaticConfig</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH">BETA_BRANCH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL">BOT_EMAIL</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME">BOT_USERNAME</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION">ORGANISATION</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.Undefined" href="#mbed_tools_ci_scripts.utils.configuration.Undefined">Undefined</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

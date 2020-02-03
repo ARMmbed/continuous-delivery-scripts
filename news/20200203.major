@@ -1,1 +1,0 @@
-Remove the need for a temporary docs configuration to be defined. DOCUMENTATION_TEMP_CI_OUTPUT_PATH is no longer used.

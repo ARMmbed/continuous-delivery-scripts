@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.4" />
+<title>mbed_tools_ci_scripts.tag_and_release API documentation</title>
+<meta name="description" content="Orchestrates release process." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.tag_and_release</code></h1>
+</header>
+<section id="section-intro">
+<p>Orchestrates release process.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Orchestrates release process.&#34;&#34;&#34;
+import argparse
+import datetime
+import logging
+import subprocess
+import sys
+import shutil
+from pathlib import Path
+from typing import Tuple
+
+from mbed_tools_ci_scripts.generate_news import version_project
+from mbed_tools_ci_scripts.utils.configuration import configuration, \
+    ConfigurationVariable
+from mbed_tools_ci_scripts.utils.definitions import CommitType
+from mbed_tools_ci_scripts.utils.filesystem_helpers import cd, TemporaryDirectory
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone
+from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
+
+from typing import Optional
+
+ENVVAR_TWINE_USERNAME = &#39;TWINE_USERNAME&#39;
+ENVVAR_TWINE_PASSWORD = &#39;TWINE_PASSWORD&#39;
+OUTPUT_DIRECTORY = &#39;release-dist&#39;
+
+logger = logging.getLogger(__name__)
+
+
+def tag_and_release(mode: CommitType,
+                    current_branch: Optional[str] = None) -&gt; None:
+    &#34;&#34;&#34;Tags and releases.
+
+    Updates repository with changes and releases package to PyPI for general availability.
+
+    Args:
+        mode: release mode
+        current_branch: current branch in case the current branch cannot easily
+        be determined (e.g. on CI)
+
+    &#34;&#34;&#34;
+    _check_credentials()
+    is_new_version, version = version_project(mode)
+    logger.info(f&#39;Current version: {version}&#39;)
+    if not version:
+        raise ValueError(&#39;Undefined version.&#39;)
+    if mode == CommitType.DEVELOPMENT:
+        return
+    _update_documentation()
+    _update_repository(mode, is_new_version, version, current_branch)
+    if is_new_version:
+        _release_to_pypi()
+
+
+def _get_documentation_paths() -&gt; Tuple[Path, Path]:
+    docs_dir = Path(configuration.get_value(
+        ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH
+    ))
+    docs_contents_dir = docs_dir.joinpath(
+        configuration.get_value(
+            ConfigurationVariable.MODULE_TO_DOCUMENT
+        )
+    )
+    return docs_dir, docs_contents_dir
+
+
+def _update_documentation() -&gt; None:
+    &#34;&#34;&#34;Ensures the documentation is in the correct location for releasing.
+
+    Pdoc nests its docs output in a folder with the module&#39;s name.
+    This process removes this unwanted folder.
+    &#34;&#34;&#34;
+    docs_dir, docs_contents_dir = _get_documentation_paths()
+    with TemporaryDirectory() as temp_dir:
+        shutil.move(str(docs_contents_dir), str(temp_dir))
+        shutil.rmtree(docs_dir)
+        shutil.move(str(temp_dir), str(docs_dir))
+
+
+def _update_repository(mode: CommitType, is_new_version: bool,
+                       version: str, current_branch: Optional[str]) -&gt; None:
+    with ProjectTempClone(desired_branch_name=current_branch) as git:
+        git.configure_for_github()
+        if mode == CommitType.RELEASE:
+            logger.info(f&#39;Committing release [{version}]...&#39;)
+            git.add(
+                configuration.get_value(
+                    ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
+            git.add(
+                configuration.get_value(
+                    ConfigurationVariable.VERSION_FILE_PATH))
+            git.add(
+                configuration.get_value(
+                    ConfigurationVariable.CHANGELOG_FILE_PATH))
+            git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
+            time_str = datetime.datetime.utcnow().strftime(
+                &#34;%Y-%m-%d %H:%M&#34;)
+            commit_message = f&#39;📰 releasing version {version} 🚀 @ {time_str}&#39; if is_new_version else f&#39;📰 Automatic changes ⚙&#39;
+            git.commit(f&#39;{commit_message}\n[skip ci]&#39;)
+            git.push()
+            git.pull()
+        if is_new_version:
+            logger.info(f&#39;Tagging commit&#39;)
+            git.create_tag(version, message=f&#39;release {version}&#39;)
+            git.force_push_tag()
+
+
+def _check_credentials() -&gt; None:
+    # Checks the GitHub token is defined
+    configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+    # Checks that twine username is defined
+    configuration.get_value(ENVVAR_TWINE_USERNAME)
+    # Checks that twine password is defined
+    configuration.get_value(ENVVAR_TWINE_PASSWORD)
+
+
+def _release_to_pypi() -&gt; None:
+    logger.info(&#39;Releasing to PyPI&#39;)
+    logger.info(&#39;Generating a release package&#39;)
+    root = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
+    with cd(root):
+        subprocess.check_call(
+            [sys.executable, &#39;setup.py&#39;,
+             &#39;clean&#39;, &#39;--all&#39;,
+             &#39;sdist&#39;, &#39;-d&#39;, OUTPUT_DIRECTORY, &#39;--formats=gztar&#39;,
+             &#39;bdist_wheel&#39;, &#39;-d&#39;, OUTPUT_DIRECTORY])
+        _upload_to_test_pypi()
+        _upload_to_pypi()
+
+
+def _upload_to_pypi() -&gt; None:
+    logger.info(&#39;Uploading to PyPI&#39;)
+    subprocess.check_call(
+        [sys.executable, &#39;-m&#39;, &#39;twine&#39;, &#39;upload&#39;, f&#39;{OUTPUT_DIRECTORY}/*&#39;])
+    logger.info(&#39;Success 👍&#39;)
+
+
+def _upload_to_test_pypi() -&gt; None:
+    if configuration.get_value_or_default(
+            ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD, False):
+        logger.warning(
+            &#39;Not testing package upload on PyPI test (https://test.pypi.org)&#39;)
+        return
+    logger.info(&#39;Uploading to test PyPI&#39;)
+    subprocess.check_call(
+        [sys.executable, &#39;-m&#39;, &#39;twine&#39;, &#39;upload&#39;,
+         &#39;--repository-url&#39;,
+         &#39;https://test.pypi.org/legacy/&#39;, f&#39;{OUTPUT_DIRECTORY}/*&#39;])
+    logger.info(&#39;Success 👍&#39;)
+
+
+def main() -&gt; None:
+    &#34;&#34;&#34;Commands.
+
+    Returns:
+        success code (0) if successful; failure code otherwise.
+    &#34;&#34;&#34;
+    parser = argparse.ArgumentParser(
+        description=&#39;Releases the project.&#39;)
+    parser.add_argument(&#39;-t&#39;, &#39;--release-type&#39;,
+                        help=&#39;type of release to perform&#39;,
+                        required=True,
+                        type=str, choices=CommitType.choices())
+    parser.add_argument(&#39;-b&#39;, &#39;--current-branch&#39;,
+                        help=&#39;Name of the current branch&#39;, nargs=&#39;?&#39;)
+    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0,
+                        help=&#34;Verbosity, by default errors are reported.&#34;)
+    args = parser.parse_args()
+    set_log_level(args.verbose)
+    try:
+        tag_and_release(CommitType.parse(args.release_type),
+                        args.current_branch)
+    except Exception as e:
+        log_exception(logger, e)
+        sys.exit(1)
+
+
+if __name__ == &#39;__main__&#39;:
+    main()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.tag_and_release.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Commands.</p>
+<h2 id="returns">Returns</h2>
+<p>success code (0) if successful; failure code otherwise.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main() -&gt; None:
+    &#34;&#34;&#34;Commands.
+
+    Returns:
+        success code (0) if successful; failure code otherwise.
+    &#34;&#34;&#34;
+    parser = argparse.ArgumentParser(
+        description=&#39;Releases the project.&#39;)
+    parser.add_argument(&#39;-t&#39;, &#39;--release-type&#39;,
+                        help=&#39;type of release to perform&#39;,
+                        required=True,
+                        type=str, choices=CommitType.choices())
+    parser.add_argument(&#39;-b&#39;, &#39;--current-branch&#39;,
+                        help=&#39;Name of the current branch&#39;, nargs=&#39;?&#39;)
+    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0,
+                        help=&#34;Verbosity, by default errors are reported.&#34;)
+    args = parser.parse_args()
+    set_log_level(args.verbose)
+    try:
+        tag_and_release(CommitType.parse(args.release_type),
+                        args.current_branch)
+    except Exception as e:
+        log_exception(logger, e)
+        sys.exit(1)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.tag_and_release.tag_and_release"><code class="name flex">
+<span>def <span class="ident">tag_and_release</span></span>(<span>mode: <a title="mbed_tools_ci_scripts.utils.definitions.CommitType" href="utils/definitions.html#mbed_tools_ci_scripts.utils.definitions.CommitType">CommitType</a>, current_branch: Union[str, NoneType] = None) -> NoneType</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Tags and releases.</p>
+<p>Updates repository with changes and releases package to PyPI for general availability.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mode</code></strong></dt>
+<dd>release mode</dd>
+<dt><strong><code>current_branch</code></strong></dt>
+<dd>current branch in case the current branch cannot easily</dd>
+</dl>
+<p>be determined (e.g. on CI)</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tag_and_release(mode: CommitType,
+                    current_branch: Optional[str] = None) -&gt; None:
+    &#34;&#34;&#34;Tags and releases.
+
+    Updates repository with changes and releases package to PyPI for general availability.
+
+    Args:
+        mode: release mode
+        current_branch: current branch in case the current branch cannot easily
+        be determined (e.g. on CI)
+
+    &#34;&#34;&#34;
+    _check_credentials()
+    is_new_version, version = version_project(mode)
+    logger.info(f&#39;Current version: {version}&#39;)
+    if not version:
+        raise ValueError(&#39;Undefined version.&#39;)
+    if mode == CommitType.DEVELOPMENT:
+        return
+    _update_documentation()
+    _update_repository(mode, is_new_version, version, current_branch)
+    if is_new_version:
+        _release_to_pypi()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts" href="index.html">mbed_tools_ci_scripts</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.tag_and_release.main" href="#mbed_tools_ci_scripts.tag_and_release.main">main</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.tag_and_release.tag_and_release" href="#mbed_tools_ci_scripts.tag_and_release.tag_and_release">tag_and_release</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>
