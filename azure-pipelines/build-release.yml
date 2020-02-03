@@ -57,7 +57,7 @@ stages:
             displayName: 'Static Analysis - general (flake8)'
 
           - script: |
-              mypy -p mbed_tools_ci
+              mypy -p mbed_tools_ci_scripts
             displayName: 'Static Analysis - type checks (mypy)'
 
           - script: |

@@ -8,13 +8,13 @@ import shutil
 from pathlib import Path
 from typing import Tuple
 
-from mbed_tools_ci.generate_news import version_project
-from mbed_tools_ci.utils.configuration import configuration, \
+from mbed_tools_ci_scripts.generate_news import version_project
+from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
-from mbed_tools_ci.utils.definitions import CommitType
-from mbed_tools_ci.utils.filesystem_helpers import cd, TemporaryDirectory
-from mbed_tools_ci.utils.git_helpers import ProjectTempClone
-from mbed_tools_ci.utils.logging import log_exception, set_log_level
+from mbed_tools_ci_scripts.utils.definitions import CommitType
+from mbed_tools_ci_scripts.utils.filesystem_helpers import cd, TemporaryDirectory
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone
+from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
 
 from typing import Optional
 

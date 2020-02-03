@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from mbed_tools_ci.utils.configuration import configuration, \
+from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
-from mbed_tools_ci.utils.git_helpers import ProjectTempClone, GitTempClone, \
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitTempClone, \
     GitWrapper, ProjectGitWrapper
 from uuid import uuid4
 from pathlib import Path

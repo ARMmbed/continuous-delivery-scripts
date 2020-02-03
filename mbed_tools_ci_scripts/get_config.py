@@ -2,9 +2,9 @@
 import argparse
 import sys
 import logging
-from mbed_tools_ci.utils.configuration import configuration, \
+from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
-from mbed_tools_ci.utils.logging import set_log_level, log_exception
+from mbed_tools_ci_scripts.utils.logging import set_log_level, log_exception
 
 logger = logging.getLogger(__name__)
 

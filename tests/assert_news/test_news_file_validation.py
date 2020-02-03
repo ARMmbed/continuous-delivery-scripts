@@ -1,7 +1,7 @@
 from unittest import mock, TestCase
 from pyfakefs.fake_filesystem_unittest import Patcher
 
-from mbed_tools_ci.assert_news import (
+from mbed_tools_ci_scripts.assert_news import (
     NEWS_FILE_NAME_REGEX,
     NewsFileValidator,
     validate_news_file,
@@ -69,7 +69,7 @@ class TestValidate(TestCase):
 
 
 class TestValidateNewsFile(TestCase):
-    @mock.patch("mbed_tools_ci.assert_news.NewsFileValidator")
+    @mock.patch("mbed_tools_ci_scripts.assert_news.NewsFileValidator")
     def test_constructs_validator_and_calls_it(self, FakeNewsFileValidator):
         instance = mock.Mock(spec_set=NewsFileValidator)
         FakeNewsFileValidator.return_value = instance

@@ -6,11 +6,11 @@ import logging
 import os
 import subprocess
 from auto_version import auto_version_tool
-from mbed_tools_ci.utils.definitions import CommitType
-from mbed_tools_ci.utils.configuration import configuration, \
+from mbed_tools_ci_scripts.utils.definitions import CommitType
+from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
-from mbed_tools_ci.utils.logging import log_exception, set_log_level
-from mbed_tools_ci.utils.filesystem_helpers import cd
+from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
+from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
 from typing import Optional, Tuple
 
 logger = logging.getLogger(__name__)

@@ -6,9 +6,9 @@ import sys
 from typing import List
 import pathlib
 
-from mbed_tools_ci.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci.utils.git_helpers import ProjectTempClone, GitWrapper
-from mbed_tools_ci.utils.logging import log_exception, set_log_level
+from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
 

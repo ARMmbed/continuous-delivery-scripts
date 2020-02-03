@@ -8,7 +8,7 @@ flake8 = "*"
 flake8-docstrings = "*"
 mypy = ">=0.500"
 pytest = "*"
-mbed-tools-ci = {path = ".",editable = true}
+mbed-tools-ci-scripts = {path = ".",editable = true}
 pyfakefs = "*"
 pytest-cov = "*"
 coverage = "*"

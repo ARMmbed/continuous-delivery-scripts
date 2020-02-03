@@ -1,3 +1,6 @@
+# Don't lock the versions of this library or installation gridlock will ensue
+Pipfile.lock
+
 # PyCharm
 .idea/
 

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 import os
 
 PACKAGE_NAME = 'mbed-tools-ci-scripts'
-SOURCE_DIR = 'mbed_tools_ci'
+SOURCE_DIR = 'mbed_tools_ci_scripts'
 __version__ = None
 
 repository_dir = os.path.dirname(__file__)

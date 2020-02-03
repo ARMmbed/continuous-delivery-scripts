@@ -5,13 +5,12 @@ PROJECT_NAME = "mbed-tools-ci-scripts"
 PACKAGE_NAME = "mbed-tools-ci-scripts"
 PROJECT_ROOT = "."
 NEWS_DIR = "news/"
-SOURCE_DIR = "mbed_tools_ci"
+SOURCE_DIR = "mbed_tools_ci_scripts"
 RELEASE_BRANCH_PATTERN = "^release.*$"
-AWS_BUCKET = "mbed-tools-ci"
-MODULE_TO_DOCUMENT = "mbed_tools_ci"
+MODULE_TO_DOCUMENT = "mbed_tools_ci_scripts"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
-VERSION_FILE_PATH = "mbed_tools_ci/_version.py"
+VERSION_FILE_PATH = "mbed_tools_ci_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
 [AutoVersionConfig]
@@ -19,7 +18,7 @@ CONFIG_NAME = "DEFAULT"
 PRERELEASE_TOKEN = "beta"
 BUILD_TOKEN = "dev"
 TAG_TEMPLATE = "release/{version}"
-targets = [ "mbed_tools_ci/_version.py",]
+targets = [ "mbed_tools_ci_scripts/_version.py",]
 
 [AutoVersionConfig.key_aliases]
 __version__ = "VERSION_KEY"

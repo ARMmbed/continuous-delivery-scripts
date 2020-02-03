@@ -7,11 +7,11 @@ from subprocess import check_call
 from pathlib import Path
 from typing import List
 
-from mbed_tools_ci.utils.configuration import (
+from mbed_tools_ci_scripts.utils.configuration import (
     configuration,
     ConfigurationVariable,
 )
-from mbed_tools_ci.utils.logging import log_exception
+from mbed_tools_ci_scripts.utils.logging import log_exception
 
 logger = logging.getLogger(__name__)
 

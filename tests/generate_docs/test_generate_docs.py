@@ -4,7 +4,7 @@ from unittest import mock, TestCase
 
 from pyfakefs.fake_filesystem_unittest import Patcher
 
-from mbed_tools_ci.generate_docs import (
+from mbed_tools_ci_scripts.generate_docs import (
     _clear_previous_docs,
     _generate_pdoc_command_list,
     generate_docs,
@@ -30,8 +30,8 @@ class TestGenerateDocs(TestCase):
 
         _clear_previous_docs(fake_output_dir)
 
-    @mock.patch("mbed_tools_ci.generate_docs._clear_previous_docs")
-    @mock.patch("mbed_tools_ci.generate_docs.check_call")
+    @mock.patch("mbed_tools_ci_scripts.generate_docs._clear_previous_docs")
+    @mock.patch("mbed_tools_ci_scripts.generate_docs.check_call")
     def test_generate_docs(self, check_call, _clear_previous_docs):
         fake_output_dir = pathlib.Path("fake/docs")
         fake_module = "module"
@@ -44,9 +44,9 @@ class TestGenerateDocs(TestCase):
             _generate_pdoc_command_list(fake_output_dir, fake_module)
         )
 
-    @mock.patch("mbed_tools_ci.generate_docs._clear_previous_docs")
-    @mock.patch("mbed_tools_ci.generate_docs.log_exception")
-    @mock.patch("mbed_tools_ci.generate_docs.check_call")
+    @mock.patch("mbed_tools_ci_scripts.generate_docs._clear_previous_docs")
+    @mock.patch("mbed_tools_ci_scripts.generate_docs.log_exception")
+    @mock.patch("mbed_tools_ci_scripts.generate_docs.check_call")
     def test_generate_docs_errors(self, check_call, log_exception, _clear_previous_docs):
         check_call.side_effect = CalledProcessError(
             returncode=2, cmd=["pdoc", "some", "stuff"]
