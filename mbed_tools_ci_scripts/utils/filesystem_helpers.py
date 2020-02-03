@@ -3,9 +3,12 @@ import os
 import tempfile
 import shutil
 import platform
+import logging
 from pathlib import Path
 from contextlib import contextmanager
 from typing import Iterator, Generator, Callable, Any
+
+logger = logging.getLogger(__name__)
 
 
 @contextmanager
@@ -119,6 +122,10 @@ class TemporaryDirectory:
     def cleanup(self) -> None:
         """Deletes the temporary directory."""
         if not (platform.system() == 'Windows'):
-            self._tmp_dir_context_manager.cleanup()
+            try:
+                self._tmp_dir_context_manager.cleanup()
+            except FileNotFoundError as e:
+                logger.warning(
+                    f"Failed cleaning up {self._tmp_dir_path}. Reason: {str(e)}")
         else:
             shutil.rmtree(self._tmp_dir_path, ignore_errors=True)
