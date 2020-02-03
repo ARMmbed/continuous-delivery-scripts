@@ -6,13 +6,14 @@ import subprocess
 import sys
 import shutil
 from pathlib import Path
+from typing import Tuple
 
 from mbed_tools_ci.generate_news import version_project
 from mbed_tools_ci.utils.configuration import configuration, \
     ConfigurationVariable
 from mbed_tools_ci.utils.definitions import CommitType
-from mbed_tools_ci.utils.filesystem_helpers import cd
-from mbed_tools_ci.utils.git_helpers import ProjectTempClone, GitWrapper
+from mbed_tools_ci.utils.filesystem_helpers import cd, TemporaryDirectory
+from mbed_tools_ci.utils.git_helpers import ProjectTempClone
 from mbed_tools_ci.utils.logging import log_exception, set_log_level
 
 from typing import Optional
@@ -43,42 +44,35 @@ def tag_and_release(mode: CommitType,
         raise ValueError('Undefined version.')
     if mode == CommitType.DEVELOPMENT:
         return
+    _update_documentation()
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
         _release_to_pypi()
 
 
-def _remove_old_documentation(git: GitWrapper, docs_dir: Path) -> None:
-    """Remove existing docs first to make sure no stale pages left behind."""
-    if docs_dir.is_dir():
-        shutil.rmtree(str(docs_dir))
-        git.add(str(docs_dir))
-
-
-def _add_new_documentation(
-        git: GitWrapper, temp_docs_dir: Path, docs_dir: Path) -> None:
-    """Move across documentation from the temporary file and add to git."""
-    shutil.move(str(temp_docs_dir), str(docs_dir))
-    git.add(str(docs_dir))
-
-
-def _update_documentation(git: GitWrapper) -> None:
+def _get_documentation_paths() -> Tuple[Path, Path]:
     docs_dir = Path(configuration.get_value(
         ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH
     ))
-    # Pdoc nests documentation in a folder with the module's name.
-    # Only transfer the contents of this folder.
-    temp_docs_dir = Path(
-        configuration.get_value(
-            ConfigurationVariable.DOCUMENTATION_TEMP_CI_OUTPUT_PATH
-        ),
+    docs_contents_dir = docs_dir.joinpath(
         configuration.get_value(
             ConfigurationVariable.MODULE_TO_DOCUMENT
         )
     )
+    return docs_dir, docs_contents_dir
 
-    _remove_old_documentation(git, docs_dir)
-    _add_new_documentation(git, temp_docs_dir, docs_dir)
+
+def _update_documentation() -> None:
+    """Ensures the documentation is in the correct location for releasing.
+
+    Pdoc nests its docs output in a folder with the module's name.
+    This process removes this unwanted folder.
+    """
+    docs_dir, docs_contents_dir = _get_documentation_paths()
+    with TemporaryDirectory() as temp_dir:
+        shutil.move(str(docs_contents_dir), str(temp_dir))
+        shutil.rmtree(docs_dir)
+        shutil.move(str(temp_dir), str(docs_dir))
 
 
 def _update_repository(mode: CommitType, is_new_version: bool,
@@ -86,8 +80,10 @@ def _update_repository(mode: CommitType, is_new_version: bool,
     with ProjectTempClone(desired_branch_name=current_branch) as git:
         git.configure_for_github()
         if mode == CommitType.RELEASE:
-            _update_documentation(git)
             logger.info(f'Committing release [{version}]...')
+            git.add(
+                configuration.get_value(
+                    ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
             git.add(
                 configuration.get_value(
                     ConfigurationVariable.VERSION_FILE_PATH))
