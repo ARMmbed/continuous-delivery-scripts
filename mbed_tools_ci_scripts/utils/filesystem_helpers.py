@@ -126,6 +126,7 @@ class TemporaryDirectory:
                 self._tmp_dir_context_manager.cleanup()
             except FileNotFoundError as e:
                 logger.warning(
-                    f"Failed cleaning up {self._tmp_dir_path}. Reason: {str(e)}")
+                    f"Failed cleaning up {self.path}. Reason: {str(e)}")
         else:
-            shutil.rmtree(self._tmp_dir_path, ignore_errors=True)
+            if self.path.exists():
+                shutil.rmtree(str(self.path), ignore_errors=True)
