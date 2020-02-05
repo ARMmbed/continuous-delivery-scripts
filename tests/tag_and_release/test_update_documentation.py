@@ -1,6 +1,8 @@
 """Tests for mbed_tools_ci_scripts.tag_and_release documentation update functions."""
-import pathlib
+import os
 from unittest import mock, TestCase
+
+import pathlib
 from pyfakefs.fake_filesystem_unittest import Patcher
 
 from mbed_tools_ci_scripts.tag_and_release import (
@@ -9,30 +11,47 @@ from mbed_tools_ci_scripts.tag_and_release import (
 
 
 class TestAddNewDocumentation(TestCase):
-    @mock.patch("mbed_tools_ci_scripts.tag_and_release.TemporaryDirectory")
-    @mock.patch("mbed_tools_ci_scripts.tag_and_release._get_documentation_paths")
-    def test_update_docs(self, _get_documentation_paths, TemporaryDictionary):
+    @mock.patch("mbed_tools_ci_scripts.generate_docs._call_pdoc")
+    @mock.patch(
+        "mbed_tools_ci_scripts.tag_and_release._get_documentation_config")
+    def test_update_docs(self, _get_documentation_config, _call_pdoc):
         with Patcher() as patcher:
-            temp_dir = pathlib.Path("temp")
-            TemporaryDictionary.return_value = temp_dir
-
             module_name = "module_name"
             docs_dir = pathlib.Path("docs")
-            docs_contents_dir = docs_dir.joinpath(module_name)
-            _get_documentation_paths.return_value = docs_dir, docs_contents_dir
+
+            _get_documentation_config.return_value = docs_dir, module_name
+
+            def mocked_generate_docs(output_directory, module):
+                # Creating some fake files in a same way as Pdoc
+                if not output_directory.exists():
+                    patcher.fs.create_dir(output_directory)
+                docs_contents_dir = output_directory.joinpath(module)
+                patcher.fs.create_file(
+                    str(docs_contents_dir.joinpath("docs_file.html")),
+                    contents="This is some documentation."
+                )
+                # check that it moves subdirectories too
+                patcher.fs.create_file(
+                    str(docs_contents_dir.joinpath("sub_dir",
+                                                   "docs_file.html")),
+                    contents="This is some more documentation."
+                )
+
+            _call_pdoc.side_effect = mocked_generate_docs
 
             patcher.fs.create_file(
-                str(docs_contents_dir.joinpath("docs_file.html")),
+                str(docs_dir.joinpath("old_docs_file.html")),
                 contents="This is some old documentation."
             )
-            # check that it moves subdirectories too
-            patcher.fs.create_file(
-                str(docs_contents_dir.joinpath("sub_dir", "docs_file.html")),
-                contents="This is some more documentation."
-            )
+            self.assertTrue(docs_dir.joinpath("old_docs_file.html").exists())
+
             _update_documentation()
 
-            # Check that module name directory has been removed from path in transfer
+            # Check that old documentation in the output directory has been removed
+            self.assertFalse(docs_dir.joinpath("old_docs_file.html").exists())
+            # Check that module name directory is not present in the output directory
+            print(os.listdir(docs_dir))
             self.assertTrue(docs_dir.joinpath("docs_file.html").is_file())
-            self.assertTrue(docs_dir.joinpath("sub_dir", "docs_file.html").is_file())
-            self.assertFalse(docs_contents_dir.is_dir())
+            self.assertTrue(
+                docs_dir.joinpath("sub_dir", "docs_file.html").is_file())
+            self.assertFalse(docs_dir.joinpath(module_name).exists())

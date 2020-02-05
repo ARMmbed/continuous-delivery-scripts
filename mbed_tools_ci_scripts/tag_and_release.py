@@ -1,22 +1,21 @@
 """Orchestrates release process."""
+import sys
+
 import argparse
 import datetime
 import logging
 import subprocess
-import sys
-import shutil
 from pathlib import Path
-from typing import Tuple
+from typing import Optional, Tuple
 
+from mbed_tools_ci_scripts.generate_docs import generate_documentation
 from mbed_tools_ci_scripts.generate_news import version_project
 from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
 from mbed_tools_ci_scripts.utils.definitions import CommitType
-from mbed_tools_ci_scripts.utils.filesystem_helpers import cd, TemporaryDirectory
+from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
 from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone
 from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
-
-from typing import Optional
 
 ENVVAR_TWINE_USERNAME = 'TWINE_USERNAME'
 ENVVAR_TWINE_PASSWORD = 'TWINE_PASSWORD'
@@ -50,16 +49,15 @@ def tag_and_release(mode: CommitType,
         _release_to_pypi()
 
 
-def _get_documentation_paths() -> Tuple[Path, Path]:
+def _get_documentation_config() -> Tuple[Path, str]:
     docs_dir = Path(configuration.get_value(
         ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH
     ))
-    docs_contents_dir = docs_dir.joinpath(
-        configuration.get_value(
-            ConfigurationVariable.MODULE_TO_DOCUMENT
-        )
+    module_to_document = configuration.get_value(
+        ConfigurationVariable.MODULE_TO_DOCUMENT
     )
-    return docs_dir, docs_contents_dir
+
+    return docs_dir, module_to_document
 
 
 def _update_documentation() -> None:
@@ -68,15 +66,13 @@ def _update_documentation() -> None:
     Pdoc nests its docs output in a folder with the module's name.
     This process removes this unwanted folder.
     """
-    docs_dir, docs_contents_dir = _get_documentation_paths()
-    with TemporaryDirectory() as temp_dir:
-        shutil.move(str(docs_contents_dir), str(temp_dir))
-        shutil.rmtree(docs_dir)
-        shutil.move(str(temp_dir), str(docs_dir))
+    docs_dir, module_to_document = _get_documentation_config()
+    generate_documentation(docs_dir, module_to_document)
 
 
-def _update_repository(mode: CommitType, is_new_version: bool,
-                       version: str, current_branch: Optional[str]) -> None:
+def _update_repository(mode: CommitType, is_new_version: bool, version: str,
+                       current_branch: Optional[str]) -> None:
+    """Update repository with changes that happened."""
     with ProjectTempClone(desired_branch_name=current_branch) as git:
         git.configure_for_github()
         if mode == CommitType.RELEASE:

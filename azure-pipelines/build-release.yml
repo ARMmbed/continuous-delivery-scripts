@@ -152,8 +152,6 @@ stages:
 
                 - template: steps/install-development-dependencies.yml
 
-                - template: steps/generate-documentation.yml
-
                 - template: steps/tag-and-release.yml
                   parameters:
                     message: 'Beta Release'
@@ -190,8 +188,6 @@ stages:
                 - template: steps/override-checkout.yml
 
                 - template: steps/install-development-dependencies.yml
-
-                - template: steps/generate-documentation.yml
 
                 - template: steps/tag-and-release.yml
                   parameters:
