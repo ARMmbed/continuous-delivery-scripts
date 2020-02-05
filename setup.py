@@ -51,6 +51,7 @@ setup(
         "toml",
         "python-dotenv",
         "twine",
+        'boto3',
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
