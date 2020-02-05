@@ -119,14 +119,20 @@ class TemporaryDirectory:
         """Context manager exit point."""
         self.cleanup()
 
+    def _default_cleanup(self) -> None:
+        try:
+            self._tmp_dir_context_manager.cleanup()
+        except FileNotFoundError as e:
+            logger.warning(
+                f"Failed cleaning up {self.path}. Reason: {str(e)}")
+
+    def _windows_cleanup(self) -> None:
+        if self.path.exists():
+            shutil.rmtree(str(self.path), ignore_errors=True)
+
     def cleanup(self) -> None:
         """Deletes the temporary directory."""
-        if not (platform.system() == 'Windows'):
-            try:
-                self._tmp_dir_context_manager.cleanup()
-            except FileNotFoundError as e:
-                logger.warning(
-                    f"Failed cleaning up {self.path}. Reason: {str(e)}")
+        if platform.system() == 'Windows':
+            self._windows_cleanup()
         else:
-            if self.path.exists():
-                shutil.rmtree(str(self.path), ignore_errors=True)
+            self._default_cleanup()

@@ -580,6 +580,20 @@ class GitWrapper:
                 line.strip().split(' ')[-1]) for line in status.splitlines()
         ]
 
+    @staticmethod
+    def _apply_modifications(destination: Path,
+                             modified_file: Path) -> None:
+        logger.info(f"Applying change in {modified_file} to {destination}")
+        if not destination.parent.exists():
+            os.makedirs(str(destination.parent), exist_ok=True)
+        shutil.copy2(src=str(modified_file), dst=str(destination))
+
+    @staticmethod
+    def _apply_deletions(destination: Path) -> None:
+        logger.info(f"Removing {destination}")
+        if destination.exists():
+            destination.unlink()
+
     def apply_uncommitted_changes(self, other_repo: 'GitWrapper') -> None:
         """Applies the uncommitted changes found in current repository to another.
 
@@ -590,14 +604,9 @@ class GitWrapper:
         for f in self.uncommitted_changes:
             destination = dest_root.joinpath(f.relative_to(self.root))
             if f.exists():
-                logger.info(f"Applying change in {f} to {destination}")
-                if not destination.parent.exists():
-                    os.makedirs(str(destination.parent), exist_ok=True)
-                shutil.copy2(src=str(f), dst=str(destination))
+                GitWrapper._apply_modifications(destination, f)
             else:
-                logger.info(f"Removing {destination}")
-                if destination.exists():
-                    destination.unlink()
+                GitWrapper._apply_deletions(destination)
 
 
 class ProjectGitWrapper(GitWrapper):
