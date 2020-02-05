@@ -1,1 +1,0 @@
-Generates documentation as part of the release process

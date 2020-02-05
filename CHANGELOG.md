@@ -11,6 +11,30 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.1.0" (2020-02-05)
+====================
+
+Features
+--------
+
+- Added unit tests for filesystem helpers (#1)
+- Generates documentation as part of the release process (#3)
+- Added package information (#4)
+- Added facilities for file upload to AWS S3 (#5)
+
+
+Bugfixes
+--------
+
+- Ensures the documentation is put at the root of GitHub pages when releasing. (#2)
+
+
+Misc
+----
+
+- #20200204, #20200205
+
+
 "1.0.0" (2020-02-03)
 ====================
 

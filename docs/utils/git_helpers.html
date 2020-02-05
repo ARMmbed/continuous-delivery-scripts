@@ -607,6 +607,20 @@ class GitWrapper:
                 line.strip().split(&#39; &#39;)[-1]) for line in status.splitlines()
         ]
 
+    @staticmethod
+    def _apply_modifications(destination: Path,
+                             modified_file: Path) -&gt; None:
+        logger.info(f&#34;Applying change in {modified_file} to {destination}&#34;)
+        if not destination.parent.exists():
+            os.makedirs(str(destination.parent), exist_ok=True)
+        shutil.copy2(src=str(modified_file), dst=str(destination))
+
+    @staticmethod
+    def _apply_deletions(destination: Path) -&gt; None:
+        logger.info(f&#34;Removing {destination}&#34;)
+        if destination.exists():
+            destination.unlink()
+
     def apply_uncommitted_changes(self, other_repo: &#39;GitWrapper&#39;) -&gt; None:
         &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
@@ -617,14 +631,9 @@ class GitWrapper:
         for f in self.uncommitted_changes:
             destination = dest_root.joinpath(f.relative_to(self.root))
             if f.exists():
-                logger.info(f&#34;Applying change in {f} to {destination}&#34;)
-                if not destination.parent.exists():
-                    os.makedirs(str(destination.parent), exist_ok=True)
-                shutil.copy2(src=str(f), dst=str(destination))
+                GitWrapper._apply_modifications(destination, f)
             else:
-                logger.info(f&#34;Removing {destination}&#34;)
-                if destination.exists():
-                    destination.unlink()
+                GitWrapper._apply_deletions(destination)
 
 
 class ProjectGitWrapper(GitWrapper):
@@ -1582,6 +1591,20 @@ def initial_location(self) -&gt; Path:
                 line.strip().split(&#39; &#39;)[-1]) for line in status.splitlines()
         ]
 
+    @staticmethod
+    def _apply_modifications(destination: Path,
+                             modified_file: Path) -&gt; None:
+        logger.info(f&#34;Applying change in {modified_file} to {destination}&#34;)
+        if not destination.parent.exists():
+            os.makedirs(str(destination.parent), exist_ok=True)
+        shutil.copy2(src=str(modified_file), dst=str(destination))
+
+    @staticmethod
+    def _apply_deletions(destination: Path) -&gt; None:
+        logger.info(f&#34;Removing {destination}&#34;)
+        if destination.exists():
+            destination.unlink()
+
     def apply_uncommitted_changes(self, other_repo: &#39;GitWrapper&#39;) -&gt; None:
         &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
@@ -1592,14 +1615,9 @@ def initial_location(self) -&gt; Path:
         for f in self.uncommitted_changes:
             destination = dest_root.joinpath(f.relative_to(self.root))
             if f.exists():
-                logger.info(f&#34;Applying change in {f} to {destination}&#34;)
-                if not destination.parent.exists():
-                    os.makedirs(str(destination.parent), exist_ok=True)
-                shutil.copy2(src=str(f), dst=str(destination))
+                GitWrapper._apply_modifications(destination, f)
             else:
-                logger.info(f&#34;Removing {destination}&#34;)
-                if destination.exists():
-                    destination.unlink()</code></pre>
+                GitWrapper._apply_deletions(destination)</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -1713,14 +1731,9 @@ def uncommitted_changes(self) -&gt; List[Path]:
     for f in self.uncommitted_changes:
         destination = dest_root.joinpath(f.relative_to(self.root))
         if f.exists():
-            logger.info(f&#34;Applying change in {f} to {destination}&#34;)
-            if not destination.parent.exists():
-                os.makedirs(str(destination.parent), exist_ok=True)
-            shutil.copy2(src=str(f), dst=str(destination))
+            GitWrapper._apply_modifications(destination, f)
         else:
-            logger.info(f&#34;Removing {destination}&#34;)
-            if destination.exists():
-                destination.unlink()</code></pre>
+            GitWrapper._apply_deletions(destination)</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists"><code class="name flex">

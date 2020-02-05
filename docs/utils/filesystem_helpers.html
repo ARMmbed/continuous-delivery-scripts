@@ -146,16 +146,23 @@ class TemporaryDirectory:
         &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
         self.cleanup()
 
+    def _default_cleanup(self) -&gt; None:
+        try:
+            self._tmp_dir_context_manager.cleanup()
+        except FileNotFoundError as e:
+            logger.warning(
+                f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
+
+    def _windows_cleanup(self) -&gt; None:
+        if self.path.exists():
+            shutil.rmtree(str(self.path), ignore_errors=True)
+
     def cleanup(self) -&gt; None:
         &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-        if not (platform.system() == &#39;Windows&#39;):
-            try:
-                self._tmp_dir_context_manager.cleanup()
-            except FileNotFoundError as e:
-                logger.warning(
-                    f&#34;Failed cleaning up {self._tmp_dir_path}. Reason: {str(e)}&#34;)
+        if platform.system() == &#39;Windows&#39;:
+            self._windows_cleanup()
         else:
-            shutil.rmtree(self._tmp_dir_path, ignore_errors=True)</code></pre>
+            self._default_cleanup()</code></pre>
 </details>
 </section>
 <section>
@@ -335,16 +342,23 @@ implemented.</p>
         &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
         self.cleanup()
 
+    def _default_cleanup(self) -&gt; None:
+        try:
+            self._tmp_dir_context_manager.cleanup()
+        except FileNotFoundError as e:
+            logger.warning(
+                f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
+
+    def _windows_cleanup(self) -&gt; None:
+        if self.path.exists():
+            shutil.rmtree(str(self.path), ignore_errors=True)
+
     def cleanup(self) -&gt; None:
         &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-        if not (platform.system() == &#39;Windows&#39;):
-            try:
-                self._tmp_dir_context_manager.cleanup()
-            except FileNotFoundError as e:
-                logger.warning(
-                    f&#34;Failed cleaning up {self._tmp_dir_path}. Reason: {str(e)}&#34;)
+        if platform.system() == &#39;Windows&#39;:
+            self._windows_cleanup()
         else:
-            shutil.rmtree(self._tmp_dir_path, ignore_errors=True)</code></pre>
+            self._default_cleanup()</code></pre>
 </details>
 <h3>Instance variables</h3>
 <dl>
@@ -375,14 +389,10 @@ def path(self) -&gt; Path:
 </summary>
 <pre><code class="python">def cleanup(self) -&gt; None:
     &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-    if not (platform.system() == &#39;Windows&#39;):
-        try:
-            self._tmp_dir_context_manager.cleanup()
-        except FileNotFoundError as e:
-            logger.warning(
-                f&#34;Failed cleaning up {self._tmp_dir_path}. Reason: {str(e)}&#34;)
+    if platform.system() == &#39;Windows&#39;:
+        self._windows_cleanup()
     else:
-        shutil.rmtree(self._tmp_dir_path, ignore_errors=True)</code></pre>
+        self._default_cleanup()</code></pre>
 </details>
 </dd>
 </dl>
