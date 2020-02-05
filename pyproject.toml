@@ -1,8 +1,6 @@
 [ProjectConfig]
 # Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
 # these tokens are used to identify path variables from other variable types.
-PROJECT_NAME = "mbed-tools-ci-scripts"
-PACKAGE_NAME = "mbed-tools-ci-scripts"
 PROJECT_ROOT = "."
 NEWS_DIR = "news/"
 SOURCE_DIR = "mbed_tools_ci_scripts"
@@ -35,7 +33,7 @@ patch = "news/*.bugfix"
 [tool.towncrier]
 directory = "news"
 filename = "CHANGELOG.md"
-package = "mbed_targets"
+package = "mbed_tools_ci_scripts"
 title_format = "{version} ({project_date})"
 start_string = """
 [//]: # (begin_release_notes)

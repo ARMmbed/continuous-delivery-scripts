@@ -1,8 +1,22 @@
+# Azure Pipeline for Build and Release a Python package.
+#
+# This pipeline performs multiple actions to ensure the quality of the package:
+# - Performs static analysis and runs test on multiple Python versions and host platforms.
+# - Uploads test coverage to Code Climate
+# - Generates reference documentation
+# - Optionally releases the software on PyPI
+
+# Rebuild after commits to master for GA releases, beta for pre-release and release branches for patches.
 trigger:
   - master
+  - beta
+  - releases/*
 
+# Trigger on a PR to master, beta or releases branches (this includes PRs from forks but secrets are not exposed).
 pr:
   - master
+  - beta
+  - releases/*
 
 stages:
   - stage: AnalyseTest
@@ -52,6 +66,7 @@ stages:
 
           - template: steps/install-development-dependencies.yml
 
+          # Static analysis is different for Python versions so should be run in each environment.
           - script: |
               flake8
             displayName: 'Static Analysis - general (flake8)'
@@ -61,43 +76,14 @@ stages:
             displayName: 'Static Analysis - type checks (mypy)'
 
           - script: |
+              pip install pytest-azurepipelines
+            displayName: 'Add pytest plugin to upload test results to Azure UI'
+
+          - script: |
               pytest
             displayName: 'Run unit tests (pytest)'
 
-          - script: |
-              curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-              chmod +x ./cc-test-reporter
-              ./cc-test-reporter format-coverage -t coverage.py -o coverage/codeclimate.json coverage/coverage.xml
-              ./cc-test-reporter upload-coverage
-            displayName: 'Upload test coverage to Code Climate'
-            condition: and(succeeded(), eq(variables['uploadCoverage'], 'true'))
-            env:
-              CC_TEST_REPORTER_ID: $(CODECLIMATE_REPORTER_ID)
-              GIT_BRANCH: $(Build.SourceBranchName)
-              GIT_COMMIT: $(Build.SourceVersion)
-
-  - stage: DocBuild
-    displayName: 'Build Documentation'
-    dependsOn: []
-    jobs:
-      - job: Docs
-        displayName: 'Build Documentation'
-        pool:
-          vmImage: 'ubuntu-latest'
-
-        steps:
-          - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
-            inputs:
-              versionSpec: '3.7'
-
-          - template: steps/install-development-dependencies.yml
-
-          - template: steps/generate-documentation.yml
-
-          - publish: $(temp_docs_path)
-            artifact: Documentation
-            displayName: 'Publish documentation'
+          - template: steps/publish-code-coverage-results.yml
 
   - stage: AssertNews
     displayName: 'Checks news files'
@@ -121,6 +107,29 @@ stages:
           - script: |
               assert-news -b $(current_branch)
             displayName: 'Run check'
+
+  - stage: DocBuild
+    displayName: 'Build Documentation'
+    dependsOn: []
+    jobs:
+      - job: Docs
+        displayName: 'Build Documentation'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - task: UsePythonVersion@0
+            displayName: 'Use Python 3.7'
+            inputs:
+              versionSpec: '3.7'
+
+          - template: steps/install-development-dependencies.yml
+
+          - template: steps/generate-documentation.yml
+
+          - publish: $(temp_docs_path)
+            artifact: Documentation
+            displayName: 'Publish documentation'
 
   - stage: BetaRelease
     displayName: 'Beta Release'
