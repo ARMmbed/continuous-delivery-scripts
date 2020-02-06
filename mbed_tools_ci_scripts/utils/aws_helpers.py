@@ -25,9 +25,7 @@ def _get_aws_config() -> Tuple[str, dict]:
     return s3_region, s3_config
 
 
-def upload_file(file: Path, bucket_dir: Optional[str],
-                bucket_name: str = str(configuration.get_value(
-                    ConfigurationVariable.AWS_BUCKET))) -> None:
+def upload_file(file: Path, bucket_dir: Optional[str], bucket_name: str) -> None:
     """Uploads a file onto AWS S3.
 
     Args:
@@ -35,6 +33,8 @@ def upload_file(file: Path, bucket_dir: Optional[str],
         bucket_dir: name of the folder where to put the file in S3 bucket
         bucket_name: name of the bucket to target
     """
+    if not bucket_name:
+        bucket_name = str(configuration.get_value(ConfigurationVariable.AWS_BUCKET))
     logger.info(f'Uploading {file} to AWS')
     if not file.exists():
         raise FileNotFoundError(file)
@@ -86,9 +86,7 @@ def _determine_destination(bucket_dir: str, real_dir_path: Path,
     return bucket_dest.replace(os.sep, '/')
 
 
-def upload_directory(dir: Path, bucket_dir: str,
-                     bucket_name: str = str(configuration.get_value(
-                         ConfigurationVariable.AWS_BUCKET))) -> None:
+def upload_directory(dir: Path, bucket_dir: str, bucket_name: str) -> None:
     """Uploads the contents of a directory (recursively) onto AWS S3.
 
     Args:
@@ -96,6 +94,8 @@ def upload_directory(dir: Path, bucket_dir: str,
         bucket_dir: name of the folder where to put the directory contents in S3 bucket
         bucket_name: name of the bucket to target
     """
+    if not bucket_name:
+        bucket_name = str(configuration.get_value(ConfigurationVariable.AWS_BUCKET))
     logger.info(f'Uploading {dir} to AWS')
     if not dir.exists():
         raise FileNotFoundError(dir)
