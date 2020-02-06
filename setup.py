@@ -21,7 +21,7 @@ setup(
     author="Mbed team",
     author_email="support@mbed.com",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
@@ -31,7 +31,7 @@ setup(
         "Topic :: Software Development :: Build Tools",
         "Topic :: Software Development :: Embedded Systems",
     ],
-    description="TODO_PYPI",
+    description="Continuous Integration scripts used by Mbed tools Python packages",
     entry_points={
         "console_scripts": [
             f"assert-news={SOURCE_DIR}.assert_news:main",
@@ -41,7 +41,7 @@ setup(
             f"get-config={SOURCE_DIR}.get_config:main",
         ],
     },
-    keywords="Arm Mbed OS MbedOS TODO_PYPI",
+    keywords="Arm Mbed OS MbedOS Tools CI Scripts",
     include_package_data=True,
     install_requires=[
         "gitpython",
