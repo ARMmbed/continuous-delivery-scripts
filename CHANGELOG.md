@@ -11,6 +11,27 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.2.0" (2020-02-06)
+====================
+
+Features
+--------
+
+- Commit back the version file on Beta releases (#2)
+
+
+Bugfixes
+--------
+
+- Fix default arguments depending on unavailable config (#1)
+
+
+Misc
+----
+
+- #1, #2
+
+
 "1.1.0" (2020-02-05)
 ====================
 

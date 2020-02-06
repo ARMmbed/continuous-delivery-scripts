@@ -53,9 +53,7 @@ def _get_aws_config() -&gt; Tuple[str, dict]:
     return s3_region, s3_config
 
 
-def upload_file(file: Path, bucket_dir: Optional[str],
-                bucket_name: str = str(configuration.get_value(
-                    ConfigurationVariable.AWS_BUCKET))) -&gt; None:
+def upload_file(file: Path, bucket_dir: Optional[str], bucket_name: str) -&gt; None:
     &#34;&#34;&#34;Uploads a file onto AWS S3.
 
     Args:
@@ -63,6 +61,8 @@ def upload_file(file: Path, bucket_dir: Optional[str],
         bucket_dir: name of the folder where to put the file in S3 bucket
         bucket_name: name of the bucket to target
     &#34;&#34;&#34;
+    if not bucket_name:
+        bucket_name = str(configuration.get_value(ConfigurationVariable.AWS_BUCKET))
     logger.info(f&#39;Uploading {file} to AWS&#39;)
     if not file.exists():
         raise FileNotFoundError(file)
@@ -114,9 +114,7 @@ def _determine_destination(bucket_dir: str, real_dir_path: Path,
     return bucket_dest.replace(os.sep, &#39;/&#39;)
 
 
-def upload_directory(dir: Path, bucket_dir: str,
-                     bucket_name: str = str(configuration.get_value(
-                         ConfigurationVariable.AWS_BUCKET))) -&gt; None:
+def upload_directory(dir: Path, bucket_dir: str, bucket_name: str) -&gt; None:
     &#34;&#34;&#34;Uploads the contents of a directory (recursively) onto AWS S3.
 
     Args:
@@ -124,6 +122,8 @@ def upload_directory(dir: Path, bucket_dir: str,
         bucket_dir: name of the folder where to put the directory contents in S3 bucket
         bucket_name: name of the bucket to target
     &#34;&#34;&#34;
+    if not bucket_name:
+        bucket_name = str(configuration.get_value(ConfigurationVariable.AWS_BUCKET))
     logger.info(f&#39;Uploading {dir} to AWS&#39;)
     if not dir.exists():
         raise FileNotFoundError(dir)
@@ -153,7 +153,7 @@ def upload_directory(dir: Path, bucket_dir: str,
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.aws_helpers.upload_directory"><code class="name flex">
-<span>def <span class="ident">upload_directory</span></span>(<span>dir: pathlib.Path, bucket_dir: str, bucket_name: str = '') -> NoneType</span>
+<span>def <span class="ident">upload_directory</span></span>(<span>dir: pathlib.Path, bucket_dir: str, bucket_name: str) -> NoneType</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Uploads the contents of a directory (recursively) onto AWS S3.</p>
@@ -170,9 +170,7 @@ def upload_directory(dir: Path, bucket_dir: str,
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def upload_directory(dir: Path, bucket_dir: str,
-                     bucket_name: str = str(configuration.get_value(
-                         ConfigurationVariable.AWS_BUCKET))) -&gt; None:
+<pre><code class="python">def upload_directory(dir: Path, bucket_dir: str, bucket_name: str) -&gt; None:
     &#34;&#34;&#34;Uploads the contents of a directory (recursively) onto AWS S3.
 
     Args:
@@ -180,6 +178,8 @@ def upload_directory(dir: Path, bucket_dir: str,
         bucket_dir: name of the folder where to put the directory contents in S3 bucket
         bucket_name: name of the bucket to target
     &#34;&#34;&#34;
+    if not bucket_name:
+        bucket_name = str(configuration.get_value(ConfigurationVariable.AWS_BUCKET))
     logger.info(f&#39;Uploading {dir} to AWS&#39;)
     if not dir.exists():
         raise FileNotFoundError(dir)
@@ -202,7 +202,7 @@ def upload_directory(dir: Path, bucket_dir: str,
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.aws_helpers.upload_file"><code class="name flex">
-<span>def <span class="ident">upload_file</span></span>(<span>file: pathlib.Path, bucket_dir: Union[str, NoneType], bucket_name: str = '') -> NoneType</span>
+<span>def <span class="ident">upload_file</span></span>(<span>file: pathlib.Path, bucket_dir: Union[str, NoneType], bucket_name: str) -> NoneType</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Uploads a file onto AWS S3.</p>
@@ -219,9 +219,7 @@ def upload_directory(dir: Path, bucket_dir: str,
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def upload_file(file: Path, bucket_dir: Optional[str],
-                bucket_name: str = str(configuration.get_value(
-                    ConfigurationVariable.AWS_BUCKET))) -&gt; None:
+<pre><code class="python">def upload_file(file: Path, bucket_dir: Optional[str], bucket_name: str) -&gt; None:
     &#34;&#34;&#34;Uploads a file onto AWS S3.
 
     Args:
@@ -229,6 +227,8 @@ def upload_directory(dir: Path, bucket_dir: str,
         bucket_dir: name of the folder where to put the file in S3 bucket
         bucket_name: name of the bucket to target
     &#34;&#34;&#34;
+    if not bucket_name:
+        bucket_name = str(configuration.get_value(ConfigurationVariable.AWS_BUCKET))
     logger.info(f&#39;Uploading {file} to AWS&#39;)
     if not file.exists():
         raise FileNotFoundError(file)
