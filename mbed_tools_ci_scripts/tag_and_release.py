@@ -14,7 +14,8 @@ from mbed_tools_ci_scripts.utils.configuration import configuration, \
     ConfigurationVariable
 from mbed_tools_ci_scripts.utils.definitions import CommitType
 from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
-from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, \
+    GitWrapper
 from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
 
 ENVVAR_TWINE_USERNAME = 'TWINE_USERNAME'
@@ -75,28 +76,47 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str,
     """Update repository with changes that happened."""
     with ProjectTempClone(desired_branch_name=current_branch) as git:
         git.configure_for_github()
+        time_str = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")
+        commit_message = f'🚀 releasing version {version} @ {time_str}' if is_new_version else f'📰 Automatic changes ⚙'
         if mode == CommitType.RELEASE:
-            logger.info(f'Committing release [{version}]...')
-            git.add(
-                configuration.get_value(
-                    ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
-            git.add(
-                configuration.get_value(
-                    ConfigurationVariable.VERSION_FILE_PATH))
-            git.add(
-                configuration.get_value(
-                    ConfigurationVariable.CHANGELOG_FILE_PATH))
-            git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
-            time_str = datetime.datetime.utcnow().strftime(
-                "%Y-%m-%d %H:%M")
-            commit_message = f'📰 releasing version {version} 🚀 @ {time_str}' if is_new_version else f'📰 Automatic changes ⚙'
-            git.commit(f'{commit_message}\n[skip ci]')
-            git.push()
-            git.pull()
+            _commit_release_changes(git, version, commit_message)
+        elif mode == CommitType.BETA:
+            _commit_beta_release_changes(git, version, commit_message)
         if is_new_version:
             logger.info(f'Tagging commit')
             git.create_tag(version, message=f'release {version}')
             git.force_push_tag()
+
+
+def _commit_beta_release_changes(git: GitWrapper, version: str,
+                                 commit_message: str) -> None:
+    logger.info(f'Committing beta release [{version}]...')
+    git.add(
+        configuration.get_value(
+            ConfigurationVariable.VERSION_FILE_PATH))
+    _commit_changes(commit_message, git)
+
+
+def _commit_release_changes(git: GitWrapper, version: str,
+                            commit_message: str) -> None:
+    logger.info(f'Committing release [{version}]...')
+    git.add(
+        configuration.get_value(
+            ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
+    git.add(
+        configuration.get_value(
+            ConfigurationVariable.VERSION_FILE_PATH))
+    git.add(
+        configuration.get_value(
+            ConfigurationVariable.CHANGELOG_FILE_PATH))
+    git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
+    _commit_changes(commit_message, git)
+
+
+def _commit_changes(commit_message: str, git: GitWrapper) -> None:
+    git.commit(f'{commit_message}\n[skip ci]')
+    git.push()
+    git.pull()
 
 
 def _check_credentials() -> None:

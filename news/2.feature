@@ -1,0 +1,1 @@
+Commit back the version file on Beta releases
