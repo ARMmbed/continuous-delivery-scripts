@@ -18,8 +18,7 @@ logger = logging.getLogger(__name__)
 class GitWrapper:
     """Wrapper class to provide convenient methods for performing git actions."""
 
-    def __init__(self, path: Path,
-                 repo: Repo) -> None:
+    def __init__(self, path: Path, repo: Repo) -> None:
         """Creates an instance of GitWrapper.
 
         Args:
@@ -30,7 +29,8 @@ class GitWrapper:
         self.repo = repo
         self.author = Actor(
             configuration.get_value(ConfigurationVariable.BOT_USERNAME),
-            configuration.get_value(ConfigurationVariable.BOT_EMAIL))
+            configuration.get_value(ConfigurationVariable.BOT_EMAIL),
+        )
 
     def _git_url_ssh_to_https(self, url: str) -> str:
         """Changes repository URL to use authorisation token.
@@ -41,13 +41,12 @@ class GitWrapper:
         Returns:
             new URL
         """
-        path = url.split('github.com', 1)[1][1:].strip()
-        new = 'https://{GITHUB_TOKEN}:x-oauth-basic@github.com/%s' % path
-        logger.info('rewriting git url to: %s' % new)
-        return new.format(GITHUB_TOKEN=configuration.get_value(
-            ConfigurationVariable.GIT_TOKEN))
+        path = url.split("github.com", 1)[1][1:].strip()
+        new = "https://{GITHUB_TOKEN}:x-oauth-basic@github.com/%s" % path
+        logger.info("rewriting git url to: %s" % new)
+        return new.format(GITHUB_TOKEN=configuration.get_value(ConfigurationVariable.GIT_TOKEN))
 
-    def clone(self, path: Path) -> 'GitWrapper':
+    def clone(self, path: Path) -> "GitWrapper":
         """Clones this repository to the path.
 
         Args:
@@ -56,11 +55,9 @@ class GitWrapper:
         Returns:
             a wrapper over the cloned repository
         """
-        git_clone = self.repo.clone_from(url=self.get_remote_url(),
-                                         to_path=str(path),
-                                         multi_options=[
-                                             '--recurse-submodules']
-                                         )
+        git_clone = self.repo.clone_from(
+            url=self.get_remote_url(), to_path=str(path), multi_options=["--recurse-submodules"]
+        )
         clone = GitWrapper(path=path, repo=git_clone)
         clone.set_remote_url(self.get_remote_url())
         clone.fetch()
@@ -77,10 +74,8 @@ class GitWrapper:
 
     def configure_author(self) -> None:
         """Sets the author."""
-        self.repo.config_writer().set_value("user", "name",
-                                            self.author.name).release()
-        self.repo.config_writer().set_value("user", "email",
-                                            self.author.email).release()
+        self.repo.config_writer().set_value("user", "name", self.author.name).release()
+        self.repo.config_writer().set_value("user", "email", self.author.email).release()
 
     def checkout_branch(self, branch_name: str) -> Any:
         """Checks out a branch from its name.
@@ -108,20 +103,19 @@ class GitWrapper:
 
     def _add_one_file_or_one_dir(self, path: str) -> None:
         if not path:
-            raise ValueError('Unspecified path.')
+            raise ValueError("Unspecified path.")
         self._add_one_path(Path(path))
 
     def _add_one_path(self, path_model: Path) -> None:
         if not path_model.is_absolute():
             path_model = Path(self.root).joinpath(path_model)
         if not path_model.exists():
-            logger.warning(
-                f'[Git] {path_model} cannot be added because not found.')
+            logger.warning(f"[Git] {path_model} cannot be added because not found.")
             return
         relative_path = str(path_model.relative_to(self.root))
-        unix_relative_path = relative_path.replace('\\', '/')
+        unix_relative_path = relative_path.replace("\\", "/")
         if path_model.is_dir():
-            unix_relative_path = f'{unix_relative_path}/*'
+            unix_relative_path = f"{unix_relative_path}/*"
         logger.info(f"Adding {unix_relative_path} to repository.")
         self.repo.git.add(unix_relative_path)
 
@@ -137,8 +131,7 @@ class GitWrapper:
         else:
             self._add_one_file_or_one_dir(path)
 
-    def commit(self, message: str,
-               **kwargs: Optional[Tuple[str, Any]]) -> None:
+    def commit(self, message: str, **kwargs: Optional[Tuple[str, Any]]) -> None:
         """Commits changes to the repository.
 
         Args:
@@ -146,11 +139,7 @@ class GitWrapper:
             **kwargs: extra parameters
         """
         logger.info("Committing changes")
-        self.repo.index.commit(
-            message,
-            author=self.author,
-            **kwargs
-        )
+        self.repo.index.commit(message, author=self.author, **kwargs)
 
     def get_master_branch(self) -> Any:
         """Gets the `master` branch.
@@ -158,8 +147,7 @@ class GitWrapper:
         Returns:
             corresponding branch
         """
-        return self.get_branch(configuration.get_value(
-            ConfigurationVariable.MASTER_BRANCH))
+        return self.get_branch(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
 
     def get_beta_branch(self) -> Any:
         """Gets the `beta` branch.
@@ -167,8 +155,7 @@ class GitWrapper:
         Returns:
             corresponding branch
         """
-        return self.get_branch(configuration.get_value(
-            ConfigurationVariable.BETA_BRANCH))
+        return self.get_branch(configuration.get_value(ConfigurationVariable.BETA_BRANCH))
 
     def is_release_branch(self, branch_name: Optional[str]) -> bool:
         """Checks whether the branch is a `release` branch or not.
@@ -179,12 +166,10 @@ class GitWrapper:
         Returns:
             True if the branch is used for `release` code; False otherwise
         """
-        branch_pattern = configuration.get_value(
-            ConfigurationVariable.RELEASE_BRANCH_PATTERN)
+        branch_pattern = configuration.get_value(ConfigurationVariable.RELEASE_BRANCH_PATTERN)
         if not branch_pattern or not branch_name:
             return False
-        is_release: Optional[Any] = re.search(branch_pattern,
-                                              str(branch_name))
+        is_release: Optional[Any] = re.search(branch_pattern, str(branch_name))
         return True if is_release else False
 
     def fetch(self) -> None:
@@ -224,28 +209,22 @@ class GitWrapper:
         try:
             return self.repo.active_branch
         except TypeError as e:
-            logger.warning(
-                f'Could not determine the branch name using GitPython: {e}'
-            )
+            logger.warning(f"Could not determine the branch name using GitPython: {e}")
         current_branch = self._get_branch_from_advanced_feature()
         if not current_branch:
-            current_branch = self._get_branch_from_abbreviation('HEAD')
+            current_branch = self._get_branch_from_abbreviation("HEAD")
         return current_branch
 
     def _get_branch_from_advanced_feature(self) -> Any:
-        if version.parse(self.git_version()) >= version.parse('2.22'):
+        if version.parse(self.git_version()) >= version.parse("2.22"):
             current_branch = self.repo.git.branch(show_current=True)
-            current_branch = current_branch if isinstance(current_branch,
-                                                          str) else current_branch.decode(
-                'utf-8')
+            current_branch = current_branch if isinstance(current_branch, str) else current_branch.decode("utf-8")
             return self.get_branch(current_branch)
         return None
 
     def _get_branch_from_abbreviation(self, abbreviation: str) -> Any:
-        current_branch = self.repo.git.rev_parse('--abbrev-ref', abbreviation)
-        current_branch = current_branch if isinstance(current_branch,
-                                                      str) else current_branch.decode(
-            'utf-8')
+        current_branch = self.repo.git.rev_parse("--abbrev-ref", abbreviation)
+        current_branch = current_branch if isinstance(current_branch, str) else current_branch.decode("utf-8")
         return self.get_branch(current_branch.strip())
 
     def get_commit_count(self) -> int:
@@ -299,8 +278,7 @@ class GitWrapper:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f'Merge from {str(branch)}',
-                    parent_commits=(branch.commit, current_branch.commit))
+        self.commit(f"Merge from {str(branch)}", parent_commits=(branch.commit, current_branch.commit))
 
     def get_remote_url(self) -> str:
         """Gets the URL of the remote repository.
@@ -310,10 +288,10 @@ class GitWrapper:
         """
         remote = self._get_remote()
         if not remote:
-            raise ValueError('Undefined remote repository')
+            raise ValueError("Undefined remote repository")
         url = remote.url
         if not url:
-            raise ValueError('Undefined remote repository URL')
+            raise ValueError("Undefined remote repository URL")
         return str(url)
 
     def cherry_pick(self, commit: Any) -> None:
@@ -333,8 +311,7 @@ class GitWrapper:
         remote = self._get_remote()
         if remote:
             self.repo.delete_remote(str(remote))
-        self.repo.create_remote(configuration.get_value(
-            ConfigurationVariable.REMOTE_ALIAS), url=url)
+        self.repo.create_remote(configuration.get_value(ConfigurationVariable.REMOTE_ALIAS), url=url)
 
     def get_remote_branch(self, branch_name: str) -> Optional[Any]:
         """Gets the branch present in the remote repository.
@@ -361,9 +338,7 @@ class GitWrapper:
             branch_name: name of the remote branch.
         """
         if self.remote_branch_exists(branch_name):
-            self.repo.git.branch(
-                '--set-upstream-to', self.get_remote_branch(branch_name)
-            )
+            self.repo.git.branch("--set-upstream-to", self.get_remote_branch(branch_name))
 
     def delete_branch(self, branch: Any) -> None:
         """Deletes a branch.
@@ -405,21 +380,18 @@ class GitWrapper:
         """
         return self.get_remote_branch(branch_name) is not None
 
-    def _get_specific_changes(self, change_type: Optional[str], commit1: Any,
-                              commit2: Any) -> List[str]:
+    def _get_specific_changes(self, change_type: Optional[str], commit1: Any, commit2: Any) -> List[str]:
         diff = commit1.diff(commit2)
         if change_type:
             change_type = change_type.upper()
             change_type = change_type if change_type in diff.change_type else None
-        diff_iterator = diff.iter_change_type(
-            change_type) if change_type else diff
-        changes = [change.a_path if change.a_path else change.b_path for change
-                   in diff_iterator]
+        diff_iterator = diff.iter_change_type(change_type) if change_type else diff
+        changes = [change.a_path if change.a_path else change.b_path for change in diff_iterator]
         return changes
 
-    def get_changes_list(self, commit1: Any, commit2: Any,
-                         change_type: Optional[str] = None,
-                         dir: Optional[str] = None) -> List[str]:
+    def get_changes_list(
+        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+    ) -> List[str]:
         """Gets change list.
 
         Gets a list of all the changes that happened between two commits:
@@ -436,12 +408,9 @@ class GitWrapper:
         """
         changes = self._get_specific_changes(change_type, commit1, commit2)
         if dir:
-            windows_path = dir.replace('/', '\\')
-            linux_path = dir.replace('\\', '/')
-            return [
-                change for change in changes if
-                (linux_path in change) or (windows_path in change)
-            ]
+            windows_path = dir.replace("/", "\\")
+            linux_path = dir.replace("\\", "/")
+            return [change for change in changes if (linux_path in change) or (windows_path in change)]
         else:
             return changes
 
@@ -452,13 +421,11 @@ class GitWrapper:
     def pull(self) -> None:
         """Pulls changes on current branch from the remote repository."""
         if self.remote_branch_exists(self.get_current_branch()):
-            self.repo.git.pull(self._get_remote(), self.get_current_branch(),
-                               quiet=True)
+            self.repo.git.pull(self._get_remote(), self.get_current_branch(), quiet=True)
 
     def force_pull(self) -> None:
         """Force pulls changes from the remote repository."""
-        self.repo.git.pull(self._get_remote(), self.get_current_branch(),
-                           quiet=True, force=True)
+        self.repo.git.pull(self._get_remote(), self.get_current_branch(), quiet=True, force=True)
 
     def push(self) -> None:
         """Pushes commits.
@@ -466,9 +433,7 @@ class GitWrapper:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         """
-        self.repo.git.push('--follow-tags', '--set-upstream',
-                           self._get_remote(),
-                           self.get_current_branch())
+        self.repo.git.push("--follow-tags", "--set-upstream", self._get_remote(), self.get_current_branch())
 
     def push_tag(self) -> None:
         """Pushes commits and tags.
@@ -531,25 +496,21 @@ class GitWrapper:
         Returns:
             the version of git in use.
         """
-        return '.'.join(
-            [str(element) for element in self.repo.git.version_info])
+        return ".".join([str(element) for element in self.repo.git.version_info])
 
     def _get_remote(self) -> Optional[Any]:
         try:
-            return self.repo.remote(
-                configuration.get_value(ConfigurationVariable.REMOTE_ALIAS))
+            return self.repo.remote(configuration.get_value(ConfigurationVariable.REMOTE_ALIAS))
         except (IndexError, ValueError) as e:
             logger.warning(e)
             return None
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
-        master_branch_commit = self.repo.commit('master')
+        master_branch_commit = self.repo.commit("master")
         current_branch_commit = self.repo.commit(self.get_current_branch())
         changes = self.get_changes_list(
-            self.get_branch_point(master_branch_commit, current_branch_commit),
-            current_branch_commit,
-            change_type='a'
+            self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type="a"
         )
         return changes
 
@@ -568,21 +529,14 @@ class GitWrapper:
         Returns:
              list of uncommitted
         """
-        status = self.repo.git.status(
-            porcelain=True,
-            untracked_files=True
-        )
+        status = self.repo.git.status(porcelain=True, untracked_files=True)
         if not status:
             return []
 
-        return [
-            Path(self.root).joinpath(
-                line.strip().split(' ')[-1]) for line in status.splitlines()
-        ]
+        return [Path(self.root).joinpath(line.strip().split(" ")[-1]) for line in status.splitlines()]
 
     @staticmethod
-    def _apply_modifications(destination: Path,
-                             modified_file: Path) -> None:
+    def _apply_modifications(destination: Path, modified_file: Path) -> None:
         logger.info(f"Applying change in {modified_file} to {destination}")
         if not destination.parent.exists():
             os.makedirs(str(destination.parent), exist_ok=True)
@@ -594,7 +548,7 @@ class GitWrapper:
         if destination.exists():
             destination.unlink()
 
-    def apply_uncommitted_changes(self, other_repo: 'GitWrapper') -> None:
+    def apply_uncommitted_changes(self, other_repo: "GitWrapper") -> None:
         """Applies the uncommitted changes found in current repository to another.
 
         Args:
@@ -615,10 +569,8 @@ class ProjectGitWrapper(GitWrapper):
     def __init__(self) -> None:
         """Creates a Git Wrapper."""
         super().__init__(
-            path=Path(
-                configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
-            repo=Repo(
-                configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+            path=Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
+            repo=Repo(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
         )
 
 
@@ -641,10 +593,9 @@ class GitClone(GitWrapper):
         self._initial_path = initial_path
 
     @staticmethod
-    def wrap(repo: GitWrapper, initial_location: Path) -> 'GitClone':
+    def wrap(repo: GitWrapper, initial_location: Path) -> "GitClone":
         """Wraps around around a repository."""
-        return GitClone(repo=repo.repo, path=repo.root,
-                        initial_path=initial_location)
+        return GitClone(repo=repo.repo, path=repo.root, initial_path=initial_location)
 
     @property
     def initial_location(self) -> Path:
@@ -667,8 +618,7 @@ class GitClone(GitWrapper):
             return Path(self.root).joinpath(path_in_initial_repo)
         try:
             # Tyring to find if the path corresponds to a file/directory present in intial repository
-            return Path(self.root).joinpath(
-                path_in_initial_repo.relative_to(self.initial_location))
+            return Path(self.root).joinpath(path_in_initial_repo.relative_to(self.initial_location))
         except ValueError:
             return path_in_initial_repo
 
@@ -676,8 +626,7 @@ class GitClone(GitWrapper):
 class GitTempClone:
     """Context manager providing a temporary cloned repository."""
 
-    def __init__(self, desired_branch_name: Optional[str],
-                 repository_to_clone: GitWrapper):
+    def __init__(self, desired_branch_name: Optional[str], repository_to_clone: GitWrapper):
         """Constructor.
 
         Args:
@@ -685,13 +634,10 @@ class GitTempClone:
             repository_to_clone: the repository to clone. If not specified, the project repository will be used.
         """
         self._temporary_dir = TemporaryDirectory()
-        logger.info(
-            f"Creating a temporary repository in {self._temporary_dir}")
+        logger.info(f"Creating a temporary repository in {self._temporary_dir}")
         _repo = repository_to_clone
-        _current_branch_name = desired_branch_name if desired_branch_name else str(
-            _repo.get_current_branch())
-        self._clone = GitClone.wrap(_repo.clone(self._temporary_dir.path),
-                                    initial_location=_repo.root)
+        _current_branch_name = desired_branch_name if desired_branch_name else str(_repo.get_current_branch())
+        self._clone = GitClone.wrap(_repo.clone(self._temporary_dir.path), initial_location=_repo.root)
         self._clone.checkout(_current_branch_name)
         _repo.apply_uncommitted_changes(self._clone)
 
@@ -715,5 +661,4 @@ class ProjectTempClone(GitTempClone):
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         """
-        super().__init__(desired_branch_name=desired_branch_name,
-                         repository_to_clone=ProjectGitWrapper())
+        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())

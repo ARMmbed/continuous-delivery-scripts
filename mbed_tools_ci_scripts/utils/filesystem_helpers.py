@@ -39,9 +39,7 @@ def walk_up_tree_to_root(starting_point: str) -> Iterator[str]:
     if not os.path.exists(starting_point):
         raise FileNotFoundError(starting_point)
 
-    current_dir = os.path.realpath(
-        starting_point if os.path.isdir(starting_point) else os.path.dirname(
-            starting_point))
+    current_dir = os.path.realpath(starting_point if os.path.isdir(starting_point) else os.path.dirname(starting_point))
 
     previous_dir = None
     while previous_dir != current_dir:
@@ -58,9 +56,7 @@ def _get_directory_walk_method(top: bool) -> Callable[[str], Iterator[str]]:
     return walk_up_tree_to_root if top else walk_down_tree
 
 
-def find_file_in_tree(file_name: str,
-                      starting_point: str = os.getcwd(),
-                      top: bool = False) -> str:
+def find_file_in_tree(file_name: str, starting_point: str = os.getcwd(), top: bool = False) -> str:
     """Finds a file in directory tree.
 
     Args:
@@ -72,7 +68,7 @@ def find_file_in_tree(file_name: str,
             path of the file of interest.
     """
     if not file_name:
-        raise ValueError('Undefined file name')
+        raise ValueError("Undefined file name")
 
     iterator = _get_directory_walk_method(top)
     for directory in iterator(starting_point):
@@ -123,8 +119,7 @@ class TemporaryDirectory:
         try:
             self._tmp_dir_context_manager.cleanup()
         except FileNotFoundError as e:
-            logger.warning(
-                f"Failed cleaning up {self.path}. Reason: {str(e)}")
+            logger.warning(f"Failed cleaning up {self.path}. Reason: {str(e)}")
 
     def _windows_cleanup(self) -> None:
         if self.path.exists():
@@ -132,7 +127,7 @@ class TemporaryDirectory:
 
     def cleanup(self) -> None:
         """Deletes the temporary directory."""
-        if platform.system() == 'Windows':
+        if platform.system() == "Windows":
             self._windows_cleanup()
         else:
             self._default_cleanup()

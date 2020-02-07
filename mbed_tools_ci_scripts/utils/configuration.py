@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 class ConfigurationVariable(enum.Enum):
     """Project's configuration variables."""
+
     PROJECT_ROOT = 1
     PROJECT_CONFIG = 2
     NEWS_DIR = 3
@@ -49,7 +50,7 @@ class ConfigurationVariable(enum.Enum):
         return [t.name.upper() for t in ConfigurationVariable]
 
     @staticmethod
-    def parse(type_str: str) -> 'ConfigurationVariable':
+    def parse(type_str: str) -> "ConfigurationVariable":
         """Determines the configuration variable from a string.
 
         Args:
@@ -61,12 +62,12 @@ class ConfigurationVariable(enum.Enum):
         try:
             return ConfigurationVariable[type_str.upper()]
         except KeyError as e:
-            raise ValueError(
-                f'Unknown configuration variable: {type_str}. {e}')
+            raise ValueError(f"Unknown configuration variable: {type_str}. {e}")
 
 
 class Undefined(Exception):
     """Exception raised when a configuration value is not defined."""
+
     pass
 
 
@@ -78,7 +79,7 @@ class GenericConfig(ABC):
         self._raise_undefined(key)
 
     def _raise_undefined(self, key: Optional[str]) -> None:
-        raise Undefined(f'Undefined key: {key}')
+        raise Undefined(f"Undefined key: {key}")
 
     def get_value(self, key: Union[str, ConfigurationVariable]) -> Any:
         """Gets a configuration value.
@@ -97,8 +98,7 @@ class GenericConfig(ABC):
         key_str = key.name if isinstance(key, ConfigurationVariable) else key
         return self._fetch_value(key_str)
 
-    def get_value_or_default(self, key: Union[str, ConfigurationVariable],
-                             default_value: Any) -> Any:
+    def get_value_or_default(self, key: Union[str, ConfigurationVariable], default_value: Any) -> Any:
         """Gets a configuration value.
 
         If the variable was not defined, the default value is returned.
@@ -128,15 +128,15 @@ class StaticConfig(GenericConfig):
     defined in toml.
     """
 
-    BETA_BRANCH = 'beta'
-    MASTER_BRANCH = 'master'
+    BETA_BRANCH = "beta"
+    MASTER_BRANCH = "master"
     RELEASE_BRANCH_PATTERN = r"^release.*$"
-    REMOTE_ALIAS = 'origin'
-    LOGGER_FORMAT = '%(levelname)s: %(message)s'
-    BOT_USERNAME = 'Monty Bot'
-    BOT_EMAIL = 'monty-bot@arm.com'
-    ORGANISATION = 'Arm Mbed'
-    ORGANISATION_EMAIL = 'support@mbed.com'
+    REMOTE_ALIAS = "origin"
+    LOGGER_FORMAT = "%(levelname)s: %(message)s"
+    BOT_USERNAME = "Monty Bot"
+    BOT_EMAIL = "monty-bot@arm.com"
+    ORGANISATION = "Arm Mbed"
+    ORGANISATION_EMAIL = "support@mbed.com"
 
     def _fetch_value(self, key: str) -> Any:
         try:
@@ -153,8 +153,7 @@ class EnvironmentConfig(GenericConfig):
 
     def __init__(self) -> None:
         """Constructor."""
-        dotenv.load_dotenv(
-            dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
+        dotenv.load_dotenv(dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
 
     def _fetch_value(self, key: str) -> Any:
         environment_value = os.getenv(key)
@@ -174,9 +173,9 @@ class FileConfig(GenericConfig):
      to current directory (i.e. os.getcwd()).
     """
 
-    CONFIG_SECTION = 'ProjectConfig'
-    PATH_TOKEN = {'DIR', 'ROOT', 'PATH'}
-    CONFIG_FILE_NAME = 'pyproject.toml'
+    CONFIG_SECTION = "ProjectConfig"
+    PATH_TOKEN = {"DIR", "ROOT", "PATH"}
+    CONFIG_FILE_NAME = "pyproject.toml"
 
     def __init__(self, file_path: str = None) -> None:
         """Constructor.
@@ -214,8 +213,7 @@ class FileConfig(GenericConfig):
     @staticmethod
     def _look_for_config_file_walking_up_tree() -> Optional[str]:
         try:
-            return find_file_in_tree(
-                FileConfig.CONFIG_FILE_NAME, top=True)
+            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True)
         except FileNotFoundError as e:
             logger.warning(e)
         return None
@@ -231,11 +229,8 @@ class FileConfig(GenericConfig):
 
     @staticmethod
     def _load_config_from_file(file_path: str) -> Dict[str, Any]:
-        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION,
-                                                dict())
-        config[
-            ConfigurationVariable.PROJECT_CONFIG.name
-        ] = file_path
+        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION, dict())
+        config[ConfigurationVariable.PROJECT_CONFIG.name] = file_path
         return config
 
     @property
@@ -243,8 +238,7 @@ class FileConfig(GenericConfig):
         """Gets the file configuration."""
         if not self._config:
             self._file_path = FileConfig._find_config_file(self._file_path)
-            self._config = FileConfig._load_config_from_file(
-                self._file_path) if self._file_path else dict()
+            self._config = FileConfig._load_config_from_file(self._file_path) if self._file_path else dict()
         return self._config
 
     def _fetch_value(self, key: str) -> Any:
@@ -276,10 +270,4 @@ class ProjectConfiguration(GenericConfig):
 
 
 # Project configuration
-configuration: GenericConfig = ProjectConfiguration(
-    [
-        FileConfig(),
-        EnvironmentConfig(),
-        StaticConfig()
-    ]
-)
+configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentConfig(), StaticConfig()])

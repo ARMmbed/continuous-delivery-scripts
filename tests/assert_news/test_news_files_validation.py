@@ -17,15 +17,10 @@ class TestFindNewsFiles(TestCase):
         news_dir = "news/"
         root_dir = "/root/"
 
-        subject = find_news_files(
-            git=fake_git_wrapper, root_dir=root_dir, news_dir=news_dir
-        )
+        subject = find_news_files(git=fake_git_wrapper, root_dir=root_dir, news_dir=news_dir)
 
         self.assertEqual(
-            subject, [
-                str(pathlib.Path(root_dir, "news/1234.txt")),
-                str(pathlib.Path(root_dir, "news/wat.html")),
-            ]
+            subject, [str(pathlib.Path(root_dir, "news/1234.txt")), str(pathlib.Path(root_dir, "news/wat.html"))]
         )
 
 
@@ -36,15 +31,9 @@ class TestValidateNewsFiles(TestCase):
         news_dir = "some/path"
 
         with self.assertRaises(FileNotFoundError) as cm:
-            validate_news_files(
-                git=mock.Mock(spec_set=GitWrapper),
-                root_dir="/does-not-matter/",
-                news_dir=news_dir
-            )
+            validate_news_files(git=mock.Mock(spec_set=GitWrapper), root_dir="/does-not-matter/", news_dir=news_dir)
 
-        expected_error_message = (
-            f"PR must contain a news file in {news_dir}. See README.md."
-        )
+        expected_error_message = f"PR must contain a news file in {news_dir}. See README.md."
         self.assertEqual(str(cm.exception), expected_error_message)
 
     @mock.patch("mbed_tools_ci_scripts.assert_news.find_news_files")
@@ -55,15 +44,7 @@ class TestValidateNewsFiles(TestCase):
         news_dir = "some/dir"
         root_dir = "/does-not-matter"
 
-        validate_news_files(
-            git=git_wrapper,
-            root_dir=root_dir,
-            news_dir=news_dir
-        )
+        validate_news_files(git=git_wrapper, root_dir=root_dir, news_dir=news_dir)
 
-        find_news_files.assert_called_once_with(
-            git=git_wrapper,
-            root_dir=root_dir,
-            news_dir=news_dir
-        )
+        find_news_files.assert_called_once_with(git=git_wrapper, root_dir=root_dir, news_dir=news_dir)
         validate_news_file.assert_called_with("a")

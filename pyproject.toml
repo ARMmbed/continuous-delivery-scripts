@@ -68,3 +68,6 @@ showcontent = true
 directory = "misc"
 name = "Misc"
 showcontent = false
+
+[tool.black]
+line-length = 120

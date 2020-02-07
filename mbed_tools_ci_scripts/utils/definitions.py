@@ -5,6 +5,7 @@ from typing import List
 
 class CommitType(enum.Enum):
     """Type of commits."""
+
     DEVELOPMENT = 1
     BETA = 2
     RELEASE = 3
@@ -19,7 +20,7 @@ class CommitType(enum.Enum):
         return [t.name.lower() for t in CommitType]
 
     @staticmethod
-    def parse(type_str: str) -> 'CommitType':
+    def parse(type_str: str) -> "CommitType":
         """Determines the commit type from a string.
 
         Args:
@@ -31,4 +32,4 @@ class CommitType(enum.Enum):
         try:
             return CommitType[type_str.upper()]
         except KeyError as e:
-            raise ValueError(f'Unknown commit type: {type_str}. {e}')
+            raise ValueError(f"Unknown commit type: {type_str}. {e}")

@@ -25,8 +25,7 @@ def _clear_previous_docs(output_directory: Path) -> None:
         shutil.rmtree(str(output_directory))
 
 
-def _generate_pdoc_command_list(output_directory: Path,
-                                module: str) -> List[str]:
+def _generate_pdoc_command_list(output_directory: Path, module: str) -> List[str]:
     return [
         "pdoc",
         "--html",
@@ -39,8 +38,7 @@ def _generate_pdoc_command_list(output_directory: Path,
     ]
 
 
-def generate_documentation(output_directory: Path,
-                           module_to_document: str) -> None:
+def generate_documentation(output_directory: Path, module_to_document: str) -> None:
     """Ensures the documentation is in the correct location.
 
     Pdoc nests its docs output in a folder with the module's name.
@@ -79,9 +77,7 @@ def main() -> None:
     parser.add_argument(
         "--output_directory",
         help="Output directory for docs html files.",
-        default=configuration.get_value(
-            ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH
-        ),
+        default=configuration.get_value(ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH),
     )
     args = parser.parse_args()
     output_directory = Path(args.output_directory)
