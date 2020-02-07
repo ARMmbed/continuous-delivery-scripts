@@ -38,13 +38,12 @@ def upload_file(file: Path, bucket_dir: Optional[str], bucket_name: str) -> None
         raise FileNotFoundError(file)
     s3_region, s3_config = _get_aws_config()
     client = boto3.client("s3", **s3_config)
-    dest_dir = bucket_dir + "/" if bucket_dir else ""
     dest_filename = file.name
-    key = f"{dest_dir}/{dest_filename}"
+    key = f"{bucket_dir}/{dest_filename}"
     extension = "".join(file.suffixes)
     bucket = bucket_name
     client.upload_file(
-        file,
+        str(file),
         bucket,
         key,
         ExtraArgs={"ContentType": mimetypes.types_map.get(extension, "application/octet-stream")} if extension else {},
