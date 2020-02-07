@@ -72,26 +72,22 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
         commit_message = f"🚀 releasing version {version} @ {time_str}" if is_new_version else f"📰 Automatic changes ⚙"
         if mode == CommitType.RELEASE:
             _commit_release_changes(git, version, commit_message)
-        elif mode == CommitType.BETA:
-            _commit_beta_release_changes(git, version, commit_message)
         if is_new_version:
             logger.info(f"Tagging commit")
             git.create_tag(version, message=f"release {version}")
             git.force_push_tag()
 
 
-def _commit_beta_release_changes(git: GitWrapper, version: str, commit_message: str) -> None:
-    logger.info(f"Committing beta release [{version}]...")
+def _add_version_changes(git: GitWrapper) -> None:
     git.add(configuration.get_value(ConfigurationVariable.VERSION_FILE_PATH))
-    _commit_changes(commit_message, git)
+    git.add(configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH))
+    git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
 
 
 def _commit_release_changes(git: GitWrapper, version: str, commit_message: str) -> None:
     logger.info(f"Committing release [{version}]...")
     git.add(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
-    git.add(configuration.get_value(ConfigurationVariable.VERSION_FILE_PATH))
-    git.add(configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH))
-    git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
+    _add_version_changes(git)
     _commit_changes(commit_message, git)
 
 

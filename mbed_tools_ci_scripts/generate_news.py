@@ -54,7 +54,10 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[b
     is_new_version: bool = False
     with cd(os.path.dirname(project_config_path)):
         old, _, updates = auto_version_tool.main(
-            release=is_release, enable_file_triggers=enable_file_triggers, bump=bump, config_path=project_config_path,
+            release=is_release,
+            enable_file_triggers=enable_file_triggers,
+            commit_count_as=bump,
+            config_path=project_config_path,
         )
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
