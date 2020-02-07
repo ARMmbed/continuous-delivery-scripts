@@ -11,6 +11,23 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.2.1" (2020-02-07)
+====================
+"" "1.2.1" (2020-02-07)
+=======================
+
+Bugfixes
+--------
+
+- Fix for multiple beta releases of a same version (#4)
+
+
+Misc
+----
+
+- #20200206
+
+
 "1.2.0" (2020-02-06)
 ====================
 

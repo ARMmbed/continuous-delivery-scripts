@@ -31,8 +31,7 @@ from .configuration import configuration, ConfigurationVariable
 from typing import Any, Optional
 
 
-def log_exception(logger: Optional[Any],
-                  exception: Optional[Exception]) -&gt; None:
+def log_exception(logger: Optional[Any], exception: Optional[Exception]) -&gt; None:
     &#34;&#34;&#34;Logs an exception in both normal and verbose forms.
 
     Args:
@@ -58,10 +57,7 @@ def set_log_level(verbose_count: int) -&gt; None:
         log_level = logging.WARNING
     else:
         log_level = logging.ERROR
-    logging.basicConfig(level=log_level,
-                        format=configuration.get_value(
-                            ConfigurationVariable.LOGGER_FORMAT)
-                        )</code></pre>
+    logging.basicConfig(level=log_level, format=configuration.get_value(ConfigurationVariable.LOGGER_FORMAT))</code></pre>
 </details>
 </section>
 <section>
@@ -87,8 +83,7 @@ def set_log_level(verbose_count: int) -&gt; None:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def log_exception(logger: Optional[Any],
-                  exception: Optional[Exception]) -&gt; None:
+<pre><code class="python">def log_exception(logger: Optional[Any], exception: Optional[Exception]) -&gt; None:
     &#34;&#34;&#34;Logs an exception in both normal and verbose forms.
 
     Args:
@@ -128,10 +123,7 @@ def set_log_level(verbose_count: int) -&gt; None:
         log_level = logging.WARNING
     else:
         log_level = logging.ERROR
-    logging.basicConfig(level=log_level,
-                        format=configuration.get_value(
-                            ConfigurationVariable.LOGGER_FORMAT)
-                        )</code></pre>
+    logging.basicConfig(level=log_level, format=configuration.get_value(ConfigurationVariable.LOGGER_FORMAT))</code></pre>
 </details>
 </dd>
 </dl>

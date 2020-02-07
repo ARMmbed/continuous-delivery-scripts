@@ -42,6 +42,7 @@ logger = logging.getLogger(__name__)
 
 class ConfigurationVariable(enum.Enum):
     &#34;&#34;&#34;Project&#39;s configuration variables.&#34;&#34;&#34;
+
     PROJECT_ROOT = 1
     PROJECT_CONFIG = 2
     NEWS_DIR = 3
@@ -76,7 +77,7 @@ class ConfigurationVariable(enum.Enum):
         return [t.name.upper() for t in ConfigurationVariable]
 
     @staticmethod
-    def parse(type_str: str) -&gt; &#39;ConfigurationVariable&#39;:
+    def parse(type_str: str) -&gt; &#34;ConfigurationVariable&#34;:
         &#34;&#34;&#34;Determines the configuration variable from a string.
 
         Args:
@@ -88,12 +89,12 @@ class ConfigurationVariable(enum.Enum):
         try:
             return ConfigurationVariable[type_str.upper()]
         except KeyError as e:
-            raise ValueError(
-                f&#39;Unknown configuration variable: {type_str}. {e}&#39;)
+            raise ValueError(f&#34;Unknown configuration variable: {type_str}. {e}&#34;)
 
 
 class Undefined(Exception):
     &#34;&#34;&#34;Exception raised when a configuration value is not defined.&#34;&#34;&#34;
+
     pass
 
 
@@ -105,7 +106,7 @@ class GenericConfig(ABC):
         self._raise_undefined(key)
 
     def _raise_undefined(self, key: Optional[str]) -&gt; None:
-        raise Undefined(f&#39;Undefined key: {key}&#39;)
+        raise Undefined(f&#34;Undefined key: {key}&#34;)
 
     def get_value(self, key: Union[str, ConfigurationVariable]) -&gt; Any:
         &#34;&#34;&#34;Gets a configuration value.
@@ -124,8 +125,7 @@ class GenericConfig(ABC):
         key_str = key.name if isinstance(key, ConfigurationVariable) else key
         return self._fetch_value(key_str)
 
-    def get_value_or_default(self, key: Union[str, ConfigurationVariable],
-                             default_value: Any) -&gt; Any:
+    def get_value_or_default(self, key: Union[str, ConfigurationVariable], default_value: Any) -&gt; Any:
         &#34;&#34;&#34;Gets a configuration value.
 
         If the variable was not defined, the default value is returned.
@@ -155,15 +155,15 @@ class StaticConfig(GenericConfig):
     defined in toml.
     &#34;&#34;&#34;
 
-    BETA_BRANCH = &#39;beta&#39;
-    MASTER_BRANCH = &#39;master&#39;
+    BETA_BRANCH = &#34;beta&#34;
+    MASTER_BRANCH = &#34;master&#34;
     RELEASE_BRANCH_PATTERN = r&#34;^release.*$&#34;
-    REMOTE_ALIAS = &#39;origin&#39;
-    LOGGER_FORMAT = &#39;%(levelname)s: %(message)s&#39;
-    BOT_USERNAME = &#39;Monty Bot&#39;
-    BOT_EMAIL = &#39;monty-bot@arm.com&#39;
-    ORGANISATION = &#39;Arm Mbed&#39;
-    ORGANISATION_EMAIL = &#39;support@mbed.com&#39;
+    REMOTE_ALIAS = &#34;origin&#34;
+    LOGGER_FORMAT = &#34;%(levelname)s: %(message)s&#34;
+    BOT_USERNAME = &#34;Monty Bot&#34;
+    BOT_EMAIL = &#34;monty-bot@arm.com&#34;
+    ORGANISATION = &#34;Arm Mbed&#34;
+    ORGANISATION_EMAIL = &#34;support@mbed.com&#34;
 
     def _fetch_value(self, key: str) -&gt; Any:
         try:
@@ -180,8 +180,7 @@ class EnvironmentConfig(GenericConfig):
 
     def __init__(self) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        dotenv.load_dotenv(
-            dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
+        dotenv.load_dotenv(dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
 
     def _fetch_value(self, key: str) -&gt; Any:
         environment_value = os.getenv(key)
@@ -201,9 +200,9 @@ class FileConfig(GenericConfig):
      to current directory (i.e. os.getcwd()).
     &#34;&#34;&#34;
 
-    CONFIG_SECTION = &#39;ProjectConfig&#39;
-    PATH_TOKEN = {&#39;DIR&#39;, &#39;ROOT&#39;, &#39;PATH&#39;}
-    CONFIG_FILE_NAME = &#39;pyproject.toml&#39;
+    CONFIG_SECTION = &#34;ProjectConfig&#34;
+    PATH_TOKEN = {&#34;DIR&#34;, &#34;ROOT&#34;, &#34;PATH&#34;}
+    CONFIG_FILE_NAME = &#34;pyproject.toml&#34;
 
     def __init__(self, file_path: str = None) -&gt; None:
         &#34;&#34;&#34;Constructor.
@@ -241,8 +240,7 @@ class FileConfig(GenericConfig):
     @staticmethod
     def _look_for_config_file_walking_up_tree() -&gt; Optional[str]:
         try:
-            return find_file_in_tree(
-                FileConfig.CONFIG_FILE_NAME, top=True)
+            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True)
         except FileNotFoundError as e:
             logger.warning(e)
         return None
@@ -258,11 +256,8 @@ class FileConfig(GenericConfig):
 
     @staticmethod
     def _load_config_from_file(file_path: str) -&gt; Dict[str, Any]:
-        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION,
-                                                dict())
-        config[
-            ConfigurationVariable.PROJECT_CONFIG.name
-        ] = file_path
+        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION, dict())
+        config[ConfigurationVariable.PROJECT_CONFIG.name] = file_path
         return config
 
     @property
@@ -270,8 +265,7 @@ class FileConfig(GenericConfig):
         &#34;&#34;&#34;Gets the file configuration.&#34;&#34;&#34;
         if not self._config:
             self._file_path = FileConfig._find_config_file(self._file_path)
-            self._config = FileConfig._load_config_from_file(
-                self._file_path) if self._file_path else dict()
+            self._config = FileConfig._load_config_from_file(self._file_path) if self._file_path else dict()
         return self._config
 
     def _fetch_value(self, key: str) -&gt; Any:
@@ -303,13 +297,7 @@ class ProjectConfiguration(GenericConfig):
 
 
 # Project configuration
-configuration: GenericConfig = ProjectConfiguration(
-    [
-        FileConfig(),
-        EnvironmentConfig(),
-        StaticConfig()
-    ]
-)</code></pre>
+configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentConfig(), StaticConfig()])</code></pre>
 </details>
 </section>
 <section>
@@ -333,6 +321,7 @@ configuration: GenericConfig = ProjectConfiguration(
 </summary>
 <pre><code class="python">class ConfigurationVariable(enum.Enum):
     &#34;&#34;&#34;Project&#39;s configuration variables.&#34;&#34;&#34;
+
     PROJECT_ROOT = 1
     PROJECT_CONFIG = 2
     NEWS_DIR = 3
@@ -367,7 +356,7 @@ configuration: GenericConfig = ProjectConfiguration(
         return [t.name.upper() for t in ConfigurationVariable]
 
     @staticmethod
-    def parse(type_str: str) -&gt; &#39;ConfigurationVariable&#39;:
+    def parse(type_str: str) -&gt; &#34;ConfigurationVariable&#34;:
         &#34;&#34;&#34;Determines the configuration variable from a string.
 
         Args:
@@ -379,8 +368,7 @@ configuration: GenericConfig = ProjectConfiguration(
         try:
             return ConfigurationVariable[type_str.upper()]
         except KeyError as e:
-            raise ValueError(
-                f&#39;Unknown configuration variable: {type_str}. {e}&#39;)</code></pre>
+            raise ValueError(f&#34;Unknown configuration variable: {type_str}. {e}&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -501,8 +489,7 @@ configuration: GenericConfig = ProjectConfiguration(
 
     def __init__(self) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        dotenv.load_dotenv(
-            dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
+        dotenv.load_dotenv(dotenv.find_dotenv(usecwd=True, raise_error_if_not_found=False))
 
     def _fetch_value(self, key: str) -&gt; Any:
         environment_value = os.getenv(key)
@@ -558,9 +545,9 @@ to current directory (i.e. os.getcwd()).</p>
      to current directory (i.e. os.getcwd()).
     &#34;&#34;&#34;
 
-    CONFIG_SECTION = &#39;ProjectConfig&#39;
-    PATH_TOKEN = {&#39;DIR&#39;, &#39;ROOT&#39;, &#39;PATH&#39;}
-    CONFIG_FILE_NAME = &#39;pyproject.toml&#39;
+    CONFIG_SECTION = &#34;ProjectConfig&#34;
+    PATH_TOKEN = {&#34;DIR&#34;, &#34;ROOT&#34;, &#34;PATH&#34;}
+    CONFIG_FILE_NAME = &#34;pyproject.toml&#34;
 
     def __init__(self, file_path: str = None) -&gt; None:
         &#34;&#34;&#34;Constructor.
@@ -598,8 +585,7 @@ to current directory (i.e. os.getcwd()).</p>
     @staticmethod
     def _look_for_config_file_walking_up_tree() -&gt; Optional[str]:
         try:
-            return find_file_in_tree(
-                FileConfig.CONFIG_FILE_NAME, top=True)
+            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True)
         except FileNotFoundError as e:
             logger.warning(e)
         return None
@@ -615,11 +601,8 @@ to current directory (i.e. os.getcwd()).</p>
 
     @staticmethod
     def _load_config_from_file(file_path: str) -&gt; Dict[str, Any]:
-        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION,
-                                                dict())
-        config[
-            ConfigurationVariable.PROJECT_CONFIG.name
-        ] = file_path
+        config: dict = toml.load(file_path).get(FileConfig.CONFIG_SECTION, dict())
+        config[ConfigurationVariable.PROJECT_CONFIG.name] = file_path
         return config
 
     @property
@@ -627,8 +610,7 @@ to current directory (i.e. os.getcwd()).</p>
         &#34;&#34;&#34;Gets the file configuration.&#34;&#34;&#34;
         if not self._config:
             self._file_path = FileConfig._find_config_file(self._file_path)
-            self._config = FileConfig._load_config_from_file(
-                self._file_path) if self._file_path else dict()
+            self._config = FileConfig._load_config_from_file(self._file_path) if self._file_path else dict()
         return self._config
 
     def _fetch_value(self, key: str) -&gt; Any:
@@ -689,8 +671,7 @@ def config(self) -&gt; dict:
     &#34;&#34;&#34;Gets the file configuration.&#34;&#34;&#34;
     if not self._config:
         self._file_path = FileConfig._find_config_file(self._file_path)
-        self._config = FileConfig._load_config_from_file(
-            self._file_path) if self._file_path else dict()
+        self._config = FileConfig._load_config_from_file(self._file_path) if self._file_path else dict()
     return self._config</code></pre>
 </details>
 </dd>
@@ -722,7 +703,7 @@ def config(self) -&gt; dict:
         self._raise_undefined(key)
 
     def _raise_undefined(self, key: Optional[str]) -&gt; None:
-        raise Undefined(f&#39;Undefined key: {key}&#39;)
+        raise Undefined(f&#34;Undefined key: {key}&#34;)
 
     def get_value(self, key: Union[str, ConfigurationVariable]) -&gt; Any:
         &#34;&#34;&#34;Gets a configuration value.
@@ -741,8 +722,7 @@ def config(self) -&gt; dict:
         key_str = key.name if isinstance(key, ConfigurationVariable) else key
         return self._fetch_value(key_str)
 
-    def get_value_or_default(self, key: Union[str, ConfigurationVariable],
-                             default_value: Any) -&gt; Any:
+    def get_value_or_default(self, key: Union[str, ConfigurationVariable], default_value: Any) -&gt; Any:
         &#34;&#34;&#34;Gets a configuration value.
 
         If the variable was not defined, the default value is returned.
@@ -832,8 +812,7 @@ default value if the variable is not defined.</p></section>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_value_or_default(self, key: Union[str, ConfigurationVariable],
-                         default_value: Any) -&gt; Any:
+<pre><code class="python">def get_value_or_default(self, key: Union[str, ConfigurationVariable], default_value: Any) -&gt; Any:
     &#34;&#34;&#34;Gets a configuration value.
 
     If the variable was not defined, the default value is returned.
@@ -929,15 +908,15 @@ defined in toml.</p></section>
     defined in toml.
     &#34;&#34;&#34;
 
-    BETA_BRANCH = &#39;beta&#39;
-    MASTER_BRANCH = &#39;master&#39;
+    BETA_BRANCH = &#34;beta&#34;
+    MASTER_BRANCH = &#34;master&#34;
     RELEASE_BRANCH_PATTERN = r&#34;^release.*$&#34;
-    REMOTE_ALIAS = &#39;origin&#39;
-    LOGGER_FORMAT = &#39;%(levelname)s: %(message)s&#39;
-    BOT_USERNAME = &#39;Monty Bot&#39;
-    BOT_EMAIL = &#39;monty-bot@arm.com&#39;
-    ORGANISATION = &#39;Arm Mbed&#39;
-    ORGANISATION_EMAIL = &#39;support@mbed.com&#39;
+    REMOTE_ALIAS = &#34;origin&#34;
+    LOGGER_FORMAT = &#34;%(levelname)s: %(message)s&#34;
+    BOT_USERNAME = &#34;Monty Bot&#34;
+    BOT_EMAIL = &#34;monty-bot@arm.com&#34;
+    ORGANISATION = &#34;Arm Mbed&#34;
+    ORGANISATION_EMAIL = &#34;support@mbed.com&#34;
 
     def _fetch_value(self, key: str) -&gt; Any:
         try:
@@ -1083,6 +1062,7 @@ errors defaults to 'strict'.</p></section>
 </summary>
 <pre><code class="python">class Undefined(Exception):
     &#34;&#34;&#34;Exception raised when a configuration value is not defined.&#34;&#34;&#34;
+
     pass</code></pre>
 </details>
 <h3>Ancestors</h3>

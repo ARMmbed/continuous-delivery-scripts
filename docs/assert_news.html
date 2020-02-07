@@ -68,9 +68,7 @@ class NewsFileValidator:
         if file_content.strip() == &#34;&#34;:
             raise ValueError(f&#39;Empty news file &#34;{self._basename}&#34;.&#39;)
         if len(file_content.splitlines()) &gt; 1:
-            raise ValueError(
-                f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;
-            )
+            raise ValueError(f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;)
 
     def validate(self) -&gt; None:
         &#34;&#34;&#34;Runs all validators.&#34;&#34;&#34;
@@ -84,9 +82,7 @@ def validate_news_file(absolute_path: str) -&gt; None:
     NewsFileValidator(absolute_path).validate()
 
 
-def find_news_files(
-        git: GitWrapper, root_dir: str, news_dir: str
-) -&gt; List[str]:
+def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; List[str]:
     &#34;&#34;&#34;Determines a list of all the news files which were added as part of the PR.
 
     Args:
@@ -100,15 +96,11 @@ def find_news_files(
     files_changed = git.list_files_added_on_current_branch()
     # Relies on the fact GitWrapper returns paths that are always relative
     # to the project root.
-    added_news_files = [file_path for file_path in files_changed if
-                        file_path.startswith(news_dir)]
-    return [str(pathlib.Path(root_dir, file_path)) for file_path in
-            added_news_files]
+    added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
+    return [str(pathlib.Path(root_dir, file_path)) for file_path in added_news_files]
 
 
-def validate_news_files(
-        git: GitWrapper, root_dir: str, news_dir: str
-) -&gt; None:
+def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; None:
     &#34;&#34;&#34;Checks that news files exist and pass validation checks.
 
     Args:
@@ -116,49 +108,31 @@ def validate_news_files(
         root_dir: Root directory of the project.
         news_dir: Relative path to news directory.
     &#34;&#34;&#34;
-    added_news_files = find_news_files(
-        git=git,
-        news_dir=news_dir,
-        root_dir=root_dir,
-    )
+    added_news_files = find_news_files(git=git, news_dir=news_dir, root_dir=root_dir,)
     if not added_news_files:
-        raise FileNotFoundError(
-            f&#34;PR must contain a news file in {news_dir}. See README.md.&#34;
-        )
+        raise FileNotFoundError(f&#34;PR must contain a news file in {news_dir}. See README.md.&#34;)
     for absolute_file_path in added_news_files:
         validate_news_file(absolute_file_path)
 
 
 def main() -&gt; None:
     &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(
-        description=&#34;Check correctly formatted news files exist on feature branch.&#34;
-    )
-    parser.add_argument(&#39;-b&#39;, &#39;--current-branch&#39;,
-                        help=&#39;Name of the current branch&#39;, nargs=&#39;?&#39;)
+    parser = argparse.ArgumentParser(description=&#34;Check correctly formatted news files exist on feature branch.&#34;)
+    parser.add_argument(&#34;-b&#34;, &#34;--current-branch&#34;, help=&#34;Name of the current branch&#34;, nargs=&#34;?&#34;)
     parser.add_argument(
-        &#34;-v&#34;,
-        &#34;--verbose&#34;,
-        action=&#34;count&#34;,
-        default=0,
-        help=&#34;Verbosity, by default errors are reported.&#34;,
+        &#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;,
     )
     args = parser.parse_args()
     set_log_level(args.verbose)
 
-    with ProjectTempClone(desired_branch_name=args.current_branch)as git:
+    with ProjectTempClone(desired_branch_name=args.current_branch) as git:
         if git.is_current_branch_feature():
-            root_dir = configuration.get_value(
-                ConfigurationVariable.PROJECT_ROOT)
-            absolute_news_dir = configuration.get_value(
-                ConfigurationVariable.NEWS_DIR)
-            news_dir = str(
-                pathlib.Path(absolute_news_dir).relative_to(root_dir))
+            root_dir = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
+            absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
+            news_dir = str(pathlib.Path(absolute_news_dir).relative_to(root_dir))
             try:
                 validate_news_files(
-                    git=git,
-                    news_dir=news_dir,
-                    root_dir=root_dir,
+                    git=git, news_dir=news_dir, root_dir=root_dir,
                 )
             except Exception as e:
                 log_exception(logger, e)
@@ -199,9 +173,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def find_news_files(
-        git: GitWrapper, root_dir: str, news_dir: str
-) -&gt; List[str]:
+<pre><code class="python">def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; List[str]:
     &#34;&#34;&#34;Determines a list of all the news files which were added as part of the PR.
 
     Args:
@@ -215,10 +187,8 @@ if __name__ == &#34;__main__&#34;:
     files_changed = git.list_files_added_on_current_branch()
     # Relies on the fact GitWrapper returns paths that are always relative
     # to the project root.
-    added_news_files = [file_path for file_path in files_changed if
-                        file_path.startswith(news_dir)]
-    return [str(pathlib.Path(root_dir, file_path)) for file_path in
-            added_news_files]</code></pre>
+    added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
+    return [str(pathlib.Path(root_dir, file_path)) for file_path in added_news_files]</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.assert_news.main"><code class="name flex">
@@ -232,34 +202,22 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">def main() -&gt; None:
     &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(
-        description=&#34;Check correctly formatted news files exist on feature branch.&#34;
-    )
-    parser.add_argument(&#39;-b&#39;, &#39;--current-branch&#39;,
-                        help=&#39;Name of the current branch&#39;, nargs=&#39;?&#39;)
+    parser = argparse.ArgumentParser(description=&#34;Check correctly formatted news files exist on feature branch.&#34;)
+    parser.add_argument(&#34;-b&#34;, &#34;--current-branch&#34;, help=&#34;Name of the current branch&#34;, nargs=&#34;?&#34;)
     parser.add_argument(
-        &#34;-v&#34;,
-        &#34;--verbose&#34;,
-        action=&#34;count&#34;,
-        default=0,
-        help=&#34;Verbosity, by default errors are reported.&#34;,
+        &#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;,
     )
     args = parser.parse_args()
     set_log_level(args.verbose)
 
-    with ProjectTempClone(desired_branch_name=args.current_branch)as git:
+    with ProjectTempClone(desired_branch_name=args.current_branch) as git:
         if git.is_current_branch_feature():
-            root_dir = configuration.get_value(
-                ConfigurationVariable.PROJECT_ROOT)
-            absolute_news_dir = configuration.get_value(
-                ConfigurationVariable.NEWS_DIR)
-            news_dir = str(
-                pathlib.Path(absolute_news_dir).relative_to(root_dir))
+            root_dir = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
+            absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
+            news_dir = str(pathlib.Path(absolute_news_dir).relative_to(root_dir))
             try:
                 validate_news_files(
-                    git=git,
-                    news_dir=news_dir,
-                    root_dir=root_dir,
+                    git=git, news_dir=news_dir, root_dir=root_dir,
                 )
             except Exception as e:
                 log_exception(logger, e)
@@ -298,9 +256,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def validate_news_files(
-        git: GitWrapper, root_dir: str, news_dir: str
-) -&gt; None:
+<pre><code class="python">def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; None:
     &#34;&#34;&#34;Checks that news files exist and pass validation checks.
 
     Args:
@@ -308,15 +264,9 @@ if __name__ == &#34;__main__&#34;:
         root_dir: Root directory of the project.
         news_dir: Relative path to news directory.
     &#34;&#34;&#34;
-    added_news_files = find_news_files(
-        git=git,
-        news_dir=news_dir,
-        root_dir=root_dir,
-    )
+    added_news_files = find_news_files(git=git, news_dir=news_dir, root_dir=root_dir,)
     if not added_news_files:
-        raise FileNotFoundError(
-            f&#34;PR must contain a news file in {news_dir}. See README.md.&#34;
-        )
+        raise FileNotFoundError(f&#34;PR must contain a news file in {news_dir}. See README.md.&#34;)
     for absolute_file_path in added_news_files:
         validate_news_file(absolute_file_path)</code></pre>
 </details>
@@ -368,9 +318,7 @@ if __name__ == &#34;__main__&#34;:
         if file_content.strip() == &#34;&#34;:
             raise ValueError(f&#39;Empty news file &#34;{self._basename}&#34;.&#39;)
         if len(file_content.splitlines()) &gt; 1:
-            raise ValueError(
-                f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;
-            )
+            raise ValueError(f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;)
 
     def validate(self) -&gt; None:
         &#34;&#34;&#34;Runs all validators.&#34;&#34;&#34;
@@ -411,9 +359,7 @@ if __name__ == &#34;__main__&#34;:
     if file_content.strip() == &#34;&#34;:
         raise ValueError(f&#39;Empty news file &#34;{self._basename}&#34;.&#39;)
     if len(file_content.splitlines()) &gt; 1:
-        raise ValueError(
-            f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;
-        )</code></pre>
+        raise ValueError(f&#39;News file &#34;{self._basename}&#34; contains more than one line.&#39;)</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.assert_news.NewsFileValidator.validate_file_name"><code class="name flex">

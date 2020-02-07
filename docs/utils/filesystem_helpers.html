@@ -66,9 +66,7 @@ def walk_up_tree_to_root(starting_point: str) -&gt; Iterator[str]:
     if not os.path.exists(starting_point):
         raise FileNotFoundError(starting_point)
 
-    current_dir = os.path.realpath(
-        starting_point if os.path.isdir(starting_point) else os.path.dirname(
-            starting_point))
+    current_dir = os.path.realpath(starting_point if os.path.isdir(starting_point) else os.path.dirname(starting_point))
 
     previous_dir = None
     while previous_dir != current_dir:
@@ -85,9 +83,7 @@ def _get_directory_walk_method(top: bool) -&gt; Callable[[str], Iterator[str]]:
     return walk_up_tree_to_root if top else walk_down_tree
 
 
-def find_file_in_tree(file_name: str,
-                      starting_point: str = os.getcwd(),
-                      top: bool = False) -&gt; str:
+def find_file_in_tree(file_name: str, starting_point: str = os.getcwd(), top: bool = False) -&gt; str:
     &#34;&#34;&#34;Finds a file in directory tree.
 
     Args:
@@ -99,7 +95,7 @@ def find_file_in_tree(file_name: str,
             path of the file of interest.
     &#34;&#34;&#34;
     if not file_name:
-        raise ValueError(&#39;Undefined file name&#39;)
+        raise ValueError(&#34;Undefined file name&#34;)
 
     iterator = _get_directory_walk_method(top)
     for directory in iterator(starting_point):
@@ -150,8 +146,7 @@ class TemporaryDirectory:
         try:
             self._tmp_dir_context_manager.cleanup()
         except FileNotFoundError as e:
-            logger.warning(
-                f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
+            logger.warning(f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
 
     def _windows_cleanup(self) -&gt; None:
         if self.path.exists():
@@ -159,7 +154,7 @@ class TemporaryDirectory:
 
     def cleanup(self) -&gt; None:
         &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-        if platform.system() == &#39;Windows&#39;:
+        if platform.system() == &#34;Windows&#34;:
             self._windows_cleanup()
         else:
             self._default_cleanup()</code></pre>
@@ -222,9 +217,7 @@ def cd(new_dir: str) -&gt; Generator:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def find_file_in_tree(file_name: str,
-                      starting_point: str = os.getcwd(),
-                      top: bool = False) -&gt; str:
+<pre><code class="python">def find_file_in_tree(file_name: str, starting_point: str = os.getcwd(), top: bool = False) -&gt; str:
     &#34;&#34;&#34;Finds a file in directory tree.
 
     Args:
@@ -236,7 +229,7 @@ def cd(new_dir: str) -&gt; Generator:
             path of the file of interest.
     &#34;&#34;&#34;
     if not file_name:
-        raise ValueError(&#39;Undefined file name&#39;)
+        raise ValueError(&#34;Undefined file name&#34;)
 
     iterator = _get_directory_walk_method(top)
     for directory in iterator(starting_point):
@@ -278,9 +271,7 @@ def cd(new_dir: str) -&gt; Generator:
     if not os.path.exists(starting_point):
         raise FileNotFoundError(starting_point)
 
-    current_dir = os.path.realpath(
-        starting_point if os.path.isdir(starting_point) else os.path.dirname(
-            starting_point))
+    current_dir = os.path.realpath(starting_point if os.path.isdir(starting_point) else os.path.dirname(starting_point))
 
     previous_dir = None
     while previous_dir != current_dir:
@@ -346,8 +337,7 @@ implemented.</p>
         try:
             self._tmp_dir_context_manager.cleanup()
         except FileNotFoundError as e:
-            logger.warning(
-                f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
+            logger.warning(f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
 
     def _windows_cleanup(self) -&gt; None:
         if self.path.exists():
@@ -355,7 +345,7 @@ implemented.</p>
 
     def cleanup(self) -&gt; None:
         &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-        if platform.system() == &#39;Windows&#39;:
+        if platform.system() == &#34;Windows&#34;:
             self._windows_cleanup()
         else:
             self._default_cleanup()</code></pre>
@@ -389,7 +379,7 @@ def path(self) -&gt; Path:
 </summary>
 <pre><code class="python">def cleanup(self) -&gt; None:
     &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-    if platform.system() == &#39;Windows&#39;:
+    if platform.system() == &#34;Windows&#34;:
         self._windows_cleanup()
     else:
         self._default_cleanup()</code></pre>

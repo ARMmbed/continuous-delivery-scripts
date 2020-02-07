@@ -34,8 +34,7 @@ import os
 import subprocess
 from auto_version import auto_version_tool
 from mbed_tools_ci_scripts.utils.definitions import CommitType
-from mbed_tools_ci_scripts.utils.configuration import configuration, \
-    ConfigurationVariable
+from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
 from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
 from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
 from typing import Optional, Tuple
@@ -54,8 +53,7 @@ def version_project(commit_type: CommitType) -&gt; Tuple[bool, Optional[str]]:
         (is new version, the new version)
     &#34;&#34;&#34;
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version = _calculate_version(commit_type,
-                                                     use_news_files)
+    is_new_version, new_version = _calculate_version(commit_type, use_news_files)
     _generate_changelog(new_version, use_news_files)
     return is_new_version, new_version
 
@@ -74,29 +72,27 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -&gt; Tupl
             a flag stating whether it is a new version or not
             A semver-style version for the latest release
     &#34;&#34;&#34;
-    BUMP_TYPES = {CommitType.DEVELOPMENT: &#34;build&#34;,
-                  CommitType.BETA: &#34;prerelease&#34;}
+    BUMP_TYPES = {CommitType.DEVELOPMENT: &#34;build&#34;, CommitType.BETA: &#34;prerelease&#34;}
     is_release = commit_type == CommitType.RELEASE
     enable_file_triggers = True if use_news_files else None
     bump = BUMP_TYPES.get(commit_type)
-    project_config_path = configuration.get_value(
-        ConfigurationVariable.PROJECT_CONFIG)
+    project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
     new_version: Optional[str] = None
     is_new_version: bool = False
     with cd(os.path.dirname(project_config_path)):
         old, _, updates = auto_version_tool.main(
             release=is_release,
             enable_file_triggers=enable_file_triggers,
-            bump=bump,
+            commit_count_as=bump,
             config_path=project_config_path,
         )
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
         # This is why the following needs to be done to determine the version
-        new_version = updates[&#39;__version__&#39;]
+        new_version = updates[&#34;__version__&#34;]
         is_new_version = old != new_version
-    logger.info(&#39;:: Determining the new version&#39;)
-    logger.info(f&#39;Version: {new_version}&#39;)
+    logger.info(&#34;:: Determining the new version&#34;)
+    logger.info(f&#34;Version: {new_version}&#34;)
     return is_new_version, new_version
 
 
@@ -110,25 +106,19 @@ def _generate_changelog(version: Optional[str], use_news_files: bool) -&gt; None
         use_news_files: are we generating the release from news files
     &#34;&#34;&#34;
     if use_news_files:
-        logger.info(&#39;:: Generating a new changelog&#39;)
-        project_config_path = configuration.get_value(
-            ConfigurationVariable.PROJECT_CONFIG)
+        logger.info(&#34;:: Generating a new changelog&#34;)
+        project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
         with cd(os.path.dirname(project_config_path)):
-            subprocess.check_call(
-                [&#39;towncrier&#39;, &#39;--yes&#39;, &#39;--name=&#34;&#34;&#39;, f&#39;--version=&#34;{version}&#34;&#39;]
-            )
+            subprocess.check_call([&#34;towncrier&#34;, &#34;--yes&#34;, &#39;--name=&#34;&#34;&#39;, f&#39;--version=&#34;{version}&#34;&#39;])
 
 
 def main() -&gt; None:
     &#34;&#34;&#34;Handle command line arguments to generate a version and changelog file.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(
-        description=&#39;Versions the project.&#39;)
-    parser.add_argument(&#39;-t&#39;, &#39;--release-type&#39;,
-                        help=&#39;type of release to perform&#39;,
-                        required=True,
-                        type=str, choices=CommitType.choices())
-    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0,
-                        help=&#34;Verbosity, by default errors are reported.&#34;)
+    parser = argparse.ArgumentParser(description=&#34;Versions the project.&#34;)
+    parser.add_argument(
+        &#34;-t&#34;, &#34;--release-type&#34;, help=&#34;type of release to perform&#34;, required=True, type=str, choices=CommitType.choices()
+    )
+    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
     args = parser.parse_args()
     set_log_level(args.verbose)
 
@@ -139,7 +129,7 @@ def main() -&gt; None:
         sys.exit(1)
 
 
-if __name__ == &#39;__main__&#39;:
+if __name__ == &#34;__main__&#34;:
     main()</code></pre>
 </details>
 </section>
@@ -161,14 +151,11 @@ if __name__ == &#39;__main__&#39;:
 </summary>
 <pre><code class="python">def main() -&gt; None:
     &#34;&#34;&#34;Handle command line arguments to generate a version and changelog file.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(
-        description=&#39;Versions the project.&#39;)
-    parser.add_argument(&#39;-t&#39;, &#39;--release-type&#39;,
-                        help=&#39;type of release to perform&#39;,
-                        required=True,
-                        type=str, choices=CommitType.choices())
-    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0,
-                        help=&#34;Verbosity, by default errors are reported.&#34;)
+    parser = argparse.ArgumentParser(description=&#34;Versions the project.&#34;)
+    parser.add_argument(
+        &#34;-t&#34;, &#34;--release-type&#34;, help=&#34;type of release to perform&#34;, required=True, type=str, choices=CommitType.choices()
+    )
+    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
     args = parser.parse_args()
     set_log_level(args.verbose)
 
@@ -206,8 +193,7 @@ if __name__ == &#39;__main__&#39;:
         (is new version, the new version)
     &#34;&#34;&#34;
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version = _calculate_version(commit_type,
-                                                     use_news_files)
+    is_new_version, new_version = _calculate_version(commit_type, use_news_files)
     _generate_changelog(new_version, use_news_files)
     return is_new_version, new_version</code></pre>
 </details>

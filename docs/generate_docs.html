@@ -52,8 +52,7 @@ def _clear_previous_docs(output_directory: Path) -&gt; None:
         shutil.rmtree(str(output_directory))
 
 
-def _generate_pdoc_command_list(output_directory: Path,
-                                module: str) -&gt; List[str]:
+def _generate_pdoc_command_list(output_directory: Path, module: str) -&gt; List[str]:
     return [
         &#34;pdoc&#34;,
         &#34;--html&#34;,
@@ -66,8 +65,7 @@ def _generate_pdoc_command_list(output_directory: Path,
     ]
 
 
-def generate_documentation(output_directory: Path,
-                           module_to_document: str) -&gt; None:
+def generate_documentation(output_directory: Path, module_to_document: str) -&gt; None:
     &#34;&#34;&#34;Ensures the documentation is in the correct location.
 
     Pdoc nests its docs output in a folder with the module&#39;s name.
@@ -106,9 +104,7 @@ def main() -&gt; None:
     parser.add_argument(
         &#34;--output_directory&#34;,
         help=&#34;Output directory for docs html files.&#34;,
-        default=configuration.get_value(
-            ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH
-        ),
+        default=configuration.get_value(ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH),
     )
     args = parser.parse_args()
     output_directory = Path(args.output_directory)
@@ -157,8 +153,7 @@ This process removes this unwanted folder.</p></section>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_documentation(output_directory: Path,
-                           module_to_document: str) -&gt; None:
+<pre><code class="python">def generate_documentation(output_directory: Path, module_to_document: str) -&gt; None:
     &#34;&#34;&#34;Ensures the documentation is in the correct location.
 
     Pdoc nests its docs output in a folder with the module&#39;s name.
@@ -189,9 +184,7 @@ This process removes this unwanted folder.</p></section>
     parser.add_argument(
         &#34;--output_directory&#34;,
         help=&#34;Output directory for docs html files.&#34;,
-        default=configuration.get_value(
-            ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH
-        ),
+        default=configuration.get_value(ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH),
     )
     args = parser.parse_args()
     output_directory = Path(args.output_directory)

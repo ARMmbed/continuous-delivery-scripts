@@ -32,6 +32,7 @@ from typing import List
 
 class CommitType(enum.Enum):
     &#34;&#34;&#34;Type of commits.&#34;&#34;&#34;
+
     DEVELOPMENT = 1
     BETA = 2
     RELEASE = 3
@@ -46,7 +47,7 @@ class CommitType(enum.Enum):
         return [t.name.lower() for t in CommitType]
 
     @staticmethod
-    def parse(type_str: str) -&gt; &#39;CommitType&#39;:
+    def parse(type_str: str) -&gt; &#34;CommitType&#34;:
         &#34;&#34;&#34;Determines the commit type from a string.
 
         Args:
@@ -58,7 +59,7 @@ class CommitType(enum.Enum):
         try:
             return CommitType[type_str.upper()]
         except KeyError as e:
-            raise ValueError(f&#39;Unknown commit type: {type_str}. {e}&#39;)</code></pre>
+            raise ValueError(f&#34;Unknown commit type: {type_str}. {e}&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -82,6 +83,7 @@ class CommitType(enum.Enum):
 </summary>
 <pre><code class="python">class CommitType(enum.Enum):
     &#34;&#34;&#34;Type of commits.&#34;&#34;&#34;
+
     DEVELOPMENT = 1
     BETA = 2
     RELEASE = 3
@@ -96,7 +98,7 @@ class CommitType(enum.Enum):
         return [t.name.lower() for t in CommitType]
 
     @staticmethod
-    def parse(type_str: str) -&gt; &#39;CommitType&#39;:
+    def parse(type_str: str) -&gt; &#34;CommitType&#34;:
         &#34;&#34;&#34;Determines the commit type from a string.
 
         Args:
@@ -108,7 +110,7 @@ class CommitType(enum.Enum):
         try:
             return CommitType[type_str.upper()]
         except KeyError as e:
-            raise ValueError(f&#39;Unknown commit type: {type_str}. {e}&#39;)</code></pre>
+            raise ValueError(f&#34;Unknown commit type: {type_str}. {e}&#34;)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
