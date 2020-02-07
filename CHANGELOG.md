@@ -11,6 +11,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.2.2" (2020-02-07)
+====================
+"" "1.2.2" (2020-02-07)
+=======================
+
+Bugfixes
+--------
+
+- Fixed file upload to AWS (#3)
+
+
 "1.2.1" (2020-02-07)
 ====================
 "" "1.2.1" (2020-02-07)

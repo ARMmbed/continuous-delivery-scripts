@@ -66,13 +66,12 @@ def upload_file(file: Path, bucket_dir: Optional[str], bucket_name: str) -&gt; N
         raise FileNotFoundError(file)
     s3_region, s3_config = _get_aws_config()
     client = boto3.client(&#34;s3&#34;, **s3_config)
-    dest_dir = bucket_dir + &#34;/&#34; if bucket_dir else &#34;&#34;
     dest_filename = file.name
-    key = f&#34;{dest_dir}/{dest_filename}&#34;
+    key = f&#34;{bucket_dir}/{dest_filename}&#34;
     extension = &#34;&#34;.join(file.suffixes)
     bucket = bucket_name
     client.upload_file(
-        file,
+        str(file),
         bucket,
         key,
         ExtraArgs={&#34;ContentType&#34;: mimetypes.types_map.get(extension, &#34;application/octet-stream&#34;)} if extension else {},
@@ -213,13 +212,12 @@ def upload_directory(dir: Path, bucket_dir: str, bucket_name: str) -&gt; None:
         raise FileNotFoundError(file)
     s3_region, s3_config = _get_aws_config()
     client = boto3.client(&#34;s3&#34;, **s3_config)
-    dest_dir = bucket_dir + &#34;/&#34; if bucket_dir else &#34;&#34;
     dest_filename = file.name
-    key = f&#34;{dest_dir}/{dest_filename}&#34;
+    key = f&#34;{bucket_dir}/{dest_filename}&#34;
     extension = &#34;&#34;.join(file.suffixes)
     bucket = bucket_name
     client.upload_file(
-        file,
+        str(file),
         bucket,
         key,
         ExtraArgs={&#34;ContentType&#34;: mimetypes.types_map.get(extension, &#34;application/octet-stream&#34;)} if extension else {},
