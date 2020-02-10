@@ -11,6 +11,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.2.3" (2020-02-10)
+====================
+"" "1.2.3" (2020-02-10)
+=======================
+
+Bugfixes
+--------
+
+- Added missing `packaging` dependency. (#1)
+
+
 "1.2.2" (2020-02-07)
 ====================
 "" "1.2.2" (2020-02-07)
