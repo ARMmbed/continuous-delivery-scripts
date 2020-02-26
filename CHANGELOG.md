@@ -11,6 +11,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.3.0" (2020-02-26)
+====================
+"" "1.3.0" (2020-02-26)
+=======================
+
+Features
+--------
+
+- Add utility for generating news files (#20200226)
+
+
 "1.2.3" (2020-02-10)
 ====================
 "" "1.2.3" (2020-02-10)

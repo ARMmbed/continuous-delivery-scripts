@@ -30,7 +30,7 @@ import argparse
 import logging
 import re
 import sys
-from typing import List
+from typing import List, Union
 import pathlib
 
 from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -45,7 +45,7 @@ NEWS_FILE_NAME_REGEX = r&#34;^[0-9]+.(misc|doc|removal|bugfix|feature|major)$&#3
 class NewsFileValidator:
     &#34;&#34;&#34;Verifies individual news files.&#34;&#34;&#34;
 
-    def __init__(self, absolute_path: str) -&gt; None:
+    def __init__(self, absolute_path: Union[pathlib.Path, str]) -&gt; None:
         &#34;&#34;&#34;Creates a new instance of NewsFileValidator.
 
         Args:
@@ -77,7 +77,7 @@ class NewsFileValidator:
         self.validate_file_contents()
 
 
-def validate_news_file(absolute_path: str) -&gt; None:
+def validate_news_file(absolute_path: Union[pathlib.Path, str]) -&gt; None:
     &#34;&#34;&#34;Applies NewsFileValidator validation logic to news file.&#34;&#34;&#34;
     NewsFileValidator(absolute_path).validate()
 
@@ -225,7 +225,7 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.assert_news.validate_news_file"><code class="name flex">
-<span>def <span class="ident">validate_news_file</span></span>(<span>absolute_path: str) -> NoneType</span>
+<span>def <span class="ident">validate_news_file</span></span>(<span>absolute_path: Union[pathlib.Path, str]) -> NoneType</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Applies NewsFileValidator validation logic to news file.</p></section>
@@ -233,7 +233,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def validate_news_file(absolute_path: str) -&gt; None:
+<pre><code class="python">def validate_news_file(absolute_path: Union[pathlib.Path, str]) -&gt; None:
     &#34;&#34;&#34;Applies NewsFileValidator validation logic to news file.&#34;&#34;&#34;
     NewsFileValidator(absolute_path).validate()</code></pre>
 </details>
@@ -278,7 +278,7 @@ if __name__ == &#34;__main__&#34;:
 <dl>
 <dt id="mbed_tools_ci_scripts.assert_news.NewsFileValidator"><code class="flex name class">
 <span>class <span class="ident">NewsFileValidator</span></span>
-<span>(</span><span>absolute_path: str)</span>
+<span>(</span><span>absolute_path: Union[pathlib.Path, str])</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Verifies individual news files.</p>
@@ -295,7 +295,7 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">class NewsFileValidator:
     &#34;&#34;&#34;Verifies individual news files.&#34;&#34;&#34;
 
-    def __init__(self, absolute_path: str) -&gt; None:
+    def __init__(self, absolute_path: Union[pathlib.Path, str]) -&gt; None:
         &#34;&#34;&#34;Creates a new instance of NewsFileValidator.
 
         Args:
