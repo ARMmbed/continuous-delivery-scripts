@@ -1,0 +1,1 @@
+Add utility for generating news files

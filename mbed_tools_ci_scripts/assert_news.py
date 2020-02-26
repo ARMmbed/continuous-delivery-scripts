@@ -3,7 +3,7 @@ import argparse
 import logging
 import re
 import sys
-from typing import List
+from typing import List, Union
 import pathlib
 
 from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -18,7 +18,7 @@ NEWS_FILE_NAME_REGEX = r"^[0-9]+.(misc|doc|removal|bugfix|feature|major)$"
 class NewsFileValidator:
     """Verifies individual news files."""
 
-    def __init__(self, absolute_path: str) -> None:
+    def __init__(self, absolute_path: Union[pathlib.Path, str]) -> None:
         """Creates a new instance of NewsFileValidator.
 
         Args:
@@ -50,7 +50,7 @@ class NewsFileValidator:
         self.validate_file_contents()
 
 
-def validate_news_file(absolute_path: str) -> None:
+def validate_news_file(absolute_path: Union[pathlib.Path, str]) -> None:
     """Applies NewsFileValidator validation logic to news file."""
     NewsFileValidator(absolute_path).validate()
 

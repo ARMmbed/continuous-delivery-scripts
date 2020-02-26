@@ -36,6 +36,7 @@ setup(
         "console_scripts": [
             f"assert-news={SOURCE_DIR}.assert_news:main",
             f"generate-news={SOURCE_DIR}.generate_news:main",
+            f"create-news-file={SOURCE_DIR}.create_news_file:main",
             f"generate-docs={SOURCE_DIR}.generate_docs:main",
             f"tag-and-release={SOURCE_DIR}.tag_and_release:main",
             f"get-config={SOURCE_DIR}.get_config:main",
