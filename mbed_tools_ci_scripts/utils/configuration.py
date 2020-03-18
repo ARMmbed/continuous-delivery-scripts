@@ -39,6 +39,8 @@ class ConfigurationVariable(enum.Enum):
     SOURCE_DIR = 21
     PACKAGE_NAME = 22
     IGNORE_PYPI_TEST_UPLOAD = 23
+    FILE_LICENCE_IDENTIFIER = 24
+    COPYRIGHT_START_DATE = 25
 
     @staticmethod
     def choices() -> List[str]:
@@ -137,6 +139,8 @@ class StaticConfig(GenericConfig):
     BOT_EMAIL = "monty-bot@arm.com"
     ORGANISATION = "Arm Mbed"
     ORGANISATION_EMAIL = "support@mbed.com"
+    FILE_LICENCE_IDENTIFIER = "Apache-2.0"
+    COPYRIGHT_START_DATE = 2020
 
     def _fetch_value(self, key: str) -> Any:
         try:

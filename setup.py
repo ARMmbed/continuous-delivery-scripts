@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020-2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Package definition for PyPI."""
 import os
 
@@ -40,6 +44,7 @@ setup(
             f"generate-docs={SOURCE_DIR}.generate_docs:main",
             f"tag-and-release={SOURCE_DIR}.tag_and_release:main",
             f"get-config={SOURCE_DIR}.get_config:main",
+            f"license-files={SOURCE_DIR}.license_files:main",
         ]
     },
     keywords="Arm Mbed OS MbedOS Tools CI Scripts",
@@ -54,6 +59,7 @@ setup(
         "twine",
         "boto3",
         "packaging",
+        "licenseheaders",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
