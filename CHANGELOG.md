@@ -11,6 +11,23 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.4.1" (2020-03-19)
+====================
+"" "1.4.1" (2020-03-19)
+=======================
+
+Bugfixes
+--------
+
+- Updated licence notice to follow regex in `flake8-copyright` (#20200319)
+
+
+Improved Documentation
+----------------------
+
+- Adds licence/copyright notice (#20200319)
+
+
 "1.4.0" (2020-03-19)
 ====================
 "" "1.4.0" (2020-03-19)
