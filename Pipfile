@@ -15,6 +15,7 @@ pytest = "*"
 pyfakefs = "*"
 pytest-cov = "*"
 wheel = "*"
+pre-commit = "*"
 mbed-tools-ci-scripts = {editable = true, path = "."}
 
 [pipenv]

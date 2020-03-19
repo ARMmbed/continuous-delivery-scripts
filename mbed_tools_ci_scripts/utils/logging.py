@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Helpers for logging errors according to severity of the exception."""
 import logging
 from .configuration import configuration, ConfigurationVariable

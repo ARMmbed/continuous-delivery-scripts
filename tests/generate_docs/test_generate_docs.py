@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 import pathlib
 from subprocess import CalledProcessError
 from unittest import mock, TestCase

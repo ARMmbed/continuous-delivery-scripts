@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 from mbed_tools_ci_scripts.license_files import _to_copyright_date_string
 import unittest
 from datetime import datetime

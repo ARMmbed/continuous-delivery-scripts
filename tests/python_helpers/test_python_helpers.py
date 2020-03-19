@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 from mbed_tools_ci_scripts.utils.python_helpers import flatten_dictionary
 import unittest
 

@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Utilities in charge of fetching configuration values for the ci scripts."""
 import enum
 import logging

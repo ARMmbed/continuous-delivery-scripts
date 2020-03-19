@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Handles usage of towncrier for automated changelog generation and pyautoversion for versioning."""
 import sys
 

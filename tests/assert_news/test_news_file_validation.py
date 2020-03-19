@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 from unittest import mock, TestCase
 from pyfakefs.fake_filesystem_unittest import Patcher
 

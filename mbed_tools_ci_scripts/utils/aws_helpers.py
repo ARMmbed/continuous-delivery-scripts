@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Helpers for interacting with AWS services such as S3.
 
 Based on the Python SDK called BOTO https://aws.amazon.com/sdk-for-python/.
