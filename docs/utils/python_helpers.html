@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.5" />
-<title>mbed_tools_ci_scripts.utils API documentation</title>
-<meta name="description" content="Utility scripts to abstract and assist with scripts run in the CI." />
+<title>mbed_tools_ci_scripts.utils.python_helpers API documentation</title>
+<meta name="description" content="Utilities around python language." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -17,53 +17,44 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools_ci_scripts.utils</code></h1>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.python_helpers</code></h1>
 </header>
 <section id="section-intro">
-<p>Utility scripts to abstract and assist with scripts run in the CI.</p>
+<p>Utilities around python language.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;Utility scripts to abstract and assist with scripts run in the CI.&#34;&#34;&#34;</code></pre>
+<pre><code class="python">&#34;&#34;&#34;Utilities around python language.&#34;&#34;&#34;
+
+
+def flatten_dictionary(dictionary: dict) -&gt; list:
+    &#34;&#34;&#34;Flattens a dictionary and transforms it into a list [key, value, ...].&#34;&#34;&#34;
+    return [item for pair in dictionary.items() for item in pair]</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.aws_helpers" href="aws_helpers.html">mbed_tools_ci_scripts.utils.aws_helpers</a></code></dt>
+<dt id="mbed_tools_ci_scripts.utils.python_helpers.flatten_dictionary"><code class="name flex">
+<span>def <span class="ident">flatten_dictionary</span></span>(<span>dictionary: dict) -> list</span>
+</code></dt>
 <dd>
-<section class="desc"><p>Helpers for interacting with AWS services such as S3 …</p></section>
-</dd>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.configuration" href="configuration.html">mbed_tools_ci_scripts.utils.configuration</a></code></dt>
-<dd>
-<section class="desc"><p>Utilities in charge of fetching configuration values for the ci scripts.</p></section>
-</dd>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.definitions" href="definitions.html">mbed_tools_ci_scripts.utils.definitions</a></code></dt>
-<dd>
-<section class="desc"><p>Place to store generic project concepts for the ci scripts.</p></section>
-</dd>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.filesystem_helpers" href="filesystem_helpers.html">mbed_tools_ci_scripts.utils.filesystem_helpers</a></code></dt>
-<dd>
-<section class="desc"><p>Helpers with regards to actions on the filesystem.</p></section>
-</dd>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.git_helpers" href="git_helpers.html">mbed_tools_ci_scripts.utils.git_helpers</a></code></dt>
-<dd>
-<section class="desc"><p>Utility script to abstract git operations for our CI scripts.</p></section>
-</dd>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.logging" href="logging.html">mbed_tools_ci_scripts.utils.logging</a></code></dt>
-<dd>
-<section class="desc"><p>Helpers for logging errors according to severity of the exception.</p></section>
-</dd>
-<dt><code class="name"><a title="mbed_tools_ci_scripts.utils.python_helpers" href="python_helpers.html">mbed_tools_ci_scripts.utils.python_helpers</a></code></dt>
-<dd>
-<section class="desc"><p>Utilities around python language.</p></section>
+<section class="desc"><p>Flattens a dictionary and transforms it into a list [key, value, &hellip;].</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flatten_dictionary(dictionary: dict) -&gt; list:
+    &#34;&#34;&#34;Flattens a dictionary and transforms it into a list [key, value, ...].&#34;&#34;&#34;
+    return [item for pair in dictionary.items() for item in pair]</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -76,18 +67,12 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools_ci_scripts" href="../index.html">mbed_tools_ci_scripts</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="mbed_tools_ci_scripts.utils.aws_helpers" href="aws_helpers.html">mbed_tools_ci_scripts.utils.aws_helpers</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration" href="configuration.html">mbed_tools_ci_scripts.utils.configuration</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions" href="definitions.html">mbed_tools_ci_scripts.utils.definitions</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers" href="filesystem_helpers.html">mbed_tools_ci_scripts.utils.filesystem_helpers</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.git_helpers" href="git_helpers.html">mbed_tools_ci_scripts.utils.git_helpers</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.logging" href="logging.html">mbed_tools_ci_scripts.utils.logging</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.python_helpers" href="python_helpers.html">mbed_tools_ci_scripts.utils.python_helpers</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.python_helpers.flatten_dictionary" href="#mbed_tools_ci_scripts.utils.python_helpers.flatten_dictionary">flatten_dictionary</a></code></li>
 </ul>
 </li>
 </ul>

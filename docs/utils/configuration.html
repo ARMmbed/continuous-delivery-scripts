@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.4" />
+<meta name="generator" content="pdoc 0.7.5" />
 <title>mbed_tools_ci_scripts.utils.configuration API documentation</title>
 <meta name="description" content="Utilities in charge of fetching configuration values for the ci scripts." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
@@ -66,6 +66,8 @@ class ConfigurationVariable(enum.Enum):
     SOURCE_DIR = 21
     PACKAGE_NAME = 22
     IGNORE_PYPI_TEST_UPLOAD = 23
+    FILE_LICENCE_IDENTIFIER = 24
+    COPYRIGHT_START_DATE = 25
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -164,6 +166,8 @@ class StaticConfig(GenericConfig):
     BOT_EMAIL = &#34;monty-bot@arm.com&#34;
     ORGANISATION = &#34;Arm Mbed&#34;
     ORGANISATION_EMAIL = &#34;support@mbed.com&#34;
+    FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
+    COPYRIGHT_START_DATE = 2020
 
     def _fetch_value(self, key: str) -&gt; Any:
         try:
@@ -345,6 +349,8 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     SOURCE_DIR = 21
     PACKAGE_NAME = 22
     IGNORE_PYPI_TEST_UPLOAD = 23
+    FILE_LICENCE_IDENTIFIER = 24
+    COPYRIGHT_START_DATE = 25
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -378,95 +384,103 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH"><code class="name">var <span class="ident">CHANGELOG_FILE_PATH</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
+<dd>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_DEFAULT_OUTPUT_PATH</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
+<dd>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN"><code class="name">var <span class="ident">GIT_TOKEN</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_PYPI_TEST_UPLOAD</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT"><code class="name">var <span class="ident">MODULE_TO_DOCUMENT</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR"><code class="name">var <span class="ident">NEWS_DIR</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME"><code class="name">var <span class="ident">PACKAGE_NAME</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG"><code class="name">var <span class="ident">PROJECT_CONFIG</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME"><code class="name">var <span class="ident">PROJECT_NAME</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT"><code class="name">var <span class="ident">PROJECT_ROOT</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH"><code class="name">var <span class="ident">VERSION_FILE_PATH</span></code></dt>
 <dd>
-<section class="desc"><p>Project's configuration variables.</p></section>
+<section class="desc"></section>
 </dd>
 </dl>
 </dd>
@@ -628,33 +642,15 @@ to current directory (i.e. os.getcwd()).</p>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME"><code class="name">var <span class="ident">CONFIG_FILE_NAME</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION"><code class="name">var <span class="ident">CONFIG_SECTION</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN"><code class="name">var <span class="ident">PATH_TOKEN</span></code></dt>
 <dd>
-<section class="desc"><p>set() -&gt; new empty set object
-set(iterable) -&gt; new set object</p>
-<p>Build an unordered collection of unique elements.</p></section>
+<section class="desc"></section>
 </dd>
 </dl>
 <h3>Instance variables</h3>
@@ -756,7 +752,7 @@ def config(self) -&gt; dict:
 <h3>Methods</h3>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value"><code class="name flex">
-<span>def <span class="ident">get_value</span></span>(<span>self, key: Union[str, <a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>]) -> Any</span>
+<span>def <span class="ident">get_value</span></span>(<span>self, key: Union[str, mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable]) -> Any</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Gets a configuration value.</p>
@@ -792,7 +788,7 @@ def config(self) -&gt; dict:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default"><code class="name flex">
-<span>def <span class="ident">get_value_or_default</span></span>(<span>self, key: Union[str, <a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>], default_value: Any) -> Any</span>
+<span>def <span class="ident">get_value_or_default</span></span>(<span>self, key: Union[str, mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable], default_value: Any) -> Any</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Gets a configuration value.</p>
@@ -917,6 +913,8 @@ defined in toml.</p></section>
     BOT_EMAIL = &#34;monty-bot@arm.com&#34;
     ORGANISATION = &#34;Arm Mbed&#34;
     ORGANISATION_EMAIL = &#34;support@mbed.com&#34;
+    FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
+    COPYRIGHT_START_DATE = 2020
 
     def _fetch_value(self, key: str) -&gt; Any:
         try:
@@ -933,111 +931,47 @@ defined in toml.</p></section>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
+<dd>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
-<section class="desc"><p>str(object='') -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to sys.getdefaultencoding().
-errors defaults to 'strict'.</p></section>
+<section class="desc"></section>
 </dd>
 </dl>
 <h3>Inherited members</h3>
@@ -1095,8 +1029,10 @@ errors defaults to 'strict'.</p></section>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL">BOT_EMAIL</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME">BOT_USERNAME</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH">CHANGELOG_FILE_PATH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH">DOCUMENTATION_DEFAULT_OUTPUT_PATH</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD">IGNORE_PYPI_TEST_UPLOAD</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
@@ -1143,6 +1079,8 @@ errors defaults to 'strict'.</p></section>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH">BETA_BRANCH</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL">BOT_EMAIL</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME">BOT_USERNAME</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION">ORGANISATION</a></code></li>
@@ -1160,7 +1098,7 @@ errors defaults to 'strict'.</p></section>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.4</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

@@ -11,6 +11,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.4.0" (2020-03-19)
+====================
+"" "1.4.0" (2020-03-19)
+=======================
+
+Features
+--------
+
+- Added a utility for putting a licence notice at top of source files. (#20200318)
+
+
 "1.3.0" (2020-02-26)
 ====================
 
