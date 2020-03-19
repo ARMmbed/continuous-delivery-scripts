@@ -20,7 +20,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-LICENCE_HEADER_TEMPLATE = """Copyright (c) {date}, {author}. All rights reserved.
+LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author}. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
 """
 
