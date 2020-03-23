@@ -11,6 +11,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.5.0" (2020-03-23)
+====================
+"" "1.5.0" (2020-03-23)
+=======================
+
+Features
+--------
+
+- Added a way/mode for `assert-news` to work on local repositories (#20200311)
+
+
 "1.4.1" (2020-03-19)
 ====================
 "" "1.4.1" (2020-03-19)

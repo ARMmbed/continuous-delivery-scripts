@@ -605,6 +605,22 @@ class ProjectGitWrapper(GitWrapper):
         )
 
 
+class LocalProjectRepository:
+    &#34;&#34;&#34;Context manager providing a git wrapper over the current project&#39;s repository.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        self._repo = ProjectGitWrapper()
+
+    def __enter__(self) -&gt; ProjectGitWrapper:
+        &#34;&#34;&#34;Context manager entry point.&#34;&#34;&#34;
+        return self._repo
+
+    def __exit__(self, type: Any, value: Any, traceback: Any) -&gt; None:
+        &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
+        pass
+
+
 class GitClone(GitWrapper):
     &#34;&#34;&#34;Cloned repository.
 
@@ -2599,6 +2615,32 @@ Tags are also pushed as part of the process</p></section>
 </dd>
 </dl>
 </dd>
+<dt id="mbed_tools_ci_scripts.utils.git_helpers.LocalProjectRepository"><code class="flex name class">
+<span>class <span class="ident">LocalProjectRepository</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Context manager providing a git wrapper over the current project's repository.</p>
+<p>Constructor.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LocalProjectRepository:
+    &#34;&#34;&#34;Context manager providing a git wrapper over the current project&#39;s repository.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        self._repo = ProjectGitWrapper()
+
+    def __enter__(self) -&gt; ProjectGitWrapper:
+        &#34;&#34;&#34;Context manager entry point.&#34;&#34;&#34;
+        return self._repo
+
+    def __exit__(self, type: Any, value: Any, traceback: Any) -&gt; None:
+        &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
+        pass</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper"><code class="flex name class">
 <span>class <span class="ident">ProjectGitWrapper</span></span>
 </code></dt>
@@ -2784,6 +2826,9 @@ will work in most cases but probably not on CI.</p></section>
 <li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.LocalProjectRepository" href="#mbed_tools_ci_scripts.utils.git_helpers.LocalProjectRepository">LocalProjectRepository</a></code></h4>
 </li>
 <li>
 <h4><code><a title="mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.ProjectGitWrapper">ProjectGitWrapper</a></code></h4>
