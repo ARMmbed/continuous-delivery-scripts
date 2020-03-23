@@ -11,7 +11,7 @@ from typing import List, Union
 import pathlib
 
 from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
 from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
@@ -95,14 +95,20 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
 def main() -> None:
     """Asserts the new PR comprises at least one news file and it adheres to the required standard."""
     parser = argparse.ArgumentParser(description="Check correctly formatted news files exist on feature branch.")
-    parser.add_argument("-b", "--current-branch", help="Name of the current branch", nargs="?")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-b", "--current-branch", help="Name of the current branch", nargs="?")
+    group.add_argument("-l", "--local", action="store_true", help="perform checks directly on local repository")
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.",
     )
     args = parser.parse_args()
     set_log_level(args.verbose)
 
-    with ProjectTempClone(desired_branch_name=args.current_branch) as git:
+    with (
+        LocalProjectRepository()  # type: ignore
+        if args.local
+        else ProjectTempClone(desired_branch_name=args.current_branch)
+    ) as git:
         if git.is_current_branch_feature():
             root_dir = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
             absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)

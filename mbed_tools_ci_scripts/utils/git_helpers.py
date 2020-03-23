@@ -578,6 +578,22 @@ class ProjectGitWrapper(GitWrapper):
         )
 
 
+class LocalProjectRepository:
+    """Context manager providing a git wrapper over the current project's repository."""
+
+    def __init__(self) -> None:
+        """Constructor."""
+        self._repo = ProjectGitWrapper()
+
+    def __enter__(self) -> ProjectGitWrapper:
+        """Context manager entry point."""
+        return self._repo
+
+    def __exit__(self, type: Any, value: Any, traceback: Any) -> None:
+        """Context manager exit point."""
+        pass
+
+
 class GitClone(GitWrapper):
     """Cloned repository.
 
