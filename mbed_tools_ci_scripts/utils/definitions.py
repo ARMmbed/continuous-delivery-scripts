@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Place to store generic project concepts for the ci scripts."""

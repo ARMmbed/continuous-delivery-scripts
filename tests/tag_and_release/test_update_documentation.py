@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Tests for mbed_tools_ci_scripts.tag_and_release documentation update functions."""
