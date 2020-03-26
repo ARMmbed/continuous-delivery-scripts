@@ -26,7 +26,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utilities around python language.&#34;&#34;&#34;
@@ -34,7 +34,14 @@
 
 def flatten_dictionary(dictionary: dict) -&gt; list:
     &#34;&#34;&#34;Flattens a dictionary and transforms it into a list [key, value, ...].&#34;&#34;&#34;
-    return [item for pair in dictionary.items() for item in pair]</code></pre>
+    flat_list = list()
+    for k, v in dictionary.items():
+        flat_list.append(k)
+        if isinstance(v, list):
+            flat_list.extend(v)
+        else:
+            flat_list.append(v)
+    return flat_list</code></pre>
 </details>
 </section>
 <section>
@@ -55,7 +62,14 @@ def flatten_dictionary(dictionary: dict) -&gt; list:
 </summary>
 <pre><code class="python">def flatten_dictionary(dictionary: dict) -&gt; list:
     &#34;&#34;&#34;Flattens a dictionary and transforms it into a list [key, value, ...].&#34;&#34;&#34;
-    return [item for pair in dictionary.items() for item in pair]</code></pre>
+    flat_list = list()
+    for k, v in dictionary.items():
+        flat_list.append(k)
+        if isinstance(v, list):
+            flat_list.extend(v)
+        else:
+            flat_list.append(v)
+    return flat_list</code></pre>
 </details>
 </dd>
 </dl>

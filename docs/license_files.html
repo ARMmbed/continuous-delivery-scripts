@@ -28,7 +28,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (c) 2020, Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Apply copyright and licensing to all source files present in a project.
@@ -52,6 +52,8 @@ logger = logging.getLogger(__name__)
 LICENCE_HEADER_TEMPLATE = &#34;&#34;&#34;Copyright (C) {date} {author}. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
 &#34;&#34;&#34;
+
+FILES_TO_IGNORE = [&#34;*.yml&#34;, &#34;*.yaml&#34;]
 
 
 def add_licence_header(verbose_count: int) -&gt; None:
@@ -83,11 +85,11 @@ def _generate_header_template() -&gt; str:
 def _call_licensehearders(config: dict, verbose_count: int) -&gt; None:
     &#34;&#34;&#34;Runs licenseheaders tool.&#34;&#34;&#34;
     args = [&#34;licenseheaders&#34;]
-    args_dict = {f&#34;--{k}&#34;: str(v) for (k, v) in config.items()}
+    args_dict = {f&#34;--{k}&#34;: v for (k, v) in config.items()}
     args.extend(flatten_dictionary(args_dict))
     if verbose_count &gt; 0:
         args.append(f&#34;-{&#39;&#39;.join([&#39;v&#39;] * verbose_count)}&#34;)
-    subprocess.check_call(args)
+    subprocess.check_call([str(arg) for arg in args])
 
 
 def _determines_copyright_dates() -&gt; str:
@@ -111,6 +113,7 @@ def get_tool_config(template_file: Path) -&gt; dict:
         &#34;tmpl&#34;: str(template_file),
         &#34;years&#34;: copyright_dates,
         &#34;additional-extensions&#34;: &#34;python=.toml&#34;,
+        &#34;exclude&#34;: FILES_TO_IGNORE,
     }
 
 
@@ -185,6 +188,7 @@ if __name__ == &#34;__main__&#34;:
         &#34;tmpl&#34;: str(template_file),
         &#34;years&#34;: copyright_dates,
         &#34;additional-extensions&#34;: &#34;python=.toml&#34;,
+        &#34;exclude&#34;: FILES_TO_IGNORE,
     }</code></pre>
 </details>
 </dd>

@@ -11,6 +11,18 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.5.1" (2020-03-26)
+====================
+"" "1.5.1" (2020-03-26)
+=======================
+
+Bugfixes
+--------
+
+- Fix pre-commit configuration and add assert-news to the check list (#20200323)
+- Ignore yaml files when licensing (#20200326)
+
+
 "1.5.0" (2020-03-23)
 ====================
 "" "1.5.0" (2020-03-23)
