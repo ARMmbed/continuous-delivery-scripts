@@ -24,6 +24,8 @@ LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author}. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
 """
 
+FILES_TO_IGNORE = ["*.yml", "*.yaml"]
+
 
 def add_licence_header(verbose_count: int) -> None:
     """Puts a copyright notice at the top of every source file.
@@ -54,11 +56,11 @@ def _generate_header_template() -> str:
 def _call_licensehearders(config: dict, verbose_count: int) -> None:
     """Runs licenseheaders tool."""
     args = ["licenseheaders"]
-    args_dict = {f"--{k}": str(v) for (k, v) in config.items()}
+    args_dict = {f"--{k}": v for (k, v) in config.items()}
     args.extend(flatten_dictionary(args_dict))
     if verbose_count > 0:
         args.append(f"-{''.join(['v'] * verbose_count)}")
-    subprocess.check_call(args)
+    subprocess.check_call([str(arg) for arg in args])
 
 
 def _determines_copyright_dates() -> str:
@@ -82,6 +84,7 @@ def get_tool_config(template_file: Path) -> dict:
         "tmpl": str(template_file),
         "years": copyright_dates,
         "additional-extensions": "python=.toml",
+        "exclude": FILES_TO_IGNORE,
     }
 
 

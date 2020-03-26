@@ -8,5 +8,5 @@ import unittest
 
 class TestPythonHelpers(unittest.TestCase):
     def test_flatten_dictionaries(self):
-        dict1 = dict(a=1, b="c", d=True)
-        self.assertListEqual(["a", 1, "b", "c", "d", True], flatten_dictionary(dict1))
+        dict1 = dict(a=1, b="c", d=True, e=[1, 2, 3])
+        self.assertListEqual(["a", 1, "b", "c", "d", True, "e", 1, 2, 3], flatten_dictionary(dict1))
