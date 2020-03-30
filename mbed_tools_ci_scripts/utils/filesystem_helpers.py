@@ -8,9 +8,12 @@ import tempfile
 import shutil
 import platform
 import logging
+from wcmatch.pathlib import Path as EnhancedPath, GLOBSTAR
 from pathlib import Path
 from contextlib import contextmanager
-from typing import Iterator, Generator, Callable, Any
+import copy
+
+from typing import Iterator, Generator, Callable, Any, Optional, Pattern, Match, List
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +89,39 @@ def find_file_in_tree(file_name: str, starting_point: str = os.getcwd(), top: bo
     return file_path
 
 
+def match_pattern(path: Path, pattern: str) -> bool:
+    """Checks whether a path matches a `Unix`-like pattern e.g. `**/*.txt`."""
+    enhanced_path = EnhancedPath(str(path))
+    return any([enhanced_path.match(pattern), enhanced_path.globmatch(pattern, flags=GLOBSTAR)])
+
+
+def should_exclude_path(path: Path, excludes: List[str]) -> bool:
+    """Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list."""
+    return any([match_pattern(path, p) for p in excludes])
+
+
+def _browse_files(files: list, root: str, should_exclude_path: Optional[Callable[[Path], bool]]) -> Iterator[Path]:
+    for f in files:
+        p = Path(root).joinpath(f)
+        if not (should_exclude_path and should_exclude_path(p)):
+            yield p
+
+
+def _exclude_browsing_paths(dirs: list, root: str, should_exclude_path: Callable[[Path], bool]) -> None:
+    for d in copy.copy(dirs):
+        if should_exclude_path(Path(root).joinpath(d)):
+            # Excluding paths from the scan (https://docs.python.org/3/library/os.html#os.walk)
+            dirs.remove(d)
+
+
+def list_all_files(root_path: Path, should_exclude_path: Optional[Callable[[Path], bool]] = None) -> Iterator[Path]:
+    """Lists all the files in a directory."""
+    for root, dirs, files in os.walk(str(root_path)):
+        yield from _browse_files(files, root, should_exclude_path)
+        if should_exclude_path:
+            _exclude_browsing_paths(dirs, root, should_exclude_path)
+
+
 class TemporaryDirectory:
     """Creates and returns a temporary directory.
 
@@ -135,3 +171,12 @@ class TemporaryDirectory:
             self._windows_cleanup()
         else:
             self._default_cleanup()
+
+
+def scan_file_for_pattern(file_path: Path, pattern: Pattern) -> Optional[Match]:
+    """Looks for a specific pattern in a file."""
+    if not file_path.exists():
+        return None
+    with open(str(file_path), "r", encoding="utf8") as f:
+        text = f.read()
+        return pattern.search(text)

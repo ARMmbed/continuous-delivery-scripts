@@ -6,6 +6,8 @@
 import enum
 from typing import List
 
+UNKNOWN = "unknown"
+
 
 class CommitType(enum.Enum):
     """Type of commits."""

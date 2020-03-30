@@ -5,8 +5,10 @@
 [ProjectConfig]
 # Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
 # these tokens are used to identify path variables from other variable types.
+PROJECT_NAME = "mbed-tools-ci-scripts"
+PACKAGE_NAME = "mbed-tools-ci-scripts"
+PROJECT_UUID = '79d8e41a-d0cf-4503-808a-0862fb8f971c'
 PROJECT_ROOT = "."
-PROJECT_NAME="mbed-tools-ci-scripts"
 NEWS_DIR = "news/"
 SOURCE_DIR = "mbed_tools_ci_scripts"
 RELEASE_BRANCH_PATTERN = "^release.*$"
@@ -15,6 +17,7 @@ DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
 VERSION_FILE_PATH = "mbed_tools_ci_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
+AWS_BUCKET=""
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"
@@ -76,3 +79,8 @@ showcontent = false
 
 [tool.black]
 line-length = 120
+
+[spdx]
+CreatorWebsite = "spdx.org"
+PathToSpdx = "spdx/spdxdocs"
+UUID="b1cae91a-69c6-4c3b-81c2-f7230fc13ba1"

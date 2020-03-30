@@ -1,0 +1,38 @@
+Lorem Ipsum
+#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0 AND EPL-1.0+ AND (BSD OR MIT)
+#
+"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
+"Il ny a personne qui naime la souffrance pour elle-même, qui ne la recherche et qui ne la veuille pour elle-même..."
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla consectetur ullamcorper fermentum. Duis elementum porttitor tortor. In nulla mi, molestie eget magna vel, porta faucibus urna. Integer purus libero, elementum sed convallis rutrum, vulputate et purus. Fusce accumsan vitae lorem vehicula vulputate. Etiam lacinia leo pharetra velit dapibus, quis consectetur libero varius. Nam non aliquet nisl. Vivamus feugiat arcu at dapibus congue.
+
+Morbi sodales nisl nec elit luctus, id tempus arcu aliquam. Aliquam mattis, purus at semper faucibus, metus sem eleifend nibh, quis maximus ipsum diam imperdiet mauris. Phasellus finibus, velit a porta accumsan, sapien est pretium elit, eu posuere diam risus sit amet ipsum. Aenean malesuada dolor nec facilisis tempor. Nullam vestibulum metus vel ante commodo elementum. Nunc rhoncus sem in justo posuere, interdum imperdiet libero mollis. Phasellus ipsum sem, efficitur id aliquam ac, molestie sed mauris. Aenean non sagittis nulla, non tristique eros.
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    - Ut a enim laoreet, eleifend mi id, porttitor neque.
+    Nam porttitor libero in mi interdum sagittis vitae non lorem.
+    Vivamus eu diam et libero accumsan gravida.
+    Maecenas egestas purus ac ligula volutpat rutrum.
+    Mauris placerat urna eu suscipit sodales.
+
+    Phasellus facilisis lectus in tortor dictum ornare.
+    Fusce ac turpis ultricies, blandit nunc id, aliquam lorem.
+
+startpattern:
+some
+value
+over
+multiple
+lines
+endpattern
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed purus mi. Fusce vitae facilisis.
+
+Duis cursus eget metus at sodales. Vestibulum mattis, eros ut blandit suscipit, massa erat volutpat nulla, vel tincidunt risus lorem ut eros. Vestibulum semper aliquet justo, ac egestas diam ornare nec. Duis feugiat, libero at ultrices interdum, purus est bibendum dui, eget congue nunc ligula sit amet arcu. Suspendisse potenti. Proin in ipsum ac elit elementum convallis. Cras eleifend condimentum leo, sit amet luctus magna efficitur et. Maecenas placerat, libero auctor cursus volutpat, justo diam eleifend magna, non blandit turpis neque sit amet risus. Fusce a ex tristique, ornare lacus id, vehicula nisl. Duis sed tincidunt purus. Nam eu nibh diam. Aenean at nisl maximus, ultricies erat eget, ullamcorper enim. Maecenas vel gravida metus. Vivamus maximus neque ac nunc luctus, vel mattis arcu luctus. Praesent interdum ligula eget mi aliquam, ac volutpat risus cursus.
+
+Vivamus vel tellus ultrices, sollicitudin velit non, fermentum erat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed nec rhoncus velit, ac placerat mauris. Mauris a enim luctus, elementum dolor a, mattis neque. Phasellus ornare sem quam, ac consequat libero elementum quis. Ut consectetur varius dapibus. Morbi consequat lectus in eleifend aliquet.
+
+Ut eu nisi et diam eleifend fringilla. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla facilisi. Praesent ut ex ante. Aenean nisi ex, pellentesque ornare tincidunt sit amet, lacinia nec lorem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Praesent congue justo accumsan erat pretium, vitae accumsan tortor ultricies. Sed ac pretium quam.
+5 paragraphes, 397 mots, 2672 caractères de Lorem Ipsum généré
