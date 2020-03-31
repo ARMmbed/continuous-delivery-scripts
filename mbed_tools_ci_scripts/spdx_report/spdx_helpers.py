@@ -77,7 +77,7 @@ def determine_spdx_value(value: Optional[str]) -> Union[str, UnKnown, SPDXNone]:
 
 def get_project_namespace(project_config_path: Path, document_name: str) -> str:
     """Determines the project namespace from configuration."""
-    with open(str(project_config_path), "r") as f:
+    with open(str(project_config_path), "r", encoding="utf8") as f:
         config = toml.load(f).get(THIRD_PARTY_CONFIG_NAMESPACE, dict())
     protocol = f"http://"
     path_part = f'{config.get("CreatorWebsite")}/{config.get("PathToSpdx")}'

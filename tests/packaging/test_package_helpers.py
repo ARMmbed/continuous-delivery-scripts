@@ -18,7 +18,7 @@ from mbed_tools_ci_scripts.utils.package_helpers import (
 class TestPackaging(unittest.TestCase):
     def test_parse_metadata(self):
         test_file = Path(__file__).parent.joinpath("fixtures", "PKG-INFO")
-        with open(str(test_file), "r") as f:
+        with open(str(test_file), "r", encoding="utf8") as f:
             metadata = parse_package_metadata_lines(f.readlines())
         self.assertIsNotNone(metadata)
         self.assertEqual("mbed-tools-ci-scripts", metadata.name)

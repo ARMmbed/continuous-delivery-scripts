@@ -10,13 +10,14 @@ flake8 = "*"
 flake8-docstrings = "*"
 flake8-black = "*"
 flake8-copyright = "*"
+flake8-file-encoding = "*"
 mypy = ">=0.500"
 pytest = "*"
 pyfakefs = "*"
 pytest-cov = "*"
 wheel = "*"
-pre-commit = "*"
 mbed-tools-ci-scripts = {editable = true, path = "."}
+pre-commit = "*"
 
 [pipenv]
 allow_prereleases = true

@@ -1,13 +1,13 @@
 # Mbed Tools CI Scripts
 
-![Package](https://img.shields.io/badge/package-mbed--tools--ci--scripts-lightgrey)
+![Package](https://img.shields.io/badge/Package-mbed--tools--ci--scripts-lightgrey)
 [![Documentation](https://img.shields.io/badge/Documentation-GitHub_Pages-blue)](https://armmbed.github.io/mbed-tools-ci-scripts)
 [![PyPI](https://img.shields.io/pypi/v/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
 [![PyPI - Status](https://img.shields.io/pypi/status/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/LICENSE)
 
-[![Build Status](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_apis/build/status/Build%20and%20Release?branchName=master)](https://dev.azure.com/mbed-tools/mbed-tools-ci/_build/latest?definitionId=3&branchName=master)
+[![Build Status](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_apis/build/status/Build%20and%20Release?branchName=master&stageName=CI%20Checkpoint)](https://dev.azure.com/mbed-tools/mbed-tools-ci/_build/latest?definitionId=3&branchName=master)
 [![Test Coverage](https://codecov.io/gh/ARMmbed/mbed-tools-ci-scripts/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/mbed-tools-ci-scripts)
 [![Maintainability](https://api.codeclimate.com/v1/badges/41301e959f22986b7b2b/maintainability)](https://codeclimate.com/github/ARMmbed/mbed-tools-ci-scripts/maintainability)
 
@@ -74,3 +74,17 @@ The follow described the major aspects of the project structure:
 - `mbed_tools_ci_scripts/` - Python source files.
 - `news/` - Collection of news files for unreleased changes.
 - `tests/` - Unit and integration tests.
+
+## Getting Help
+
+- For interface definition and usage documentation, please see [GitHub Pages](https://armmbed.github.io/mbed-tools-ci-scripts).
+- For a list of known issues and possible work arounds, please see [Known Issues](KNOWN_ISSUES.md).
+- To raise a defect or enhancement please use [GitHub Issues](https://github.com/ARMmbed/mbed-tools-ci-scripts/issues).
+- To ask a question please use the [Mbed Forum](https://forums.mbed.com/).
+
+## Contributing
+
+- Mbed OS is an open source project and we are committed to fostering a welcoming community, please see our
+  [Code of Conduct](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/CODE_OF_CONDUCT.md) for more information.
+- For ways to contribute to the project, please see the [Contributions Guidelines](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/CONTRIBUTING.md)
+- For a technical introduction into developing this package, please see the [Development Guide](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/DEVELOPMENT.md)

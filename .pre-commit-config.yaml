@@ -25,7 +25,7 @@
       entry: black
       language: python
       types: [python]
-      always_run: true
+      require_serial: true
 
     - id: flake8
       name: flake8
@@ -36,7 +36,7 @@
 
     - id: mypy
       name: mypy
-      entry: mypy -p {{ cookiecutter.python_module_name }}
+      entry: mypy -p mbed_tools_ci_scripts
       language: python
       types: [python]
       require_serial: true
