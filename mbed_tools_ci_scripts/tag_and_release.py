@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 from typing import Optional, Tuple
 
+from mbed_tools_ci_scripts.license_files import add_licence_header
 from mbed_tools_ci_scripts.generate_docs import generate_documentation
 from mbed_tools_ci_scripts.generate_news import version_project
 from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -19,10 +20,12 @@ from mbed_tools_ci_scripts.utils.definitions import CommitType
 from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
 from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
 from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
+from mbed_tools_ci_scripts.report_third_party_ip import generate_spdx_reports
 
 ENVVAR_TWINE_USERNAME = "TWINE_USERNAME"
 ENVVAR_TWINE_PASSWORD = "TWINE_PASSWORD"
 OUTPUT_DIRECTORY = "release-dist"
+SPDX_REPORTS_DIRECTORY = "licensing"
 
 logger = logging.getLogger(__name__)
 
@@ -46,8 +49,10 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     if mode == CommitType.DEVELOPMENT:
         return
     _update_documentation()
+    add_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
+        _generate_spdx_reports()
         _release_to_pypi()
 
 
@@ -80,6 +85,14 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
             logger.info(f"Tagging commit")
             git.create_tag(version, message=f"release {version}")
             git.force_push_tag()
+
+
+def _generate_spdx_reports() -> None:
+    report_directory = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)).joinpath(
+        SPDX_REPORTS_DIRECTORY
+    )
+    report_directory.mkdir(exist_ok=True)
+    generate_spdx_reports(report_directory)
 
 
 def _add_version_changes(git: GitWrapper) -> None:

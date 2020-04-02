@@ -11,16 +11,30 @@ Therefore, some changes will have to be carried out when the later version is
 supported so that third-party IP gets documented as described by the
 specification (i.e. with relationships).
 """
+import sys
+
 import argparse
 import logging
-import sys
 from pathlib import Path
 
+from mbed_tools_ci_scripts.spdx_report.spdx_project import SpdxProject
 from mbed_tools_ci_scripts.utils.logging import set_log_level, log_exception
 from mbed_tools_ci_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
-from mbed_tools_ci_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
+
+
+def generate_spdx_reports(output_directory: Path) -> None:
+    """Generates all the SPDX reports for the current project."""
+    logger.info("Generating package information.")
+    try:
+        # Trying to generate the egg for the package but this may fail. If so, continue.
+        generate_package_info()
+    except Exception as e:
+        log_exception(logger, e)
+
+    logger.info("Generating SPDX report.")
+    SpdxProject(CurrentProjectMetadataParser()).generate_tag_value_files(output_directory)
 
 
 def main() -> int:
@@ -37,10 +51,7 @@ def main() -> int:
     set_log_level(args.verbose)
 
     try:
-        logger.info("Generating package information.")
-        generate_package_info()
-        logger.info("Generating SPDX report.")
-        SpdxProject(CurrentProjectMetadataParser()).generate_tag_value_files(Path(args.output_dir))
+        generate_spdx_reports(Path(args.output_dir))
         return 0
     except Exception as e:
         log_exception(logger, e)
