@@ -1,1 +1,0 @@
-Added utilities for generating the [SPDX report](https://spdx.org/) of a given python package

@@ -1,0 +1,878 @@
+<!--
+-- Copyright (C) 2020 Arm Mbed. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.5" />
+<title>mbed_tools_ci_scripts.spdx_report.spdx_package API documentation</title>
+<meta name="description" content="Definition of an SPDX Package." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.spdx_report.spdx_package</code></h1>
+</header>
+<section id="section-intro">
+<p>Definition of an SPDX Package.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+&#34;&#34;&#34;Definition of an SPDX Package.&#34;&#34;&#34;
+
+from pathlib import Path
+from spdx.checksum import Algorithm
+from spdx.creationinfo import Person
+from spdx.document import License
+from spdx.package import Package
+from spdx.utils import NoAssert
+from typing import List, Optional
+
+from mbed_tools_ci_scripts.spdx_report.spdx_file import SpdxFile
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
+    determine_spdx_value,
+    list_project_files_for_licensing,
+    determine_licence_compound,
+)
+from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
+from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True, order=True)
+class PackageInfo:
+    &#34;&#34;&#34;Definition of a Python package.
+
+    Attributes:
+        metadata: metadata about a package from files generated from setup.py.
+        root_dir: project root directory.
+        source_dir: directory where package&#39;s sources are.
+        uuid: unique identifier of the package.
+    &#34;&#34;&#34;
+
+    metadata: PackageMetadata
+    root_dir: Path
+    source_dir: Path
+    uuid: str
+
+
+class SpdxPackage:
+    &#34;&#34;&#34;SPDX package.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.4i7ojhp
+    &#34;&#34;&#34;
+
+    def __init__(self, package_info: PackageInfo, is_dependency: bool = False,) -&gt; None:
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        self._is_dependency = is_dependency
+        self._package_info = package_info
+        self._file_list: Optional[List[Path]] = None
+        self._actual_licence: Optional[str] = None
+
+    @property
+    def files(self) -&gt; Optional[List[Path]]:
+        &#34;&#34;&#34;Gets package&#39;s files.
+
+        Returns:
+            list of file path or None if a dependency.
+        &#34;&#34;&#34;
+        if self._is_dependency:
+            return None
+        if not self._file_list:
+            self._file_list = [p for p in list_project_files_for_licensing(self._package_info.source_dir)]
+        return self._file_list
+
+    @property
+    def id(self) -&gt; str:
+        &#34;&#34;&#34;Gets Package&#39;s identifier.
+
+        Returns:
+            An ID
+        &#34;&#34;&#34;
+        return self.name if self._is_dependency else self._package_info.uuid
+
+    @property
+    def name(self) -&gt; str:
+        &#34;&#34;&#34;Gets Package&#39;s name.
+
+        See https://spdx.org/spdx-specification-21-web-version#h.2xcytpi
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        return self._package_info.metadata.name
+
+    @property
+    def version(self) -&gt; str:
+        &#34;&#34;&#34;Gets package&#39;s version.
+
+        Returns:
+            package version
+        &#34;&#34;&#34;
+        return self._package_info.metadata.version
+
+    @property
+    def main_licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the package&#39;s official licence.
+
+        Returns:
+            project&#39;s licence
+        &#34;&#34;&#34;
+        return self._package_info.metadata.licence
+
+    @property
+    def licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the actual package&#39;s licence based on the files it contains.
+
+        Returns:
+            project&#39;s licence
+        &#34;&#34;&#34;
+        if not self._actual_licence:
+            files = self.get_spdx_files()
+            self._actual_licence = (
+                determine_licence_compound(self.main_licence, [f.licence for f in files])
+                if files
+                else self.main_licence
+            )
+        return self._actual_licence
+
+    @property
+    def author(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document&#39;s author.
+
+        Returns:
+            document&#39;s author
+        &#34;&#34;&#34;
+        return self._package_info.metadata.author
+
+    @property
+    def author_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document author&#39;s email.
+
+        Returns:
+            document author&#39;s email
+        &#34;&#34;&#34;
+        return self._package_info.metadata.author_email
+
+    @property
+    def url(self) -&gt; str:
+        &#34;&#34;&#34;Gets the package source URL.
+
+        Returns:
+            the package homepage
+        &#34;&#34;&#34;
+        return self._package_info.metadata.url
+
+    @property
+    def description(self) -&gt; str:
+        &#34;&#34;&#34;Gets the package description.
+
+        Returns:
+            some description
+        &#34;&#34;&#34;
+        return self._package_info.metadata.description
+
+    def get_spdx_files(self) -&gt; Optional[List[&#34;SpdxFile&#34;]]:
+        &#34;&#34;&#34;Gets package&#39;s files SPDX description.
+
+        Returns:
+            list of file descriptions or None if a dependency.
+        &#34;&#34;&#34;
+        if not self.files or len(self.files) == 0:
+            return None
+        return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]
+
+    def generate_spdx_package(self) -&gt; Package:
+        &#34;&#34;&#34;Generates the SPDX package.
+
+        Example of a SPDX package:
+        PackageName: eduVPN
+        DataFormat: SPDXRef-1
+        PackageSupplier: Organization: The Commons Conservancy eduVPN Programme
+        PackageHomePage: https://eduvpn.org
+        PackageLicenseDeclared: GPL-3.0+
+        PackageCopyrightText: 2017, The Commons Conservancy eduVPN Programme
+        PackageSummary: &lt;text&gt;EduVPN is designed to allow users to connect
+        securely and encrypted to the Internet from any standard device.
+                        &lt;/text&gt;
+        PackageComment: &lt;text&gt;The package includes the following libraries; see
+        Relationship information.
+                        &lt;/text&gt;
+        Created: 2017-06-06T09:00:00Z
+        PackageDownloadLocation: git://github.com/eduVPN/reponame
+        PackageDownloadLocation: git+https://github.com/eduVPN/reponame.git
+        PackageDownloadLocation: git+ssh://github.com/eduVPN/reponame.git
+        Creator: Person: Jane Doe
+
+        Returns:
+            the corresponding package
+        &#34;&#34;&#34;
+        package = Package()
+        package.check_sum = Algorithm(&#34;SHA1&#34;, str(NoAssert()))
+        package.verif_code = NoAssert()
+        package.cr_text = NoAssert()
+        package.name = determine_spdx_value(self.name)
+        package.version = determine_spdx_value(self.version)
+        package.file_name = determine_spdx_value(self.name)
+        package.download_location = determine_spdx_value(None)
+        package.homepage = determine_spdx_value(self.url)
+        package.originator = Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email))
+        package.license_declared = License.from_identifier(str(determine_spdx_value(self.licence)))
+        package.summary = determine_spdx_value(self.description)
+        package.description = NoAssert()
+        package.spdx_id = f&#34;SPDXRef-{self.id}&#34;
+        package.conc_lics = NoAssert()
+        package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(self.licence))))
+        files = self.get_spdx_files()
+        if files:
+            for file in files:
+                package.add_file(file.generate_spdx_file())
+        else:
+            # Has to generate a dummy file because of the following rule in SDK:
+            # - Package must have at least one file
+            package.add_file(SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence).generate_spdx_file())
+        return package</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.PackageInfo"><code class="flex name class">
+<span>class <span class="ident">PackageInfo</span></span>
+<span>(</span><span>metadata: <a title="mbed_tools_ci_scripts.utils.package_helpers.PackageMetadata" href="../utils/package_helpers.html#mbed_tools_ci_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>, root_dir: pathlib.Path, source_dir: pathlib.Path, uuid: str)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Definition of a Python package.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>metadata</code></strong></dt>
+<dd>metadata about a package from files generated from setup.py.</dd>
+<dt><strong><code>root_dir</code></strong></dt>
+<dd>project root directory.</dd>
+<dt><strong><code>source_dir</code></strong></dt>
+<dd>directory where package's sources are.</dd>
+<dt><strong><code>uuid</code></strong></dt>
+<dd>unique identifier of the package.</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PackageInfo:
+    &#34;&#34;&#34;Definition of a Python package.
+
+    Attributes:
+        metadata: metadata about a package from files generated from setup.py.
+        root_dir: project root directory.
+        source_dir: directory where package&#39;s sources are.
+        uuid: unique identifier of the package.
+    &#34;&#34;&#34;
+
+    metadata: PackageMetadata
+    root_dir: Path
+    source_dir: Path
+    uuid: str</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage"><code class="flex name class">
+<span>class <span class="ident">SpdxPackage</span></span>
+<span>(</span><span>package_info: <a title="mbed_tools_ci_scripts.spdx_report.spdx_package.PackageInfo" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.PackageInfo">PackageInfo</a>, is_dependency: bool = False)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>SPDX package.</p>
+<p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.4i7ojhp">https://spdx.org/spdx-specification-21-web-version#h.4i7ojhp</a></p>
+<p>Constructor.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SpdxPackage:
+    &#34;&#34;&#34;SPDX package.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.4i7ojhp
+    &#34;&#34;&#34;
+
+    def __init__(self, package_info: PackageInfo, is_dependency: bool = False,) -&gt; None:
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        self._is_dependency = is_dependency
+        self._package_info = package_info
+        self._file_list: Optional[List[Path]] = None
+        self._actual_licence: Optional[str] = None
+
+    @property
+    def files(self) -&gt; Optional[List[Path]]:
+        &#34;&#34;&#34;Gets package&#39;s files.
+
+        Returns:
+            list of file path or None if a dependency.
+        &#34;&#34;&#34;
+        if self._is_dependency:
+            return None
+        if not self._file_list:
+            self._file_list = [p for p in list_project_files_for_licensing(self._package_info.source_dir)]
+        return self._file_list
+
+    @property
+    def id(self) -&gt; str:
+        &#34;&#34;&#34;Gets Package&#39;s identifier.
+
+        Returns:
+            An ID
+        &#34;&#34;&#34;
+        return self.name if self._is_dependency else self._package_info.uuid
+
+    @property
+    def name(self) -&gt; str:
+        &#34;&#34;&#34;Gets Package&#39;s name.
+
+        See https://spdx.org/spdx-specification-21-web-version#h.2xcytpi
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        return self._package_info.metadata.name
+
+    @property
+    def version(self) -&gt; str:
+        &#34;&#34;&#34;Gets package&#39;s version.
+
+        Returns:
+            package version
+        &#34;&#34;&#34;
+        return self._package_info.metadata.version
+
+    @property
+    def main_licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the package&#39;s official licence.
+
+        Returns:
+            project&#39;s licence
+        &#34;&#34;&#34;
+        return self._package_info.metadata.licence
+
+    @property
+    def licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the actual package&#39;s licence based on the files it contains.
+
+        Returns:
+            project&#39;s licence
+        &#34;&#34;&#34;
+        if not self._actual_licence:
+            files = self.get_spdx_files()
+            self._actual_licence = (
+                determine_licence_compound(self.main_licence, [f.licence for f in files])
+                if files
+                else self.main_licence
+            )
+        return self._actual_licence
+
+    @property
+    def author(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document&#39;s author.
+
+        Returns:
+            document&#39;s author
+        &#34;&#34;&#34;
+        return self._package_info.metadata.author
+
+    @property
+    def author_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document author&#39;s email.
+
+        Returns:
+            document author&#39;s email
+        &#34;&#34;&#34;
+        return self._package_info.metadata.author_email
+
+    @property
+    def url(self) -&gt; str:
+        &#34;&#34;&#34;Gets the package source URL.
+
+        Returns:
+            the package homepage
+        &#34;&#34;&#34;
+        return self._package_info.metadata.url
+
+    @property
+    def description(self) -&gt; str:
+        &#34;&#34;&#34;Gets the package description.
+
+        Returns:
+            some description
+        &#34;&#34;&#34;
+        return self._package_info.metadata.description
+
+    def get_spdx_files(self) -&gt; Optional[List[&#34;SpdxFile&#34;]]:
+        &#34;&#34;&#34;Gets package&#39;s files SPDX description.
+
+        Returns:
+            list of file descriptions or None if a dependency.
+        &#34;&#34;&#34;
+        if not self.files or len(self.files) == 0:
+            return None
+        return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]
+
+    def generate_spdx_package(self) -&gt; Package:
+        &#34;&#34;&#34;Generates the SPDX package.
+
+        Example of a SPDX package:
+        PackageName: eduVPN
+        DataFormat: SPDXRef-1
+        PackageSupplier: Organization: The Commons Conservancy eduVPN Programme
+        PackageHomePage: https://eduvpn.org
+        PackageLicenseDeclared: GPL-3.0+
+        PackageCopyrightText: 2017, The Commons Conservancy eduVPN Programme
+        PackageSummary: &lt;text&gt;EduVPN is designed to allow users to connect
+        securely and encrypted to the Internet from any standard device.
+                        &lt;/text&gt;
+        PackageComment: &lt;text&gt;The package includes the following libraries; see
+        Relationship information.
+                        &lt;/text&gt;
+        Created: 2017-06-06T09:00:00Z
+        PackageDownloadLocation: git://github.com/eduVPN/reponame
+        PackageDownloadLocation: git+https://github.com/eduVPN/reponame.git
+        PackageDownloadLocation: git+ssh://github.com/eduVPN/reponame.git
+        Creator: Person: Jane Doe
+
+        Returns:
+            the corresponding package
+        &#34;&#34;&#34;
+        package = Package()
+        package.check_sum = Algorithm(&#34;SHA1&#34;, str(NoAssert()))
+        package.verif_code = NoAssert()
+        package.cr_text = NoAssert()
+        package.name = determine_spdx_value(self.name)
+        package.version = determine_spdx_value(self.version)
+        package.file_name = determine_spdx_value(self.name)
+        package.download_location = determine_spdx_value(None)
+        package.homepage = determine_spdx_value(self.url)
+        package.originator = Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email))
+        package.license_declared = License.from_identifier(str(determine_spdx_value(self.licence)))
+        package.summary = determine_spdx_value(self.description)
+        package.description = NoAssert()
+        package.spdx_id = f&#34;SPDXRef-{self.id}&#34;
+        package.conc_lics = NoAssert()
+        package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(self.licence))))
+        files = self.get_spdx_files()
+        if files:
+            for file in files:
+                package.add_file(file.generate_spdx_file())
+        else:
+            # Has to generate a dummy file because of the following rule in SDK:
+            # - Package must have at least one file
+            package.add_file(SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence).generate_spdx_file())
+        return package</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.author"><code class="name">var <span class="ident">author</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document's author.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>document's</code> <code>author</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def author(self) -&gt; str:
+    &#34;&#34;&#34;Gets the document&#39;s author.
+
+    Returns:
+        document&#39;s author
+    &#34;&#34;&#34;
+    return self._package_info.metadata.author</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.author_email"><code class="name">var <span class="ident">author_email</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document author's email.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>document</code> <code>author's</code> <code>email</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def author_email(self) -&gt; str:
+    &#34;&#34;&#34;Gets the document author&#39;s email.
+
+    Returns:
+        document author&#39;s email
+    &#34;&#34;&#34;
+    return self._package_info.metadata.author_email</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.description"><code class="name">var <span class="ident">description</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the package description.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>some</code> <code>description</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def description(self) -&gt; str:
+    &#34;&#34;&#34;Gets the package description.
+
+    Returns:
+        some description
+    &#34;&#34;&#34;
+    return self._package_info.metadata.description</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.files"><code class="name">var <span class="ident">files</span></code></dt>
+<dd>
+<section class="desc"><p>Gets package's files.</p>
+<h2 id="returns">Returns</h2>
+<p>list of file path or None if a dependency.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def files(self) -&gt; Optional[List[Path]]:
+    &#34;&#34;&#34;Gets package&#39;s files.
+
+    Returns:
+        list of file path or None if a dependency.
+    &#34;&#34;&#34;
+    if self._is_dependency:
+        return None
+    if not self._file_list:
+        self._file_list = [p for p in list_project_files_for_licensing(self._package_info.source_dir)]
+    return self._file_list</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dd>
+<section class="desc"><p>Gets Package's identifier.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>An</code> <code>ID</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def id(self) -&gt; str:
+    &#34;&#34;&#34;Gets Package&#39;s identifier.
+
+    Returns:
+        An ID
+    &#34;&#34;&#34;
+    return self.name if self._is_dependency else self._package_info.uuid</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.licence"><code class="name">var <span class="ident">licence</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the actual package's licence based on the files it contains.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>project's</code> <code>licence</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence(self) -&gt; str:
+    &#34;&#34;&#34;Gets the actual package&#39;s licence based on the files it contains.
+
+    Returns:
+        project&#39;s licence
+    &#34;&#34;&#34;
+    if not self._actual_licence:
+        files = self.get_spdx_files()
+        self._actual_licence = (
+            determine_licence_compound(self.main_licence, [f.licence for f in files])
+            if files
+            else self.main_licence
+        )
+    return self._actual_licence</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.main_licence"><code class="name">var <span class="ident">main_licence</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the package's official licence.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>project's</code> <code>licence</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def main_licence(self) -&gt; str:
+    &#34;&#34;&#34;Gets the package&#39;s official licence.
+
+    Returns:
+        project&#39;s licence
+    &#34;&#34;&#34;
+    return self._package_info.metadata.licence</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<section class="desc"><p>Gets Package's name.</p>
+<p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.2xcytpi">https://spdx.org/spdx-specification-21-web-version#h.2xcytpi</a></p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>string</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def name(self) -&gt; str:
+    &#34;&#34;&#34;Gets Package&#39;s name.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.2xcytpi
+
+    Returns:
+        corresponding string
+    &#34;&#34;&#34;
+    return self._package_info.metadata.name</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.url"><code class="name">var <span class="ident">url</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the package source URL.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>the</code> <code>package</code> <code>homepage</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def url(self) -&gt; str:
+    &#34;&#34;&#34;Gets the package source URL.
+
+    Returns:
+        the package homepage
+    &#34;&#34;&#34;
+    return self._package_info.metadata.url</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.version"><code class="name">var <span class="ident">version</span></code></dt>
+<dd>
+<section class="desc"><p>Gets package's version.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>package</code> <code>version</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def version(self) -&gt; str:
+    &#34;&#34;&#34;Gets package&#39;s version.
+
+    Returns:
+        package version
+    &#34;&#34;&#34;
+    return self._package_info.metadata.version</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.generate_spdx_package"><code class="name flex">
+<span>def <span class="ident">generate_spdx_package</span></span>(<span>self) -> spdx.package.Package</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generates the SPDX package.</p>
+<p>Example of a SPDX package:
+PackageName: eduVPN
+DataFormat: SPDXRef-1
+PackageSupplier: Organization: The Commons Conservancy eduVPN Programme
+PackageHomePage: <a href="https://eduvpn.org">https://eduvpn.org</a>
+PackageLicenseDeclared: GPL-3.0+
+PackageCopyrightText: 2017, The Commons Conservancy eduVPN Programme
+PackageSummary: <text>EduVPN is designed to allow users to connect
+securely and encrypted to the Internet from any standard device.
+</text>
+PackageComment: <text>The package includes the following libraries; see
+Relationship information.
+</text>
+Created: 2017-06-06T09:00:00Z
+PackageDownloadLocation: git://github.com/eduVPN/reponame
+PackageDownloadLocation: git+<a href="https://github.com/eduVPN/reponame.git">https://github.com/eduVPN/reponame.git</a>
+PackageDownloadLocation: git+ssh://github.com/eduVPN/reponame.git
+Creator: Person: Jane Doe</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>the</code> <code>corresponding</code> <code>package</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_spdx_package(self) -&gt; Package:
+    &#34;&#34;&#34;Generates the SPDX package.
+
+    Example of a SPDX package:
+    PackageName: eduVPN
+    DataFormat: SPDXRef-1
+    PackageSupplier: Organization: The Commons Conservancy eduVPN Programme
+    PackageHomePage: https://eduvpn.org
+    PackageLicenseDeclared: GPL-3.0+
+    PackageCopyrightText: 2017, The Commons Conservancy eduVPN Programme
+    PackageSummary: &lt;text&gt;EduVPN is designed to allow users to connect
+    securely and encrypted to the Internet from any standard device.
+                    &lt;/text&gt;
+    PackageComment: &lt;text&gt;The package includes the following libraries; see
+    Relationship information.
+                    &lt;/text&gt;
+    Created: 2017-06-06T09:00:00Z
+    PackageDownloadLocation: git://github.com/eduVPN/reponame
+    PackageDownloadLocation: git+https://github.com/eduVPN/reponame.git
+    PackageDownloadLocation: git+ssh://github.com/eduVPN/reponame.git
+    Creator: Person: Jane Doe
+
+    Returns:
+        the corresponding package
+    &#34;&#34;&#34;
+    package = Package()
+    package.check_sum = Algorithm(&#34;SHA1&#34;, str(NoAssert()))
+    package.verif_code = NoAssert()
+    package.cr_text = NoAssert()
+    package.name = determine_spdx_value(self.name)
+    package.version = determine_spdx_value(self.version)
+    package.file_name = determine_spdx_value(self.name)
+    package.download_location = determine_spdx_value(None)
+    package.homepage = determine_spdx_value(self.url)
+    package.originator = Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email))
+    package.license_declared = License.from_identifier(str(determine_spdx_value(self.licence)))
+    package.summary = determine_spdx_value(self.description)
+    package.description = NoAssert()
+    package.spdx_id = f&#34;SPDXRef-{self.id}&#34;
+    package.conc_lics = NoAssert()
+    package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(self.licence))))
+    files = self.get_spdx_files()
+    if files:
+        for file in files:
+            package.add_file(file.generate_spdx_file())
+    else:
+        # Has to generate a dummy file because of the following rule in SDK:
+        # - Package must have at least one file
+        package.add_file(SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence).generate_spdx_file())
+    return package</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.get_spdx_files"><code class="name flex">
+<span>def <span class="ident">get_spdx_files</span></span>(<span>self) -> Union[List[<a title="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile" href="spdx_file.html#mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile">SpdxFile</a>], NoneType]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gets package's files SPDX description.</p>
+<h2 id="returns">Returns</h2>
+<p>list of file descriptions or None if a dependency.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_spdx_files(self) -&gt; Optional[List[&#34;SpdxFile&#34;]]:
+    &#34;&#34;&#34;Gets package&#39;s files SPDX description.
+
+    Returns:
+        list of file descriptions or None if a dependency.
+    &#34;&#34;&#34;
+    if not self.files or len(self.files) == 0:
+        return None
+    return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report" href="index.html">mbed_tools_ci_scripts.spdx_report</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.PackageInfo" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.PackageInfo">PackageInfo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.author" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.author">author</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.author_email" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.author_email">author_email</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.description" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.description">description</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.files" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.files">files</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.generate_spdx_package" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.generate_spdx_package">generate_spdx_package</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.get_spdx_files" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.get_spdx_files">get_spdx_files</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.id" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.id">id</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.licence">licence</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.main_licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.main_licence">main_licence</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.name" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.name">name</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.url" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.url">url</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.version" href="#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage.version">version</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

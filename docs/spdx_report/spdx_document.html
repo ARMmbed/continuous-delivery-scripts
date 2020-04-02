@@ -1,0 +1,970 @@
+<!--
+-- Copyright (C) 2020 Arm Mbed. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.7.5" />
+<title>mbed_tools_ci_scripts.spdx_report.spdx_document API documentation</title>
+<meta name="description" content="Definition of an SPDX Document." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.spdx_report.spdx_document</code></h1>
+</header>
+<section id="section-intro">
+<p>Definition of an SPDX Document.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+&#34;&#34;&#34;Definition of an SPDX Document.&#34;&#34;&#34;
+from pathlib import Path
+from spdx.creationinfo import Person, Organization, Tool
+from spdx.document import Document, License
+from spdx.review import Review
+from spdx.version import Version
+from typing import List
+
+from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
+from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
+from mbed_tools_ci_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
+from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str
+from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
+
+TOOL_NAME = &#34;mbed-spdx-generator&#34;
+
+
+class SpdxDocument:
+    &#34;&#34;&#34;SPDX document.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.4d34og8
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        package_metadata: PackageMetadata,
+        other_document_refs: List[DependencySpdxDocumentRef] = list(),
+        is_dependency: bool = False,
+        document_namespace: str = None,
+    ):
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        self._project_root = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+        self._project_uuid = str(configuration.get_value(ConfigurationVariable.PROJECT_UUID))
+        self._project_config = Path(configuration.get_value(ConfigurationVariable.PROJECT_CONFIG))
+        self._project_source = self._project_root.joinpath(configuration.get_value(ConfigurationVariable.SOURCE_DIR))
+        self._package_metadata: PackageMetadata = package_metadata
+        self._is_dependency: bool = is_dependency
+        self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs
+        self._document_namespace = document_namespace
+
+    @property
+    def document_name(self) -&gt; str:
+        &#34;&#34;&#34;Gets document name.
+
+        See https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        return f&#34;{self.name}-{self.version}&#34;
+
+    @property
+    def document_namespace(self) -&gt; str:
+        &#34;&#34;&#34;Gets document namespace.
+
+        See https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        if self._document_namespace:
+            return self._document_namespace
+        return self._generate_namespace()
+
+    def _generate_namespace(self) -&gt; str:
+        &#34;&#34;&#34;Generates a document namespace.&#34;&#34;&#34;
+        if self._is_dependency:
+            url_base = f&#34;http://spdx.org/spdxdocs&#34;
+            uuid = generate_uuid_based_on_str(self.document_name)
+            return f&#34;{url_base}/{self.document_name}-{uuid}&#34;
+        return get_project_namespace(self._project_config, self.document_name)
+
+    @property
+    def name(self) -&gt; str:
+        &#34;&#34;&#34;Gets package&#39;s name.
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        return f&#34;{self._package_metadata.name}&#34;
+
+    @property
+    def version(self) -&gt; str:
+        &#34;&#34;&#34;Gets package version.
+
+        Returns:
+            package version
+        &#34;&#34;&#34;
+        return self._package_metadata.version
+
+    @property
+    def licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the project&#39;s licence.
+
+        Returns:
+            project&#39;s licence
+        &#34;&#34;&#34;
+        return self._package_metadata.licence
+
+    @property
+    def author(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document&#39;s author.
+
+        Returns:
+            document&#39;s author
+        &#34;&#34;&#34;
+        return self._package_metadata.author
+
+    @property
+    def author_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document author&#39;s email.
+
+        Returns:
+            document author&#39;s email
+        &#34;&#34;&#34;
+        return self._package_metadata.author_email
+
+    @property
+    def organisation(self) -&gt; str:
+        &#34;&#34;&#34;Gets the organisation.
+
+        Returns:
+            the organisation in charge
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.ORGANISATION))
+
+    @property
+    def organisation_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the organisation&#39;s email.
+
+        Returns:
+            organisation&#39;s email
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.ORGANISATION_EMAIL))
+
+    @property
+    def tool_name(self) -&gt; str:
+        &#34;&#34;&#34;Gets this generation tool&#39;s name.
+
+        Returns:
+            this tool&#39;s name
+        &#34;&#34;&#34;
+        return TOOL_NAME
+
+    @property
+    def reviewer(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document&#39;s reviewer.
+
+        Returns:
+            document&#39;s reviewer
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.BOT_USERNAME))
+
+    @property
+    def reviewer_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document reviewer&#39;s email.
+
+        Returns:
+            document reviewer&#39;s email
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.BOT_EMAIL))
+
+    @property
+    def external_refs(self) -&gt; List[DependencySpdxDocumentRef]:
+        &#34;&#34;&#34;Gets the document external references.
+
+        Returns:
+            the list of external references
+        &#34;&#34;&#34;
+        return self._other_document_references
+
+    def generate_spdx_package(self) -&gt; SpdxPackage:
+        &#34;&#34;&#34;Generates the SPDX package for this package.
+
+        Returns:
+            corresponding SPDX package.
+        &#34;&#34;&#34;
+        return SpdxPackage(
+            PackageInfo(
+                metadata=self._package_metadata,
+                root_dir=self._project_root,
+                source_dir=self._project_source,
+                uuid=self._project_uuid,
+            ),
+            is_dependency=self._is_dependency,
+        )
+
+    def generate_spdx_document(self) -&gt; Document:
+        &#34;&#34;&#34;Generates the SPDX document.
+
+        Example of SPDX document section.
+        SPDXVersion: SPDX-2.1
+        DataLicense: CC0-1.0
+        SPDXID: SPDXRef-DOCUMENT
+        DocumentName: mbed-targets
+        DocumentNamespace: http://spdx.org/spdxdocs/spdx-v2.1-3c4714e6-a7b1-4574-abb8-861149cbc590
+        Creator: Person: Anonymous ()
+        Creator: Organization: Anonymous ()
+        Creator: Tool: reuse-0.8.0
+        Created: 2020-01-20T17:53:41Z
+        CreatorComment: &lt;text&gt;
+        This document was created automatically using available reuse information consistent with REUSE.
+        &lt;/text&gt;
+
+        Returns:
+            the corresponding document
+        &#34;&#34;&#34;
+        doc = Document()
+        doc.version = Version(1, 2)
+        doc.name = determine_spdx_value(self.document_name)
+        doc.namespace = determine_spdx_value(self.document_namespace)
+        doc.spdx_id = &#34;SPDXRef-DOCUMENT&#34;
+        doc.comment = determine_spdx_value(
+            &#34;This document was created automatically using available information from python packages.&#34;
+        )
+        doc.data_license = License.from_identifier(&#34;CC0-1.0&#34;)
+        doc.creation_info.add_creator(Person(self.author, self.author_email))
+        if not self._is_dependency:
+            doc.creation_info.add_creator(Organization(self.organisation, self.organisation_email))
+        doc.creation_info.add_creator(Tool(self.tool_name))
+        doc.creation_info.set_created_now()
+        if not self._is_dependency:
+            review = Review(Person(determine_spdx_value(self.reviewer), determine_spdx_value(self.reviewer_email),))
+            review.set_review_date_now()
+            doc.add_review(review)
+
+        # FIXME with current tooling and specification, only one package can
+        #  be described in a file and hence, all dependencies are described
+        #  in separate files. Find out what to do with dependencies when new
+        #  tools are released as it is not entirely clear in the specification
+        doc.package = self.generate_spdx_package().generate_spdx_package()
+
+        for external_reference in self.external_refs:
+            doc.add_ext_document_reference(external_reference.generate_external_reference())
+        return doc</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument"><code class="flex name class">
+<span>class <span class="ident">SpdxDocument</span></span>
+<span>(</span><span>package_metadata: <a title="mbed_tools_ci_scripts.utils.package_helpers.PackageMetadata" href="../utils/package_helpers.html#mbed_tools_ci_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>, other_document_refs: List[<a title="mbed_tools_ci_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef" href="spdx_dependency.html#mbed_tools_ci_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef">DependencySpdxDocumentRef</a>] = [], is_dependency: bool = False, document_namespace: str = None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>SPDX document.</p>
+<p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.4d34og8">https://spdx.org/spdx-specification-21-web-version#h.4d34og8</a></p>
+<p>Constructor.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SpdxDocument:
+    &#34;&#34;&#34;SPDX document.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.4d34og8
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        package_metadata: PackageMetadata,
+        other_document_refs: List[DependencySpdxDocumentRef] = list(),
+        is_dependency: bool = False,
+        document_namespace: str = None,
+    ):
+        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
+        self._project_root = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+        self._project_uuid = str(configuration.get_value(ConfigurationVariable.PROJECT_UUID))
+        self._project_config = Path(configuration.get_value(ConfigurationVariable.PROJECT_CONFIG))
+        self._project_source = self._project_root.joinpath(configuration.get_value(ConfigurationVariable.SOURCE_DIR))
+        self._package_metadata: PackageMetadata = package_metadata
+        self._is_dependency: bool = is_dependency
+        self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs
+        self._document_namespace = document_namespace
+
+    @property
+    def document_name(self) -&gt; str:
+        &#34;&#34;&#34;Gets document name.
+
+        See https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        return f&#34;{self.name}-{self.version}&#34;
+
+    @property
+    def document_namespace(self) -&gt; str:
+        &#34;&#34;&#34;Gets document namespace.
+
+        See https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        if self._document_namespace:
+            return self._document_namespace
+        return self._generate_namespace()
+
+    def _generate_namespace(self) -&gt; str:
+        &#34;&#34;&#34;Generates a document namespace.&#34;&#34;&#34;
+        if self._is_dependency:
+            url_base = f&#34;http://spdx.org/spdxdocs&#34;
+            uuid = generate_uuid_based_on_str(self.document_name)
+            return f&#34;{url_base}/{self.document_name}-{uuid}&#34;
+        return get_project_namespace(self._project_config, self.document_name)
+
+    @property
+    def name(self) -&gt; str:
+        &#34;&#34;&#34;Gets package&#39;s name.
+
+        Returns:
+            corresponding string
+        &#34;&#34;&#34;
+        return f&#34;{self._package_metadata.name}&#34;
+
+    @property
+    def version(self) -&gt; str:
+        &#34;&#34;&#34;Gets package version.
+
+        Returns:
+            package version
+        &#34;&#34;&#34;
+        return self._package_metadata.version
+
+    @property
+    def licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the project&#39;s licence.
+
+        Returns:
+            project&#39;s licence
+        &#34;&#34;&#34;
+        return self._package_metadata.licence
+
+    @property
+    def author(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document&#39;s author.
+
+        Returns:
+            document&#39;s author
+        &#34;&#34;&#34;
+        return self._package_metadata.author
+
+    @property
+    def author_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document author&#39;s email.
+
+        Returns:
+            document author&#39;s email
+        &#34;&#34;&#34;
+        return self._package_metadata.author_email
+
+    @property
+    def organisation(self) -&gt; str:
+        &#34;&#34;&#34;Gets the organisation.
+
+        Returns:
+            the organisation in charge
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.ORGANISATION))
+
+    @property
+    def organisation_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the organisation&#39;s email.
+
+        Returns:
+            organisation&#39;s email
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.ORGANISATION_EMAIL))
+
+    @property
+    def tool_name(self) -&gt; str:
+        &#34;&#34;&#34;Gets this generation tool&#39;s name.
+
+        Returns:
+            this tool&#39;s name
+        &#34;&#34;&#34;
+        return TOOL_NAME
+
+    @property
+    def reviewer(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document&#39;s reviewer.
+
+        Returns:
+            document&#39;s reviewer
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.BOT_USERNAME))
+
+    @property
+    def reviewer_email(self) -&gt; str:
+        &#34;&#34;&#34;Gets the document reviewer&#39;s email.
+
+        Returns:
+            document reviewer&#39;s email
+        &#34;&#34;&#34;
+        return str(configuration.get_value(ConfigurationVariable.BOT_EMAIL))
+
+    @property
+    def external_refs(self) -&gt; List[DependencySpdxDocumentRef]:
+        &#34;&#34;&#34;Gets the document external references.
+
+        Returns:
+            the list of external references
+        &#34;&#34;&#34;
+        return self._other_document_references
+
+    def generate_spdx_package(self) -&gt; SpdxPackage:
+        &#34;&#34;&#34;Generates the SPDX package for this package.
+
+        Returns:
+            corresponding SPDX package.
+        &#34;&#34;&#34;
+        return SpdxPackage(
+            PackageInfo(
+                metadata=self._package_metadata,
+                root_dir=self._project_root,
+                source_dir=self._project_source,
+                uuid=self._project_uuid,
+            ),
+            is_dependency=self._is_dependency,
+        )
+
+    def generate_spdx_document(self) -&gt; Document:
+        &#34;&#34;&#34;Generates the SPDX document.
+
+        Example of SPDX document section.
+        SPDXVersion: SPDX-2.1
+        DataLicense: CC0-1.0
+        SPDXID: SPDXRef-DOCUMENT
+        DocumentName: mbed-targets
+        DocumentNamespace: http://spdx.org/spdxdocs/spdx-v2.1-3c4714e6-a7b1-4574-abb8-861149cbc590
+        Creator: Person: Anonymous ()
+        Creator: Organization: Anonymous ()
+        Creator: Tool: reuse-0.8.0
+        Created: 2020-01-20T17:53:41Z
+        CreatorComment: &lt;text&gt;
+        This document was created automatically using available reuse information consistent with REUSE.
+        &lt;/text&gt;
+
+        Returns:
+            the corresponding document
+        &#34;&#34;&#34;
+        doc = Document()
+        doc.version = Version(1, 2)
+        doc.name = determine_spdx_value(self.document_name)
+        doc.namespace = determine_spdx_value(self.document_namespace)
+        doc.spdx_id = &#34;SPDXRef-DOCUMENT&#34;
+        doc.comment = determine_spdx_value(
+            &#34;This document was created automatically using available information from python packages.&#34;
+        )
+        doc.data_license = License.from_identifier(&#34;CC0-1.0&#34;)
+        doc.creation_info.add_creator(Person(self.author, self.author_email))
+        if not self._is_dependency:
+            doc.creation_info.add_creator(Organization(self.organisation, self.organisation_email))
+        doc.creation_info.add_creator(Tool(self.tool_name))
+        doc.creation_info.set_created_now()
+        if not self._is_dependency:
+            review = Review(Person(determine_spdx_value(self.reviewer), determine_spdx_value(self.reviewer_email),))
+            review.set_review_date_now()
+            doc.add_review(review)
+
+        # FIXME with current tooling and specification, only one package can
+        #  be described in a file and hence, all dependencies are described
+        #  in separate files. Find out what to do with dependencies when new
+        #  tools are released as it is not entirely clear in the specification
+        doc.package = self.generate_spdx_package().generate_spdx_package()
+
+        for external_reference in self.external_refs:
+            doc.add_ext_document_reference(external_reference.generate_external_reference())
+        return doc</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author"><code class="name">var <span class="ident">author</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document's author.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>document's</code> <code>author</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def author(self) -&gt; str:
+    &#34;&#34;&#34;Gets the document&#39;s author.
+
+    Returns:
+        document&#39;s author
+    &#34;&#34;&#34;
+    return self._package_metadata.author</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author_email"><code class="name">var <span class="ident">author_email</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document author's email.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>document</code> <code>author's</code> <code>email</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def author_email(self) -&gt; str:
+    &#34;&#34;&#34;Gets the document author&#39;s email.
+
+    Returns:
+        document author&#39;s email
+    &#34;&#34;&#34;
+    return self._package_metadata.author_email</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_name"><code class="name">var <span class="ident">document_name</span></code></dt>
+<dd>
+<section class="desc"><p>Gets document name.</p>
+<p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2">https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2</a></p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>string</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def document_name(self) -&gt; str:
+    &#34;&#34;&#34;Gets document name.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2
+
+    Returns:
+        corresponding string
+    &#34;&#34;&#34;
+    return f&#34;{self.name}-{self.version}&#34;</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_namespace"><code class="name">var <span class="ident">document_namespace</span></code></dt>
+<dd>
+<section class="desc"><p>Gets document namespace.</p>
+<p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90">https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90</a></p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>string</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def document_namespace(self) -&gt; str:
+    &#34;&#34;&#34;Gets document namespace.
+
+    See https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90
+
+    Returns:
+        corresponding string
+    &#34;&#34;&#34;
+    if self._document_namespace:
+        return self._document_namespace
+    return self._generate_namespace()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.external_refs"><code class="name">var <span class="ident">external_refs</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document external references.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>the</code> <code>list</code> of <code>external</code> <code>references</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def external_refs(self) -&gt; List[DependencySpdxDocumentRef]:
+    &#34;&#34;&#34;Gets the document external references.
+
+    Returns:
+        the list of external references
+    &#34;&#34;&#34;
+    return self._other_document_references</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.licence"><code class="name">var <span class="ident">licence</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the project's licence.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>project's</code> <code>licence</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence(self) -&gt; str:
+    &#34;&#34;&#34;Gets the project&#39;s licence.
+
+    Returns:
+        project&#39;s licence
+    &#34;&#34;&#34;
+    return self._package_metadata.licence</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dd>
+<section class="desc"><p>Gets package's name.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>corresponding</code> <code>string</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def name(self) -&gt; str:
+    &#34;&#34;&#34;Gets package&#39;s name.
+
+    Returns:
+        corresponding string
+    &#34;&#34;&#34;
+    return f&#34;{self._package_metadata.name}&#34;</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation"><code class="name">var <span class="ident">organisation</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the organisation.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>the</code> <code>organisation</code> <code>in</code> <code>charge</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def organisation(self) -&gt; str:
+    &#34;&#34;&#34;Gets the organisation.
+
+    Returns:
+        the organisation in charge
+    &#34;&#34;&#34;
+    return str(configuration.get_value(ConfigurationVariable.ORGANISATION))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation_email"><code class="name">var <span class="ident">organisation_email</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the organisation's email.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>organisation's</code> <code>email</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def organisation_email(self) -&gt; str:
+    &#34;&#34;&#34;Gets the organisation&#39;s email.
+
+    Returns:
+        organisation&#39;s email
+    &#34;&#34;&#34;
+    return str(configuration.get_value(ConfigurationVariable.ORGANISATION_EMAIL))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer"><code class="name">var <span class="ident">reviewer</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document's reviewer.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>document's</code> <code>reviewer</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def reviewer(self) -&gt; str:
+    &#34;&#34;&#34;Gets the document&#39;s reviewer.
+
+    Returns:
+        document&#39;s reviewer
+    &#34;&#34;&#34;
+    return str(configuration.get_value(ConfigurationVariable.BOT_USERNAME))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer_email"><code class="name">var <span class="ident">reviewer_email</span></code></dt>
+<dd>
+<section class="desc"><p>Gets the document reviewer's email.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>document</code> <code>reviewer's</code> <code>email</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def reviewer_email(self) -&gt; str:
+    &#34;&#34;&#34;Gets the document reviewer&#39;s email.
+
+    Returns:
+        document reviewer&#39;s email
+    &#34;&#34;&#34;
+    return str(configuration.get_value(ConfigurationVariable.BOT_EMAIL))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.tool_name"><code class="name">var <span class="ident">tool_name</span></code></dt>
+<dd>
+<section class="desc"><p>Gets this generation tool's name.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>this</code> <code>tool's</code> <code>name</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def tool_name(self) -&gt; str:
+    &#34;&#34;&#34;Gets this generation tool&#39;s name.
+
+    Returns:
+        this tool&#39;s name
+    &#34;&#34;&#34;
+    return TOOL_NAME</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.version"><code class="name">var <span class="ident">version</span></code></dt>
+<dd>
+<section class="desc"><p>Gets package version.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>package</code> <code>version</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def version(self) -&gt; str:
+    &#34;&#34;&#34;Gets package version.
+
+    Returns:
+        package version
+    &#34;&#34;&#34;
+    return self._package_metadata.version</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.generate_spdx_document"><code class="name flex">
+<span>def <span class="ident">generate_spdx_document</span></span>(<span>self) -> spdx.document.Document</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generates the SPDX document.</p>
+<p>Example of SPDX document section.
+SPDXVersion: SPDX-2.1
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: mbed-targets
+DocumentNamespace: <a href="http://spdx.org/spdxdocs/spdx-v2.1-3c4714e6-a7b1-4574-abb8-861149cbc590">http://spdx.org/spdxdocs/spdx-v2.1-3c4714e6-a7b1-4574-abb8-861149cbc590</a>
+Creator: Person: Anonymous ()
+Creator: Organization: Anonymous ()
+Creator: Tool: reuse-0.8.0
+Created: 2020-01-20T17:53:41Z
+CreatorComment: <text>
+This document was created automatically using available reuse information consistent with REUSE.
+</text></p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>the</code> <code>corresponding</code> <code>document</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_spdx_document(self) -&gt; Document:
+    &#34;&#34;&#34;Generates the SPDX document.
+
+    Example of SPDX document section.
+    SPDXVersion: SPDX-2.1
+    DataLicense: CC0-1.0
+    SPDXID: SPDXRef-DOCUMENT
+    DocumentName: mbed-targets
+    DocumentNamespace: http://spdx.org/spdxdocs/spdx-v2.1-3c4714e6-a7b1-4574-abb8-861149cbc590
+    Creator: Person: Anonymous ()
+    Creator: Organization: Anonymous ()
+    Creator: Tool: reuse-0.8.0
+    Created: 2020-01-20T17:53:41Z
+    CreatorComment: &lt;text&gt;
+    This document was created automatically using available reuse information consistent with REUSE.
+    &lt;/text&gt;
+
+    Returns:
+        the corresponding document
+    &#34;&#34;&#34;
+    doc = Document()
+    doc.version = Version(1, 2)
+    doc.name = determine_spdx_value(self.document_name)
+    doc.namespace = determine_spdx_value(self.document_namespace)
+    doc.spdx_id = &#34;SPDXRef-DOCUMENT&#34;
+    doc.comment = determine_spdx_value(
+        &#34;This document was created automatically using available information from python packages.&#34;
+    )
+    doc.data_license = License.from_identifier(&#34;CC0-1.0&#34;)
+    doc.creation_info.add_creator(Person(self.author, self.author_email))
+    if not self._is_dependency:
+        doc.creation_info.add_creator(Organization(self.organisation, self.organisation_email))
+    doc.creation_info.add_creator(Tool(self.tool_name))
+    doc.creation_info.set_created_now()
+    if not self._is_dependency:
+        review = Review(Person(determine_spdx_value(self.reviewer), determine_spdx_value(self.reviewer_email),))
+        review.set_review_date_now()
+        doc.add_review(review)
+
+    # FIXME with current tooling and specification, only one package can
+    #  be described in a file and hence, all dependencies are described
+    #  in separate files. Find out what to do with dependencies when new
+    #  tools are released as it is not entirely clear in the specification
+    doc.package = self.generate_spdx_package().generate_spdx_package()
+
+    for external_reference in self.external_refs:
+        doc.add_ext_document_reference(external_reference.generate_external_reference())
+    return doc</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.generate_spdx_package"><code class="name flex">
+<span>def <span class="ident">generate_spdx_package</span></span>(<span>self) -> <a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generates the SPDX package for this package.</p>
+<h2 id="returns">Returns</h2>
+<p>corresponding SPDX package.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_spdx_package(self) -&gt; SpdxPackage:
+    &#34;&#34;&#34;Generates the SPDX package for this package.
+
+    Returns:
+        corresponding SPDX package.
+    &#34;&#34;&#34;
+    return SpdxPackage(
+        PackageInfo(
+            metadata=self._package_metadata,
+            root_dir=self._project_root,
+            source_dir=self._project_source,
+            uuid=self._project_uuid,
+        ),
+        is_dependency=self._is_dependency,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report" href="index.html">mbed_tools_ci_scripts.spdx_report</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument">SpdxDocument</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author">author</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author_email" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author_email">author_email</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_name" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_name">document_name</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_namespace" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_namespace">document_namespace</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.external_refs" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.external_refs">external_refs</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.generate_spdx_document" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.generate_spdx_document">generate_spdx_document</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.generate_spdx_package" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.generate_spdx_package">generate_spdx_package</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.licence">licence</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.name" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.name">name</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation">organisation</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation_email" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation_email">organisation_email</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer">reviewer</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer_email" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer_email">reviewer_email</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.tool_name" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.tool_name">tool_name</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.version" href="#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.version">version</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

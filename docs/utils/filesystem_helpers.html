@@ -39,9 +39,12 @@ import tempfile
 import shutil
 import platform
 import logging
+from wcmatch.pathlib import Path as EnhancedPath, GLOBSTAR
 from pathlib import Path
 from contextlib import contextmanager
-from typing import Iterator, Generator, Callable, Any
+import copy
+
+from typing import Iterator, Generator, Callable, Any, Optional, Pattern, Match, List
 
 logger = logging.getLogger(__name__)
 
@@ -117,6 +120,39 @@ def find_file_in_tree(file_name: str, starting_point: str = os.getcwd(), top: bo
     return file_path
 
 
+def match_pattern(path: Path, pattern: str) -&gt; bool:
+    &#34;&#34;&#34;Checks whether a path matches a `Unix`-like pattern e.g. `**/*.txt`.&#34;&#34;&#34;
+    enhanced_path = EnhancedPath(str(path))
+    return any([enhanced_path.match(pattern), enhanced_path.globmatch(pattern, flags=GLOBSTAR)])
+
+
+def should_exclude_path(path: Path, excludes: List[str]) -&gt; bool:
+    &#34;&#34;&#34;Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.&#34;&#34;&#34;
+    return any([match_pattern(path, p) for p in excludes])
+
+
+def _browse_files(files: list, root: str, should_exclude_path: Optional[Callable[[Path], bool]]) -&gt; Iterator[Path]:
+    for f in files:
+        p = Path(root).joinpath(f)
+        if not (should_exclude_path and should_exclude_path(p)):
+            yield p
+
+
+def _exclude_browsing_paths(dirs: list, root: str, should_exclude_path: Callable[[Path], bool]) -&gt; None:
+    for d in copy.copy(dirs):
+        if should_exclude_path(Path(root).joinpath(d)):
+            # Excluding paths from the scan (https://docs.python.org/3/library/os.html#os.walk)
+            dirs.remove(d)
+
+
+def list_all_files(root_path: Path, should_exclude_path: Optional[Callable[[Path], bool]] = None) -&gt; Iterator[Path]:
+    &#34;&#34;&#34;Lists all the files in a directory.&#34;&#34;&#34;
+    for root, dirs, files in os.walk(str(root_path)):
+        yield from _browse_files(files, root, should_exclude_path)
+        if should_exclude_path:
+            _exclude_browsing_paths(dirs, root, should_exclude_path)
+
+
 class TemporaryDirectory:
     &#34;&#34;&#34;Creates and returns a temporary directory.
 
@@ -165,7 +201,16 @@ class TemporaryDirectory:
         if platform.system() == &#34;Windows&#34;:
             self._windows_cleanup()
         else:
-            self._default_cleanup()</code></pre>
+            self._default_cleanup()
+
+
+def scan_file_for_pattern(file_path: Path, pattern: Pattern) -&gt; Optional[Match]:
+    &#34;&#34;&#34;Looks for a specific pattern in a file.&#34;&#34;&#34;
+    if not file_path.exists():
+        return None
+    with open(str(file_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+        text = f.read()
+        return pattern.search(text)</code></pre>
 </details>
 </section>
 <section>
@@ -249,6 +294,70 @@ def cd(new_dir: str) -&gt; Generator:
             f&#39;File [{file_name}] not found anywhere in directories {&#34;above&#34; if top else &#34;under&#34;} {starting_point}&#39;
         )
     return file_path</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.filesystem_helpers.list_all_files"><code class="name flex">
+<span>def <span class="ident">list_all_files</span></span>(<span>root_path: pathlib.Path, should_exclude_path: Union[Callable[[pathlib.Path], bool], NoneType] = None) -> Iterator[pathlib.Path]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Lists all the files in a directory.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_all_files(root_path: Path, should_exclude_path: Optional[Callable[[Path], bool]] = None) -&gt; Iterator[Path]:
+    &#34;&#34;&#34;Lists all the files in a directory.&#34;&#34;&#34;
+    for root, dirs, files in os.walk(str(root_path)):
+        yield from _browse_files(files, root, should_exclude_path)
+        if should_exclude_path:
+            _exclude_browsing_paths(dirs, root, should_exclude_path)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.filesystem_helpers.match_pattern"><code class="name flex">
+<span>def <span class="ident">match_pattern</span></span>(<span>path: pathlib.Path, pattern: str) -> bool</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks whether a path matches a <code>Unix</code>-like pattern e.g. <code>**/*.txt</code>.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def match_pattern(path: Path, pattern: str) -&gt; bool:
+    &#34;&#34;&#34;Checks whether a path matches a `Unix`-like pattern e.g. `**/*.txt`.&#34;&#34;&#34;
+    enhanced_path = EnhancedPath(str(path))
+    return any([enhanced_path.match(pattern), enhanced_path.globmatch(pattern, flags=GLOBSTAR)])</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.filesystem_helpers.scan_file_for_pattern"><code class="name flex">
+<span>def <span class="ident">scan_file_for_pattern</span></span>(<span>file_path: pathlib.Path, pattern: Pattern) -> Union[Match, NoneType]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Looks for a specific pattern in a file.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scan_file_for_pattern(file_path: Path, pattern: Pattern) -&gt; Optional[Match]:
+    &#34;&#34;&#34;Looks for a specific pattern in a file.&#34;&#34;&#34;
+    if not file_path.exists():
+        return None
+    with open(str(file_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+        text = f.read()
+        return pattern.search(text)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.filesystem_helpers.should_exclude_path"><code class="name flex">
+<span>def <span class="ident">should_exclude_path</span></span>(<span>path: pathlib.Path, excludes: List[str]) -> bool</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def should_exclude_path(path: Path, excludes: List[str]) -&gt; bool:
+    &#34;&#34;&#34;Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.&#34;&#34;&#34;
+    return any([match_pattern(path, p) for p in excludes])</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.filesystem_helpers.walk_up_tree_to_root"><code class="name flex">
@@ -413,6 +522,10 @@ def path(self) -&gt; Path:
 <ul class="">
 <li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.cd" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.cd">cd</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.find_file_in_tree" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.find_file_in_tree">find_file_in_tree</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.list_all_files" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.list_all_files">list_all_files</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.match_pattern" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.match_pattern">match_pattern</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.scan_file_for_pattern" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.scan_file_for_pattern">scan_file_for_pattern</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.should_exclude_path" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.should_exclude_path">should_exclude_path</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.filesystem_helpers.walk_up_tree_to_root" href="#mbed_tools_ci_scripts.utils.filesystem_helpers.walk_up_tree_to_root">walk_up_tree_to_root</a></code></li>
 </ul>
 </li>

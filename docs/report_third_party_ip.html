@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.5" />
-<title>mbed_tools_ci_scripts.utils.definitions API documentation</title>
-<meta name="description" content="Place to store generic project concepts for the ci scripts." />
+<title>mbed_tools_ci_scripts.report_third_party_ip API documentation</title>
+<meta name="description" content="Script providing information about licensing and third party IP in order to comply with OpenChain …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -21,10 +21,16 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.definitions</code></h1>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.report_third_party_ip</code></h1>
 </header>
 <section id="section-intro">
-<p>Place to store generic project concepts for the ci scripts.</p>
+<p>Script providing information about licensing and third party IP in order to comply with OpenChain.</p>
+<p>The current script uses the SDK provided by the SPDX organisation
+(i.e. <a href="https://github.com/spdx/tools-python">https://github.com/spdx/tools-python</a>).
+This SDK only supports version 1.2 of the specification and not 2.1.
+Therefore, some changes will have to be carried out when the later version is
+supported so that third-party IP gets documented as described by the
+specification (i.e. with relationships).</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -33,43 +39,64 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Place to store generic project concepts for the ci scripts.&#34;&#34;&#34;
-import enum
-from typing import List
+&#34;&#34;&#34;Script providing information about licensing and third party IP in order to comply with OpenChain.
 
-UNKNOWN = &#34;unknown&#34;
+The current script uses the SDK provided by the SPDX organisation
+(i.e. https://github.com/spdx/tools-python).
+This SDK only supports version 1.2 of the specification and not 2.1.
+Therefore, some changes will have to be carried out when the later version is
+supported so that third-party IP gets documented as described by the
+specification (i.e. with relationships).
+&#34;&#34;&#34;
+import sys
+
+import argparse
+import logging
+from pathlib import Path
+
+from mbed_tools_ci_scripts.spdx_report.spdx_project import SpdxProject
+from mbed_tools_ci_scripts.utils.logging import set_log_level, log_exception
+from mbed_tools_ci_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
+
+logger = logging.getLogger(__name__)
 
 
-class CommitType(enum.Enum):
-    &#34;&#34;&#34;Type of commits.&#34;&#34;&#34;
+def generate_spdx_reports(output_directory: Path) -&gt; None:
+    &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
+    logger.info(&#34;Generating package information.&#34;)
+    try:
+        # Trying to generate the egg for the package but this may fail. If so, continue.
+        generate_package_info()
+    except Exception as e:
+        log_exception(logger, e)
 
-    DEVELOPMENT = 1
-    BETA = 2
-    RELEASE = 3
+    logger.info(&#34;Generating SPDX report.&#34;)
+    SpdxProject(CurrentProjectMetadataParser()).generate_tag_value_files(output_directory)
 
-    @staticmethod
-    def choices() -&gt; List[str]:
-        &#34;&#34;&#34;Gets a list of all possible commit types.
 
-        Returns:
-            a list of commit types
-        &#34;&#34;&#34;
-        return [t.name.lower() for t in CommitType]
+def main() -&gt; int:
+    &#34;&#34;&#34;Script CLI.&#34;&#34;&#34;
+    parser = argparse.ArgumentParser(description=&#34;Generate licence and third-party IP reports.&#34;)
+    parser.add_argument(
+        &#34;-o&#34;, &#34;--output-dir&#34;, help=&#34;Output directory where the files are generated&#34;, required=True,
+    )
 
-    @staticmethod
-    def parse(type_str: str) -&gt; &#34;CommitType&#34;:
-        &#34;&#34;&#34;Determines the commit type from a string.
+    parser.add_argument(
+        &#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;,
+    )
+    args = parser.parse_args()
+    set_log_level(args.verbose)
 
-        Args:
-            type_str: string to parse.
+    try:
+        generate_spdx_reports(Path(args.output_dir))
+        return 0
+    except Exception as e:
+        log_exception(logger, e)
+        return 1
 
-        Returns:
-            corresponding commit type.
-        &#34;&#34;&#34;
-        try:
-            return CommitType[type_str.upper()]
-        except KeyError as e:
-            raise ValueError(f&#34;Unknown commit type: {type_str}. {e}&#34;)</code></pre>
+
+if __name__ == &#34;__main__&#34;:
+    sys.exit(main())</code></pre>
 </details>
 </section>
 <section>
@@ -77,72 +104,63 @@ class CommitType(enum.Enum):
 <section>
 </section>
 <section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType"><code class="flex name class">
-<span>class <span class="ident">CommitType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<dt id="mbed_tools_ci_scripts.report_third_party_ip.generate_spdx_reports"><code class="name flex">
+<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path) -> NoneType</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Type of commits.</p></section>
+<section class="desc"><p>Generates all the SPDX reports for the current project.</p></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class CommitType(enum.Enum):
-    &#34;&#34;&#34;Type of commits.&#34;&#34;&#34;
+<pre><code class="python">def generate_spdx_reports(output_directory: Path) -&gt; None:
+    &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
+    logger.info(&#34;Generating package information.&#34;)
+    try:
+        # Trying to generate the egg for the package but this may fail. If so, continue.
+        generate_package_info()
+    except Exception as e:
+        log_exception(logger, e)
 
-    DEVELOPMENT = 1
-    BETA = 2
-    RELEASE = 3
-
-    @staticmethod
-    def choices() -&gt; List[str]:
-        &#34;&#34;&#34;Gets a list of all possible commit types.
-
-        Returns:
-            a list of commit types
-        &#34;&#34;&#34;
-        return [t.name.lower() for t in CommitType]
-
-    @staticmethod
-    def parse(type_str: str) -&gt; &#34;CommitType&#34;:
-        &#34;&#34;&#34;Determines the commit type from a string.
-
-        Args:
-            type_str: string to parse.
-
-        Returns:
-            corresponding commit type.
-        &#34;&#34;&#34;
-        try:
-            return CommitType[type_str.upper()]
-        except KeyError as e:
-            raise ValueError(f&#34;Unknown commit type: {type_str}. {e}&#34;)</code></pre>
+    logger.info(&#34;Generating SPDX report.&#34;)
+    SpdxProject(CurrentProjectMetadataParser()).generate_tag_value_files(output_directory)</code></pre>
 </details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType.BETA"><code class="name">var <span class="ident">BETA</span></code></dt>
-<dd>
-<section class="desc"></section>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType.DEVELOPMENT"><code class="name">var <span class="ident">DEVELOPMENT</span></code></dt>
+<dt id="mbed_tools_ci_scripts.report_third_party_ip.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>) -> int</span>
+</code></dt>
 <dd>
-<section class="desc"></section>
-</dd>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType.RELEASE"><code class="name">var <span class="ident">RELEASE</span></code></dt>
-<dd>
-<section class="desc"></section>
+<section class="desc"><p>Script CLI.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main() -&gt; int:
+    &#34;&#34;&#34;Script CLI.&#34;&#34;&#34;
+    parser = argparse.ArgumentParser(description=&#34;Generate licence and third-party IP reports.&#34;)
+    parser.add_argument(
+        &#34;-o&#34;, &#34;--output-dir&#34;, help=&#34;Output directory where the files are generated&#34;, required=True,
+    )
+
+    parser.add_argument(
+        &#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;,
+    )
+    args = parser.parse_args()
+    set_log_level(args.verbose)
+
+    try:
+        generate_spdx_reports(Path(args.output_dir))
+        return 0
+    except Exception as e:
+        log_exception(logger, e)
+        return 1</code></pre>
+</details>
 </dd>
 </dl>
-</dd>
-</dl>
+</section>
+<section>
 </section>
 </article>
 <nav id="sidebar">
@@ -153,19 +171,13 @@ class CommitType(enum.Enum):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts" href="index.html">mbed_tools_ci_scripts</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType" href="#mbed_tools_ci_scripts.utils.definitions.CommitType">CommitType</a></code></h4>
+<li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType.BETA" href="#mbed_tools_ci_scripts.utils.definitions.CommitType.BETA">BETA</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType.DEVELOPMENT" href="#mbed_tools_ci_scripts.utils.definitions.CommitType.DEVELOPMENT">DEVELOPMENT</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType.RELEASE" href="#mbed_tools_ci_scripts.utils.definitions.CommitType.RELEASE">RELEASE</a></code></li>
-</ul>
-</li>
+<li><code><a title="mbed_tools_ci_scripts.report_third_party_ip.generate_spdx_reports" href="#mbed_tools_ci_scripts.report_third_party_ip.generate_spdx_reports">generate_spdx_reports</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.report_third_party_ip.main" href="#mbed_tools_ci_scripts.report_third_party_ip.main">main</a></code></li>
 </ul>
 </li>
 </ul>

@@ -70,12 +70,13 @@ class ConfigurationVariable(enum.Enum):
     ORGANISATION = 17
     ORGANISATION_EMAIL = 18
     AWS_BUCKET = 19
-    PROJECT_NAME = 20
-    SOURCE_DIR = 21
-    PACKAGE_NAME = 22
-    IGNORE_PYPI_TEST_UPLOAD = 23
-    FILE_LICENCE_IDENTIFIER = 24
-    COPYRIGHT_START_DATE = 25
+    PROJECT_NAME = 21
+    PROJECT_UUID = 22
+    PACKAGE_NAME = 23
+    SOURCE_DIR = 24
+    IGNORE_PYPI_TEST_UPLOAD = 25
+    FILE_LICENCE_IDENTIFIER = 26
+    COPYRIGHT_START_DATE = 27
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -353,12 +354,13 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     ORGANISATION = 17
     ORGANISATION_EMAIL = 18
     AWS_BUCKET = 19
-    PROJECT_NAME = 20
-    SOURCE_DIR = 21
-    PACKAGE_NAME = 22
-    IGNORE_PYPI_TEST_UPLOAD = 23
-    FILE_LICENCE_IDENTIFIER = 24
-    COPYRIGHT_START_DATE = 25
+    PROJECT_NAME = 21
+    PROJECT_UUID = 22
+    PACKAGE_NAME = 23
+    SOURCE_DIR = 24
+    IGNORE_PYPI_TEST_UPLOAD = 25
+    FILE_LICENCE_IDENTIFIER = 26
+    COPYRIGHT_START_DATE = 27
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -471,6 +473,10 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <section class="desc"></section>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT"><code class="name">var <span class="ident">PROJECT_ROOT</span></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID"><code class="name">var <span class="ident">PROJECT_UUID</span></code></dt>
 <dd>
 <section class="desc"></section>
 </dd>
@@ -1053,6 +1059,7 @@ defined in toml.</p></section>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG">PROJECT_CONFIG</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME">PROJECT_NAME</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT">PROJECT_ROOT</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID">PROJECT_UUID</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>

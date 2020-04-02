@@ -1,1 +1,0 @@
-Generating SPDX documents as part of the release process.

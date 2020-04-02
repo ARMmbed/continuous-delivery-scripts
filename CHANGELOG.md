@@ -11,6 +11,24 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.6.0" (2020-04-02)
+====================
+"" "1.6.0" (2020-04-02)
+=======================
+
+Features
+--------
+
+- Added utilities for generating the [SPDX report](https://spdx.org/) of a given python package (#2)
+- Generating SPDX documents as part of the release process. (#20200330)
+
+
+Misc
+----
+
+- #20200330
+
+
 "1.5.1" (2020-03-26)
 ====================
 "" "1.5.1" (2020-03-26)

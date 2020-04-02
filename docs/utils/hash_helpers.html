@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.7.5" />
-<title>mbed_tools_ci_scripts.utils.definitions API documentation</title>
-<meta name="description" content="Place to store generic project concepts for the ci scripts." />
+<title>mbed_tools_ci_scripts.utils.hash_helpers API documentation</title>
+<meta name="description" content="Helpers for calculating hashes or UUID." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -21,10 +21,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.definitions</code></h1>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.hash_helpers</code></h1>
 </header>
 <section id="section-intro">
-<p>Place to store generic project concepts for the ci scripts.</p>
+<p>Helpers for calculating hashes or UUID.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -33,43 +33,45 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Place to store generic project concepts for the ci scripts.&#34;&#34;&#34;
-import enum
-from typing import List
+&#34;&#34;&#34;Helpers for calculating hashes or UUID.&#34;&#34;&#34;
+import hashlib
+import uuid
+from pathlib import Path
 
-UNKNOWN = &#34;unknown&#34;
+
+def generate_uuid_based_on_str(string: str) -&gt; str:
+    &#34;&#34;&#34;Generates a UUID based on a string.
+
+    Args:
+        string: string to base the UUID generation on
+
+    Returns:
+        a UUID
+    &#34;&#34;&#34;
+    m = hashlib.md5()
+    m.update((string if string else &#34;&#34;).encode(&#34;utf-8&#34;))
+    return str(uuid.UUID(m.hexdigest()))
 
 
-class CommitType(enum.Enum):
-    &#34;&#34;&#34;Type of commits.&#34;&#34;&#34;
+def determine_sha1_hash_of_file(filepath: Path) -&gt; str:
+    &#34;&#34;&#34;Calculates the checksum of a file.
 
-    DEVELOPMENT = 1
-    BETA = 2
-    RELEASE = 3
+    Args:
+        filepath: path to the file
 
-    @staticmethod
-    def choices() -&gt; List[str]:
-        &#34;&#34;&#34;Gets a list of all possible commit types.
-
-        Returns:
-            a list of commit types
-        &#34;&#34;&#34;
-        return [t.name.lower() for t in CommitType]
-
-    @staticmethod
-    def parse(type_str: str) -&gt; &#34;CommitType&#34;:
-        &#34;&#34;&#34;Determines the commit type from a string.
-
-        Args:
-            type_str: string to parse.
-
-        Returns:
-            corresponding commit type.
-        &#34;&#34;&#34;
-        try:
-            return CommitType[type_str.upper()]
-        except KeyError as e:
-            raise ValueError(f&#34;Unknown commit type: {type_str}. {e}&#34;)</code></pre>
+    Returns:
+        corresponding SHA1 hash.
+    &#34;&#34;&#34;
+    if not filepath.exists() or not filepath.is_file():
+        return &#34;0&#34;
+    BLOCKSIZE = 65536
+    hasher = hashlib.sha1()
+    with open(str(filepath), &#34;rb&#34;) as afile:
+        buf = afile.read(BLOCKSIZE)
+        while len(buf) &gt; 0:
+            hasher.update(buf)
+            buf = afile.read(BLOCKSIZE)
+    return hasher.hexdigest()</code></pre>
 </details>
 </section>
 <section>
@@ -77,72 +79,81 @@ class CommitType(enum.Enum):
 <section>
 </section>
 <section>
-</section>
-<section>
-<h2 class="section-title" id="header-classes">Classes</h2>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType"><code class="flex name class">
-<span>class <span class="ident">CommitType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<dt id="mbed_tools_ci_scripts.utils.hash_helpers.determine_sha1_hash_of_file"><code class="name flex">
+<span>def <span class="ident">determine_sha1_hash_of_file</span></span>(<span>filepath: pathlib.Path) -> str</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Type of commits.</p></section>
+<section class="desc"><p>Calculates the checksum of a file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filepath</code></strong></dt>
+<dd>path to the file</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding SHA1 hash.</p></section>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class CommitType(enum.Enum):
-    &#34;&#34;&#34;Type of commits.&#34;&#34;&#34;
+<pre><code class="python">def determine_sha1_hash_of_file(filepath: Path) -&gt; str:
+    &#34;&#34;&#34;Calculates the checksum of a file.
 
-    DEVELOPMENT = 1
-    BETA = 2
-    RELEASE = 3
+    Args:
+        filepath: path to the file
 
-    @staticmethod
-    def choices() -&gt; List[str]:
-        &#34;&#34;&#34;Gets a list of all possible commit types.
-
-        Returns:
-            a list of commit types
-        &#34;&#34;&#34;
-        return [t.name.lower() for t in CommitType]
-
-    @staticmethod
-    def parse(type_str: str) -&gt; &#34;CommitType&#34;:
-        &#34;&#34;&#34;Determines the commit type from a string.
-
-        Args:
-            type_str: string to parse.
-
-        Returns:
-            corresponding commit type.
-        &#34;&#34;&#34;
-        try:
-            return CommitType[type_str.upper()]
-        except KeyError as e:
-            raise ValueError(f&#34;Unknown commit type: {type_str}. {e}&#34;)</code></pre>
+    Returns:
+        corresponding SHA1 hash.
+    &#34;&#34;&#34;
+    if not filepath.exists() or not filepath.is_file():
+        return &#34;0&#34;
+    BLOCKSIZE = 65536
+    hasher = hashlib.sha1()
+    with open(str(filepath), &#34;rb&#34;) as afile:
+        buf = afile.read(BLOCKSIZE)
+        while len(buf) &gt; 0:
+            hasher.update(buf)
+            buf = afile.read(BLOCKSIZE)
+    return hasher.hexdigest()</code></pre>
 </details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.hash_helpers.generate_uuid_based_on_str"><code class="name flex">
+<span>def <span class="ident">generate_uuid_based_on_str</span></span>(<span>string: str) -> str</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generates a UUID based on a string.</p>
+<h2 id="args">Args</h2>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType.BETA"><code class="name">var <span class="ident">BETA</span></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType.DEVELOPMENT"><code class="name">var <span class="ident">DEVELOPMENT</span></code></dt>
-<dd>
-<section class="desc"></section>
-</dd>
-<dt id="mbed_tools_ci_scripts.utils.definitions.CommitType.RELEASE"><code class="name">var <span class="ident">RELEASE</span></code></dt>
-<dd>
-<section class="desc"></section>
+<dt><strong><code>string</code></strong></dt>
+<dd>string to base the UUID generation on</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>a</code> <code>UUID</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_uuid_based_on_str(string: str) -&gt; str:
+    &#34;&#34;&#34;Generates a UUID based on a string.
+
+    Args:
+        string: string to base the UUID generation on
+
+    Returns:
+        a UUID
+    &#34;&#34;&#34;
+    m = hashlib.md5()
+    m.update((string if string else &#34;&#34;).encode(&#34;utf-8&#34;))
+    return str(uuid.UUID(m.hexdigest()))</code></pre>
+</details>
 </dd>
 </dl>
-</dd>
-</dl>
+</section>
+<section>
 </section>
 </article>
 <nav id="sidebar">
@@ -156,16 +167,10 @@ class CommitType(enum.Enum):
 <li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType" href="#mbed_tools_ci_scripts.utils.definitions.CommitType">CommitType</a></code></h4>
+<li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType.BETA" href="#mbed_tools_ci_scripts.utils.definitions.CommitType.BETA">BETA</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType.DEVELOPMENT" href="#mbed_tools_ci_scripts.utils.definitions.CommitType.DEVELOPMENT">DEVELOPMENT</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.definitions.CommitType.RELEASE" href="#mbed_tools_ci_scripts.utils.definitions.CommitType.RELEASE">RELEASE</a></code></li>
-</ul>
-</li>
+<li><code><a title="mbed_tools_ci_scripts.utils.hash_helpers.determine_sha1_hash_of_file" href="#mbed_tools_ci_scripts.utils.hash_helpers.determine_sha1_hash_of_file">determine_sha1_hash_of_file</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.hash_helpers.generate_uuid_based_on_str" href="#mbed_tools_ci_scripts.utils.hash_helpers.generate_uuid_based_on_str">generate_uuid_based_on_str</a></code></li>
 </ul>
 </li>
 </ul>
