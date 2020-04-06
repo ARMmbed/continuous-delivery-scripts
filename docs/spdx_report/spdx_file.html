@@ -39,11 +39,15 @@ from pathlib import Path
 from spdx.checksum import Algorithm
 from spdx.document import License
 from spdx.file import File, FileType
-from spdx.utils import NoAssert
+from typing import Optional
 
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
+    determine_spdx_value,
+    determine_file_licence,
+    determine_file_copyright_text,
+)
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
 from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str, determine_sha1_hash_of_file
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, determine_file_licence
 
 
 class SpdxFile:
@@ -117,6 +121,15 @@ class SpdxFile:
         file_licence = determine_file_licence(self.path)
         return file_licence if file_licence else self._package_licence
 
+    @property
+    def copyright(self) -&gt; Optional[str]:
+        &#34;&#34;&#34;Determines copyright text from file notice.
+
+        Returns:
+            file&#39;s copyright text
+        &#34;&#34;&#34;
+        return determine_file_copyright_text(self.path)
+
     def generate_spdx_file(self) -&gt; File:
         &#34;&#34;&#34;Generates the SPDX file.
 
@@ -134,9 +147,9 @@ class SpdxFile:
         source_file.type = FileType.SOURCE
         source_file.comment = determine_spdx_value(None)
         source_file.chk_sum = Algorithm(&#34;SHA1&#34;, self.sha1_check_sum)
-        source_file.conc_lics = NoAssert()
+        source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
         source_file.spdx_id = f&#34;SPDXRef-{self.id}&#34;
-        source_file.copyright = NoAssert()
+        source_file.copyright = determine_spdx_value(self.copyright)
         source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
         return source_file</code></pre>
 </details>
@@ -233,6 +246,15 @@ class SpdxFile:
         file_licence = determine_file_licence(self.path)
         return file_licence if file_licence else self._package_licence
 
+    @property
+    def copyright(self) -&gt; Optional[str]:
+        &#34;&#34;&#34;Determines copyright text from file notice.
+
+        Returns:
+            file&#39;s copyright text
+        &#34;&#34;&#34;
+        return determine_file_copyright_text(self.path)
+
     def generate_spdx_file(self) -&gt; File:
         &#34;&#34;&#34;Generates the SPDX file.
 
@@ -250,14 +272,36 @@ class SpdxFile:
         source_file.type = FileType.SOURCE
         source_file.comment = determine_spdx_value(None)
         source_file.chk_sum = Algorithm(&#34;SHA1&#34;, self.sha1_check_sum)
-        source_file.conc_lics = NoAssert()
+        source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
         source_file.spdx_id = f&#34;SPDXRef-{self.id}&#34;
-        source_file.copyright = NoAssert()
+        source_file.copyright = determine_spdx_value(self.copyright)
         source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
         return source_file</code></pre>
 </details>
 <h3>Instance variables</h3>
 <dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.copyright"><code class="name">var <span class="ident">copyright</span></code></dt>
+<dd>
+<section class="desc"><p>Determines copyright text from file notice.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>file's</code> <code>copyright</code> <code>text</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def copyright(self) -&gt; Optional[str]:
+    &#34;&#34;&#34;Determines copyright text from file notice.
+
+    Returns:
+        file&#39;s copyright text
+    &#34;&#34;&#34;
+    return determine_file_copyright_text(self.path)</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.id"><code class="name">var <span class="ident">id</span></code></dt>
 <dd>
 <section class="desc"><p>Gets a unique identifier.</p>
@@ -435,9 +479,9 @@ FileCopyrightText: NONE</p>
     source_file.type = FileType.SOURCE
     source_file.comment = determine_spdx_value(None)
     source_file.chk_sum = Algorithm(&#34;SHA1&#34;, self.sha1_check_sum)
-    source_file.conc_lics = NoAssert()
+    source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
     source_file.spdx_id = f&#34;SPDXRef-{self.id}&#34;
-    source_file.copyright = NoAssert()
+    source_file.copyright = determine_spdx_value(self.copyright)
     source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
     return source_file</code></pre>
 </details>
@@ -463,6 +507,7 @@ FileCopyrightText: NONE</p>
 <li>
 <h4><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile" href="#mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile">SpdxFile</a></code></h4>
 <ul class="two-column">
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.copyright" href="#mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.copyright">copyright</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.generate_spdx_file" href="#mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.generate_spdx_file">generate_spdx_file</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.id" href="#mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.id">id</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_file.SpdxFile.licence">licence</a></code></li>

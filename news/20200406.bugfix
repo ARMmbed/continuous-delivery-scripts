@@ -1,1 +1,0 @@
-Fix towncrier version to remove issue found in [tool's pre-release](https://github.com/twisted/towncrier/issues/180)

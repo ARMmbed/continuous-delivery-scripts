@@ -11,6 +11,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.6.1" (2020-04-06)
+====================
+
+Bugfixes
+--------
+
+- Improves SPDX document contents. (#20200403)
+- Fix towncrier version to remove issue found in [tool's pre-release](https://github.com/twisted/towncrier/issues/180) (#20200406)
+
+
 "1.6.0" (2020-04-02)
 ====================
 

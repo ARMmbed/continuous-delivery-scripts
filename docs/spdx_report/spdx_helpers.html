@@ -68,6 +68,9 @@ from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
 
 logger = logging.getLogger(__name__)
 
+# Copyright similar to the regex defined in flake8-copyright
+COPYRIGHT_PATTERN = r&#34;((?i)Copyright(?i).*$)&#34;
+COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, re.MULTILINE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
 SPDX_LICENCE_IDENTIFIER_PATTERN = r&#34;SPDX-License-Identifier: ([\.\w+\-\(\)\s]+)[\*]?$&#34;
@@ -98,6 +101,14 @@ def determine_file_licence(path: Path) -&gt; Optional[str]:
     except Exception as e:
         logger.error(f&#34;Could not determine the licence of file [{path}] from identifier &#39;{licence}&#39;. Reason: {e}.&#34;)
         return None
+
+
+def determine_file_copyright_text(path: Path) -&gt; Optional[str]:
+    &#34;&#34;&#34;Determines the copyright text of a file.&#34;&#34;&#34;
+    match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
+    if not match:
+        return None
+    return str(match.group(1).strip())
 
 
 def determine_spdx_value(value: Optional[str]) -&gt; Union[str, UnKnown, SPDXNone]:
@@ -148,6 +159,23 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_copyright_text"><code class="name flex">
+<span>def <span class="ident">determine_file_copyright_text</span></span>(<span>path: pathlib.Path) -> Union[str, NoneType]</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Determines the copyright text of a file.</p></section>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_file_copyright_text(path: Path) -&gt; Optional[str]:
+    &#34;&#34;&#34;Determines the copyright text of a file.&#34;&#34;&#34;
+    match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
+    if not match:
+        return None
+    return str(match.group(1).strip())</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_licence"><code class="name flex">
 <span>def <span class="ident">determine_file_licence</span></span>(<span>path: pathlib.Path) -> Union[str, NoneType]</span>
 </code></dt>
@@ -275,6 +303,7 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_copyright_text" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_copyright_text">determine_file_copyright_text</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_licence">determine_file_licence</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_licence_compound" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_licence_compound">determine_licence_compound</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_spdx_value" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_spdx_value">determine_spdx_value</a></code></li>

@@ -106,9 +106,10 @@ class SpdxProject:
                     name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
                 )
             )
-        SpdxProject.generate_tag_value_file(
-            dir, SpdxDocument(package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,),
-        )</code></pre>
+        main_document = SpdxDocument(
+            package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
+        )
+        SpdxProject.generate_tag_value_file(dir, main_document, f&#34;{main_document.name}.spdx&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -195,9 +196,10 @@ See <a href="https://certification.openchainproject.or">https://certification.op
                     name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
                 )
             )
-        SpdxProject.generate_tag_value_file(
-            dir, SpdxDocument(package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,),
-        )</code></pre>
+        main_document = SpdxDocument(
+            package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
+        )
+        SpdxProject.generate_tag_value_file(dir, main_document, f&#34;{main_document.name}.spdx&#34;)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -297,9 +299,10 @@ per third-party dependencies</p>
                 name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
             )
         )
-    SpdxProject.generate_tag_value_file(
-        dir, SpdxDocument(package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,),
-    )</code></pre>
+    main_document = SpdxDocument(
+        package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
+    )
+    SpdxProject.generate_tag_value_file(dir, main_document, f&#34;{main_document.name}.spdx&#34;)</code></pre>
 </details>
 </dd>
 </dl>
