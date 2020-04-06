@@ -201,18 +201,24 @@ class SpdxPackage:
         package.download_location = determine_spdx_value(None)
         package.homepage = determine_spdx_value(self.url)
         package.originator = Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email))
-        package.license_declared = License.from_identifier(str(determine_spdx_value(self.licence)))
+        package.license_declared = License.from_identifier(str(determine_spdx_value(self.main_licence)))
+        package.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
         package.summary = determine_spdx_value(self.description)
         package.description = NoAssert()
         package.spdx_id = f"SPDXRef-{self.id}"
-        package.conc_lics = NoAssert()
-        package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(self.licence))))
+
         files = self.get_spdx_files()
         if files:
+            package.files_analyzed = True
             for file in files:
                 package.add_file(file.generate_spdx_file())
+                package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(file.licence))))
+                package.cr_text = file.copyright
+            package.verif_code = package.calc_verif_code()
         else:
             # Has to generate a dummy file because of the following rule in SDK:
             # - Package must have at least one file
-            package.add_file(SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence).generate_spdx_file())
+            dummy_file = SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence)
+            package.add_file(dummy_file.generate_spdx_file())
+            package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(dummy_file.licence))))
         return package

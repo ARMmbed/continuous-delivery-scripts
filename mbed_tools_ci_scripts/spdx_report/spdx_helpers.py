@@ -27,6 +27,9 @@ from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
 
 logger = logging.getLogger(__name__)
 
+# Copyright similar to the regex defined in flake8-copyright
+COPYRIGHT_PATTERN = r"((?i)Copyright(?i).*$)"
+COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, re.MULTILINE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
 SPDX_LICENCE_IDENTIFIER_PATTERN = r"SPDX-License-Identifier: ([\.\w+\-\(\)\s]+)[\*]?$"
@@ -57,6 +60,14 @@ def determine_file_licence(path: Path) -> Optional[str]:
     except Exception as e:
         logger.error(f"Could not determine the licence of file [{path}] from identifier '{licence}'. Reason: {e}.")
         return None
+
+
+def determine_file_copyright_text(path: Path) -> Optional[str]:
+    """Determines the copyright text of a file."""
+    match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
+    if not match:
+        return None
+    return str(match.group(1).strip())
 
 
 def determine_spdx_value(value: Optional[str]) -> Union[str, UnKnown, SPDXNone]:

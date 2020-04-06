@@ -75,6 +75,7 @@ class SpdxProject:
                     name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
                 )
             )
-        SpdxProject.generate_tag_value_file(
-            dir, SpdxDocument(package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,),
+        main_document = SpdxDocument(
+            package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
         )
+        SpdxProject.generate_tag_value_file(dir, main_document, f"{main_document.name}.spdx")

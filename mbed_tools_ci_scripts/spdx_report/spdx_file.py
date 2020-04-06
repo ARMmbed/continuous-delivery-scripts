@@ -8,11 +8,15 @@ from pathlib import Path
 from spdx.checksum import Algorithm
 from spdx.document import License
 from spdx.file import File, FileType
-from spdx.utils import NoAssert
+from typing import Optional
 
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
+    determine_spdx_value,
+    determine_file_licence,
+    determine_file_copyright_text,
+)
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
 from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str, determine_sha1_hash_of_file
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, determine_file_licence
 
 
 class SpdxFile:
@@ -86,6 +90,15 @@ class SpdxFile:
         file_licence = determine_file_licence(self.path)
         return file_licence if file_licence else self._package_licence
 
+    @property
+    def copyright(self) -> Optional[str]:
+        """Determines copyright text from file notice.
+
+        Returns:
+            file's copyright text
+        """
+        return determine_file_copyright_text(self.path)
+
     def generate_spdx_file(self) -> File:
         """Generates the SPDX file.
 
@@ -103,8 +116,8 @@ class SpdxFile:
         source_file.type = FileType.SOURCE
         source_file.comment = determine_spdx_value(None)
         source_file.chk_sum = Algorithm("SHA1", self.sha1_check_sum)
-        source_file.conc_lics = NoAssert()
+        source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
         source_file.spdx_id = f"SPDXRef-{self.id}"
-        source_file.copyright = NoAssert()
+        source_file.copyright = determine_spdx_value(self.copyright)
         source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
         return source_file
