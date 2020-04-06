@@ -52,8 +52,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "gitpython",
-        "towncrier",
-        "pyautoversion",
+        "towncrier==19.2.0",
+        "pyautoversion~=1.2.0",
         "pdoc3",
         "toml",
         "python-dotenv",
