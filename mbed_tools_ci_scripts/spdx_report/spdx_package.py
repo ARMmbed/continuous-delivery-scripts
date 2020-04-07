@@ -40,6 +40,12 @@ class PackageInfo:
     uuid: str
 
 
+def _set_package_copyright(file: SpdxFile, package: Package) -> None:
+    """Sets the copyright field of a package based on file copyright."""
+    if file.copyright:
+        package.cr_text = determine_spdx_value(file.copyright)
+
+
 class SpdxPackage:
     """SPDX package.
 
@@ -156,7 +162,7 @@ class SpdxPackage:
         """
         return self._package_info.metadata.description
 
-    def get_spdx_files(self) -> Optional[List["SpdxFile"]]:
+    def get_spdx_files(self) -> Optional[List[SpdxFile]]:
         """Gets package's files SPDX description.
 
         Returns:
@@ -193,7 +199,6 @@ class SpdxPackage:
         """
         package = Package()
         package.check_sum = Algorithm("SHA1", str(NoAssert()))
-        package.verif_code = NoAssert()
         package.cr_text = NoAssert()
         package.name = determine_spdx_value(self.name)
         package.version = determine_spdx_value(self.version)
@@ -213,12 +218,13 @@ class SpdxPackage:
             for file in files:
                 package.add_file(file.generate_spdx_file())
                 package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(file.licence))))
-                package.cr_text = file.copyright
-            package.verif_code = package.calc_verif_code()
+                _set_package_copyright(file, package)
+            package.verif_code = determine_spdx_value(package.calc_verif_code())
         else:
             # Has to generate a dummy file because of the following rule in SDK:
             # - Package must have at least one file
             dummy_file = SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence)
+            package.verif_code = NoAssert()
             package.add_file(dummy_file.generate_spdx_file())
             package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(dummy_file.licence))))
         return package

@@ -45,7 +45,7 @@ PATHS_TO_EXCLUDE = [
     "*.tar",
     "*.zip",
     "**/__pycache__/**",
-    "**/.egg-info/**",
+    "**/*.egg-info/**",
 ]
 
 

@@ -85,6 +85,8 @@ class TestFilesystemHelpers(TestCase):
         self.assertTrue(match_pattern(Path("/test/test1/test2/a_test.test"), "**/test2/*"))
         self.assertTrue(match_pattern(Path("/test/test1/test2/a_test.test"), "**/test2/*.test"))
         self.assertTrue(match_pattern(Path("/test/test1/a_test.test"), "/test/**"))
+        self.assertTrue(match_pattern(Path("/test/more.test1/a_test.test"), "**/*.test1/**"))
+        self.assertFalse(match_pattern(Path("/test/more.test1/a_test.test"), "**/test1/**"))
         self.assertFalse(match_pattern(Path("/test/test1/test2/a_test.txt"), "*.test"))
         self.assertFalse(match_pattern(Path("/test/test1/test2/a_test.txt"), "*.ignore"))
         self.assertFalse(match_pattern(Path("/test/test1/test2/a_test.txt"), "**/test3/*"))
@@ -95,6 +97,8 @@ class TestFilesystemHelpers(TestCase):
         self.assertFalse(should_exclude_path(Path("/test/test1/test2/a_test.txt"), ["*.ignore", "*.test"]))
         self.assertTrue(should_exclude_path(Path("/test/test1/test2/a_test.test"), ["*.ignore", "**/test1/**"]))
         self.assertFalse(should_exclude_path(Path("/test/test3/test2/a_test.test"), ["*.ignore", "**/test1/**"]))
+        self.assertFalse(should_exclude_path(Path("/test/more.test1/test2/a_test.test"), ["*.ignore", "**/test1/**"]))
+        self.assertTrue(should_exclude_path(Path("/test/more.test1/test2/a_test.test"), ["*.ignore", "**/*.test1/**"]))
 
     def test_list_files(self):
         self.assertListEqual(
