@@ -11,6 +11,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.6.2" (2020-04-07)
+====================
+
+Bugfixes
+--------
+
+- Fix issue found in targets during SPDX report generation. (#20200407)
+
+
 "1.6.1" (2020-04-06)
 ====================
 
