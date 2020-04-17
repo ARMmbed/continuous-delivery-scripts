@@ -64,6 +64,7 @@ setup(
         "spdx-tools",
         "license-expression",
         "wcmatch",
+        "jellyfish",
         "dataclasses; python_version<'3.7'",
     ],
     license="Apache 2.0",

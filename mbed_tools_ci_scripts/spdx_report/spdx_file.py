@@ -17,6 +17,7 @@ from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
 )
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
 from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str, determine_sha1_hash_of_file
+from mbed_tools_ci_scripts.utils.third_party_licences import cleanse_licence_expression
 
 
 class SpdxFile:
@@ -88,7 +89,7 @@ class SpdxFile:
             file's licence
         """
         file_licence = determine_file_licence(self.path)
-        return file_licence if file_licence else self._package_licence
+        return cleanse_licence_expression(file_licence) if file_licence else self._package_licence
 
     @property
     def copyright(self) -> Optional[str]:

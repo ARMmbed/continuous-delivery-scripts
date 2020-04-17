@@ -46,6 +46,8 @@ class ConfigurationVariable(enum.Enum):
     IGNORE_PYPI_TEST_UPLOAD = 25
     FILE_LICENCE_IDENTIFIER = 26
     COPYRIGHT_START_DATE = 27
+    ACCEPTED_THIRD_PARTY_LICENCES = 28
+    PACKAGES_WITH_CHECKED_LICENCE = 29
 
     @staticmethod
     def choices() -> List[str]:
@@ -146,6 +148,8 @@ class StaticConfig(GenericConfig):
     ORGANISATION_EMAIL = "support@mbed.com"
     FILE_LICENCE_IDENTIFIER = "Apache-2.0"
     COPYRIGHT_START_DATE = 2020
+    ACCEPTED_THIRD_PARTY_LICENCES = ["Apache-2.0", "BSD*", "JSON", "MIT", "Python-2.0", "PSF-2.0", "MPL-2.0"]
+    PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
     def _fetch_value(self, key: str) -> Any:
         try:

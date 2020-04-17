@@ -1,0 +1,1 @@
+Added a licence compliance check for the package and its dependencies.

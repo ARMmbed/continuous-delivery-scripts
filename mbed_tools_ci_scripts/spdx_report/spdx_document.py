@@ -177,6 +177,11 @@ class SpdxDocument:
         """
         return self._other_document_references
 
+    @external_refs.setter
+    def external_refs(self, external_refs: List[DependencySpdxDocumentRef]) -> None:
+        """Sets the document external references."""
+        self._other_document_references = external_refs
+
     def generate_spdx_package(self) -> SpdxPackage:
         """Generates the SPDX package for this package.
 

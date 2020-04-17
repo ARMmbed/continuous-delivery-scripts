@@ -153,6 +153,7 @@ stages:
           - publish: $(temp_spdx_reports_path)
             artifact: SPDX
             displayName: 'Publish SPDX reports'
+            condition: always()
 
   # Collect test and build stages together before the release stages to provide a pass/fail point for the status badge.
   - stage: CiCheckpoint

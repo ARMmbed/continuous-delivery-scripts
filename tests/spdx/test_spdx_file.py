@@ -14,7 +14,7 @@ class TestSpdxFile(TestCase):
         test_file = Path(__file__).parent.joinpath("fixtures", "file_with_patterns.txt")
         licence = determine_file_licence(test_file)
         self.assertIsNotNone(licence)
-        self.assertEqual(licence, "Apache-2.0 AND EPL-1.0+ AND (BSD OR MIT)")
+        self.assertEqual(licence, "Apache-2.0 AND EPL-1.0 AND (BSD OR MIT)")
 
     def test_file_copyright_scanner(self):
         test_file = Path(__file__).parent.joinpath("fixtures", "file_with_patterns.txt")

@@ -96,10 +96,19 @@ class ProjectMetadata:
         """Gets all package's dependencies metadata."""
         return self._dependency_packages_metadata
 
+    def add_dependency_metadata(self, dependency_metadata: PackageMetadata) -> None:
+        """Adds metadata about a dependency."""
+        self._dependency_packages_metadata.append(dependency_metadata)
+
     @property
     def project_metadata(self) -> PackageMetadata:
         """Gets project metadata."""
         return self._package_metadata
+
+    @project_metadata.setter
+    def project_metadata(self, package_metadata: PackageMetadata) -> None:
+        """Sets project metadata."""
+        self._package_metadata = package_metadata
 
     @property
     def package_name(self) -> str:
@@ -135,9 +144,9 @@ class ProjectMetadataParser:
         for metadata in get_all_packages_metadata_lines(self._package_name):
             info = parse_package_metadata_lines(metadata)
             if info.name == self._package_name:
-                project_metadata._package_metadata = info
+                project_metadata.project_metadata = info
             else:
-                project_metadata._dependency_packages_metadata.append(info)
+                project_metadata.add_dependency_metadata(info)
         return project_metadata
 
     @property

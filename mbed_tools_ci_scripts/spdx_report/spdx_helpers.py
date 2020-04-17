@@ -17,13 +17,14 @@ import re
 
 import logging
 import toml
-from license_expression import Licensing
 from pathlib import Path
 from spdx.utils import SPDXNone, UnKnown
-from typing import Union, Optional, Iterator, List
+from typing import Union, Optional, Iterator, Iterable, Any
 
-from mbed_tools_ci_scripts.utils.filesystem_helpers import scan_file_for_pattern, should_exclude_path, list_all_files
+from mbed_tools_ci_scripts.utils.configuration import ConfigurationVariable, configuration
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
+from mbed_tools_ci_scripts.utils.filesystem_helpers import scan_file_for_pattern, should_exclude_path, list_all_files
+from mbed_tools_ci_scripts.utils.third_party_licences import simplify_licence_expression
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ def determine_file_licence(path: Path) -> Optional[str]:
         if not match:
             return None
         licence = match.group(1).strip()
-        return str(Licensing().parse(licence).simplify())
+        return simplify_licence_expression(licence)
     except Exception as e:
         logger.error(f"Could not determine the licence of file [{path}] from identifier '{licence}'. Reason: {e}.")
         return None
@@ -105,7 +106,21 @@ def list_project_files_for_licensing(project_root: Path) -> Iterator[Path]:
     return list_all_files(project_root, ignore_path)
 
 
-def determine_licence_compound(main_licence: str, additional_licences: List[str]) -> str:
-    """Determines the overall licence based on main licence and additional licences."""
-    overall_licence = f"({main_licence}) AND ({') AND ('.join(additional_licences)})"
-    return str(Licensing().parse(overall_licence).simplify())
+def determine_checked_packages_from_string(checked_packages: Any) -> Iterable[Any]:
+    """Determines the list of packages for which the licence has been checked."""
+    if isinstance(checked_packages, str):
+        checked_packages = checked_packages.split(", ")
+    if isinstance(checked_packages, (list, dict, tuple, set)):
+        yield from checked_packages
+
+
+def get_packages_with_checked_licence() -> Iterable[str]:
+    """Determines the list of packages for which the licence has been checked from configuration."""
+    yield from determine_checked_packages_from_string(
+        configuration.get_value(ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE)
+    )
+
+
+def is_package_licence_checked(package_name: str) -> bool:
+    """States whether the licence of a package has been checked and hence, that its licence is compliant."""
+    return package_name.strip() in get_packages_with_checked_licence()

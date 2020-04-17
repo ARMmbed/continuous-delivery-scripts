@@ -4,6 +4,7 @@
 #
 """Definition of an SPDX Package."""
 
+from dataclasses import dataclass
 from pathlib import Path
 from spdx.checksum import Algorithm
 from spdx.creationinfo import Person
@@ -16,11 +17,15 @@ from mbed_tools_ci_scripts.spdx_report.spdx_file import SpdxFile
 from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
     determine_spdx_value,
     list_project_files_for_licensing,
-    determine_licence_compound,
 )
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
 from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
-from dataclasses import dataclass
+from mbed_tools_ci_scripts.utils.third_party_licences import (
+    UNKNOWN_LICENCE,
+    cleanse_licence_expression,
+    is_licence_accepted,
+    determine_licence_compound,
+)
 
 
 @dataclass(frozen=True, order=True)
@@ -58,6 +63,7 @@ class SpdxPackage:
         self._package_info = package_info
         self._file_list: Optional[List[Path]] = None
         self._actual_licence: Optional[str] = None
+        self._main_licence: Optional[str] = None
 
     @property
     def files(self) -> Optional[List[Path]]:
@@ -108,7 +114,17 @@ class SpdxPackage:
         Returns:
             project's licence
         """
-        return self._package_info.metadata.licence
+        if not self._main_licence:
+            package_licence = self._package_info.metadata.licence
+            self._main_licence = (
+                cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
+            )
+        return self._main_licence
+
+    @property
+    def is_main_licence_accepted(self) -> bool:
+        """States whether the main licence of the package is part of the accepted licence list."""
+        return is_licence_accepted(self.main_licence)
 
     @property
     def licence(self) -> str:
@@ -125,6 +141,11 @@ class SpdxPackage:
                 else self.main_licence
             )
         return self._actual_licence
+
+    @property
+    def is_licence_accepted(self) -> bool:
+        """States whether the actual package's licence of the package is part of the accepted licence list."""
+        return is_licence_accepted(self.licence)
 
     @property
     def author(self) -> str:
@@ -168,7 +189,7 @@ class SpdxPackage:
         Returns:
             list of file descriptions or None if a dependency.
         """
-        if not self.files or len(self.files) == 0:
+        if not self.files:
             return None
         return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]
 
@@ -197,21 +218,22 @@ class SpdxPackage:
         Returns:
             the corresponding package
         """
-        package = Package()
+        package = Package(
+            name=determine_spdx_value(self.name),
+            spdx_id=f"SPDXRef-{self.id}",
+            download_location=determine_spdx_value(None),
+            version=determine_spdx_value(self.version),
+            file_name=determine_spdx_value(self.name),
+            supplier=None,
+            originator=Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email)),
+        )
         package.check_sum = Algorithm("SHA1", str(NoAssert()))
         package.cr_text = NoAssert()
-        package.name = determine_spdx_value(self.name)
-        package.version = determine_spdx_value(self.version)
-        package.file_name = determine_spdx_value(self.name)
-        package.download_location = determine_spdx_value(None)
         package.homepage = determine_spdx_value(self.url)
-        package.originator = Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email))
         package.license_declared = License.from_identifier(str(determine_spdx_value(self.main_licence)))
         package.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
         package.summary = determine_spdx_value(self.description)
         package.description = NoAssert()
-        package.spdx_id = f"SPDXRef-{self.id}"
-
         files = self.get_spdx_files()
         if files:
             package.files_analyzed = True
@@ -223,7 +245,7 @@ class SpdxPackage:
         else:
             # Has to generate a dummy file because of the following rule in SDK:
             # - Package must have at least one file
-            dummy_file = SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.licence)
+            dummy_file = SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.main_licence)
             package.verif_code = NoAssert()
             package.add_file(dummy_file.generate_spdx_file())
             package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(dummy_file.licence))))

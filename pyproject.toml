@@ -18,6 +18,7 @@ DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
 VERSION_FILE_PATH = "mbed_tools_ci_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 AWS_BUCKET=""
+PACKAGES_WITH_CHECKED_LICENCE=["jeepney", "chardet", "zipp", "python-dateutil", "keyring", "setuptools", "GitPython", "pdoc3", "python-dotenv", "twine", "jellyfish"]
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

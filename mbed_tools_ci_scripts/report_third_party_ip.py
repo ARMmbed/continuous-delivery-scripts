@@ -16,7 +16,7 @@ import sys
 import argparse
 import logging
 from pathlib import Path
-
+from typing import Any
 from mbed_tools_ci_scripts.spdx_report.spdx_project import SpdxProject
 from mbed_tools_ci_scripts.utils.logging import set_log_level, log_exception
 from mbed_tools_ci_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
@@ -24,7 +24,7 @@ from mbed_tools_ci_scripts.utils.package_helpers import CurrentProjectMetadataPa
 logger = logging.getLogger(__name__)
 
 
-def generate_spdx_reports(output_directory: Path) -> None:
+def generate_spdx_reports(output_directory: Path) -> SpdxProject:
     """Generates all the SPDX reports for the current project."""
     logger.info("Generating package information.")
     try:
@@ -34,14 +34,21 @@ def generate_spdx_reports(output_directory: Path) -> None:
         log_exception(logger, e)
 
     logger.info("Generating SPDX report.")
-    SpdxProject(CurrentProjectMetadataParser()).generate_tag_value_files(output_directory)
+    project = SpdxProject(CurrentProjectMetadataParser())
+    project.generate_tag_value_files(output_directory)
+    return project
 
 
 def main() -> int:
     """Script CLI."""
     parser = argparse.ArgumentParser(description="Generate licence and third-party IP reports.")
+
+    def convert_to_path(arg: Any) -> Path:
+        """Converts argument to a path."""
+        return Path(arg)
+
     parser.add_argument(
-        "-o", "--output-dir", help="Output directory where the files are generated", required=True,
+        "-o", "--output-dir", help="Output directory where the files are generated", required=True, type=convert_to_path
     )
 
     parser.add_argument(
@@ -51,7 +58,8 @@ def main() -> int:
     set_log_level(args.verbose)
 
     try:
-        generate_spdx_reports(Path(args.output_dir))
+        project = generate_spdx_reports(args.output_dir)
+        project.check_licence_compliance()
         return 0
     except Exception as e:
         log_exception(logger, e)
