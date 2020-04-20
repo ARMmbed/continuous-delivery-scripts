@@ -1,0 +1,1 @@
+Refactored CI job to ensure licensing artifacts are uploaded no matter the result of the reporting.
