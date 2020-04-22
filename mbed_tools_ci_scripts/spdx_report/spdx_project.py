@@ -14,6 +14,7 @@ from mbed_tools_ci_scripts.spdx_report.spdx_document import SpdxDocument
 from mbed_tools_ci_scripts.utils.hash_helpers import determine_sha1_hash_of_file
 from mbed_tools_ci_scripts.utils.package_helpers import ProjectMetadataParser
 from mbed_tools_ci_scripts.spdx_report.spdx_helpers import is_package_licence_checked
+from mbed_tools_ci_scripts.spdx_report.spdx_summary import SummaryGenerator
 
 
 class SpdxProject:
@@ -71,9 +72,19 @@ class SpdxProject:
             raise NotADirectoryError(str(dir))
 
         path = dir.joinpath(filename)
-        with open(path, mode="w", encoding="utf-8") as out:
+        with open(str(path), mode="w", encoding="utf-8") as out:
             write_document(spdx_doc.generate_spdx_document(), out)
         return determine_sha1_hash_of_file(path)
+
+    def generate_licensing_summary(self, dir: Path) -> None:
+        """Generates licensing summary into the specified directory.
+
+        Args:
+            dir: output directory
+        """
+        SummaryGenerator(
+            self.main_document.generate_spdx_package(), [d.generate_spdx_package() for d in self.dependency_documents]
+        ).generate_summary(dir)
 
     def generate_tag_value_files(self, dir: Path) -> None:
         """Generates SPDX tag-value files into the specified directory.
@@ -102,17 +113,6 @@ class SpdxProject:
         self.main_document.external_refs = externalRefs
         SpdxProject.generate_tag_value_file(dir, self.main_document, f"{self.main_document.name}.spdx")
 
-    @staticmethod
-    def _check_package_licence(package_document: SpdxDocument) -> Tuple[bool, bool, str, str, str]:
-        package = package_document.generate_spdx_package()
-        return (
-            package.is_main_licence_accepted,
-            package.is_licence_accepted,
-            package.name,
-            package.main_licence,
-            package.licence,
-        )
-
     def _report_issues(self, issues: Dict[str, str]) -> None:
         if issues:
             raise ValueError(
@@ -125,7 +125,7 @@ class SpdxProject:
             )
 
     def _check_one_licence_compliance(self, spdx_document: SpdxDocument, issues: Dict[str, str]) -> None:
-        main_valid, actual_valid, name, main_licence, actual_licence = SpdxProject._check_package_licence(spdx_document)
+        main_valid, actual_valid, name, main_licence, actual_licence = _check_package_licence(spdx_document)
         if not ((main_valid and actual_valid) or is_package_licence_checked(name)):
             issues[name] = actual_licence if main_valid else main_licence
 
@@ -145,3 +145,14 @@ class SpdxProject:
         self._check_package_licence_compliance(issues)
         self._check_package_dependencies_licence_compliance(issues)
         self._report_issues(issues)
+
+
+def _check_package_licence(package_document: SpdxDocument) -> Tuple[bool, bool, str, str, str]:
+    package = package_document.generate_spdx_package()
+    return (
+        package.is_main_licence_accepted,
+        package.is_licence_accepted,
+        package.name,
+        package.main_licence,
+        package.licence,
+    )

@@ -36,6 +36,8 @@ def generate_spdx_reports(output_directory: Path) -> SpdxProject:
     logger.info("Generating SPDX report.")
     project = SpdxProject(CurrentProjectMetadataParser())
     project.generate_tag_value_files(output_directory)
+    logger.info("Generating licensing summary.")
+    project.generate_licensing_summary(output_directory)
     return project
 
 

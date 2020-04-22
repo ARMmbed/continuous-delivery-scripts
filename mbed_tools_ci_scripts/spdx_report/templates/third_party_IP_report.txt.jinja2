@@ -1,0 +1,17 @@
+                                3rd party IP report for {{ project.name }}
+
+                                         {{ render_time }}
+
+# Summary:
+    Licence compliance: {% if project.compliance %}Compliant{% else %}Not compliant{% endif %}
+    Details: {% if project.compliance_details %}{{ project.compliance_details }}{% else %}N/A{% endif %}
+
+# More details:
+{% for name,package in packages|dictsort %}
+- {{ package.name }}:
+    [{%- if package.is_compliant == True -%}X{%- endif -%}] Compliant?
+    [{%- if package.is_dependency == True -%}X{%- endif -%}] Dependency?
+    URL: {{ package.url }}
+    Licence: {{ package.licence }}
+    Licence compliance: {{ package.licence_compliance_details }}
+{% endfor %}

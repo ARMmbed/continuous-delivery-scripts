@@ -1,0 +1,4 @@
+Compliance, Name,Is a dependency?,URL,Licence,Details
+{% for name,package in packages|dictsort %}
+{%- if package.is_compliant == True -%}True{%- else -%}False{%- endif -%},{{ package.name }},{%- if package.is_dependency == True -%}True{%- else -%}False{%- endif -%},{{ package.url }},{{ package.licence }},{{ package.licence_compliance_details }}
+{% endfor %}

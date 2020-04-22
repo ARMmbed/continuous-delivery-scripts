@@ -88,6 +88,11 @@ class SpdxPackage:
         return self.name if self._is_dependency else self._package_info.uuid
 
     @property
+    def is_dependency(self) -> bool:
+        """States whether the package is a dependency or not."""
+        return self._is_dependency
+
+    @property
     def name(self) -> str:
         """Gets Package's name.
 

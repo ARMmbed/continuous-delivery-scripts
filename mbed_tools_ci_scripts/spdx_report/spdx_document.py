@@ -8,17 +8,17 @@ from spdx.creationinfo import Person, Organization, Tool
 from spdx.document import Document, License
 from spdx.review import Review
 from spdx.version import Version
-from typing import List
+from typing import List, Optional
 
-from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
 from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
+from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
 from mbed_tools_ci_scripts.utils.configuration import (
     configuration,
     ConfigurationVariable,
 )
 from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
 
 TOOL_NAME = "mbed-spdx-generator"
 
@@ -45,6 +45,7 @@ class SpdxDocument:
         self._is_dependency: bool = is_dependency
         self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs
         self._document_namespace = document_namespace
+        self._spdx_package: Optional[SpdxPackage] = None
 
     @property
     def document_name(self) -> str:
@@ -188,15 +189,17 @@ class SpdxDocument:
         Returns:
             corresponding SPDX package.
         """
-        return SpdxPackage(
-            PackageInfo(
-                metadata=self._package_metadata,
-                root_dir=self._project_root,
-                source_dir=self._project_source,
-                uuid=self._project_uuid,
-            ),
-            is_dependency=self._is_dependency,
-        )
+        if not self._spdx_package:
+            self._spdx_package = SpdxPackage(
+                PackageInfo(
+                    metadata=self._package_metadata,
+                    root_dir=self._project_root,
+                    source_dir=self._project_source,
+                    uuid=self._project_uuid,
+                ),
+                is_dependency=self._is_dependency,
+            )
+        return self._spdx_package
 
     def generate_spdx_document(self) -> Document:
         """Generates the SPDX document.

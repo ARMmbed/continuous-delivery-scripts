@@ -65,6 +65,7 @@ setup(
         "license-expression",
         "wcmatch",
         "jellyfish",
+        "jinja2",
         "dataclasses; python_version<'3.7'",
     ],
     license="Apache 2.0",
