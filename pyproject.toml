@@ -18,7 +18,19 @@ DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
 VERSION_FILE_PATH = "mbed_tools_ci_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 AWS_BUCKET=""
-PACKAGES_WITH_CHECKED_LICENCE=["jeepney", "chardet", "zipp", "python-dateutil", "keyring", "setuptools", "GitPython", "pdoc3", "python-dotenv", "twine", "jellyfish"]
+
+[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
+jeepney="MIT"
+chardet="LGPL-2.1+ but accepted for this project since not distributed."
+zipp="MIT"
+python-dateutil="All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License."
+keyring="MIT"
+setuptools="MIT"
+GitPython="BSD-3-Clause"
+pdoc3="Accepted for this project since not distributed"
+python-dotenv="BSD-3-Clause"
+twine="Apache-2.0"
+jellyfish="BSD-2-Clause"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

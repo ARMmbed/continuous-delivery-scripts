@@ -13,7 +13,7 @@ from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocu
 from mbed_tools_ci_scripts.spdx_report.spdx_document import SpdxDocument
 from mbed_tools_ci_scripts.utils.hash_helpers import determine_sha1_hash_of_file
 from mbed_tools_ci_scripts.utils.package_helpers import ProjectMetadataParser
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import is_package_licence_checked
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
 from mbed_tools_ci_scripts.spdx_report.spdx_summary import SummaryGenerator
 
 
@@ -126,7 +126,7 @@ class SpdxProject:
 
     def _check_one_licence_compliance(self, spdx_document: SpdxDocument, issues: Dict[str, str]) -> None:
         main_valid, actual_valid, name, main_licence, actual_licence = _check_package_licence(spdx_document)
-        if not ((main_valid and actual_valid) or is_package_licence_checked(name)):
+        if not ((main_valid and actual_valid) or is_package_licence_manually_checked(name)):
             issues[name] = actual_licence if main_valid else main_licence
 
     def _check_package_dependencies_licence_compliance(self, issues: Dict[str, str]) -> None:

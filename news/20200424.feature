@@ -1,0 +1,1 @@
+Changed the configuration type entry for package licence compliance check.

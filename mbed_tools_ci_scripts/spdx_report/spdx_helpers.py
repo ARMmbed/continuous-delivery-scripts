@@ -19,7 +19,7 @@ import logging
 import toml
 from pathlib import Path
 from spdx.utils import SPDXNone, UnKnown
-from typing import Union, Optional, Iterator, Iterable, Any
+from typing import Union, Optional, Iterator, Any, Tuple
 
 from mbed_tools_ci_scripts.utils.configuration import ConfigurationVariable, configuration
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
@@ -106,21 +106,39 @@ def list_project_files_for_licensing(project_root: Path) -> Iterator[Path]:
     return list_all_files(project_root, ignore_path)
 
 
-def determine_checked_packages_from_string(checked_packages: Any) -> Iterable[Any]:
-    """Determines the list of packages for which the licence has been checked."""
+def _convert_list_into_dict(checked_packages: Any) -> dict:
+    checked_package_description = dict()
+    for item in checked_packages:
+        info = item.split("=" if "=" in item else ":")
+        checked_package_description[info[0].strip()] = info[-1].strip() if len(info) > 1 else None
+    return checked_package_description
+
+
+def determine_checked_packages_from_configuration_entry(checked_packages: Any) -> dict:
+    """Determines the list of packages for which the licence has been manually checked."""
     if isinstance(checked_packages, str):
         checked_packages = checked_packages.split(", ")
-    if isinstance(checked_packages, (list, dict, tuple, set)):
-        yield from checked_packages
+    if isinstance(checked_packages, (list, tuple, set)):
+        return _convert_list_into_dict(checked_packages)
+    if isinstance(checked_packages, dict):
+        return checked_packages
+    return dict()
 
 
-def get_packages_with_checked_licence() -> Iterable[str]:
+def get_packages_with_checked_licence() -> dict:
     """Determines the list of packages for which the licence has been checked from configuration."""
-    yield from determine_checked_packages_from_string(
+    return determine_checked_packages_from_configuration_entry(
         configuration.get_value(ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE)
     )
 
 
-def is_package_licence_checked(package_name: str) -> bool:
-    """States whether the licence of a package has been checked and hence, that its licence is compliant."""
-    return package_name.strip() in get_packages_with_checked_licence()
+def get_package_manual_check(package_name: str) -> Tuple[bool, Optional[str]]:
+    """Gets information about package licence manual check."""
+    checked_packages = get_packages_with_checked_licence()
+    return bool(package_name.strip() in checked_packages), checked_packages.get(package_name.strip())
+
+
+def is_package_licence_manually_checked(package_name: str) -> bool:
+    """States whether the licence of a package has been manually checked and hence, that its licence is compliant."""
+    checked, _ = get_package_manual_check(package_name)
+    return checked

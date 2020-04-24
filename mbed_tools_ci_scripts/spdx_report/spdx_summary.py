@@ -1,12 +1,15 @@
+#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Summary generators."""
 import datetime
 import jinja2
 import logging
-import os
 from pathlib import Path
 from typing import List, Tuple, Optional, Dict, Any
 
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import is_package_licence_checked
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import get_package_manual_check
 from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage
 
 JINJA_TEMPLATE_SUMMARY_HTML = "third_party_IP_report.html.jinja2"
@@ -60,7 +63,7 @@ class SummaryGenerator:
             "name": self.project.name,
             "compliance": global_compliance,
             "compliance_details": (
-                f"Project [{self.project.name}]'s licence is compliant: {self.project.licence}.{os.linesep}"
+                f"Project [{self.project.name}]'s licence is compliant: {self.project.licence}."
                 "All its dependencies are also compliant licence-wise."
             )
             if global_compliance
@@ -76,19 +79,24 @@ class SummaryGenerator:
         for p in self.all_packages:
             main_licence_valid = p.is_main_licence_accepted
             actual_licence_valid = p.is_licence_accepted
-            package_checked = is_package_licence_checked(p.name)
+            package_manually_checked, manual_check_details = get_package_manual_check(p.name)
             is_licence_compliant = main_licence_valid and actual_licence_valid
-            is_compliant = is_licence_compliant or package_checked
+            is_compliant = is_licence_compliant or package_manually_checked
             if not is_compliant:
                 global_compliance = False
             description_list[p.name] = self._generate_description_for_one_package(
-                is_compliant, is_licence_compliant, package_checked, p
+                is_compliant, is_licence_compliant, package_manually_checked, manual_check_details, p
             )
 
         return global_compliance, description_list
 
     def _generate_description_for_one_package(
-        self, is_compliant: bool, is_licence_compliant: bool, package_checked: bool, p: SpdxPackage
+        self,
+        is_compliant: bool,
+        is_licence_compliant: bool,
+        package_manually_checked: bool,
+        manual_check_details: Optional[str],
+        p: SpdxPackage,
     ) -> dict:
         return {
             "name": p.name,
@@ -100,8 +108,8 @@ class SummaryGenerator:
             "licence_compliance_details": "Licence is compliant."
             if is_licence_compliant
             else (
-                "Package's licence has been checked"
-                if package_checked
+                f"Package's licence manually checked: {manual_check_details}"
+                if package_manually_checked
                 else "Licence is not compliant according to project's configuration."
             ),
         }
