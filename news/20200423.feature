@@ -1,1 +1,0 @@
-Add licensing summary to docs.

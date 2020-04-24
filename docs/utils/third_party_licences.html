@@ -1,0 +1,687 @@
+<!--
+-- Copyright (C) 2020 Arm Mbed. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.1" />
+<title>mbed_tools_ci_scripts.utils.third_party_licences API documentation</title>
+<meta name="description" content="Third party licences." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.third_party_licences</code></h1>
+</header>
+<section id="section-intro">
+<p>Third party licences.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+&#34;&#34;&#34;Third party licences.&#34;&#34;&#34;
+import re
+
+import json
+from dataclasses import dataclass
+from license_expression import Licensing, LicenseExpression, OR
+from spdx.config import _licenses
+from typing import Iterable, cast, Optional, Iterator, List, Pattern, Any
+
+from mbed_tools_ci_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
+from mbed_tools_ci_scripts.utils.string_helpers import determine_similar_string_from_list
+
+
+@dataclass(order=True, frozen=True)
+class Licence:
+    &#34;&#34;&#34;Licence descriptor.
+
+    Maps to what is defined in licenses.json in
+    https://github.com/spdx/license-list-data/blob/master/json/licenses.json
+    &#34;&#34;&#34;
+
+    reference_number: str
+    identifier: str
+    name: str
+    is_deprecated: bool
+    is_osi_approved: bool
+    url: str
+    reference: str
+
+
+UNKNOWN_LICENCE = Licence(
+    reference_number=&#34;Unknown&#34;,
+    identifier=&#34;Unknown&#34;,
+    name=&#34;Unknown&#34;,
+    is_deprecated=True,
+    is_osi_approved=False,
+    url=&#34;Unknown&#34;,
+    reference=&#34;Unknown&#34;,
+)
+
+LICENCE_LIKELIHOOD_THRESHOLD = 0.5
+
+LICENCE_NON_ACCEPTED_CHARACTERS = r&#34;[^\w\s\.\:\-()]&#34;
+
+
+def _parse_licence_expression(licensing: Licensing, licence_expression: str) -&gt; LicenseExpression:
+    # Removing any unwanted characters so that the expression follows the laws:
+    # &gt; the valid characters are: letters and numbers, underscore, dot, colon or hyphen signs and spaces
+    expression = re.sub(LICENCE_NON_ACCEPTED_CHARACTERS, &#34;&#34;, licence_expression)
+    expression = re.sub(r&#34;\([sS]ee [\w\s\.\-]*\)&#34;, &#34;&#34;, expression)
+    return licensing.parse(expression)
+
+
+def parse_licence(licence_info: dict) -&gt; Licence:
+    &#34;&#34;&#34;Parses a licence entry in the Json file and translates it into a licence object.&#34;&#34;&#34;
+    return Licence(
+        reference_number=licence_info.get(&#34;referenceNumber&#34;, &#34;&#34;),
+        identifier=licence_info.get(&#34;licenseId&#34;, &#34;&#34;),
+        name=licence_info.get(&#34;name&#34;, &#34;&#34;),
+        url=licence_info.get(&#34;detailsUrl&#34;, &#34;&#34;),
+        reference=licence_info.get(&#34;reference&#34;, &#34;&#34;),
+        is_deprecated=bool(licence_info.get(&#34;isDeprecatedLicenseId&#34;, False)),
+        is_osi_approved=bool(licence_info.get(&#34;isOsiApproved&#34;, True)),
+    )
+
+
+def iter_licenses(licence_info: dict) -&gt; Iterable[Licence]:
+    &#34;&#34;&#34;Gets a generator over all the licences present in licenses.json.&#34;&#34;&#34;
+    licences = cast(Iterable[dict], licence_info.get(&#34;licenses&#34;, []))
+    for licence_info in licences:
+        yield parse_licence(licence_info)
+
+
+def _handle_special_licence_entries(cleansed_descriptor: str) -&gt; str:
+    if cleansed_descriptor in [&#34;Python Software Foundation License&#34;]:
+        return &#34;Python&#34;
+    if cleansed_descriptor in [&#34;Apache Software License&#34;, &#34;Apache&#34;, &#34;apache&#34;]:
+        return &#34;Apache-2.0&#34;
+    if cleansed_descriptor in [&#34;LGPL&#34;, &#34;UNKNOWN&#34;, &#34;Dual License&#34;]:
+        # It is not possible to find which is the actual licence to consider.
+        return UNKNOWN_LICENCE.identifier
+    return cleansed_descriptor
+
+
+def cleanse_licence_descriptor(licence_descriptor: str) -&gt; str:
+    &#34;&#34;&#34;Cleanses the licence descriptor to only keep words describing the licence.&#34;&#34;&#34;
+    cleansed_descriptor = licence_descriptor.strip()
+    cleansed_descriptor = re.sub(r&#34;OSI\s?[Aa]pproved[\:]*&#34;, &#34;&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;[pP]ublic [dD]omain&#34;, &#34;&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;BSD[-\s][Ll]ike&#34;, &#34;BSD&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;BSD [lL]icen[sc]e&#34;, &#34;BSD&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;MIT [lL]icen[sc]e&#34;, &#34;MIT&#34;, cleansed_descriptor)
+    cleansed_descriptor = _handle_special_licence_entries(cleansed_descriptor.strip())
+    if cleansed_descriptor.lower().startswith(&#34;the&#34;):
+        cleansed_descriptor = cleansed_descriptor[3:].strip()
+    return cleansed_descriptor
+
+
+class OpenSourceLicences:
+    &#34;&#34;&#34;All the opensource licences known.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Initialiser.&#34;&#34;&#34;
+        self._licence_store: Optional[dict] = None
+        self._licence_list: Optional[list] = None
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads licence data from internal Json file.&#34;&#34;&#34;
+        if self._licence_list and self._licence_store:
+            return
+        self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
+        self._licence_list = [UNKNOWN_LICENCE.identifier]
+        with open(_licenses, &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+            for licence in iter_licenses(json.load(f)):
+                self._licence_store[licence.identifier] = licence
+                self._licence_list.append(licence.identifier)
+                self._licence_store[licence.name] = licence
+                self._licence_list.append(licence.name)
+
+    def get_licences_from_pattern(self, licence_descriptor_pattern: Pattern) -&gt; Optional[List[Licence]]:
+        &#34;&#34;&#34;Determines all the licences following a certain pattern.&#34;&#34;&#34;
+        self.load()
+        if not self._licence_store or not self._licence_list:
+            return None
+        matching_licences = [l for l in self._licence_list if licence_descriptor_pattern.match(l)]
+        return [cast(Licence, self._licence_store.get(l)) for l in matching_licences] if matching_licences else None
+
+    def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
+        &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+        self.load()
+        if not self._licence_store or not self._licence_list or not licence_descriptor:
+            return None
+        cleansed_descriptor = cleanse_licence_descriptor(licence_descriptor)
+        likelihood, licence = determine_similar_string_from_list(cleansed_descriptor, self._licence_list)
+        return self._licence_store.get(licence) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None
+
+
+OPENSOURCE_LICENCES = OpenSourceLicences()
+
+
+def cleanse_licence_expression(licence_expression: str) -&gt; str:
+    &#34;&#34;&#34;Cleanses a licence expression by using SPDX identifiers when possible.
+
+    A licence expression can be a combination of licences and in a lot of cases is free-form text.
+    The idea is to return an equivalent expression but using SPDX identifiers when possible.
+    &#34;&#34;&#34;
+    simplified_expression = _parse_licence_expression(Licensing(), licence_expression).simplify()
+    for s in simplified_expression.symbols:
+        corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)
+        if corresponding_licence:
+            s.key = corresponding_licence.identifier
+    return simplify_licence_expression(str(simplified_expression))
+
+
+def _iter_matching_licences(desc: str) -&gt; Iterable[Licence]:
+    licence = OPENSOURCE_LICENCES.get_licence(desc)
+    if licence:
+        yield licence
+
+
+def _iter_matching_licences_from_pattern(desc: str) -&gt; Iterable[Licence]:
+    desc_pattern = re.compile(desc.replace(&#34;*&#34;, &#34;.*&#34;), re.IGNORECASE)
+    licences = OPENSOURCE_LICENCES.get_licences_from_pattern(desc_pattern)
+    if licences:
+        yield from licences
+
+
+def _retrieve_licences_from_identifier_list(identifiers: Iterable[str]) -&gt; Iterable[Licence]:
+    for desc in identifiers:
+        if &#34;*&#34; in desc:
+            yield from _iter_matching_licences_from_pattern(desc)
+        else:
+            yield from _iter_matching_licences(desc)
+
+
+def determine_allowed_opensource_licences_from_string(allowed_licences: Any) -&gt; Iterable[Licence]:
+    &#34;&#34;&#34;Determines all the third party licences allowed as set in the input parameter.&#34;&#34;&#34;
+    if isinstance(allowed_licences, str):
+        allowed_licences = allowed_licences.split(&#34;, &#34;)
+    if isinstance(allowed_licences, (list, dict, tuple, set)):
+        yield from _retrieve_licences_from_identifier_list(allowed_licences)
+
+
+def get_allowed_opensource_licences() -&gt; Iterable[Licence]:
+    &#34;&#34;&#34;Determines all the third party licences allowed for a given project.&#34;&#34;&#34;
+    yield from determine_allowed_opensource_licences_from_string(
+        configuration.get_value(ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES)
+    )
+
+
+def simplify_licence_expression(licence_expression: str) -&gt; str:
+    &#34;&#34;&#34;Simplifies a licence expression.&#34;&#34;&#34;
+    return str(_parse_licence_expression(Licensing(), licence_expression).simplify())
+
+
+def determine_licence_compound(main_licence: str, additional_licences: List[str]) -&gt; str:
+    &#34;&#34;&#34;Determines the overall licence based on main licence and additional licences.&#34;&#34;&#34;
+    overall_licence = f&#34;({main_licence}) AND ({&#39;) AND (&#39;.join(additional_licences)})&#34;
+    return str(_parse_licence_expression(Licensing(), overall_licence).simplify())
+
+
+def determine_licences_not_in_list(licence_expression: str, licence_list: Iterator[str]) -&gt; Iterator[str]:
+    &#34;&#34;&#34;Determines all the licences in an expression which are not in list.&#34;&#34;&#34;
+    licensing_util = Licensing()
+    licence_keys = licensing_util.license_keys(_parse_licence_expression(licensing_util, licence_expression))
+    for licence in licence_keys:
+        if licence not in licence_list:
+            yield licence
+
+
+def determine_whether_licence_expression_is_compliant(licence_expression: str, licence_list: list) -&gt; bool:
+    &#34;&#34;&#34;Checks whether an expression is compliant with a list of licences.&#34;&#34;&#34;
+    licensing_util = Licensing()
+    for l in licence_list:
+        if licensing_util.contains(licence_expression, l):
+            return True
+    return False
+
+
+def _is_expression_or(licence_expression: str) -&gt; bool:
+    licensing_util = Licensing()
+    return isinstance(_parse_licence_expression(licensing_util, licence_expression), OR)
+
+
+def is_licence_accepted(licence_expression: str) -&gt; bool:
+    &#34;&#34;&#34;Determines whether the licence expressed is valid with regards to project&#39;s accepted licences.&#34;&#34;&#34;
+    authorised_licences = [l.identifier for l in get_allowed_opensource_licences()]
+    is_or = _is_expression_or(licence_expression)
+    if bool([l for l in determine_licences_not_in_list(licence_expression, iter(authorised_licences))]):
+        return (
+            determine_whether_licence_expression_is_compliant(licence_expression, authorised_licences)
+            if is_or
+            else False
+        )
+    return True</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.cleanse_licence_descriptor"><code class="name flex">
+<span>def <span class="ident">cleanse_licence_descriptor</span></span>(<span>licence_descriptor: str) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cleanses the licence descriptor to only keep words describing the licence.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cleanse_licence_descriptor(licence_descriptor: str) -&gt; str:
+    &#34;&#34;&#34;Cleanses the licence descriptor to only keep words describing the licence.&#34;&#34;&#34;
+    cleansed_descriptor = licence_descriptor.strip()
+    cleansed_descriptor = re.sub(r&#34;OSI\s?[Aa]pproved[\:]*&#34;, &#34;&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;[pP]ublic [dD]omain&#34;, &#34;&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;BSD[-\s][Ll]ike&#34;, &#34;BSD&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;BSD [lL]icen[sc]e&#34;, &#34;BSD&#34;, cleansed_descriptor)
+    cleansed_descriptor = re.sub(r&#34;MIT [lL]icen[sc]e&#34;, &#34;MIT&#34;, cleansed_descriptor)
+    cleansed_descriptor = _handle_special_licence_entries(cleansed_descriptor.strip())
+    if cleansed_descriptor.lower().startswith(&#34;the&#34;):
+        cleansed_descriptor = cleansed_descriptor[3:].strip()
+    return cleansed_descriptor</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.cleanse_licence_expression"><code class="name flex">
+<span>def <span class="ident">cleanse_licence_expression</span></span>(<span>licence_expression: str) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cleanses a licence expression by using SPDX identifiers when possible.</p>
+<p>A licence expression can be a combination of licences and in a lot of cases is free-form text.
+The idea is to return an equivalent expression but using SPDX identifiers when possible.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cleanse_licence_expression(licence_expression: str) -&gt; str:
+    &#34;&#34;&#34;Cleanses a licence expression by using SPDX identifiers when possible.
+
+    A licence expression can be a combination of licences and in a lot of cases is free-form text.
+    The idea is to return an equivalent expression but using SPDX identifiers when possible.
+    &#34;&#34;&#34;
+    simplified_expression = _parse_licence_expression(Licensing(), licence_expression).simplify()
+    for s in simplified_expression.symbols:
+        corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)
+        if corresponding_licence:
+            s.key = corresponding_licence.identifier
+    return simplify_licence_expression(str(simplified_expression))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.determine_allowed_opensource_licences_from_string"><code class="name flex">
+<span>def <span class="ident">determine_allowed_opensource_licences_from_string</span></span>(<span>allowed_licences: Any) -> Iterable[<a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines all the third party licences allowed as set in the input parameter.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_allowed_opensource_licences_from_string(allowed_licences: Any) -&gt; Iterable[Licence]:
+    &#34;&#34;&#34;Determines all the third party licences allowed as set in the input parameter.&#34;&#34;&#34;
+    if isinstance(allowed_licences, str):
+        allowed_licences = allowed_licences.split(&#34;, &#34;)
+    if isinstance(allowed_licences, (list, dict, tuple, set)):
+        yield from _retrieve_licences_from_identifier_list(allowed_licences)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.determine_licence_compound"><code class="name flex">
+<span>def <span class="ident">determine_licence_compound</span></span>(<span>main_licence: str, additional_licences: List[str]) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines the overall licence based on main licence and additional licences.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_licence_compound(main_licence: str, additional_licences: List[str]) -&gt; str:
+    &#34;&#34;&#34;Determines the overall licence based on main licence and additional licences.&#34;&#34;&#34;
+    overall_licence = f&#34;({main_licence}) AND ({&#39;) AND (&#39;.join(additional_licences)})&#34;
+    return str(_parse_licence_expression(Licensing(), overall_licence).simplify())</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.determine_licences_not_in_list"><code class="name flex">
+<span>def <span class="ident">determine_licences_not_in_list</span></span>(<span>licence_expression: str, licence_list: Iterator[str]) -> Iterator[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines all the licences in an expression which are not in list.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_licences_not_in_list(licence_expression: str, licence_list: Iterator[str]) -&gt; Iterator[str]:
+    &#34;&#34;&#34;Determines all the licences in an expression which are not in list.&#34;&#34;&#34;
+    licensing_util = Licensing()
+    licence_keys = licensing_util.license_keys(_parse_licence_expression(licensing_util, licence_expression))
+    for licence in licence_keys:
+        if licence not in licence_list:
+            yield licence</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.determine_whether_licence_expression_is_compliant"><code class="name flex">
+<span>def <span class="ident">determine_whether_licence_expression_is_compliant</span></span>(<span>licence_expression: str, licence_list: list) -> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether an expression is compliant with a list of licences.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_whether_licence_expression_is_compliant(licence_expression: str, licence_list: list) -&gt; bool:
+    &#34;&#34;&#34;Checks whether an expression is compliant with a list of licences.&#34;&#34;&#34;
+    licensing_util = Licensing()
+    for l in licence_list:
+        if licensing_util.contains(licence_expression, l):
+            return True
+    return False</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.get_allowed_opensource_licences"><code class="name flex">
+<span>def <span class="ident">get_allowed_opensource_licences</span></span>(<span>) -> Iterable[<a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines all the third party licences allowed for a given project.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_allowed_opensource_licences() -&gt; Iterable[Licence]:
+    &#34;&#34;&#34;Determines all the third party licences allowed for a given project.&#34;&#34;&#34;
+    yield from determine_allowed_opensource_licences_from_string(
+        configuration.get_value(ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES)
+    )</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.is_licence_accepted"><code class="name flex">
+<span>def <span class="ident">is_licence_accepted</span></span>(<span>licence_expression: str) -> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines whether the licence expressed is valid with regards to project's accepted licences.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_licence_accepted(licence_expression: str) -&gt; bool:
+    &#34;&#34;&#34;Determines whether the licence expressed is valid with regards to project&#39;s accepted licences.&#34;&#34;&#34;
+    authorised_licences = [l.identifier for l in get_allowed_opensource_licences()]
+    is_or = _is_expression_or(licence_expression)
+    if bool([l for l in determine_licences_not_in_list(licence_expression, iter(authorised_licences))]):
+        return (
+            determine_whether_licence_expression_is_compliant(licence_expression, authorised_licences)
+            if is_or
+            else False
+        )
+    return True</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.iter_licenses"><code class="name flex">
+<span>def <span class="ident">iter_licenses</span></span>(<span>licence_info: dict) -> Iterable[<a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets a generator over all the licences present in licenses.json.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iter_licenses(licence_info: dict) -&gt; Iterable[Licence]:
+    &#34;&#34;&#34;Gets a generator over all the licences present in licenses.json.&#34;&#34;&#34;
+    licences = cast(Iterable[dict], licence_info.get(&#34;licenses&#34;, []))
+    for licence_info in licences:
+        yield parse_licence(licence_info)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.parse_licence"><code class="name flex">
+<span>def <span class="ident">parse_licence</span></span>(<span>licence_info: dict) -> <a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Parses a licence entry in the Json file and translates it into a licence object.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_licence(licence_info: dict) -&gt; Licence:
+    &#34;&#34;&#34;Parses a licence entry in the Json file and translates it into a licence object.&#34;&#34;&#34;
+    return Licence(
+        reference_number=licence_info.get(&#34;referenceNumber&#34;, &#34;&#34;),
+        identifier=licence_info.get(&#34;licenseId&#34;, &#34;&#34;),
+        name=licence_info.get(&#34;name&#34;, &#34;&#34;),
+        url=licence_info.get(&#34;detailsUrl&#34;, &#34;&#34;),
+        reference=licence_info.get(&#34;reference&#34;, &#34;&#34;),
+        is_deprecated=bool(licence_info.get(&#34;isDeprecatedLicenseId&#34;, False)),
+        is_osi_approved=bool(licence_info.get(&#34;isOsiApproved&#34;, True)),
+    )</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.simplify_licence_expression"><code class="name flex">
+<span>def <span class="ident">simplify_licence_expression</span></span>(<span>licence_expression: str) -> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Simplifies a licence expression.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def simplify_licence_expression(licence_expression: str) -&gt; str:
+    &#34;&#34;&#34;Simplifies a licence expression.&#34;&#34;&#34;
+    return str(_parse_licence_expression(Licensing(), licence_expression).simplify())</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.Licence"><code class="flex name class">
+<span>class <span class="ident">Licence</span></span>
+<span>(</span><span>reference_number: str, identifier: str, name: str, is_deprecated: bool, is_osi_approved: bool, url: str, reference: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Licence descriptor.</p>
+<p>Maps to what is defined in licenses.json in
+<a href="https://github.com/spdx/license-list-data/blob/master/json/licenses.json">https://github.com/spdx/license-list-data/blob/master/json/licenses.json</a></p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Licence:
+    &#34;&#34;&#34;Licence descriptor.
+
+    Maps to what is defined in licenses.json in
+    https://github.com/spdx/license-list-data/blob/master/json/licenses.json
+    &#34;&#34;&#34;
+
+    reference_number: str
+    identifier: str
+    name: str
+    is_deprecated: bool
+    is_osi_approved: bool
+    url: str
+    reference: str</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences"><code class="flex name class">
+<span>class <span class="ident">OpenSourceLicences</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>All the opensource licences known.</p>
+<p>Initialiser.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class OpenSourceLicences:
+    &#34;&#34;&#34;All the opensource licences known.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Initialiser.&#34;&#34;&#34;
+        self._licence_store: Optional[dict] = None
+        self._licence_list: Optional[list] = None
+
+    def load(self) -&gt; None:
+        &#34;&#34;&#34;Loads licence data from internal Json file.&#34;&#34;&#34;
+        if self._licence_list and self._licence_store:
+            return
+        self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
+        self._licence_list = [UNKNOWN_LICENCE.identifier]
+        with open(_licenses, &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+            for licence in iter_licenses(json.load(f)):
+                self._licence_store[licence.identifier] = licence
+                self._licence_list.append(licence.identifier)
+                self._licence_store[licence.name] = licence
+                self._licence_list.append(licence.name)
+
+    def get_licences_from_pattern(self, licence_descriptor_pattern: Pattern) -&gt; Optional[List[Licence]]:
+        &#34;&#34;&#34;Determines all the licences following a certain pattern.&#34;&#34;&#34;
+        self.load()
+        if not self._licence_store or not self._licence_list:
+            return None
+        matching_licences = [l for l in self._licence_list if licence_descriptor_pattern.match(l)]
+        return [cast(Licence, self._licence_store.get(l)) for l in matching_licences] if matching_licences else None
+
+    def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
+        &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+        self.load()
+        if not self._licence_store or not self._licence_list or not licence_descriptor:
+            return None
+        cleansed_descriptor = cleanse_licence_descriptor(licence_descriptor)
+        likelihood, licence = determine_similar_string_from_list(cleansed_descriptor, self._licence_list)
+        return self._licence_store.get(licence) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.get_licence"><code class="name flex">
+<span>def <span class="ident">get_licence</span></span>(<span>self, licence_descriptor: Union[str, NoneType]) -> Union[<a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a>, NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines the licence based on a string descriptor e.g. Apache 2.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
+    &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+    self.load()
+    if not self._licence_store or not self._licence_list or not licence_descriptor:
+        return None
+    cleansed_descriptor = cleanse_licence_descriptor(licence_descriptor)
+    likelihood, licence = determine_similar_string_from_list(cleansed_descriptor, self._licence_list)
+    return self._licence_store.get(licence) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.get_licences_from_pattern"><code class="name flex">
+<span>def <span class="ident">get_licences_from_pattern</span></span>(<span>self, licence_descriptor_pattern: Pattern) -> Union[List[<a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a>], NoneType]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines all the licences following a certain pattern.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_licences_from_pattern(self, licence_descriptor_pattern: Pattern) -&gt; Optional[List[Licence]]:
+    &#34;&#34;&#34;Determines all the licences following a certain pattern.&#34;&#34;&#34;
+    self.load()
+    if not self._licence_store or not self._licence_list:
+        return None
+    matching_licences = [l for l in self._licence_list if licence_descriptor_pattern.match(l)]
+    return [cast(Licence, self._licence_store.get(l)) for l in matching_licences] if matching_licences else None</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.load"><code class="name flex">
+<span>def <span class="ident">load</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Loads licence data from internal Json file.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def load(self) -&gt; None:
+    &#34;&#34;&#34;Loads licence data from internal Json file.&#34;&#34;&#34;
+    if self._licence_list and self._licence_store:
+        return
+    self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
+    self._licence_list = [UNKNOWN_LICENCE.identifier]
+    with open(_licenses, &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+        for licence in iter_licenses(json.load(f)):
+            self._licence_store[licence.identifier] = licence
+            self._licence_list.append(licence.identifier)
+            self._licence_store[licence.name] = licence
+            self._licence_list.append(licence.name)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.cleanse_licence_descriptor" href="#mbed_tools_ci_scripts.utils.third_party_licences.cleanse_licence_descriptor">cleanse_licence_descriptor</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.cleanse_licence_expression" href="#mbed_tools_ci_scripts.utils.third_party_licences.cleanse_licence_expression">cleanse_licence_expression</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.determine_allowed_opensource_licences_from_string" href="#mbed_tools_ci_scripts.utils.third_party_licences.determine_allowed_opensource_licences_from_string">determine_allowed_opensource_licences_from_string</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.determine_licence_compound" href="#mbed_tools_ci_scripts.utils.third_party_licences.determine_licence_compound">determine_licence_compound</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.determine_licences_not_in_list" href="#mbed_tools_ci_scripts.utils.third_party_licences.determine_licences_not_in_list">determine_licences_not_in_list</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.determine_whether_licence_expression_is_compliant" href="#mbed_tools_ci_scripts.utils.third_party_licences.determine_whether_licence_expression_is_compliant">determine_whether_licence_expression_is_compliant</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.get_allowed_opensource_licences" href="#mbed_tools_ci_scripts.utils.third_party_licences.get_allowed_opensource_licences">get_allowed_opensource_licences</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.is_licence_accepted" href="#mbed_tools_ci_scripts.utils.third_party_licences.is_licence_accepted">is_licence_accepted</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.iter_licenses" href="#mbed_tools_ci_scripts.utils.third_party_licences.iter_licenses">iter_licenses</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.parse_licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.parse_licence">parse_licence</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.simplify_licence_expression" href="#mbed_tools_ci_scripts.utils.third_party_licences.simplify_licence_expression">simplify_licence_expression</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.Licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.Licence">Licence</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences" href="#mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences">OpenSourceLicences</a></code></h4>
+<ul class="">
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.get_licence" href="#mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.get_licence">get_licence</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.get_licences_from_pattern" href="#mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.get_licences_from_pattern">get_licences_from_pattern</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.load" href="#mbed_tools_ci_scripts.utils.third_party_licences.OpenSourceLicences.load">load</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

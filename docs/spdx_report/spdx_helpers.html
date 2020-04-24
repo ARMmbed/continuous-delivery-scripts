@@ -7,14 +7,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>mbed_tools_ci_scripts.spdx_report.spdx_helpers API documentation</title>
 <meta name="description" content="Facilities regarding SPDX …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -58,13 +58,14 @@ import re
 
 import logging
 import toml
-from license_expression import Licensing
 from pathlib import Path
 from spdx.utils import SPDXNone, UnKnown
-from typing import Union, Optional, Iterator, List
+from typing import Union, Optional, Iterator, Any, Tuple
 
-from mbed_tools_ci_scripts.utils.filesystem_helpers import scan_file_for_pattern, should_exclude_path, list_all_files
+from mbed_tools_ci_scripts.utils.configuration import ConfigurationVariable, configuration
 from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
+from mbed_tools_ci_scripts.utils.filesystem_helpers import scan_file_for_pattern, should_exclude_path, list_all_files
+from mbed_tools_ci_scripts.utils.third_party_licences import simplify_licence_expression
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +98,7 @@ def determine_file_licence(path: Path) -&gt; Optional[str]:
         if not match:
             return None
         licence = match.group(1).strip()
-        return str(Licensing().parse(licence).simplify())
+        return simplify_licence_expression(licence)
     except Exception as e:
         logger.error(f&#34;Could not determine the licence of file [{path}] from identifier &#39;{licence}&#39;. Reason: {e}.&#34;)
         return None
@@ -146,10 +147,42 @@ def list_project_files_for_licensing(project_root: Path) -&gt; Iterator[Path]:
     return list_all_files(project_root, ignore_path)
 
 
-def determine_licence_compound(main_licence: str, additional_licences: List[str]) -&gt; str:
-    &#34;&#34;&#34;Determines the overall licence based on main licence and additional licences.&#34;&#34;&#34;
-    overall_licence = f&#34;({main_licence}) AND ({&#39;) AND (&#39;.join(additional_licences)})&#34;
-    return str(Licensing().parse(overall_licence).simplify())</code></pre>
+def _convert_list_into_dict(checked_packages: Any) -&gt; dict:
+    checked_package_description = dict()
+    for item in checked_packages:
+        info = item.split(&#34;=&#34; if &#34;=&#34; in item else &#34;:&#34;)
+        checked_package_description[info[0].strip()] = info[-1].strip() if len(info) &gt; 1 else None
+    return checked_package_description
+
+
+def determine_checked_packages_from_configuration_entry(checked_packages: Any) -&gt; dict:
+    &#34;&#34;&#34;Determines the list of packages for which the licence has been manually checked.&#34;&#34;&#34;
+    if isinstance(checked_packages, str):
+        checked_packages = checked_packages.split(&#34;, &#34;)
+    if isinstance(checked_packages, (list, tuple, set)):
+        return _convert_list_into_dict(checked_packages)
+    if isinstance(checked_packages, dict):
+        return checked_packages
+    return dict()
+
+
+def get_packages_with_checked_licence() -&gt; dict:
+    &#34;&#34;&#34;Determines the list of packages for which the licence has been checked from configuration.&#34;&#34;&#34;
+    return determine_checked_packages_from_configuration_entry(
+        configuration.get_value(ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE)
+    )
+
+
+def get_package_manual_check(package_name: str) -&gt; Tuple[bool, Optional[str]]:
+    &#34;&#34;&#34;Gets information about package licence manual check.&#34;&#34;&#34;
+    checked_packages = get_packages_with_checked_licence()
+    return bool(package_name.strip() in checked_packages), checked_packages.get(package_name.strip())
+
+
+def is_package_licence_manually_checked(package_name: str) -&gt; bool:
+    &#34;&#34;&#34;States whether the licence of a package has been manually checked and hence, that its licence is compliant.&#34;&#34;&#34;
+    checked, _ = get_package_manual_check(package_name)
+    return checked</code></pre>
 </details>
 </section>
 <section>
@@ -159,11 +192,31 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_checked_packages_from_configuration_entry"><code class="name flex">
+<span>def <span class="ident">determine_checked_packages_from_configuration_entry</span></span>(<span>checked_packages: Any) -> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines the list of packages for which the licence has been manually checked.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_checked_packages_from_configuration_entry(checked_packages: Any) -&gt; dict:
+    &#34;&#34;&#34;Determines the list of packages for which the licence has been manually checked.&#34;&#34;&#34;
+    if isinstance(checked_packages, str):
+        checked_packages = checked_packages.split(&#34;, &#34;)
+    if isinstance(checked_packages, (list, tuple, set)):
+        return _convert_list_into_dict(checked_packages)
+    if isinstance(checked_packages, dict):
+        return checked_packages
+    return dict()</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_copyright_text"><code class="name flex">
 <span>def <span class="ident">determine_file_copyright_text</span></span>(<span>path: pathlib.Path) -> Union[str, NoneType]</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Determines the copyright text of a file.</p></section>
+<div class="desc"><p>Determines the copyright text of a file.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -180,7 +233,7 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 <span>def <span class="ident">determine_file_licence</span></span>(<span>path: pathlib.Path) -> Union[str, NoneType]</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Determines the licence of a file based on the SPDX identifier.</p></section>
+<div class="desc"><p>Determines the licence of a file based on the SPDX identifier.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -192,32 +245,17 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
         if not match:
             return None
         licence = match.group(1).strip()
-        return str(Licensing().parse(licence).simplify())
+        return simplify_licence_expression(licence)
     except Exception as e:
         logger.error(f&#34;Could not determine the licence of file [{path}] from identifier &#39;{licence}&#39;. Reason: {e}.&#34;)
         return None</code></pre>
-</details>
-</dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_licence_compound"><code class="name flex">
-<span>def <span class="ident">determine_licence_compound</span></span>(<span>main_licence: str, additional_licences: List[str]) -> str</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Determines the overall licence based on main licence and additional licences.</p></section>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def determine_licence_compound(main_licence: str, additional_licences: List[str]) -&gt; str:
-    &#34;&#34;&#34;Determines the overall licence based on main licence and additional licences.&#34;&#34;&#34;
-    overall_licence = f&#34;({main_licence}) AND ({&#39;) AND (&#39;.join(additional_licences)})&#34;
-    return str(Licensing().parse(overall_licence).simplify())</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_spdx_value"><code class="name flex">
 <span>def <span class="ident">determine_spdx_value</span></span>(<span>value: Union[str, NoneType]) -> Union[str, spdx.utils.UnKnown, spdx.utils.SPDXNone]</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Determines the correct SPDX value.</p>
+<div class="desc"><p>Determines the correct SPDX value.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>value</code></strong></dt>
@@ -225,9 +263,9 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>correct</code> <code>SPDX</code> <code>value</code> <code>a</code> <code>string</code>, <code>UnKnown</code> or <code>SPDXNone</code></dt>
+<dt><code>correct SPDX value a string, UnKnown</code> or <code>SPDXNone</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -248,11 +286,42 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
     return value</code></pre>
 </details>
 </dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_package_manual_check"><code class="name flex">
+<span>def <span class="ident">get_package_manual_check</span></span>(<span>package_name: str) -> Tuple[bool, Union[str, NoneType]]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets information about package licence manual check.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_package_manual_check(package_name: str) -&gt; Tuple[bool, Optional[str]]:
+    &#34;&#34;&#34;Gets information about package licence manual check.&#34;&#34;&#34;
+    checked_packages = get_packages_with_checked_licence()
+    return bool(package_name.strip() in checked_packages), checked_packages.get(package_name.strip())</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence"><code class="name flex">
+<span>def <span class="ident">get_packages_with_checked_licence</span></span>(<span>) -> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines the list of packages for which the licence has been checked from configuration.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_packages_with_checked_licence() -&gt; dict:
+    &#34;&#34;&#34;Determines the list of packages for which the licence has been checked from configuration.&#34;&#34;&#34;
+    return determine_checked_packages_from_configuration_entry(
+        configuration.get_value(ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE)
+    )</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_project_namespace"><code class="name flex">
 <span>def <span class="ident">get_project_namespace</span></span>(<span>project_config_path: pathlib.Path, document_name: str) -> str</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Determines the project namespace from configuration.</p></section>
+<div class="desc"><p>Determines the project namespace from configuration.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -267,11 +336,26 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
     return f&#34;{protocol}{path_part}/{name_part}&#34;</code></pre>
 </details>
 </dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked"><code class="name flex">
+<span>def <span class="ident">is_package_licence_manually_checked</span></span>(<span>package_name: str) -> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>States whether the licence of a package has been manually checked and hence, that its licence is compliant.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_package_licence_manually_checked(package_name: str) -&gt; bool:
+    &#34;&#34;&#34;States whether the licence of a package has been manually checked and hence, that its licence is compliant.&#34;&#34;&#34;
+    checked, _ = get_package_manual_check(package_name)
+    return checked</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing"><code class="name flex">
 <span>def <span class="ident">list_project_files_for_licensing</span></span>(<span>project_root: pathlib.Path) -> Iterator[pathlib.Path]</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Gets a generator over all the project's files needing licensing.</p></section>
+<div class="desc"><p>Gets a generator over all the project's files needing licensing.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -303,11 +387,14 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_checked_packages_from_configuration_entry" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_checked_packages_from_configuration_entry">determine_checked_packages_from_configuration_entry</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_copyright_text" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_copyright_text">determine_file_copyright_text</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_file_licence">determine_file_licence</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_licence_compound" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_licence_compound">determine_licence_compound</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_spdx_value" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.determine_spdx_value">determine_spdx_value</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_package_manual_check" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_package_manual_check">get_package_manual_check</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence">get_packages_with_checked_licence</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_project_namespace" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.get_project_namespace">get_project_namespace</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked">is_package_licence_manually_checked</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing" href="#mbed_tools_ci_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing">list_project_files_for_licensing</a></code></li>
 </ul>
 </li>
@@ -315,7 +402,7 @@ def determine_licence_compound(main_licence: str, additional_licences: List[str]
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

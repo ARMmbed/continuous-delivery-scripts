@@ -1,0 +1,436 @@
+                                3rd party IP report for mbed-tools-ci-scripts
+
+                                         2020-04-24 16:02:27.193747
+
+# Summary:
+    Licence compliance: Compliant
+    Details: Project [mbed-tools-ci-scripts]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.
+
+# More details:
+
+- backrefs:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/facelessuser/backrefs
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- bleach:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/mozilla/bleach
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- boolean.py:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/bastikr/boolean.py
+    Licence: BSD-2-Clause
+    Licence compliance: Licence is compliant.
+
+- boto3:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/boto/boto3
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- botocore:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/boto/botocore
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- bracex:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/facelessuser/bracex
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- certifi:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://certifiio.readthedocs.io/en/latest/
+    Licence: MPL-2.0
+    Licence compliance: Licence is compliant.
+
+- cffi:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://cffi.readthedocs.org
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- chardet:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/chardet/chardet
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: LGPL-2.1+ but accepted for this project since not distributed.
+
+- click:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://palletsprojects.com/p/click/
+    Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- cryptography:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pyca/cryptography
+    Licence: 0BSD OR Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- docutils:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://docutils.sourceforge.net/
+    Licence: Python-2.0
+    Licence compliance: Licence is compliant.
+
+- gitdb:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gitpython-developers/gitdb
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- GitPython:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gitpython-developers/GitPython
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: BSD-3-Clause
+
+- idna:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/kjd/idna
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- importlib-metadata:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://importlib-metadata.readthedocs.io/
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- incremental:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/twisted/incremental
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- isodate:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gweis/isodate/
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- jeepney:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://gitlab.com/takluyver/jeepney
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
+
+- jellyfish:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://github.com/jamesturk/jellyfish
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: BSD-2-Clause
+
+- Jinja2:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://palletsprojects.com/p/jinja/
+    Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- jmespath:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/jmespath/jmespath.py
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- keyring:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/jaraco/keyring
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
+
+- license-expression:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/nexB/license-expression
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- licenseheaders:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://github.com/johann-petrak/licenseheaders
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- Mako:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://www.makotemplates.org/
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- Markdown:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://Python-Markdown.github.io/
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- MarkupSafe:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://palletsprojects.com/p/markupsafe/
+    Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- mbed-tools-ci-scripts:
+    [X] Compliant?
+    [] Dependency?
+    URL: https://github.com/ARMmbed/mbed-tools-ci-scripts
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- packaging:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pypa/packaging
+    Licence: 0BSD OR Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- pdoc3:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://pdoc3.github.io/pdoc/
+    Licence: AGPL-3.0
+    Licence compliance: Package's licence manually checked: Accepted for this project since not distributed
+
+- pkginfo:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://code.launchpad.net/~tseaver/pkginfo/trunk
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- ply:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://www.dabeaz.com/ply/
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- pyautoversion:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/ARMmbed/autoversion
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- pycparser:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/eliben/pycparser
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- Pygments:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://pygments.org/
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- pyparsing:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pyparsing/pyparsing/
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- python-dateutil:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://dateutil.readthedocs.io
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
+
+- python-dotenv:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://github.com/theskumar/python-dotenv
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: BSD-3-Clause
+
+- PyYAML:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/yaml/pyyaml
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- rdflib:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/RDFLib/rdflib
+    Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- readme-renderer:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pypa/readme_renderer
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- regex:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://bitbucket.org/mrabarnett/mrab-regex
+    Licence: Python-2.0
+    Licence compliance: Licence is compliant.
+
+- requests:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://requests.readthedocs.io
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- requests-toolbelt:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://toolbelt.readthedocs.org
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- s3transfer:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/boto/s3transfer
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- SecretStorage:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/mitya57/secretstorage
+    Licence: BSD-1-Clause
+    Licence compliance: Licence is compliant.
+
+- semver:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/python-semver/python-semver
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- setuptools:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pypa/setuptools
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
+
+- six:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/benjaminp/six
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- smmap:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gitpython-developers/smmap
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- spdx-tools:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/spdx/tools-python
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- toml:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/uiri/toml
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- towncrier:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/hawkowl/towncrier
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- tqdm:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/tqdm/tqdm
+    Licence: MPL-2.0
+    Licence compliance: Licence is compliant.
+
+- twine:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://twine.readthedocs.io/
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: Apache-2.0
+
+- urllib3:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://urllib3.readthedocs.io/
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- wcmatch:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/facelessuser/wcmatch
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- webencodings:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/SimonSapin/python-webencodings
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- xmltodict:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/martinblech/xmltodict
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- zipp:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/jaraco/zipp
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT

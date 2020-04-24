@@ -11,6 +11,24 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.7.0" (2020-04-24)
+====================
+
+Features
+--------
+
+- Added a licence compliance check for the package and its dependencies. (#20200415)
+- Generates a licensing summary. (#20200420)
+- Add licensing summary to docs. (#20200423)
+- Changed the configuration type entry for package licence compliance check. (#20200424)
+
+
+Misc
+----
+
+- #20200416
+
+
 "1.6.2" (2020-04-07)
 ====================
 

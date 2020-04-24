@@ -7,14 +7,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>mbed_tools_ci_scripts.spdx_report.spdx_project API documentation</title>
 <meta name="description" content="Definition of an SPDX report for a Python project." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -36,12 +36,16 @@
 &#34;&#34;&#34;Definition of an SPDX report for a Python project.&#34;&#34;&#34;
 
 from pathlib import Path
+import os
 from spdx.writers.tagvalue import write_document
+from typing import Optional, List, cast, Tuple, Dict
 
 from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
 from mbed_tools_ci_scripts.spdx_report.spdx_document import SpdxDocument
 from mbed_tools_ci_scripts.utils.hash_helpers import determine_sha1_hash_of_file
 from mbed_tools_ci_scripts.utils.package_helpers import ProjectMetadataParser
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
+from mbed_tools_ci_scripts.spdx_report.spdx_summary import SummaryGenerator
 
 
 class SpdxProject:
@@ -54,6 +58,30 @@ class SpdxProject:
     def __init__(self, parser: ProjectMetadataParser) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._parser = parser
+        self._main_document: Optional[SpdxDocument] = None
+        self._dependency_documents: Optional[List[SpdxDocument]] = None
+
+    def _generate_documents(self) -&gt; None:
+        if self._main_document:
+            return
+        self._dependency_documents = list()
+        project_metadata = self._parser.project_metadata
+        dependencies = project_metadata.dependencies_metadata
+        for dependency in dependencies:
+            self._dependency_documents.append(SpdxDocument(dependency, is_dependency=True))
+        self._main_document = SpdxDocument(package_metadata=project_metadata.project_metadata)
+
+    @property
+    def main_document(self) -&gt; SpdxDocument:
+        &#34;&#34;&#34;Gets project&#39;s main SPDX document.&#34;&#34;&#34;
+        self._generate_documents()
+        return cast(SpdxDocument, self._main_document)
+
+    @property
+    def dependency_documents(self) -&gt; List[SpdxDocument]:
+        &#34;&#34;&#34;Gets the list of project&#39;s dependencies SPDX documents.&#34;&#34;&#34;
+        self._generate_documents()
+        return self._dependency_documents if self._dependency_documents else list()
 
     @staticmethod
     def generate_tag_value_file(dir: Path, spdx_doc: SpdxDocument, filename: str = &#34;LICENSE.spdx&#34;) -&gt; str:
@@ -75,9 +103,19 @@ class SpdxProject:
             raise NotADirectoryError(str(dir))
 
         path = dir.joinpath(filename)
-        with open(path, mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
+        with open(str(path), mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
             write_document(spdx_doc.generate_spdx_document(), out)
         return determine_sha1_hash_of_file(path)
+
+    def generate_licensing_summary(self, dir: Path) -&gt; None:
+        &#34;&#34;&#34;Generates licensing summary into the specified directory.
+
+        Args:
+            dir: output directory
+        &#34;&#34;&#34;
+        SummaryGenerator(
+            self.main_document.generate_spdx_package(), [d.generate_spdx_package() for d in self.dependency_documents]
+        ).generate_summary(dir)
 
     def generate_tag_value_files(self, dir: Path) -&gt; None:
         &#34;&#34;&#34;Generates SPDX tag-value files into the specified directory.
@@ -94,11 +132,8 @@ class SpdxProject:
         if not dir.is_dir():
             raise NotADirectoryError(str(dir))
 
-        project_metadata = self._parser.project_metadata
-        externalRefs = []
-        dependencies = project_metadata.dependencies_metadata
-        for dependency in dependencies:
-            spdx_dependency = SpdxDocument(dependency, is_dependency=True)
+        externalRefs = list()
+        for spdx_dependency in self.dependency_documents:
             file_name = f&#34;{spdx_dependency.name}.spdx&#34;
             checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
             externalRefs.append(
@@ -106,10 +141,52 @@ class SpdxProject:
                     name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
                 )
             )
-        main_document = SpdxDocument(
-            package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
-        )
-        SpdxProject.generate_tag_value_file(dir, main_document, f&#34;{main_document.name}.spdx&#34;)</code></pre>
+        self.main_document.external_refs = externalRefs
+        SpdxProject.generate_tag_value_file(dir, self.main_document, f&#34;{self.main_document.name}.spdx&#34;)
+
+    def _report_issues(self, issues: Dict[str, str]) -&gt; None:
+        if issues:
+            raise ValueError(
+                f&#34;,{os.linesep}&#34;.join(
+                    [
+                        f&#34;Package [{package_name}] has a non-compliant licence ({package_licence}) for this project&#34;
+                        for package_name, package_licence in issues.items()
+                    ]
+                )
+            )
+
+    def _check_one_licence_compliance(self, spdx_document: SpdxDocument, issues: Dict[str, str]) -&gt; None:
+        main_valid, actual_valid, name, main_licence, actual_licence = _check_package_licence(spdx_document)
+        if not ((main_valid and actual_valid) or is_package_licence_manually_checked(name)):
+            issues[name] = actual_licence if main_valid else main_licence
+
+    def _check_package_dependencies_licence_compliance(self, issues: Dict[str, str]) -&gt; None:
+        for dependency in self.dependency_documents:
+            self._check_one_licence_compliance(dependency, issues)
+
+    def _check_package_licence_compliance(self, issues: Dict[str, str]) -&gt; None:
+        self._check_one_licence_compliance(self.main_document, issues)
+
+    def check_licence_compliance(self) -&gt; None:
+        &#34;&#34;&#34;Checks whether the licences of the package as well as all its dependencies are compliant.
+
+        By compliant, it is meant that all the licences are in the list of accepted licences set for the given project.
+        &#34;&#34;&#34;
+        issues: Dict[str, str] = dict()
+        self._check_package_licence_compliance(issues)
+        self._check_package_dependencies_licence_compliance(issues)
+        self._report_issues(issues)
+
+
+def _check_package_licence(package_document: SpdxDocument) -&gt; Tuple[bool, bool, str, str, str]:
+    package = package_document.generate_spdx_package()
+    return (
+        package.is_main_licence_accepted,
+        package.is_licence_accepted,
+        package.name,
+        package.main_licence,
+        package.licence,
+    )</code></pre>
 </details>
 </section>
 <section>
@@ -126,10 +203,10 @@ class SpdxProject:
 <span>(</span><span>parser: <a title="mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser" href="../utils/package_helpers.html#mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser">ProjectMetadataParser</a>)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>SPDX for a project.</p>
+<div class="desc"><p>SPDX for a project.</p>
 <p>SPDX information about a project so that it complies with OpenChain
 See <a href="https://certification.openchainproject.or">https://certification.openchainproject.or</a></p>
-<p>Constructor.</p></section>
+<p>Constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -144,6 +221,30 @@ See <a href="https://certification.openchainproject.or">https://certification.op
     def __init__(self, parser: ProjectMetadataParser) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._parser = parser
+        self._main_document: Optional[SpdxDocument] = None
+        self._dependency_documents: Optional[List[SpdxDocument]] = None
+
+    def _generate_documents(self) -&gt; None:
+        if self._main_document:
+            return
+        self._dependency_documents = list()
+        project_metadata = self._parser.project_metadata
+        dependencies = project_metadata.dependencies_metadata
+        for dependency in dependencies:
+            self._dependency_documents.append(SpdxDocument(dependency, is_dependency=True))
+        self._main_document = SpdxDocument(package_metadata=project_metadata.project_metadata)
+
+    @property
+    def main_document(self) -&gt; SpdxDocument:
+        &#34;&#34;&#34;Gets project&#39;s main SPDX document.&#34;&#34;&#34;
+        self._generate_documents()
+        return cast(SpdxDocument, self._main_document)
+
+    @property
+    def dependency_documents(self) -&gt; List[SpdxDocument]:
+        &#34;&#34;&#34;Gets the list of project&#39;s dependencies SPDX documents.&#34;&#34;&#34;
+        self._generate_documents()
+        return self._dependency_documents if self._dependency_documents else list()
 
     @staticmethod
     def generate_tag_value_file(dir: Path, spdx_doc: SpdxDocument, filename: str = &#34;LICENSE.spdx&#34;) -&gt; str:
@@ -165,9 +266,19 @@ See <a href="https://certification.openchainproject.or">https://certification.op
             raise NotADirectoryError(str(dir))
 
         path = dir.joinpath(filename)
-        with open(path, mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
+        with open(str(path), mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
             write_document(spdx_doc.generate_spdx_document(), out)
         return determine_sha1_hash_of_file(path)
+
+    def generate_licensing_summary(self, dir: Path) -&gt; None:
+        &#34;&#34;&#34;Generates licensing summary into the specified directory.
+
+        Args:
+            dir: output directory
+        &#34;&#34;&#34;
+        SummaryGenerator(
+            self.main_document.generate_spdx_package(), [d.generate_spdx_package() for d in self.dependency_documents]
+        ).generate_summary(dir)
 
     def generate_tag_value_files(self, dir: Path) -&gt; None:
         &#34;&#34;&#34;Generates SPDX tag-value files into the specified directory.
@@ -184,11 +295,8 @@ See <a href="https://certification.openchainproject.or">https://certification.op
         if not dir.is_dir():
             raise NotADirectoryError(str(dir))
 
-        project_metadata = self._parser.project_metadata
-        externalRefs = []
-        dependencies = project_metadata.dependencies_metadata
-        for dependency in dependencies:
-            spdx_dependency = SpdxDocument(dependency, is_dependency=True)
+        externalRefs = list()
+        for spdx_dependency in self.dependency_documents:
             file_name = f&#34;{spdx_dependency.name}.spdx&#34;
             checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
             externalRefs.append(
@@ -196,10 +304,41 @@ See <a href="https://certification.openchainproject.or">https://certification.op
                     name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
                 )
             )
-        main_document = SpdxDocument(
-            package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
-        )
-        SpdxProject.generate_tag_value_file(dir, main_document, f&#34;{main_document.name}.spdx&#34;)</code></pre>
+        self.main_document.external_refs = externalRefs
+        SpdxProject.generate_tag_value_file(dir, self.main_document, f&#34;{self.main_document.name}.spdx&#34;)
+
+    def _report_issues(self, issues: Dict[str, str]) -&gt; None:
+        if issues:
+            raise ValueError(
+                f&#34;,{os.linesep}&#34;.join(
+                    [
+                        f&#34;Package [{package_name}] has a non-compliant licence ({package_licence}) for this project&#34;
+                        for package_name, package_licence in issues.items()
+                    ]
+                )
+            )
+
+    def _check_one_licence_compliance(self, spdx_document: SpdxDocument, issues: Dict[str, str]) -&gt; None:
+        main_valid, actual_valid, name, main_licence, actual_licence = _check_package_licence(spdx_document)
+        if not ((main_valid and actual_valid) or is_package_licence_manually_checked(name)):
+            issues[name] = actual_licence if main_valid else main_licence
+
+    def _check_package_dependencies_licence_compliance(self, issues: Dict[str, str]) -&gt; None:
+        for dependency in self.dependency_documents:
+            self._check_one_licence_compliance(dependency, issues)
+
+    def _check_package_licence_compliance(self, issues: Dict[str, str]) -&gt; None:
+        self._check_one_licence_compliance(self.main_document, issues)
+
+    def check_licence_compliance(self) -&gt; None:
+        &#34;&#34;&#34;Checks whether the licences of the package as well as all its dependencies are compliant.
+
+        By compliant, it is meant that all the licences are in the list of accepted licences set for the given project.
+        &#34;&#34;&#34;
+        issues: Dict[str, str] = dict()
+        self._check_package_licence_compliance(issues)
+        self._check_package_dependencies_licence_compliance(issues)
+        self._report_issues(issues)</code></pre>
 </details>
 <h3>Static methods</h3>
 <dl>
@@ -207,7 +346,7 @@ See <a href="https://certification.openchainproject.or">https://certification.op
 <span>def <span class="ident">generate_tag_value_file</span></span>(<span>dir: pathlib.Path, spdx_doc: <a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument" href="spdx_document.html#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument">SpdxDocument</a>, filename: str = 'LICENSE.spdx') -> str</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generates the Tag file into the directory.</p>
+<div class="desc"><p>Generates the Tag file into the directory.</p>
 <p>See <a href="https://github.com/david-a-wheeler/spdx-tutorial#spdx-files">https://github.com/david-a-wheeler/spdx-tutorial#spdx-files</a></p>
 <h2 id="args">Args</h2>
 <dl>
@@ -220,9 +359,9 @@ See <a href="https://certification.openchainproject.or">https://certification.op
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>file</code> <code>checksum</code></dt>
+<dt><code>file checksum</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -247,19 +386,96 @@ def generate_tag_value_file(dir: Path, spdx_doc: SpdxDocument, filename: str = &
         raise NotADirectoryError(str(dir))
 
     path = dir.joinpath(filename)
-    with open(path, mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
+    with open(str(path), mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
         write_document(spdx_doc.generate_spdx_document(), out)
     return determine_sha1_hash_of_file(path)</code></pre>
 </details>
 </dd>
 </dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.dependency_documents"><code class="name">var <span class="ident">dependency_documents</span> : List[<a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument" href="spdx_document.html#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument">SpdxDocument</a>]</code></dt>
+<dd>
+<div class="desc"><p>Gets the list of project's dependencies SPDX documents.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dependency_documents(self) -&gt; List[SpdxDocument]:
+    &#34;&#34;&#34;Gets the list of project&#39;s dependencies SPDX documents.&#34;&#34;&#34;
+    self._generate_documents()
+    return self._dependency_documents if self._dependency_documents else list()</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.main_document"><code class="name">var <span class="ident">main_document</span> : <a title="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument" href="spdx_document.html#mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument">SpdxDocument</a></code></dt>
+<dd>
+<div class="desc"><p>Gets project's main SPDX document.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def main_document(self) -&gt; SpdxDocument:
+    &#34;&#34;&#34;Gets project&#39;s main SPDX document.&#34;&#34;&#34;
+    self._generate_documents()
+    return cast(SpdxDocument, self._main_document)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.check_licence_compliance"><code class="name flex">
+<span>def <span class="ident">check_licence_compliance</span></span>(<span>self) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Checks whether the licences of the package as well as all its dependencies are compliant.</p>
+<p>By compliant, it is meant that all the licences are in the list of accepted licences set for the given project.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def check_licence_compliance(self) -&gt; None:
+    &#34;&#34;&#34;Checks whether the licences of the package as well as all its dependencies are compliant.
+
+    By compliant, it is meant that all the licences are in the list of accepted licences set for the given project.
+    &#34;&#34;&#34;
+    issues: Dict[str, str] = dict()
+    self._check_package_licence_compliance(issues)
+    self._check_package_dependencies_licence_compliance(issues)
+    self._report_issues(issues)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_licensing_summary"><code class="name flex">
+<span>def <span class="ident">generate_licensing_summary</span></span>(<span>self, dir: pathlib.Path) -> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates licensing summary into the specified directory.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dir</code></strong></dt>
+<dd>output directory</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_licensing_summary(self, dir: Path) -&gt; None:
+    &#34;&#34;&#34;Generates licensing summary into the specified directory.
+
+    Args:
+        dir: output directory
+    &#34;&#34;&#34;
+    SummaryGenerator(
+        self.main_document.generate_spdx_package(), [d.generate_spdx_package() for d in self.dependency_documents]
+    ).generate_summary(dir)</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_files"><code class="name flex">
 <span>def <span class="ident">generate_tag_value_files</span></span>(<span>self, dir: pathlib.Path) -> NoneType</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generates SPDX tag-value files into the specified directory.</p>
+<div class="desc"><p>Generates SPDX tag-value files into the specified directory.</p>
 <p>See <a href="https://github.com/david-a-wheeler/spdx-tutorial#spdx-files">https://github.com/david-a-wheeler/spdx-tutorial#spdx-files</a>
 There will be a file for the current project as well as a file
 per third-party dependencies</p>
@@ -267,7 +483,7 @@ per third-party dependencies</p>
 <dl>
 <dt><strong><code>dir</code></strong></dt>
 <dd>output directory</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -287,11 +503,8 @@ per third-party dependencies</p>
     if not dir.is_dir():
         raise NotADirectoryError(str(dir))
 
-    project_metadata = self._parser.project_metadata
-    externalRefs = []
-    dependencies = project_metadata.dependencies_metadata
-    for dependency in dependencies:
-        spdx_dependency = SpdxDocument(dependency, is_dependency=True)
+    externalRefs = list()
+    for spdx_dependency in self.dependency_documents:
         file_name = f&#34;{spdx_dependency.name}.spdx&#34;
         checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
         externalRefs.append(
@@ -299,10 +512,8 @@ per third-party dependencies</p>
                 name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
             )
         )
-    main_document = SpdxDocument(
-        package_metadata=project_metadata.project_metadata, other_document_refs=externalRefs,
-    )
-    SpdxProject.generate_tag_value_file(dir, main_document, f&#34;{main_document.name}.spdx&#34;)</code></pre>
+    self.main_document.external_refs = externalRefs
+    SpdxProject.generate_tag_value_file(dir, self.main_document, f&#34;{self.main_document.name}.spdx&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -326,8 +537,12 @@ per third-party dependencies</p>
 <li>
 <h4><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a></code></h4>
 <ul class="">
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.check_licence_compliance" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.check_licence_compliance">check_licence_compliance</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.dependency_documents" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.dependency_documents">dependency_documents</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_licensing_summary" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_licensing_summary">generate_licensing_summary</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_file" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_file">generate_tag_value_file</a></code></li>
 <li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_files" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_files">generate_tag_value_files</a></code></li>
+<li><code><a title="mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.main_document" href="#mbed_tools_ci_scripts.spdx_report.spdx_project.SpdxProject.main_document">main_document</a></code></li>
 </ul>
 </li>
 </ul>
@@ -336,7 +551,7 @@ per third-party dependencies</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>

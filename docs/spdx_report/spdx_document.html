@@ -7,14 +7,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.7.5" />
+<meta name="generator" content="pdoc 0.8.1" />
 <title>mbed_tools_ci_scripts.spdx_report.spdx_document API documentation</title>
 <meta name="description" content="Definition of an SPDX Document." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
 </head>
 <body>
@@ -39,17 +39,17 @@ from spdx.creationinfo import Person, Organization, Tool
 from spdx.document import Document, License
 from spdx.review import Review
 from spdx.version import Version
-from typing import List
+from typing import List, Optional
 
-from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
 from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
+from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
+from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
 from mbed_tools_ci_scripts.utils.configuration import (
     configuration,
     ConfigurationVariable,
 )
 from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
 
 TOOL_NAME = &#34;mbed-spdx-generator&#34;
 
@@ -76,6 +76,7 @@ class SpdxDocument:
         self._is_dependency: bool = is_dependency
         self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs
         self._document_namespace = document_namespace
+        self._spdx_package: Optional[SpdxPackage] = None
 
     @property
     def document_name(self) -&gt; str:
@@ -208,21 +209,28 @@ class SpdxDocument:
         &#34;&#34;&#34;
         return self._other_document_references
 
+    @external_refs.setter
+    def external_refs(self, external_refs: List[DependencySpdxDocumentRef]) -&gt; None:
+        &#34;&#34;&#34;Sets the document external references.&#34;&#34;&#34;
+        self._other_document_references = external_refs
+
     def generate_spdx_package(self) -&gt; SpdxPackage:
         &#34;&#34;&#34;Generates the SPDX package for this package.
 
         Returns:
             corresponding SPDX package.
         &#34;&#34;&#34;
-        return SpdxPackage(
-            PackageInfo(
-                metadata=self._package_metadata,
-                root_dir=self._project_root,
-                source_dir=self._project_source,
-                uuid=self._project_uuid,
-            ),
-            is_dependency=self._is_dependency,
-        )
+        if not self._spdx_package:
+            self._spdx_package = SpdxPackage(
+                PackageInfo(
+                    metadata=self._package_metadata,
+                    root_dir=self._project_root,
+                    source_dir=self._project_source,
+                    uuid=self._project_uuid,
+                ),
+                is_dependency=self._is_dependency,
+            )
+        return self._spdx_package
 
     def generate_spdx_document(self) -&gt; Document:
         &#34;&#34;&#34;Generates the SPDX document.
@@ -288,9 +296,9 @@ class SpdxDocument:
 <span>(</span><span>package_metadata: <a title="mbed_tools_ci_scripts.utils.package_helpers.PackageMetadata" href="../utils/package_helpers.html#mbed_tools_ci_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>, other_document_refs: List[<a title="mbed_tools_ci_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef" href="spdx_dependency.html#mbed_tools_ci_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef">DependencySpdxDocumentRef</a>] = [], is_dependency: bool = False, document_namespace: str = None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>SPDX document.</p>
+<div class="desc"><p>SPDX document.</p>
 <p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.4d34og8">https://spdx.org/spdx-specification-21-web-version#h.4d34og8</a></p>
-<p>Constructor.</p></section>
+<p>Constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -317,6 +325,7 @@ class SpdxDocument:
         self._is_dependency: bool = is_dependency
         self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs
         self._document_namespace = document_namespace
+        self._spdx_package: Optional[SpdxPackage] = None
 
     @property
     def document_name(self) -&gt; str:
@@ -449,21 +458,28 @@ class SpdxDocument:
         &#34;&#34;&#34;
         return self._other_document_references
 
+    @external_refs.setter
+    def external_refs(self, external_refs: List[DependencySpdxDocumentRef]) -&gt; None:
+        &#34;&#34;&#34;Sets the document external references.&#34;&#34;&#34;
+        self._other_document_references = external_refs
+
     def generate_spdx_package(self) -&gt; SpdxPackage:
         &#34;&#34;&#34;Generates the SPDX package for this package.
 
         Returns:
             corresponding SPDX package.
         &#34;&#34;&#34;
-        return SpdxPackage(
-            PackageInfo(
-                metadata=self._package_metadata,
-                root_dir=self._project_root,
-                source_dir=self._project_source,
-                uuid=self._project_uuid,
-            ),
-            is_dependency=self._is_dependency,
-        )
+        if not self._spdx_package:
+            self._spdx_package = SpdxPackage(
+                PackageInfo(
+                    metadata=self._package_metadata,
+                    root_dir=self._project_root,
+                    source_dir=self._project_source,
+                    uuid=self._project_uuid,
+                ),
+                is_dependency=self._is_dependency,
+            )
+        return self._spdx_package
 
     def generate_spdx_document(self) -&gt; Document:
         &#34;&#34;&#34;Generates the SPDX document.
@@ -516,14 +532,14 @@ class SpdxDocument:
 </details>
 <h3>Instance variables</h3>
 <dl>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author"><code class="name">var <span class="ident">author</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author"><code class="name">var <span class="ident">author</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the document's author.</p>
+<div class="desc"><p>Gets the document's author.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>document's</code> <code>author</code></dt>
+<dt><code>document's author</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -538,14 +554,14 @@ def author(self) -&gt; str:
     return self._package_metadata.author</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author_email"><code class="name">var <span class="ident">author_email</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.author_email"><code class="name">var <span class="ident">author_email</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the document author's email.</p>
+<div class="desc"><p>Gets the document author's email.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>document</code> <code>author's</code> <code>email</code></dt>
+<dt><code>document author's email</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -560,15 +576,15 @@ def author_email(self) -&gt; str:
     return self._package_metadata.author_email</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_name"><code class="name">var <span class="ident">document_name</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_name"><code class="name">var <span class="ident">document_name</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets document name.</p>
+<div class="desc"><p>Gets document name.</p>
 <p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2">https://spdx.org/spdx-specification-21-web-version#h.wape5vaqknj2</a></p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>corresponding</code> <code>string</code></dt>
+<dt><code>corresponding string</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -585,15 +601,15 @@ def document_name(self) -&gt; str:
     return f&#34;{self.name}-{self.version}&#34;</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_namespace"><code class="name">var <span class="ident">document_namespace</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.document_namespace"><code class="name">var <span class="ident">document_namespace</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets document namespace.</p>
+<div class="desc"><p>Gets document namespace.</p>
 <p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90">https://spdx.org/spdx-specification-21-web-version#h.1gdfkutofa90</a></p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>corresponding</code> <code>string</code></dt>
+<dt><code>corresponding string</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -612,14 +628,14 @@ def document_namespace(self) -&gt; str:
     return self._generate_namespace()</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.external_refs"><code class="name">var <span class="ident">external_refs</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.external_refs"><code class="name">var <span class="ident">external_refs</span> : List[<a title="mbed_tools_ci_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef" href="spdx_dependency.html#mbed_tools_ci_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef">DependencySpdxDocumentRef</a>]</code></dt>
 <dd>
-<section class="desc"><p>Gets the document external references.</p>
+<div class="desc"><p>Gets the document external references.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>the</code> <code>list</code> of <code>external</code> <code>references</code></dt>
+<dt><code>the list</code> of <code>external references</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -634,14 +650,14 @@ def external_refs(self) -&gt; List[DependencySpdxDocumentRef]:
     return self._other_document_references</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.licence"><code class="name">var <span class="ident">licence</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.licence"><code class="name">var <span class="ident">licence</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the project's licence.</p>
+<div class="desc"><p>Gets the project's licence.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>project's</code> <code>licence</code></dt>
+<dt><code>project's licence</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -656,14 +672,14 @@ def licence(self) -&gt; str:
     return self._package_metadata.licence</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets package's name.</p>
+<div class="desc"><p>Gets package's name.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>corresponding</code> <code>string</code></dt>
+<dt><code>corresponding string</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -678,14 +694,14 @@ def name(self) -&gt; str:
     return f&#34;{self._package_metadata.name}&#34;</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation"><code class="name">var <span class="ident">organisation</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation"><code class="name">var <span class="ident">organisation</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the organisation.</p>
+<div class="desc"><p>Gets the organisation.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>the</code> <code>organisation</code> <code>in</code> <code>charge</code></dt>
+<dt><code>the organisation in charge</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -700,14 +716,14 @@ def organisation(self) -&gt; str:
     return str(configuration.get_value(ConfigurationVariable.ORGANISATION))</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation_email"><code class="name">var <span class="ident">organisation_email</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.organisation_email"><code class="name">var <span class="ident">organisation_email</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the organisation's email.</p>
+<div class="desc"><p>Gets the organisation's email.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>organisation's</code> <code>email</code></dt>
+<dt><code>organisation's email</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -722,14 +738,14 @@ def organisation_email(self) -&gt; str:
     return str(configuration.get_value(ConfigurationVariable.ORGANISATION_EMAIL))</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer"><code class="name">var <span class="ident">reviewer</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer"><code class="name">var <span class="ident">reviewer</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the document's reviewer.</p>
+<div class="desc"><p>Gets the document's reviewer.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>document's</code> <code>reviewer</code></dt>
+<dt><code>document's reviewer</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -744,14 +760,14 @@ def reviewer(self) -&gt; str:
     return str(configuration.get_value(ConfigurationVariable.BOT_USERNAME))</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer_email"><code class="name">var <span class="ident">reviewer_email</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.reviewer_email"><code class="name">var <span class="ident">reviewer_email</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets the document reviewer's email.</p>
+<div class="desc"><p>Gets the document reviewer's email.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>document</code> <code>reviewer's</code> <code>email</code></dt>
+<dt><code>document reviewer's email</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -766,14 +782,14 @@ def reviewer_email(self) -&gt; str:
     return str(configuration.get_value(ConfigurationVariable.BOT_EMAIL))</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.tool_name"><code class="name">var <span class="ident">tool_name</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.tool_name"><code class="name">var <span class="ident">tool_name</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets this generation tool's name.</p>
+<div class="desc"><p>Gets this generation tool's name.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>this</code> <code>tool's</code> <code>name</code></dt>
+<dt><code>this tool's name</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -788,14 +804,14 @@ def tool_name(self) -&gt; str:
     return TOOL_NAME</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.version"><code class="name">var <span class="ident">version</span></code></dt>
+<dt id="mbed_tools_ci_scripts.spdx_report.spdx_document.SpdxDocument.version"><code class="name">var <span class="ident">version</span> : str</code></dt>
 <dd>
-<section class="desc"><p>Gets package version.</p>
+<div class="desc"><p>Gets package version.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>package</code> <code>version</code></dt>
+<dt><code>package version</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -817,7 +833,7 @@ def version(self) -&gt; str:
 <span>def <span class="ident">generate_spdx_document</span></span>(<span>self) -> spdx.document.Document</span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generates the SPDX document.</p>
+<div class="desc"><p>Generates the SPDX document.</p>
 <p>Example of SPDX document section.
 SPDXVersion: SPDX-2.1
 DataLicense: CC0-1.0
@@ -833,9 +849,9 @@ This document was created automatically using available reuse information consis
 </text></p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>the</code> <code>corresponding</code> <code>document</code></dt>
+<dt><code>the corresponding document</code></dt>
 <dd>&nbsp;</dd>
-</dl></section>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -894,9 +910,9 @@ This document was created automatically using available reuse information consis
 <span>def <span class="ident">generate_spdx_package</span></span>(<span>self) -> <a title="mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#mbed_tools_ci_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a></span>
 </code></dt>
 <dd>
-<section class="desc"><p>Generates the SPDX package for this package.</p>
+<div class="desc"><p>Generates the SPDX package for this package.</p>
 <h2 id="returns">Returns</h2>
-<p>corresponding SPDX package.</p></section>
+<p>corresponding SPDX package.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -907,15 +923,17 @@ This document was created automatically using available reuse information consis
     Returns:
         corresponding SPDX package.
     &#34;&#34;&#34;
-    return SpdxPackage(
-        PackageInfo(
-            metadata=self._package_metadata,
-            root_dir=self._project_root,
-            source_dir=self._project_source,
-            uuid=self._project_uuid,
-        ),
-        is_dependency=self._is_dependency,
-    )</code></pre>
+    if not self._spdx_package:
+        self._spdx_package = SpdxPackage(
+            PackageInfo(
+                metadata=self._package_metadata,
+                root_dir=self._project_root,
+                source_dir=self._project_source,
+                uuid=self._project_uuid,
+            ),
+            is_dependency=self._is_dependency,
+        )
+    return self._spdx_package</code></pre>
 </details>
 </dd>
 </dl>
@@ -962,7 +980,7 @@ This document was created automatically using available reuse information consis
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.7.5</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
 </footer>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
 <script>hljs.initHighlightingOnLoad()</script>
