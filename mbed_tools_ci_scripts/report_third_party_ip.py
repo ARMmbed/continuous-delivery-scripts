@@ -24,21 +24,30 @@ from mbed_tools_ci_scripts.utils.package_helpers import CurrentProjectMetadataPa
 logger = logging.getLogger(__name__)
 
 
-def generate_spdx_reports(output_directory: Path) -> SpdxProject:
-    """Generates all the SPDX reports for the current project."""
+def get_current_spdx_project() -> SpdxProject:
+    """Gets information about the current project/package."""
     logger.info("Generating package information.")
     try:
         # Trying to generate the egg for the package but this may fail. If so, continue.
         generate_package_info()
     except Exception as e:
         log_exception(logger, e)
+    return SpdxProject(CurrentProjectMetadataParser())
 
+
+def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) -> SpdxProject:
+    """Generates all the SPDX reports for a given project."""
     logger.info("Generating SPDX report.")
-    project = SpdxProject(CurrentProjectMetadataParser())
     project.generate_tag_value_files(output_directory)
     logger.info("Generating licensing summary.")
     project.generate_licensing_summary(output_directory)
     return project
+
+
+def generate_spdx_reports(output_directory: Path) -> SpdxProject:
+    """Generates all the SPDX reports for the current project."""
+    project = get_current_spdx_project()
+    return generate_spdx_project_reports(project, output_directory)
 
 
 def main() -> int:

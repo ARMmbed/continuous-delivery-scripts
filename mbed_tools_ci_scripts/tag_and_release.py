@@ -20,7 +20,11 @@ from mbed_tools_ci_scripts.utils.definitions import CommitType
 from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
 from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
 from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
-from mbed_tools_ci_scripts.report_third_party_ip import generate_spdx_reports
+from mbed_tools_ci_scripts.report_third_party_ip import (
+    get_current_spdx_project,
+    generate_spdx_project_reports,
+    SpdxProject,
+)
 
 ENVVAR_TWINE_USERNAME = "TWINE_USERNAME"
 ENVVAR_TWINE_PASSWORD = "TWINE_PASSWORD"
@@ -48,11 +52,14 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
         raise ValueError("Undefined version.")
     if mode == CommitType.DEVELOPMENT:
         return
+    # The documentation folder will be emptied when the documentation is updated
     _update_documentation()
+    # Adding the licensing summaries in /docs after folder has been cleared and regenerated.
+    spdx_project = _update_licensing_summary()
     add_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
-        _generate_spdx_reports()
+        _generate_spdx_reports(spdx_project)
         _release_to_pypi()
 
 
@@ -73,6 +80,14 @@ def _update_documentation() -> None:
     generate_documentation(docs_dir, module_to_document)
 
 
+def _update_licensing_summary() -> SpdxProject:
+    project = get_current_spdx_project()
+    project.generate_licensing_summary(
+        Path(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
+    )
+    return project
+
+
 def _update_repository(mode: CommitType, is_new_version: bool, version: str, current_branch: Optional[str]) -> None:
     """Update repository with changes that happened."""
     with ProjectTempClone(desired_branch_name=current_branch) as git:
@@ -87,12 +102,12 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
             git.force_push_tag()
 
 
-def _generate_spdx_reports() -> None:
+def _generate_spdx_reports(project: SpdxProject) -> None:
     report_directory = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)).joinpath(
         SPDX_REPORTS_DIRECTORY
     )
     report_directory.mkdir(exist_ok=True)
-    generate_spdx_reports(report_directory)
+    generate_spdx_project_reports(project, report_directory)
 
 
 def _add_version_changes(git: GitWrapper) -> None:
