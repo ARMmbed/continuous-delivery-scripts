@@ -129,8 +129,12 @@ class OpenSourceLicences:
         self.load()
         if not self._licence_store or not self._licence_list:
             return None
-        matching_licences = [l for l in self._licence_list if licence_descriptor_pattern.match(l)]
-        return [cast(Licence, self._licence_store.get(l)) for l in matching_licences] if matching_licences else None
+        matching_licences = [licence for licence in self._licence_list if licence_descriptor_pattern.match(licence)]
+        return (
+            [cast(Licence, self._licence_store.get(licence)) for licence in matching_licences]
+            if matching_licences
+            else None
+        )
 
     def get_licence(self, licence_descriptor: Optional[str]) -> Optional[Licence]:
         """Determines the licence based on a string descriptor e.g. Apache 2."""
@@ -218,8 +222,8 @@ def determine_licences_not_in_list(licence_expression: str, licence_list: Iterat
 def determine_whether_licence_expression_is_compliant(licence_expression: str, licence_list: list) -> bool:
     """Checks whether an expression is compliant with a list of licences."""
     licensing_util = Licensing()
-    for l in licence_list:
-        if licensing_util.contains(licence_expression, l):
+    for licence in licence_list:
+        if licensing_util.contains(licence_expression, licence):
             return True
     return False
 
@@ -231,9 +235,9 @@ def _is_expression_or(licence_expression: str) -> bool:
 
 def is_licence_accepted(licence_expression: str) -> bool:
     """Determines whether the licence expressed is valid with regards to project's accepted licences."""
-    authorised_licences = [l.identifier for l in get_allowed_opensource_licences()]
+    authorised_licences = [licence.identifier for licence in get_allowed_opensource_licences()]
     is_or = _is_expression_or(licence_expression)
-    if bool([l for l in determine_licences_not_in_list(licence_expression, iter(authorised_licences))]):
+    if bool([licence for licence in determine_licences_not_in_list(licence_expression, iter(authorised_licences))]):
         return (
             determine_whether_licence_expression_is_compliant(licence_expression, authorised_licences)
             if is_or

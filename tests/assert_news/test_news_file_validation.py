@@ -38,7 +38,7 @@ class TestValidateFileContent(TestCase):
             with self.assertRaises(ValueError) as cm:
                 NewsFileValidator(file_path).validate_file_contents()
 
-            expected_error_message = f'Empty news file "bar.txt".'
+            expected_error_message = 'Empty news file "bar.txt".'
             self.assertEqual(str(cm.exception), expected_error_message)
 
     def test_raises_if_file_has_too_many_lines(self):
@@ -49,7 +49,7 @@ class TestValidateFileContent(TestCase):
             with self.assertRaises(ValueError) as cm:
                 NewsFileValidator(file_path).validate_file_contents()
 
-            expected_error_message = f'News file "baz.txt" contains more than one line.'
+            expected_error_message = 'News file "baz.txt" contains more than one line.'
             self.assertEqual(str(cm.exception), expected_error_message)
 
     def test_does_nothing_if_file_has_valid_contents(self):

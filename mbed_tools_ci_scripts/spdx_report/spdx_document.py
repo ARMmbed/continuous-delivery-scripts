@@ -74,7 +74,7 @@ class SpdxDocument:
     def _generate_namespace(self) -> str:
         """Generates a document namespace."""
         if self._is_dependency:
-            url_base = f"http://spdx.org/spdxdocs"
+            url_base = "http://spdx.org/spdxdocs"
             uuid = generate_uuid_based_on_str(self.document_name)
             return f"{url_base}/{self.document_name}-{uuid}"
         return get_project_namespace(self._project_config, self.document_name)

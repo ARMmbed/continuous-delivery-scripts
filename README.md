@@ -1,15 +1,15 @@
 # Mbed Tools CI Scripts
 
-![Package](https://img.shields.io/badge/Package-mbed--tools--ci--scripts-lightgrey)
-[![Documentation](https://img.shields.io/badge/Documentation-GitHub_Pages-blue)](https://armmbed.github.io/mbed-tools-ci-scripts)
-[![PyPI](https://img.shields.io/pypi/v/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
+![Package](https://badgen.net/badge/Package/mbed-tools-ci-scripts/grey)
+[![Documentation](https://badgen.net/badge/Documentation/GitHub%20Pages/blue?icon=github)](https://armmbed.github.io/mbed-tools-ci-scripts)
+[![PyPI](https://badgen.net/pypi/v/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
 [![PyPI - Status](https://img.shields.io/pypi/status/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mbed-tools-ci-scripts)](https://pypi.org/project/mbed-tools-ci-scripts/)
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/LICENSE)
+[![License](https://badgen.net/pypi/license/mbed-tools-ci-scripts)](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/LICENSE)
 [![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/mbed-tools-ci-scripts/third_party_IP_report.html)
 
-[![Build Status](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_apis/build/status/Build%20and%20Release?branchName=master&stageName=CI%20Checkpoint)](https://dev.azure.com/mbed-tools/mbed-tools-ci/_build/latest?definitionId=3&branchName=master)
+[![Build Status](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_apis/build/status/Build%20and%20Release?branchName=master&stageName=CI%20Checkpoint)](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_build/latest?definitionId=8&branchName=master)
 [![Test Coverage](https://codecov.io/gh/ARMmbed/mbed-tools-ci-scripts/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/mbed-tools-ci-scripts)
 [![Maintainability](https://api.codeclimate.com/v1/badges/41301e959f22986b7b2b/maintainability)](https://codeclimate.com/github/ARMmbed/mbed-tools-ci-scripts/maintainability)
 

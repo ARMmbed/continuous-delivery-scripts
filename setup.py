@@ -32,6 +32,7 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Topic :: Software Development :: Build Tools",
         "Topic :: Software Development :: Embedded Systems",
     ],
@@ -48,7 +49,7 @@ setup(
             f"generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
         ],
     },
-    keywords="Arm Mbed OS MbedOS Tools CI Scripts",
+    keywords="Arm Mbed OS MbedOS Tools CI Scripts Automation",
     include_package_data=True,
     install_requires=[
         "gitpython",

@@ -75,7 +75,7 @@ class TestLicences(unittest.TestCase):
             ],
         }
 
-        parsed_licences = [l for l in iter_licenses(licences)]
+        parsed_licences = [licence for licence in iter_licenses(licences)]
         self.assertIsNotNone(parsed_licences)
         self.assertEqual(len(parsed_licences), 2)
         self.assertIn(APACHE2_LICENCE, parsed_licences)
@@ -91,7 +91,7 @@ class TestLicences(unittest.TestCase):
 
     def test_get_licence(self):
         licences = OpenSourceLicences()
-        for l in [
+        for licence in [
             "Apache 2.0",
             "Apache Licence, Version 2.0",
             "The Apache License, Version 2.0",
@@ -103,7 +103,7 @@ class TestLicences(unittest.TestCase):
             "Apache-2",
             "Apache-2.0",
         ]:
-            self.assertEqual(APACHE2_LICENCE, licences.get_licence(l))
+            self.assertEqual(APACHE2_LICENCE, licences.get_licence(licence))
 
     def test_licences_evaluation(self):
         self.assertEqual(
@@ -125,13 +125,24 @@ class TestLicences(unittest.TestCase):
 
     def test_licences_not_in_list(self):
         self.assertEqual(
-            [l for l in determine_licences_not_in_list("Apache-2.0 AND (BSD OR MIT)", ["Apache-2.0", "MIT", "BSD"])], []
+            [
+                licence
+                for licence in determine_licences_not_in_list(
+                    "Apache-2.0 AND (BSD OR MIT)", ["Apache-2.0", "MIT", "BSD"]
+                )
+            ],
+            [],
         )
         self.assertEqual(
-            [l for l in determine_licences_not_in_list("Apache-2.0 AND (BSD OR MIT)", ["Apache-2.0", "MIT"])], ["BSD"]
+            [
+                licence
+                for licence in determine_licences_not_in_list("Apache-2.0 AND (BSD OR MIT)", ["Apache-2.0", "MIT"])
+            ],
+            ["BSD"],
         )
         self.assertEqual(
-            [l for l in determine_licences_not_in_list("Apache-2.0 AND (BSD OR MIT)", [])], ["Apache-2.0", "BSD", "MIT"]
+            [licence for licence in determine_licences_not_in_list("Apache-2.0 AND (BSD OR MIT)", [])],
+            ["Apache-2.0", "BSD", "MIT"],
         )
 
     def test_if_licence_accepted(self):
@@ -142,10 +153,12 @@ class TestLicences(unittest.TestCase):
 
     def test_allowed_opensource_licences_from_string(self):
         self.assertIn(APACHE2_LICENCE, determine_allowed_opensource_licences_from_string("Apache 2"))
-        self.assertEqual(len([l for l in determine_allowed_opensource_licences_from_string("Apache 2")]), 1)
-        self.assertGreater(len([l for l in determine_allowed_opensource_licences_from_string("Apache*")]), 1)
-        self.assertEqual(len([l for l in determine_allowed_opensource_licences_from_string("BSD")]), 1)
-        self.assertGreater(len([l for l in determine_allowed_opensource_licences_from_string("BSD*")]), 1)
+        self.assertEqual(len([licence for licence in determine_allowed_opensource_licences_from_string("Apache 2")]), 1)
+        self.assertGreater(
+            len([licence for licence in determine_allowed_opensource_licences_from_string("Apache*")]), 1
+        )
+        self.assertEqual(len([licence for licence in determine_allowed_opensource_licences_from_string("BSD")]), 1)
+        self.assertGreater(len([licence for licence in determine_allowed_opensource_licences_from_string("BSD*")]), 1)
 
     def test_allowed_third_party_licences(self):
         self.assertIn(APACHE2_LICENCE, get_allowed_opensource_licences())
