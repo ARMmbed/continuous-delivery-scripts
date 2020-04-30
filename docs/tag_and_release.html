@@ -124,11 +124,11 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
     with ProjectTempClone(desired_branch_name=current_branch) as git:
         git.configure_for_github()
         time_str = datetime.datetime.utcnow().strftime(&#34;%Y-%m-%d %H:%M&#34;)
-        commit_message = f&#34;🚀 releasing version {version} @ {time_str}&#34; if is_new_version else f&#34;📰 Automatic changes ⚙&#34;
+        commit_message = f&#34;🚀 releasing version {version} @ {time_str}&#34; if is_new_version else &#34;📰 Automatic changes ⚙&#34;
         if mode == CommitType.RELEASE:
             _commit_release_changes(git, version, commit_message)
         if is_new_version:
-            logger.info(f&#34;Tagging commit&#34;)
+            logger.info(&#34;Tagging commit&#34;)
             git.create_tag(version, message=f&#34;release {version}&#34;)
             git.force_push_tag()
 

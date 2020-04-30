@@ -132,7 +132,7 @@ def get_project_namespace(project_config_path: Path, document_name: str) -&gt; s
     &#34;&#34;&#34;Determines the project namespace from configuration.&#34;&#34;&#34;
     with open(str(project_config_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
         config = toml.load(f).get(THIRD_PARTY_CONFIG_NAMESPACE, dict())
-    protocol = f&#34;http://&#34;
+    protocol = &#34;http://&#34;
     path_part = f&#39;{config.get(&#34;CreatorWebsite&#34;)}/{config.get(&#34;PathToSpdx&#34;)}&#39;
     name_part = f&#39;{document_name}-{config.get(&#34;UUID&#34;)}&#39;
     return f&#34;{protocol}{path_part}/{name_part}&#34;
@@ -330,7 +330,7 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     &#34;&#34;&#34;Determines the project namespace from configuration.&#34;&#34;&#34;
     with open(str(project_config_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
         config = toml.load(f).get(THIRD_PARTY_CONFIG_NAMESPACE, dict())
-    protocol = f&#34;http://&#34;
+    protocol = &#34;http://&#34;
     path_part = f&#39;{config.get(&#34;CreatorWebsite&#34;)}/{config.get(&#34;PathToSpdx&#34;)}&#39;
     name_part = f&#39;{document_name}-{config.get(&#34;UUID&#34;)}&#39;
     return f&#34;{protocol}{path_part}/{name_part}&#34;</code></pre>

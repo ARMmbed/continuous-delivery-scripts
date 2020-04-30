@@ -105,7 +105,7 @@ class SpdxDocument:
     def _generate_namespace(self) -&gt; str:
         &#34;&#34;&#34;Generates a document namespace.&#34;&#34;&#34;
         if self._is_dependency:
-            url_base = f&#34;http://spdx.org/spdxdocs&#34;
+            url_base = &#34;http://spdx.org/spdxdocs&#34;
             uuid = generate_uuid_based_on_str(self.document_name)
             return f&#34;{url_base}/{self.document_name}-{uuid}&#34;
         return get_project_namespace(self._project_config, self.document_name)
@@ -354,7 +354,7 @@ class SpdxDocument:
     def _generate_namespace(self) -&gt; str:
         &#34;&#34;&#34;Generates a document namespace.&#34;&#34;&#34;
         if self._is_dependency:
-            url_base = f&#34;http://spdx.org/spdxdocs&#34;
+            url_base = &#34;http://spdx.org/spdxdocs&#34;
             uuid = generate_uuid_based_on_str(self.document_name)
             return f&#34;{url_base}/{self.document_name}-{uuid}&#34;
         return get_project_namespace(self._project_config, self.document_name)
