@@ -93,6 +93,7 @@ PATHS_TO_EXCLUDE = [
 
 def determine_file_licence(path: Path) -&gt; Optional[str]:
     &#34;&#34;&#34;Determines the licence of a file based on the SPDX identifier.&#34;&#34;&#34;
+    licence = None
     try:
         match = scan_file_for_pattern(path, SPDX_IDENTIFIER_REGEX_PATTERN)
         if not match:
@@ -240,6 +241,7 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
 </summary>
 <pre><code class="python">def determine_file_licence(path: Path) -&gt; Optional[str]:
     &#34;&#34;&#34;Determines the licence of a file based on the SPDX identifier.&#34;&#34;&#34;
+    licence = None
     try:
         match = scan_file_for_pattern(path, SPDX_IDENTIFIER_REGEX_PATTERN)
         if not match:

@@ -28,7 +28,7 @@ True,Mako,True,https://www.makotemplates.org/,MIT,Licence is compliant.
 True,Markdown,True,https://Python-Markdown.github.io/,0BSD,Licence is compliant.
 True,MarkupSafe,True,https://palletsprojects.com/p/markupsafe/,BSD-3-Clause,Licence is compliant.
 True,mbed-tools-ci-scripts,False,https://github.com/ARMmbed/mbed-tools-ci-scripts,Apache-2.0,Licence is compliant.
-True,packaging,True,https://github.com/pypa/packaging,0BSD OR Apache-2.0,Licence is compliant.
+True,packaging,True,https://github.com/pypa/packaging,Apache-2.0 OR BSD-2-Clause,Licence is compliant.
 True,pdoc3,True,https://pdoc3.github.io/pdoc/,AGPL-3.0,Package's licence manually checked: Accepted for this project since not distributed
 True,pkginfo,True,https://code.launchpad.net/~tseaver/pkginfo/trunk,MIT,Licence is compliant.
 True,ply,True,http://www.dabeaz.com/ply/,0BSD,Licence is compliant.
