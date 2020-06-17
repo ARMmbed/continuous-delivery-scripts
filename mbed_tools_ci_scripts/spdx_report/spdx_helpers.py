@@ -52,6 +52,7 @@ PATHS_TO_EXCLUDE = [
 
 def determine_file_licence(path: Path) -> Optional[str]:
     """Determines the licence of a file based on the SPDX identifier."""
+    licence = None
     try:
         match = scan_file_for_pattern(path, SPDX_IDENTIFIER_REGEX_PATTERN)
         if not match:
