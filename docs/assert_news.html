@@ -126,9 +126,8 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; Non
 def main() -&gt; None:
     &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
     parser = argparse.ArgumentParser(description=&#34;Check correctly formatted news files exist on feature branch.&#34;)
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(&#34;-b&#34;, &#34;--current-branch&#34;, help=&#34;Name of the current branch&#34;, nargs=&#34;?&#34;)
-    group.add_argument(&#34;-l&#34;, &#34;--local&#34;, action=&#34;store_true&#34;, help=&#34;perform checks directly on local repository&#34;)
+    parser.add_argument(&#34;-b&#34;, &#34;--current-branch&#34;, help=&#34;Name of the current branch&#34;, nargs=&#34;?&#34;)
+    parser.add_argument(&#34;-l&#34;, &#34;--local&#34;, action=&#34;store_true&#34;, help=&#34;perform checks directly on local repository&#34;)
     parser.add_argument(
         &#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;,
     )
@@ -217,9 +216,8 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def main() -&gt; None:
     &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
     parser = argparse.ArgumentParser(description=&#34;Check correctly formatted news files exist on feature branch.&#34;)
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(&#34;-b&#34;, &#34;--current-branch&#34;, help=&#34;Name of the current branch&#34;, nargs=&#34;?&#34;)
-    group.add_argument(&#34;-l&#34;, &#34;--local&#34;, action=&#34;store_true&#34;, help=&#34;perform checks directly on local repository&#34;)
+    parser.add_argument(&#34;-b&#34;, &#34;--current-branch&#34;, help=&#34;Name of the current branch&#34;, nargs=&#34;?&#34;)
+    parser.add_argument(&#34;-l&#34;, &#34;--local&#34;, action=&#34;store_true&#34;, help=&#34;perform checks directly on local repository&#34;)
     parser.add_argument(
         &#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;,
     )

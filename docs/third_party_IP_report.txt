@@ -1,6 +1,6 @@
                                 3rd party IP report for mbed-tools-ci-scripts
 
-                                         2020-06-17 19:10:54.408406
+                                         2020-06-18 11:59:36.495550
 
 # Summary:
     Licence compliance: Compliant

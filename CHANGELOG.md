@@ -11,6 +11,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.7.3" (2020-06-18)
+====================
+
+Bugfixes
+--------
+
+- Remove assert-news mutually exclusive group (#20200617)
+
+
 "1.7.2" (2020-06-17)
 ====================
 
