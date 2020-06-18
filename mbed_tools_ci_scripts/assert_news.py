@@ -95,9 +95,8 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
 def main() -> None:
     """Asserts the new PR comprises at least one news file and it adheres to the required standard."""
     parser = argparse.ArgumentParser(description="Check correctly formatted news files exist on feature branch.")
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("-b", "--current-branch", help="Name of the current branch", nargs="?")
-    group.add_argument("-l", "--local", action="store_true", help="perform checks directly on local repository")
+    parser.add_argument("-b", "--current-branch", help="Name of the current branch", nargs="?")
+    parser.add_argument("-l", "--local", action="store_true", help="perform checks directly on local repository")
     parser.add_argument(
         "-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.",
     )
