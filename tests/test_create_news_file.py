@@ -3,10 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import pathlib
-from pyfakefs.fake_filesystem_unittest import Patcher
 from unittest import TestCase, mock
 from datetime import datetime
-
+from tempfile import TemporaryDirectory
 from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
 from mbed_tools_ci_scripts.create_news_file import NewsType, create_news_file, determine_news_file_path, _write_file
 
@@ -35,9 +34,9 @@ class TestDetermineNewsFilePath(TestCase):
 
         for news_type in NewsType:
             with self.subTest(f"It determines available file path for {news_type}."):
-                with Patcher() as patcher:
-                    patcher.fs.create_file(f"{news_file_path_today}.{news_type.name}")
-                    patcher.fs.create_file(f"{news_file_path_today}01.{news_type.name}")
+                with TemporaryDirectory() as tmp_dir:
+                    pathlib.Path(tmp_dir, f"{news_file_path_today}.{news_type.name}").touch()
+                    pathlib.Path(tmp_dir, f"{news_file_path_today}01.{news_type.name}").touch()
 
                     file_path = determine_news_file_path(news_type)
 
@@ -46,10 +45,20 @@ class TestDetermineNewsFilePath(TestCase):
 
 class TestWriteFile(TestCase):
     def test_writes_files_in_nested_directories(self):
-        with Patcher():
-            file_path = "/some/directory/file.txt"
-            path = pathlib.Path(file_path)
+        with TemporaryDirectory() as tmp_dir:
+            dir_path = pathlib.Path(tmp_dir, "some", "dir")
+            dir_path.mkdir(parents=True)
+            file_path = dir_path / "file.txt"
+            file_path.touch()
             contents = "woohoo"
-            _write_file(path, contents)
+            _write_file(file_path, contents)
 
-            self.assertEqual(path.read_text(), contents)
+            self.assertEqual(file_path.read_text(), f"{contents}\n")
+
+    def test_skips_adding_newline_if_already_exists(self):
+        with TemporaryDirectory() as tmp_dir:
+            file_path = pathlib.Path(tmp_dir, "file.txt")
+            contents = "woohoo\n"
+            _write_file(file_path, contents)
+
+            self.assertEqual(file_path.read_text(), contents)
