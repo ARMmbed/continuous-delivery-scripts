@@ -7,15 +7,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.1" />
+<meta name="generator" content="pdoc 0.8.3" />
 <title>mbed_tools_ci_scripts.utils.git_helpers API documentation</title>
 <meta name="description" content="Utility script to abstract git operations for our CI scripts." />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
 <body>
 <main>
@@ -801,7 +803,7 @@ is in a completely different location.</p>
 <h3>Static methods</h3>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitClone.wrap"><code class="name flex">
-<span>def <span class="ident">wrap</span></span>(<span>repo: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, initial_location: pathlib.Path) -> <a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone">GitClone</a></span>
+<span>def <span class="ident">wrap</span></span>(<span>repo: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, initial_location: pathlib.Path) ‑> <a title="mbed_tools_ci_scripts.utils.git_helpers.GitClone" href="#mbed_tools_ci_scripts.utils.git_helpers.GitClone">GitClone</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Wraps around around a repository.</p></div>
@@ -835,7 +837,7 @@ def initial_location(self) -&gt; Path:
 <h3>Methods</h3>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitClone.get_corresponding_path"><code class="name flex">
-<span>def <span class="ident">get_corresponding_path</span></span>(<span>self, path_in_initial_repo: pathlib.Path) -> pathlib.Path</span>
+<span>def <span class="ident">get_corresponding_path</span></span>(<span>self, path_in_initial_repo: pathlib.Path) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the path in cloned repository corresponding to path in initial repository.</p>
@@ -1564,10 +1566,7 @@ def root(self) -&gt; Path:
 <dd>
 <div class="desc"><p>Gets list of uncommitted files.</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code> of <code>uncommitted</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>list of uncommitted</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1590,7 +1589,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 <h3>Methods</h3>
 <dl>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.add"><code class="name flex">
-<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) -> NoneType</span>
+<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a file or a list of files.</p>
@@ -1617,7 +1616,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes"><code class="name flex">
-<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: GitWrapper) -> NoneType</span>
+<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies the uncommitted changes found in current repository to another.</p>
@@ -1646,7 +1645,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.branch_exists"><code class="name flex">
-<span>def <span class="ident">branch_exists</span></span>(<span>self, branch_name: str) -> bool</span>
+<span>def <span class="ident">branch_exists</span></span>(<span>self, branch_name: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks whether a branch in the repository exists.</p>
@@ -1674,7 +1673,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout"><code class="name flex">
-<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) -> NoneType</span>
+<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks out a branch.</p>
@@ -1698,7 +1697,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.checkout_branch"><code class="name flex">
-<span>def <span class="ident">checkout_branch</span></span>(<span>self, branch_name: str) -> Any</span>
+<span>def <span class="ident">checkout_branch</span></span>(<span>self, branch_name: str) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks out a branch from its name.</p>
@@ -1730,7 +1729,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.cherry_pick"><code class="name flex">
-<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) -> NoneType</span>
+<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cherry picks a specific commit.</p>
@@ -1753,7 +1752,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.clone"><code class="name flex">
-<span>def <span class="ident">clone</span></span>(<span>self, path: pathlib.Path) -> <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></span>
+<span>def <span class="ident">clone</span></span>(<span>self, path: pathlib.Path) ‑> <a title="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper" href="#mbed_tools_ci_scripts.utils.git_helpers.GitWrapper">GitWrapper</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Clones this repository to the path.</p>
@@ -1763,10 +1762,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 <dd>path where to put the clone</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>a wrapper over the cloned repository</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>a wrapper over the cloned repository</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1790,7 +1786,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.commit"><code class="name flex">
-<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Union[Tuple[str, Any], NoneType]) -> NoneType</span>
+<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Union[Tuple[str, Any], NoneType]) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Commits changes to the repository.</p>
@@ -1817,7 +1813,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_author"><code class="name flex">
-<span>def <span class="ident">configure_author</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">configure_author</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the author.</p></div>
@@ -1832,7 +1828,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.configure_for_github"><code class="name flex">
-<span>def <span class="ident">configure_for_github</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">configure_for_github</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Reconfigures the repository.</p>
@@ -1851,7 +1847,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_branch"><code class="name flex">
-<span>def <span class="ident">create_branch</span></span>(<span>self, branch_name: str) -> Any</span>
+<span>def <span class="ident">create_branch</span></span>(<span>self, branch_name: str) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a new branch.</p>
@@ -1861,10 +1857,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 <dd>name of the branch</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>corresponding branch</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>corresponding branch</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1883,7 +1876,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.create_tag"><code class="name flex">
-<span>def <span class="ident">create_tag</span></span>(<span>self, tag_name: str, message: Union[str, NoneType] = None) -> Any</span>
+<span>def <span class="ident">create_tag</span></span>(<span>self, tag_name: str, message: Union[str, NoneType] = None) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a new tag.</p>
@@ -1895,10 +1888,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 <dd>tag annotation (<a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags">https://git-scm.com/book/en/v2/Git-Basics-Tagging#_annotated_tags</a>)</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>corresponding tag</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>corresponding tag</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1917,7 +1907,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.delete_branch"><code class="name flex">
-<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) -> NoneType</span>
+<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Deletes a branch.</p>
@@ -1940,7 +1930,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.fetch"><code class="name flex">
-<span>def <span class="ident">fetch</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">fetch</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches latest changes.</p></div>
@@ -1954,7 +1944,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_pull"><code class="name flex">
-<span>def <span class="ident">force_pull</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">force_pull</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Force pulls changes from the remote repository.</p></div>
@@ -1968,7 +1958,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push"><code class="name flex">
-<span>def <span class="ident">force_push</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">force_push</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits with force.</p>
@@ -1986,7 +1976,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.force_push_tag"><code class="name flex">
-<span>def <span class="ident">force_push_tag</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">force_push_tag</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits and tags with force.</p>
@@ -2006,15 +1996,12 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_beta_branch"><code class="name flex">
-<span>def <span class="ident">get_beta_branch</span></span>(<span>self) -> Any</span>
+<span>def <span class="ident">get_beta_branch</span></span>(<span>self) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the <code>beta</code> branch.</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>corresponding branch</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>corresponding branch</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2029,7 +2016,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch"><code class="name flex">
-<span>def <span class="ident">get_branch</span></span>(<span>self, branch_name: str) -> Any</span>
+<span>def <span class="ident">get_branch</span></span>(<span>self, branch_name: str) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets a specific local branch.</p>
@@ -2063,7 +2050,7 @@ if no branches with this <code>branch_name</code> were found</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_branch_point"><code class="name flex">
-<span>def <span class="ident">get_branch_point</span></span>(<span>self, commit1: Any, commit2: Any) -> Any</span>
+<span>def <span class="ident">get_branch_point</span></span>(<span>self, commit1: Any, commit2: Any) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Finds the common ancestor.</p>
@@ -2097,7 +2084,7 @@ if no branches with this <code>branch_name</code> were found</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_changes_list"><code class="name flex">
-<span>def <span class="ident">get_changes_list</span></span>(<span>self, commit1: Any, commit2: Any, change_type: Union[str, NoneType] = None, dir: Union[str, NoneType] = None) -> List[str]</span>
+<span>def <span class="ident">get_changes_list</span></span>(<span>self, commit1: Any, commit2: Any, change_type: Union[str, NoneType] = None, dir: Union[str, NoneType] = None) ‑> List[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets change list.</p>
@@ -2115,10 +2102,7 @@ list of the paths of the files which changed</p>
 <dd>directory of interest. if None the whole repository is considered</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code> of <code>paths</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>list of paths</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2150,7 +2134,7 @@ list of the paths of the files which changed</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_count"><code class="name flex">
-<span>def <span class="ident">get_commit_count</span></span>(<span>self) -> int</span>
+<span>def <span class="ident">get_commit_count</span></span>(<span>self) ‑> int</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets current commit count.</p>
@@ -2176,7 +2160,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_commit_hash"><code class="name flex">
-<span>def <span class="ident">get_commit_hash</span></span>(<span>self) -> str</span>
+<span>def <span class="ident">get_commit_hash</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the hash of the current commit.</p>
@@ -2196,15 +2180,12 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_branch"><code class="name flex">
-<span>def <span class="ident">get_current_branch</span></span>(<span>self) -> Any</span>
+<span>def <span class="ident">get_current_branch</span></span>(<span>self) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the current branch.</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>the current branch</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>the current branch</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2227,7 +2208,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_current_commit"><code class="name flex">
-<span>def <span class="ident">get_current_commit</span></span>(<span>self) -> Any</span>
+<span>def <span class="ident">get_current_commit</span></span>(<span>self) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the current commit.</p>
@@ -2247,15 +2228,12 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_master_branch"><code class="name flex">
-<span>def <span class="ident">get_master_branch</span></span>(<span>self) -> Any</span>
+<span>def <span class="ident">get_master_branch</span></span>(<span>self) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the <code>master</code> branch.</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>corresponding branch</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>corresponding branch</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2270,7 +2248,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_branch"><code class="name flex">
-<span>def <span class="ident">get_remote_branch</span></span>(<span>self, branch_name: str) -> Union[Any, NoneType]</span>
+<span>def <span class="ident">get_remote_branch</span></span>(<span>self, branch_name: str) ‑> Union[Any, NoneType]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the branch present in the remote repository.</p>
@@ -2305,7 +2283,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.get_remote_url"><code class="name flex">
-<span>def <span class="ident">get_remote_url</span></span>(<span>self) -> str</span>
+<span>def <span class="ident">get_remote_url</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the URL of the remote repository.</p>
@@ -2331,7 +2309,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.git_version"><code class="name flex">
-<span>def <span class="ident">git_version</span></span>(<span>self) -> str</span>
+<span>def <span class="ident">git_version</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets git version.</p>
@@ -2351,7 +2329,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature"><code class="name flex">
-<span>def <span class="ident">is_current_branch_feature</span></span>(<span>self) -> bool</span>
+<span>def <span class="ident">is_current_branch_feature</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns boolean indicating if current branch is considered a feature.</p></div>
@@ -2369,7 +2347,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.is_release_branch"><code class="name flex">
-<span>def <span class="ident">is_release_branch</span></span>(<span>self, branch_name: Union[str, NoneType]) -> bool</span>
+<span>def <span class="ident">is_release_branch</span></span>(<span>self, branch_name: Union[str, NoneType]) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks whether the branch is a <code>release</code> branch or not.</p>
@@ -2401,15 +2379,12 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_branches"><code class="name flex">
-<span>def <span class="ident">list_branches</span></span>(<span>self) -> list</span>
+<span>def <span class="ident">list_branches</span></span>(<span>self) ‑> list</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the list of branches.</p>
 <h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list</code> of <code>branches</code></dt>
-<dd>&nbsp;</dd>
-</dl></div>
+<p>list of branches</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2425,7 +2400,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch"><code class="name flex">
-<span>def <span class="ident">list_files_added_on_current_branch</span></span>(<span>self) -> List[str]</span>
+<span>def <span class="ident">list_files_added_on_current_branch</span></span>(<span>self) ‑> List[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a list of files changed against master branch.</p></div>
@@ -2444,7 +2419,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.merge"><code class="name flex">
-<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) -> NoneType</span>
+<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Merges <code>branch</code> to current branch.</p>
@@ -2470,7 +2445,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull"><code class="name flex">
-<span>def <span class="ident">pull</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">pull</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pulls changes on current branch from the remote repository.</p></div>
@@ -2485,7 +2460,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.pull_all"><code class="name flex">
-<span>def <span class="ident">pull_all</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">pull_all</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pulls all changes from all remotes.</p></div>
@@ -2499,7 +2474,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push"><code class="name flex">
-<span>def <span class="ident">push</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">push</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits.</p>
@@ -2519,7 +2494,7 @@ Pushes also relevant annotated tags when pushing branches out.</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.push_tag"><code class="name flex">
-<span>def <span class="ident">push_tag</span></span>(<span>self) -> NoneType</span>
+<span>def <span class="ident">push_tag</span></span>(<span>self) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits and tags.</p>
@@ -2539,7 +2514,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.remote_branch_exists"><code class="name flex">
-<span>def <span class="ident">remote_branch_exists</span></span>(<span>self, branch_name: str) -> bool</span>
+<span>def <span class="ident">remote_branch_exists</span></span>(<span>self, branch_name: str) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks whether a branch in the remote repository exists.</p>
@@ -2568,7 +2543,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_remote_url"><code class="name flex">
-<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) -> NoneType</span>
+<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the URL of the remote repository.</p>
@@ -2594,7 +2569,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="mbed_tools_ci_scripts.utils.git_helpers.GitWrapper.set_upstream_branch"><code class="name flex">
-<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) -> NoneType</span>
+<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the upstream branch of the current branch.</p>
@@ -2846,9 +2821,7 @@ will work in most cases but probably not on CI.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 </body>
 </html>

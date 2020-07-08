@@ -11,6 +11,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"1.7.4" (2020-07-08)
+====================
+
+Bugfixes
+--------
+
+- Add newline to news file created with create-news-file (#20200707)
+- Remove  from pre-commit checks (#2020070701)
+- add timestamp to news file name (#20200707185215)
+
+
 "1.7.3" (2020-06-18)
 ====================
 

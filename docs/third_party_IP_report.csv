@@ -9,6 +9,7 @@ True,certifi,True,https://certifiio.readthedocs.io/en/latest/,MPL-2.0,Licence is
 True,cffi,True,http://cffi.readthedocs.org,MIT,Licence is compliant.
 True,chardet,True,https://github.com/chardet/chardet,Unknown,Package's licence manually checked: LGPL-2.1+ but accepted for this project since not distributed.
 True,click,True,https://palletsprojects.com/p/click/,BSD-3-Clause,Licence is compliant.
+True,colorama,True,https://github.com/tartley/colorama,0BSD,Licence is compliant.
 True,cryptography,True,https://github.com/pyca/cryptography,0BSD OR Apache-2.0,Licence is compliant.
 True,docutils,True,http://docutils.sourceforge.net/,Python-2.0,Licence is compliant.
 True,gitdb,True,https://github.com/gitpython-developers/gitdb,0BSD,Licence is compliant.
@@ -37,13 +38,14 @@ True,pycparser,True,https://github.com/eliben/pycparser,0BSD,Licence is complian
 True,Pygments,True,https://pygments.org/,0BSD,Licence is compliant.
 True,pyparsing,True,https://github.com/pyparsing/pyparsing/,MIT,Licence is compliant.
 True,python-dateutil,True,https://dateutil.readthedocs.io,Unknown,Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
-True,python-dotenv,True,http://github.com/theskumar/python-dotenv,Unknown,Package's licence manually checked: BSD-3-Clause
+True,python-dotenv,True,https://github.com/theskumar/python-dotenv,Unknown,Package's licence manually checked: BSD-3-Clause
 True,PyYAML,True,https://github.com/yaml/pyyaml,MIT,Licence is compliant.
 True,rdflib,True,https://github.com/RDFLib/rdflib,BSD-3-Clause,Licence is compliant.
 True,readme-renderer,True,https://github.com/pypa/readme_renderer,Apache-2.0,Licence is compliant.
 True,regex,True,https://bitbucket.org/mrabarnett/mrab-regex,Python-2.0,Licence is compliant.
 True,requests,True,https://requests.readthedocs.io,Apache-2.0,Licence is compliant.
 True,requests-toolbelt,True,https://toolbelt.readthedocs.org,Apache-2.0,Licence is compliant.
+True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
 True,s3transfer,True,https://github.com/boto/s3transfer,Apache-2.0,Licence is compliant.
 True,SecretStorage,True,https://github.com/mitya57/secretstorage,BSD-1-Clause,Licence is compliant.
 True,semver,True,https://github.com/python-semver/python-semver,0BSD,Licence is compliant.

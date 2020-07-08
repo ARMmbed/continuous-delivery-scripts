@@ -1,6 +1,6 @@
                                 3rd party IP report for mbed-tools-ci-scripts
 
-                                         2020-06-18 11:59:36.495550
+                                         2020-07-08 17:04:05.692904
 
 # Summary:
     Licence compliance: Compliant
@@ -76,6 +76,13 @@
     [X] Dependency?
     URL: https://palletsprojects.com/p/click/
     Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- colorama:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/tartley/colorama
+    Licence: 0BSD
     Licence compliance: Licence is compliant.
 
 - cryptography:
@@ -277,7 +284,7 @@
 - python-dotenv:
     [X] Compliant?
     [X] Dependency?
-    URL: http://github.com/theskumar/python-dotenv
+    URL: https://github.com/theskumar/python-dotenv
     Licence: Unknown
     Licence compliance: Package's licence manually checked: BSD-3-Clause
 
@@ -320,6 +327,13 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://toolbelt.readthedocs.org
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- rfc3986:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://rfc3986.readthedocs.io
     Licence: Apache-2.0
     Licence compliance: Licence is compliant.
 
