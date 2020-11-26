@@ -26,7 +26,7 @@
 
     - id: mypy
       name: mypy
-      entry: mypy -p mbed_tools_ci_scripts
+      entry: mypy -p continuous_delivery_scripts
       language: python
       types: [python]
       require_serial: true

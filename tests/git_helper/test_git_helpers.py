@@ -4,8 +4,8 @@
 #
 from unittest import TestCase
 
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitTempClone, GitWrapper, ProjectGitWrapper
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitTempClone, GitWrapper, ProjectGitWrapper
 from uuid import uuid4
 from pathlib import Path
 
@@ -26,21 +26,21 @@ class TestGitWrapper(TestCase):
 class TestGitTempClone(TestCase):
     def test_git_clone(self):
         """Ensures a fully fledged clone is created."""
-        with ProjectTempClone(desired_branch_name="master") as clone:
+        with ProjectTempClone(desired_branch_name="main") as clone:
             self.assertTrue(isinstance(clone, GitWrapper))
-            self.assertEqual("master", str(clone.get_current_branch()))
+            self.assertEqual("main", str(clone.get_current_branch()))
             self.assertNotEqual(configuration.get_value(ConfigurationVariable.PROJECT_ROOT), str(clone.root))
 
     def test_git_clone_independent(self):
         """Ensures the clone is independent from repository it is based on."""
         git = ProjectGitWrapper()
-        with GitTempClone(repository_to_clone=git, desired_branch_name="master") as clone:
+        with GitTempClone(repository_to_clone=git, desired_branch_name="main") as clone:
             self.assertEqual(git.get_remote_url(), clone.get_remote_url())
             self.assertNotEqual(git.root, clone.root)
 
     def test_git_branch_actions(self):
         """Test basic git branch actions on the clone."""
-        with ProjectTempClone(desired_branch_name="master") as clone:
+        with ProjectTempClone(desired_branch_name="main") as clone:
             branch = clone.create_branch(f"test-{uuid4()}")
             self.assertIsNotNone(branch)
             self.assertEqual(branch, clone.get_branch(str(branch)))
@@ -55,7 +55,7 @@ class TestGitTempClone(TestCase):
 
     def test_file_addition(self):
         """Test basic git branch actions on the clone."""
-        with ProjectTempClone(desired_branch_name="master") as clone:
+        with ProjectTempClone(desired_branch_name="main") as clone:
             branch = clone.create_branch(f"test-{uuid4()}")
             clone.checkout(branch)
             self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
@@ -77,7 +77,7 @@ class TestGitTempClone(TestCase):
         git = ProjectGitWrapper()
         test_file = Path(git.root).joinpath(f"a_test_file-{uuid4()}.txt")
         test_file.touch()
-        with GitTempClone(repository_to_clone=git, desired_branch_name="master") as clone:
+        with GitTempClone(repository_to_clone=git, desired_branch_name="main") as clone:
             test_file.unlink()
             branch = clone.create_branch(f"branch-test-{uuid4()}")
             clone.checkout(branch)

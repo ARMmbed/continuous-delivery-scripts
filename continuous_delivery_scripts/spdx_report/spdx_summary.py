@@ -9,8 +9,8 @@ import logging
 from pathlib import Path
 from typing import List, Tuple, Optional, Dict, Any
 
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import get_package_manual_check
-from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage
+from continuous_delivery_scripts.spdx_report.spdx_helpers import get_package_manual_check
+from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage
 
 JINJA_TEMPLATE_SUMMARY_HTML = "third_party_IP_report.html.jinja2"
 JINJA_TEMPLATE_SUMMARY_CSV = "third_party_IP_report.csv.jinja2"
@@ -19,7 +19,7 @@ JINJA_TEMPLATES = [JINJA_TEMPLATE_SUMMARY_HTML, JINJA_TEMPLATE_SUMMARY_CSV, JINJ
 logger = logging.getLogger(__name__)
 try:
     jinja2_env = jinja2.Environment(
-        loader=jinja2.PackageLoader("mbed_tools_ci_scripts.spdx_report.spdx_summary", "templates"),
+        loader=jinja2.PackageLoader("continuous_delivery_scripts.spdx_report.spdx_summary", "templates"),
         autoescape=jinja2.select_autoescape(["html", "xml"]),
     )
 except ModuleNotFoundError as e:
@@ -36,7 +36,7 @@ def generate_file_based_on_template(
     if suffix:
         filename = Path(
             "{0}_{2}{1}".format(
-                *(str(filename.name), str(filename.suffix), str(suffix.replace(".", "_").replace("-", "_")),)
+                *(str(filename.name), str(filename.suffix), str(suffix.replace(".", "_").replace("-", "_")))
             )
         )
     output_filename = output_dir.joinpath(filename)

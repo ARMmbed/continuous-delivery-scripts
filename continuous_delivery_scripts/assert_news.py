@@ -10,9 +10,9 @@ import sys
 from typing import List, Union
 import pathlib
 
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
-from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
+from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         root_dir: Root directory of the project.
         news_dir: Relative path to news directory.
     """
-    added_news_files = find_news_files(git=git, news_dir=news_dir, root_dir=root_dir,)
+    added_news_files = find_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
     if not added_news_files:
         raise FileNotFoundError(f"PR must contain a news file in {news_dir}. See README.md.")
     for absolute_file_path in added_news_files:
@@ -97,9 +97,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Check correctly formatted news files exist on feature branch.")
     parser.add_argument("-b", "--current-branch", help="Name of the current branch", nargs="?")
     parser.add_argument("-l", "--local", action="store_true", help="perform checks directly on local repository")
-    parser.add_argument(
-        "-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.",
-    )
+    parser.add_argument("-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.")
     args = parser.parse_args()
     set_log_level(args.verbose)
 
@@ -113,9 +111,7 @@ def main() -> None:
             absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
             news_dir = str(pathlib.Path(absolute_news_dir).relative_to(root_dir))
             try:
-                validate_news_files(
-                    git=git, news_dir=news_dir, root_dir=root_dir,
-                )
+                validate_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
             except Exception as e:
                 log_exception(logger, e)
                 sys.exit(1)

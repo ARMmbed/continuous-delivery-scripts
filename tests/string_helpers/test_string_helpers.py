@@ -3,7 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import unittest
-from mbed_tools_ci_scripts.utils.string_helpers import determine_matching_stats, determine_similar_string_from_list
+from continuous_delivery_scripts.utils.string_helpers import (
+    determine_matching_stats,
+    determine_similar_string_from_list,
+)
 
 
 class TestStringHelpers(unittest.TestCase):

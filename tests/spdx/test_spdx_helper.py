@@ -4,7 +4,7 @@
 #
 from unittest import TestCase
 
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_checked_packages_from_configuration_entry
+from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_checked_packages_from_configuration_entry
 
 
 class TestSpdxHelpers(TestCase):

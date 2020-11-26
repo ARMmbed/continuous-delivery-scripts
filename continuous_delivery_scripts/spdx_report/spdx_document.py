@@ -10,15 +10,12 @@ from spdx.review import Review
 from spdx.version import Version
 from typing import List, Optional
 
-from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
-from mbed_tools_ci_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
-from mbed_tools_ci_scripts.utils.configuration import (
-    configuration,
-    ConfigurationVariable,
-)
-from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str
-from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
+from continuous_delivery_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
+from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
+from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
+from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 
 TOOL_NAME = "mbed-spdx-generator"
 
@@ -236,7 +233,7 @@ class SpdxDocument:
         doc.creation_info.add_creator(Tool(self.tool_name))
         doc.creation_info.set_created_now()
         if not self._is_dependency:
-            review = Review(Person(determine_spdx_value(self.reviewer), determine_spdx_value(self.reviewer_email),))
+            review = Review(Person(determine_spdx_value(self.reviewer), determine_spdx_value(self.reviewer_email)))
             review.set_review_date_now()
             doc.add_review(review)
 

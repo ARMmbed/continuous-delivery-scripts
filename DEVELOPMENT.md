@@ -40,13 +40,13 @@ export PATH=~/Library/Python/3.7/bin/:$PATH
 Clone GitHub repository
 
 ```bash
-git clone git@github.com:ARMmbed/mbed-tools-ci-scripts.git
+git clone git@github.com:ARMmbed/continuous-delivery-scripts.git
 ```
 
 Setup Pipenv to use Python 3 (Python 2 is not supported) and install package development dependencies:
 
 ```bash
-cd mbed-tools-ci-scripts/
+cd continuous-delivery-scripts/
 pipenv --three
 pipenv install --dev
 ```
@@ -83,7 +83,7 @@ flake8
 Perform static type check:
 
 ```bash
-mypy -p mbed_tools_ci_scripts
+mypy -p continuous_delivery_scripts
 ```
 
 ## Documenting code

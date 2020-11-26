@@ -6,7 +6,7 @@ from unittest import TestCase
 
 from pathlib import Path
 
-from mbed_tools_ci_scripts.spdx_report.spdx_file import determine_file_licence, determine_file_copyright_text
+from continuous_delivery_scripts.spdx_report.spdx_file import determine_file_licence, determine_file_copyright_text
 
 
 class TestSpdxFile(TestCase):

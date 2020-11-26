@@ -7,8 +7,8 @@ import os
 
 from setuptools import setup
 
-PROJECT_SLUG = "mbed-tools-ci-scripts"
-SOURCE_DIR = "mbed_tools_ci_scripts"
+PROJECT_SLUG = "continuous-delivery-scripts"
+SOURCE_DIR = "continuous_delivery_scripts"
 __version__ = None
 
 repository_dir = os.path.dirname(__file__)
@@ -22,10 +22,9 @@ with open(os.path.join(repository_dir, "README.md"), encoding="utf8") as fh:
     long_description = fh.read()
 
 setup(
-    author="Mbed team",
-    author_email="support@mbed.com",
+    author="CMSIS team",
+    author_email="adrien.cabarbaye@arm.com",
     classifiers=[
-        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
@@ -34,22 +33,21 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Topic :: Software Development :: Build Tools",
-        "Topic :: Software Development :: Embedded Systems",
     ],
-    description="Continuous Integration scripts used by Mbed tools Python packages",
+    description="Continuous Delivery scripts to increase automation",
     entry_points={
         "console_scripts": [
-            f"assert-news={SOURCE_DIR}.assert_news:main",
-            f"generate-news={SOURCE_DIR}.generate_news:main",
-            f"create-news-file={SOURCE_DIR}.create_news_file:main",
-            f"generate-docs={SOURCE_DIR}.generate_docs:main",
-            f"tag-and-release={SOURCE_DIR}.tag_and_release:main",
-            f"get-config={SOURCE_DIR}.get_config:main",
-            f"license-files={SOURCE_DIR}.license_files:main",
-            f"generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
-        ],
+            f"cd-assert-news={SOURCE_DIR}.assert_news:main",
+            f"cd-generate-news={SOURCE_DIR}.generate_news:main",
+            f"cd-create-news-file={SOURCE_DIR}.create_news_file:main",
+            f"cd-generate-docs={SOURCE_DIR}.generate_docs:main",
+            f"cd-tag-and-release={SOURCE_DIR}.tag_and_release:main",
+            f"cd-get-config={SOURCE_DIR}.get_config:main",
+            f"cd-license-files={SOURCE_DIR}.license_files:main",
+            f"cd-generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
+        ]
     },
-    keywords="Arm Mbed OS MbedOS Tools CI Scripts Automation",
+    keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
     include_package_data=True,
     install_requires=[
         "gitpython",

@@ -12,15 +12,15 @@ import subprocess
 from pathlib import Path
 from typing import Optional, Tuple
 
-from mbed_tools_ci_scripts.license_files import add_licence_header
-from mbed_tools_ci_scripts.generate_docs import generate_documentation
-from mbed_tools_ci_scripts.generate_news import version_project
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.definitions import CommitType
-from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
-from mbed_tools_ci_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
-from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
-from mbed_tools_ci_scripts.report_third_party_ip import (
+from continuous_delivery_scripts.license_files import add_licence_header
+from continuous_delivery_scripts.generate_docs import generate_documentation
+from continuous_delivery_scripts.generate_news import version_project
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.filesystem_helpers import cd
+from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.report_third_party_ip import (
     get_current_spdx_project,
     generate_spdx_project_reports,
     SpdxProject,

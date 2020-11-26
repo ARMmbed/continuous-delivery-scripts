@@ -10,10 +10,7 @@ from typing import List, Any, Optional, cast
 
 import pkg_resources
 
-from mbed_tools_ci_scripts.utils.configuration import (
-    ConfigurationVariable,
-    configuration,
-)
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 from .definitions import UNKNOWN
 import sys
 import subprocess

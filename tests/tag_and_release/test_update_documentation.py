@@ -2,19 +2,19 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Tests for mbed_tools_ci_scripts.tag_and_release documentation update functions."""
+"""Tests for continuous_delivery_scripts.tag_and_release documentation update functions."""
 import os
 from unittest import mock, TestCase
 
 import pathlib
 from pyfakefs.fake_filesystem_unittest import Patcher
 
-from mbed_tools_ci_scripts.tag_and_release import _update_documentation
+from continuous_delivery_scripts.tag_and_release import _update_documentation
 
 
 class TestAddNewDocumentation(TestCase):
-    @mock.patch("mbed_tools_ci_scripts.generate_docs._call_pdoc")
-    @mock.patch("mbed_tools_ci_scripts.tag_and_release._get_documentation_config")
+    @mock.patch("continuous_delivery_scripts.generate_docs._call_pdoc")
+    @mock.patch("continuous_delivery_scripts.tag_and_release._get_documentation_config")
     def test_update_docs(self, _get_documentation_config, _call_pdoc):
         with Patcher() as patcher:
             module_name = "module_name"

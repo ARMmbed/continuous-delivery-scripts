@@ -4,7 +4,7 @@
 #
 import unittest
 
-from mbed_tools_ci_scripts.utils.third_party_licences import (
+from continuous_delivery_scripts.utils.third_party_licences import (
     parse_licence,
     iter_licenses,
     OpenSourceLicences,

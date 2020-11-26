@@ -511,7 +511,7 @@ class GitWrapper:
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
-        master_branch_commit = self.repo.commit("master")
+        master_branch_commit = self.repo.commit(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
         current_branch_commit = self.repo.commit(self.get_current_branch())
         changes = self.get_changes_list(
             self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type="a"
@@ -655,18 +655,25 @@ class GitTempClone:
         """
         self._temporary_dir = TemporaryDirectory()
         logger.info(f"Creating a temporary repository in {self._temporary_dir}")
-        _repo = repository_to_clone
-        _current_branch_name = desired_branch_name if desired_branch_name else str(_repo.get_current_branch())
-        self._clone = GitClone.wrap(_repo.clone(self._temporary_dir.path), initial_location=_repo.root)
+        self._repo = repository_to_clone
+        _current_branch_name = desired_branch_name if desired_branch_name else str(self._repo.get_current_branch())
+        self._clone = GitClone.wrap(self._repo.clone(self._temporary_dir.path), initial_location=self._repo.root)
         self._clone.checkout(_current_branch_name)
-        _repo.apply_uncommitted_changes(self._clone)
+        self._repo.apply_uncommitted_changes(self._clone)
 
     def __enter__(self) -> GitClone:
         """Context manager entry point."""
         return self._clone
 
     def __exit__(self, type: Any, value: Any, traceback: Any) -> None:
-        """Context manager exit point."""
+        """Context manager exit point.
+
+        As described in
+        https://github.com/gitpython-developers/GitPython/blob/60acfa5d8d454a7c968640a307772902d211f043/git/repo/base.py#L223,
+        Tempfiles objects on Windows are holding references to open files until
+        they are collected by the garbage collector, thus preventing deletion.
+        """
+        self._repo.repo.close()
         self._temporary_dir.cleanup()
 
 

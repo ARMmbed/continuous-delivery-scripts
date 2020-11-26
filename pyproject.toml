@@ -5,17 +5,18 @@
 [ProjectConfig]
 # Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
 # these tokens are used to identify path variables from other variable types.
-PROJECT_NAME = "Mbed Tools CI Scripts"
-PACKAGE_NAME = "mbed-tools-ci-scripts"
+MASTER_BRANCH = "main"
+PROJECT_NAME = "Continuous Delivery Scripts"
+PACKAGE_NAME = "continuous-delivery-scripts"
 PROJECT_UUID = '79d8e41a-d0cf-4503-808a-0862fb8f971c'
 PROJECT_ROOT = "."
 NEWS_DIR = "news/"
-SOURCE_DIR = "mbed_tools_ci_scripts"
+SOURCE_DIR = "continuous_delivery_scripts"
 RELEASE_BRANCH_PATTERN = "^release.*$"
-MODULE_TO_DOCUMENT = "mbed_tools_ci_scripts"
+MODULE_TO_DOCUMENT = "continuous_delivery_scripts"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
-VERSION_FILE_PATH = "mbed_tools_ci_scripts/_version.py"
+VERSION_FILE_PATH = "continuous-delivery-scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 AWS_BUCKET=""
 
@@ -37,7 +38,7 @@ CONFIG_NAME = "DEFAULT"
 PRERELEASE_TOKEN = "beta"
 BUILD_TOKEN = "dev"
 TAG_TEMPLATE = "release/{version}"
-targets = [ "mbed_tools_ci_scripts/_version.py",]
+targets = [ "continuous_delivery_scripts/_version.py",]
 
 [AutoVersionConfig.key_aliases]
 __version__ = "VERSION_KEY"
@@ -54,7 +55,7 @@ patch = "news/*.bugfix"
 [tool.towncrier]
 directory = "news"
 filename = "CHANGELOG.md"
-package = "mbed_tools_ci_scripts"
+package = "continuous_delivery_scripts"
 title_format = "{version} ({project_date})"
 start_string = """
 [//]: # (begin_release_notes)

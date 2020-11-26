@@ -4,7 +4,7 @@
 #
 import unittest
 from pathlib import Path
-from mbed_tools_ci_scripts.utils.hash_helpers import determine_sha1_hash_of_file
+from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file
 
 
 class TestHashGeneration(unittest.TestCase):

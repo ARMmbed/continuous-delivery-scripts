@@ -13,14 +13,11 @@ from spdx.package import Package
 from spdx.utils import NoAssert
 from typing import List, Optional
 
-from mbed_tools_ci_scripts.spdx_report.spdx_file import SpdxFile
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
-    determine_spdx_value,
-    list_project_files_for_licensing,
-)
-from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
-from mbed_tools_ci_scripts.utils.package_helpers import PackageMetadata
-from mbed_tools_ci_scripts.utils.third_party_licences import (
+from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
+from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_value, list_project_files_for_licensing
+from continuous_delivery_scripts.utils.definitions import UNKNOWN
+from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.third_party_licences import (
     UNKNOWN_LICENCE,
     cleanse_licence_expression,
     is_licence_accepted,
@@ -57,7 +54,7 @@ class SpdxPackage:
     See https://spdx.org/spdx-specification-21-web-version#h.4i7ojhp
     """
 
-    def __init__(self, package_info: PackageInfo, is_dependency: bool = False,) -> None:
+    def __init__(self, package_info: PackageInfo, is_dependency: bool = False) -> None:
         """Constructor."""
         self._is_dependency = is_dependency
         self._package_info = package_info

@@ -13,9 +13,9 @@ import subprocess
 import sys
 import tempfile
 from datetime import datetime
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.logging import set_log_level, log_exception
-from mbed_tools_ci_scripts.utils.python_helpers import flatten_dictionary
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
+from continuous_delivery_scripts.utils.python_helpers import flatten_dictionary
 from pathlib import Path
 
 logger = logging.getLogger(__name__)

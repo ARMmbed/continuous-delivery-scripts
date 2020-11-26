@@ -14,9 +14,9 @@ import pathlib
 import sys
 from datetime import datetime
 
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.assert_news import validate_news_file
-from mbed_tools_ci_scripts.utils.logging import log_exception
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.assert_news import validate_news_file
+from continuous_delivery_scripts.utils.logging import log_exception
 
 logger = logging.getLogger(__name__)
 

@@ -8,13 +8,13 @@
 
 # Rebuild after commits to master for GA releases, beta for pre-release and release branches for patches.
 trigger:
-  - master
+  - main
   - beta
   - releases/*
 
 # Trigger on a PR to master, beta or releases branches (this includes PRs from forks but secrets are not exposed).
 pr:
-  - master
+  - main
   - beta
   - releases/*
 
@@ -88,7 +88,7 @@ stages:
             displayName: 'Static Analysis - general (flake8)'
 
           - script: |
-              mypy -p mbed_tools_ci_scripts
+              mypy -p continuous_delivery_scripts
             displayName: 'Static Analysis - type checks (mypy)'
 
           - script: |
@@ -221,7 +221,7 @@ stages:
     # Only allow production releases if the tests pass and we are on the master branch.
     dependsOn:
       - CiCheckpoint
-    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/main'))
     jobs:
       - deployment: PyPIProductionRelease
         displayName: 'PyPI Production Release'

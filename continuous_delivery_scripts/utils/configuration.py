@@ -144,8 +144,8 @@ class StaticConfig(GenericConfig):
     LOGGER_FORMAT = "%(levelname)s: %(message)s"
     BOT_USERNAME = "Monty Bot"
     BOT_EMAIL = "monty-bot@arm.com"
-    ORGANISATION = "Arm Mbed"
-    ORGANISATION_EMAIL = "support@mbed.com"
+    ORGANISATION = "Arm"
+    ORGANISATION_EMAIL = "support@arm.com"
     FILE_LICENCE_IDENTIFIER = "Apache-2.0"
     COPYRIGHT_START_DATE = 2020
     ACCEPTED_THIRD_PARTY_LICENCES = ["Apache-2.0", "BSD*", "JSON", "MIT", "Python-2.0", "PSF-2.0", "MPL-2.0"]

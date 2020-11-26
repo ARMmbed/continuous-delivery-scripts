@@ -17,9 +17,9 @@ import argparse
 import logging
 from pathlib import Path
 from typing import Any
-from mbed_tools_ci_scripts.spdx_report.spdx_project import SpdxProject
-from mbed_tools_ci_scripts.utils.logging import set_log_level, log_exception
-from mbed_tools_ci_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
+from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
+from continuous_delivery_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
 
 logger = logging.getLogger(__name__)
 
@@ -62,9 +62,7 @@ def main() -> int:
         "-o", "--output-dir", help="Output directory where the files are generated", required=True, type=convert_to_path
     )
 
-    parser.add_argument(
-        "-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.",
-    )
+    parser.add_argument("-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.")
     args = parser.parse_args()
     set_log_level(args.verbose)
 

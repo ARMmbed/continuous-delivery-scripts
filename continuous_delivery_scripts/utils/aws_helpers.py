@@ -11,7 +11,7 @@ import logging
 import os
 from pathlib import Path
 import mimetypes
-from mbed_tools_ci_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 
 from typing import List, Optional, Tuple
 

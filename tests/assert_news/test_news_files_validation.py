@@ -5,8 +5,8 @@
 import pathlib
 from unittest import TestCase, mock
 
-from mbed_tools_ci_scripts.assert_news import find_news_files, validate_news_files
-from mbed_tools_ci_scripts.utils.git_helpers import GitWrapper
+from continuous_delivery_scripts.assert_news import find_news_files, validate_news_files
+from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 
 
 class TestFindNewsFiles(TestCase):
@@ -29,7 +29,7 @@ class TestFindNewsFiles(TestCase):
 
 
 class TestValidateNewsFiles(TestCase):
-    @mock.patch("mbed_tools_ci_scripts.assert_news.find_news_files")
+    @mock.patch("continuous_delivery_scripts.assert_news.find_news_files")
     def test_raises_when_theres_no_news_files(self, find_news_files):
         find_news_files.return_value = []
         news_dir = "some/path"
@@ -40,8 +40,8 @@ class TestValidateNewsFiles(TestCase):
         expected_error_message = f"PR must contain a news file in {news_dir}. See README.md."
         self.assertEqual(str(cm.exception), expected_error_message)
 
-    @mock.patch("mbed_tools_ci_scripts.assert_news.find_news_files")
-    @mock.patch("mbed_tools_ci_scripts.assert_news.validate_news_file")
+    @mock.patch("continuous_delivery_scripts.assert_news.find_news_files")
+    @mock.patch("continuous_delivery_scripts.assert_news.validate_news_file")
     def test_checks_each_news_file(self, validate_news_file, find_news_files):
         find_news_files.return_value = ["a"]
         git_wrapper = mock.Mock(spec_set=GitWrapper)

@@ -8,7 +8,7 @@ from unittest import TestCase
 
 from pathlib import Path
 
-from mbed_tools_ci_scripts.utils.filesystem_helpers import (
+from continuous_delivery_scripts.utils.filesystem_helpers import (
     TemporaryDirectory,
     find_file_in_tree,
     cd,
@@ -17,7 +17,7 @@ from mbed_tools_ci_scripts.utils.filesystem_helpers import (
     should_exclude_path,
     list_all_files,
 )
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import SPDX_LICENCE_IDENTIFIER_PATTERN
+from continuous_delivery_scripts.spdx_report.spdx_helpers import SPDX_LICENCE_IDENTIFIER_PATTERN
 
 
 class TestFilesystemHelpers(TestCase):

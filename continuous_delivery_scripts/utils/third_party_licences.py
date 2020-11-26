@@ -11,11 +11,8 @@ from license_expression import Licensing, LicenseExpression, OR
 from spdx.config import _licenses
 from typing import Iterable, cast, Optional, Iterator, List, Pattern, Any
 
-from mbed_tools_ci_scripts.utils.configuration import (
-    ConfigurationVariable,
-    configuration,
-)
-from mbed_tools_ci_scripts.utils.string_helpers import determine_similar_string_from_list
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.string_helpers import determine_similar_string_from_list
 
 
 @dataclass(order=True, frozen=True)

@@ -6,13 +6,18 @@ import pathlib
 from unittest import TestCase, mock
 from datetime import datetime
 from tempfile import TemporaryDirectory
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.create_news_file import NewsType, create_news_file, determine_news_file_path, _write_file
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.create_news_file import (
+    NewsType,
+    create_news_file,
+    determine_news_file_path,
+    _write_file,
+)
 
 
 class TestCreateNewsFile(TestCase):
-    @mock.patch("mbed_tools_ci_scripts.create_news_file.determine_news_file_path")
-    @mock.patch("mbed_tools_ci_scripts.create_news_file._write_file")
+    @mock.patch("continuous_delivery_scripts.create_news_file.determine_news_file_path")
+    @mock.patch("continuous_delivery_scripts.create_news_file._write_file")
     def test_creates_a_file_with_available_file_name_and_returns_its_path(self, _write_file, determine_news_file_path):
         news_file_path = pathlib.Path("some/1234501.feature")
         determine_news_file_path.return_value = news_file_path

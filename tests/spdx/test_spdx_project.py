@@ -6,8 +6,8 @@ from unittest import TestCase
 
 from unittest.mock import PropertyMock, patch
 
-from mbed_tools_ci_scripts.spdx_report.spdx_project import SpdxProject
-from mbed_tools_ci_scripts.utils.package_helpers import ProjectMetadataParser, ProjectMetadata, PackageMetadata
+from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataParser, ProjectMetadata, PackageMetadata
 
 
 class TestSpdxFile(TestCase):
@@ -16,7 +16,7 @@ class TestSpdxFile(TestCase):
         metadata.project_metadata = PackageMetadata({"License": "Apache 2"})
 
         with patch(
-            "mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
+            "continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
             new_callable=PropertyMock,
         ) as mock_parser:
             mock_parser.return_value = metadata
@@ -28,7 +28,7 @@ class TestSpdxFile(TestCase):
         metadata.project_metadata = PackageMetadata({"License": "Apache 2"})
         metadata.add_dependency_metadata(PackageMetadata({"License": "Apache 2"}))
         with patch(
-            "mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
+            "continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
             new_callable=PropertyMock,
         ) as mock_parser:
             mock_parser.return_value = metadata
@@ -40,7 +40,7 @@ class TestSpdxFile(TestCase):
         metadata.project_metadata = PackageMetadata({"License": "GPL 3"})
 
         with patch(
-            "mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
+            "continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
             new_callable=PropertyMock,
         ) as mock_parser:
             mock_parser.return_value = metadata
@@ -54,7 +54,7 @@ class TestSpdxFile(TestCase):
         metadata.project_metadata = PackageMetadata({"License": "Apache Licence, Version 2 AND (BSD OR MIT) AND GPL 3"})
 
         with patch(
-            "mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
+            "continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
             new_callable=PropertyMock,
         ) as mock_parser:
             mock_parser.return_value = metadata
@@ -69,7 +69,7 @@ class TestSpdxFile(TestCase):
         metadata.add_dependency_metadata(PackageMetadata({"License": "GPL 3"}))
 
         with patch(
-            "mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
+            "continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
             new_callable=PropertyMock,
         ) as mock_parser:
             mock_parser.return_value = metadata
@@ -84,7 +84,7 @@ class TestSpdxFile(TestCase):
         metadata.add_dependency_metadata(PackageMetadata({"License": "Apache Licence 2 AND (BSD OR MIT) AND GPL 3"}))
 
         with patch(
-            "mbed_tools_ci_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
+            "continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser.project_metadata",
             new_callable=PropertyMock,
         ) as mock_parser:
             mock_parser.return_value = metadata

@@ -9,12 +9,12 @@ import os
 from spdx.writers.tagvalue import write_document
 from typing import Optional, List, cast, Tuple, Dict
 
-from mbed_tools_ci_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
-from mbed_tools_ci_scripts.spdx_report.spdx_document import SpdxDocument
-from mbed_tools_ci_scripts.utils.hash_helpers import determine_sha1_hash_of_file
-from mbed_tools_ci_scripts.utils.package_helpers import ProjectMetadataParser
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
-from mbed_tools_ci_scripts.spdx_report.spdx_summary import SummaryGenerator
+from continuous_delivery_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
+from continuous_delivery_scripts.spdx_report.spdx_document import SpdxDocument
+from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file
+from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataParser
+from continuous_delivery_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
+from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
 
 
 class SpdxProject:
@@ -107,7 +107,7 @@ class SpdxProject:
             checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
             externalRefs.append(
                 DependencySpdxDocumentRef(
-                    name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum,
+                    name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum
                 )
             )
         self.main_document.external_refs = externalRefs

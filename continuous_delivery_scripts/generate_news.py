@@ -10,10 +10,10 @@ import logging
 import os
 import subprocess
 from auto_version import auto_version_tool
-from mbed_tools_ci_scripts.utils.definitions import CommitType
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.logging import log_exception, set_log_level
-from mbed_tools_ci_scripts.utils.filesystem_helpers import cd
+from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.utils.filesystem_helpers import cd
 from typing import Optional, Tuple
 
 logger = logging.getLogger(__name__)

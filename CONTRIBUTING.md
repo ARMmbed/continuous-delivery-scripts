@@ -1,18 +1,18 @@
 # Contribution Guide
 
-Mbed OS is an open source project and we really appreciate your contributions to the tools. We are committed to 
+We really appreciate your contributions to the tools. We are committed to 
 fostering a welcoming community, please see our Code of Conduct, which can be found here:
 
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
 
 There are several ways to contribute:
 
-- Raise an issue found via [GitHub Issues](https://github.com/ARMmbed/mbed-tools-ci-scripts/issues).
-- Open an [pull request](https://github.com/ARMmbed/mbed-tools-ci-scripts/pulls) to:
+- Raise an issue found via [GitHub Issues](https://github.com/ARMmbed/continuous-delivery-scripts/issues).
+- Open an [pull request](https://github.com/ARMmbed/continuous-delivery-scripts/pulls) to:
   - Provide a fix.
   - Add an enhancement feature.
   - Correct, update or add documentation.
-- Answering community questions on the [Mbed Forum](https://forums.mbed.com/).
+
 
 ## How to Contribute Documentation or Code
 
@@ -28,7 +28,7 @@ normal process to make a change is as follows:
 6. Submit a pull request.
 
 We will review the proposed change as soon as we can and, if needed, give feedback. Please bear in mind that the tools
-for Mbed OS are complex and cover a large number of use cases. This means we may ask for changes not only to ensure
+are complex and cover a large number of use cases. This means we may ask for changes not only to ensure
 that the proposed change meets our quality criteria, but also to make sure the that the change is generally useful and
 doesn't impact other uses cases or maintainability.
 
@@ -91,11 +91,5 @@ Emoji | Topic(s)
 🚀 | Releasing or deploying.
 
 For more on the version number scheme please see the [ReadMe](./README.md).
-
-## One Last Thing...
-
-For us to accept your code contributions, we will need you to agree to our 
-[Mbed Contributor Agreement](https://os.mbed.com/contributor_agreement/) to give us the necessary rights to use and 
-distribute your contributions.
 
 Thank you :smiley:

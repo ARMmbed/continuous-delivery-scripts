@@ -10,14 +10,14 @@ from spdx.document import License
 from spdx.file import File, FileType
 from typing import Optional
 
-from mbed_tools_ci_scripts.spdx_report.spdx_helpers import (
+from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     determine_spdx_value,
     determine_file_licence,
     determine_file_copyright_text,
 )
-from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
-from mbed_tools_ci_scripts.utils.hash_helpers import generate_uuid_based_on_str, determine_sha1_hash_of_file
-from mbed_tools_ci_scripts.utils.third_party_licences import cleanse_licence_expression
+from continuous_delivery_scripts.utils.definitions import UNKNOWN
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str, determine_sha1_hash_of_file
+from continuous_delivery_scripts.utils.third_party_licences import cleanse_licence_expression
 
 
 class SpdxFile:

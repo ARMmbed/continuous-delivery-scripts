@@ -21,10 +21,14 @@ from pathlib import Path
 from spdx.utils import SPDXNone, UnKnown
 from typing import Union, Optional, Iterator, Any, Tuple
 
-from mbed_tools_ci_scripts.utils.configuration import ConfigurationVariable, configuration
-from mbed_tools_ci_scripts.utils.definitions import UNKNOWN
-from mbed_tools_ci_scripts.utils.filesystem_helpers import scan_file_for_pattern, should_exclude_path, list_all_files
-from mbed_tools_ci_scripts.utils.third_party_licences import simplify_licence_expression
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.definitions import UNKNOWN
+from continuous_delivery_scripts.utils.filesystem_helpers import (
+    scan_file_for_pattern,
+    should_exclude_path,
+    list_all_files,
+)
+from continuous_delivery_scripts.utils.third_party_licences import simplify_licence_expression
 
 logger = logging.getLogger(__name__)
 

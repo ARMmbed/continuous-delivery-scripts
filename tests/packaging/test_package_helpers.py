@@ -6,8 +6,8 @@ import unittest
 
 from pathlib import Path
 
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
-from mbed_tools_ci_scripts.utils.package_helpers import (
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.package_helpers import (
     ProjectMetadataParser,
     parse_package_metadata_lines,
     generate_package_info,
