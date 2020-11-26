@@ -12,3 +12,11 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"1.0.0" (2020-11-26)
+====================
+
+Major changes
+-------------
+
+- Initial Release (#1)

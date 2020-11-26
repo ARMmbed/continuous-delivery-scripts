@@ -7,23 +7,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.3" />
-<title>mbed_tools_ci_scripts.utils.configuration API documentation</title>
+<meta name="generator" content="pdoc 0.9.1" />
+<title>continuous_delivery_scripts.utils.configuration API documentation</title>
 <meta name="description" content="Utilities in charge of fetching configuration values for the ci scripts." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
 <style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
 <script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
 <body>
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools_ci_scripts.utils.configuration</code></h1>
+<h1 class="title">Module <code>continuous_delivery_scripts.utils.configuration</code></h1>
 </header>
 <section id="section-intro">
 <p>Utilities in charge of fetching configuration values for the ci scripts.</p>
@@ -177,8 +177,8 @@ class StaticConfig(GenericConfig):
     LOGGER_FORMAT = &#34;%(levelname)s: %(message)s&#34;
     BOT_USERNAME = &#34;Monty Bot&#34;
     BOT_EMAIL = &#34;monty-bot@arm.com&#34;
-    ORGANISATION = &#34;Arm Mbed&#34;
-    ORGANISATION_EMAIL = &#34;support@mbed.com&#34;
+    ORGANISATION = &#34;Arm&#34;
+    ORGANISATION_EMAIL = &#34;support@arm.com&#34;
     FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
     COPYRIGHT_START_DATE = 2020
     ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
@@ -328,7 +328,7 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable"><code class="flex name class">
 <span>class <span class="ident">ConfigurationVariable</span></span>
 <span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
 </code></dt>
@@ -400,121 +400,177 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES"><code class="name">var <span class="ident">ACCEPTED_THIRD_PARTY_LICENCES</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES"><code class="name">var <span class="ident">ACCEPTED_THIRD_PARTY_LICENCES</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH"><code class="name">var <span class="ident">CHANGELOG_FILE_PATH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH"><code class="name">var <span class="ident">CHANGELOG_FILE_PATH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_DEFAULT_OUTPUT_PATH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_DEFAULT_OUTPUT_PATH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN"><code class="name">var <span class="ident">GIT_TOKEN</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN"><code class="name">var <span class="ident">GIT_TOKEN</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_PYPI_TEST_UPLOAD</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_PYPI_TEST_UPLOAD</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT"><code class="name">var <span class="ident">MODULE_TO_DOCUMENT</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT"><code class="name">var <span class="ident">MODULE_TO_DOCUMENT</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR"><code class="name">var <span class="ident">NEWS_DIR</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR"><code class="name">var <span class="ident">NEWS_DIR</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE"><code class="name">var <span class="ident">PACKAGES_WITH_CHECKED_LICENCE</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE"><code class="name">var <span class="ident">PACKAGES_WITH_CHECKED_LICENCE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME"><code class="name">var <span class="ident">PACKAGE_NAME</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME"><code class="name">var <span class="ident">PACKAGE_NAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG"><code class="name">var <span class="ident">PROJECT_CONFIG</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG"><code class="name">var <span class="ident">PROJECT_CONFIG</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME"><code class="name">var <span class="ident">PROJECT_NAME</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME"><code class="name">var <span class="ident">PROJECT_NAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT"><code class="name">var <span class="ident">PROJECT_ROOT</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT"><code class="name">var <span class="ident">PROJECT_ROOT</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID"><code class="name">var <span class="ident">PROJECT_UUID</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID"><code class="name">var <span class="ident">PROJECT_UUID</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH"><code class="name">var <span class="ident">VERSION_FILE_PATH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH"><code class="name">var <span class="ident">VERSION_FILE_PATH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.choices"><code class="name flex">
+<span>def <span class="ident">choices</span></span>(<span>) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets a list of all possible configuration variables.</p>
+<h2 id="returns">Returns</h2>
+<p>a list of configuration variables</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def choices() -&gt; List[str]:
+    &#34;&#34;&#34;Gets a list of all possible configuration variables.
+
+    Returns:
+        a list of configuration variables
+    &#34;&#34;&#34;
+    return [t.name.upper() for t in ConfigurationVariable]</code></pre>
+</details>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>type_str: str) ‑> <a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines the configuration variable from a string.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>type_str</code></strong></dt>
+<dd>string to parse.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding configuration variable.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(type_str: str) -&gt; &#34;ConfigurationVariable&#34;:
+    &#34;&#34;&#34;Determines the configuration variable from a string.
+
+    Args:
+        type_str: string to parse.
+
+    Returns:
+        corresponding configuration variable.
+    &#34;&#34;&#34;
+    try:
+        return ConfigurationVariable[type_str.upper()]
+    except KeyError as e:
+        raise ValueError(f&#34;Unknown configuration variable: {type_str}. {e}&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.EnvironmentConfig"><code class="flex name class">
 <span>class <span class="ident">EnvironmentConfig</span></span>
 </code></dt>
 <dd>
@@ -543,20 +599,20 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<li><code><b><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
 <ul class="hlist">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.FileConfig"><code class="flex name class">
 <span>class <span class="ident">FileConfig</span></span>
 <span>(</span><span>file_path: str = None)</span>
 </code></dt>
@@ -665,27 +721,27 @@ to current directory (i.e. os.getcwd()).</p>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME"><code class="name">var <span class="ident">CONFIG_FILE_NAME</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME"><code class="name">var <span class="ident">CONFIG_FILE_NAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION"><code class="name">var <span class="ident">CONFIG_SECTION</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.FileConfig.CONFIG_SECTION"><code class="name">var <span class="ident">CONFIG_SECTION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN"><code class="name">var <span class="ident">PATH_TOKEN</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.FileConfig.PATH_TOKEN"><code class="name">var <span class="ident">PATH_TOKEN</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.configuration.FileConfig.config"><code class="name">var <span class="ident">config</span> : dict</code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.FileConfig.config"><code class="name">var <span class="ident">config</span> : dict</code></dt>
 <dd>
 <div class="desc"><p>Gets the file configuration.</p></div>
 <details class="source">
@@ -704,15 +760,15 @@ def config(self) -&gt; dict:
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<li><code><b><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
 <ul class="hlist">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.GenericConfig"><code class="flex name class">
 <span>class <span class="ident">GenericConfig</span></span>
 </code></dt>
 <dd>
@@ -774,15 +830,15 @@ def config(self) -&gt; dict:
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig" href="#mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig">EnvironmentConfig</a></li>
-<li><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig">FileConfig</a></li>
-<li><a title="mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration" href="#mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration">ProjectConfiguration</a></li>
-<li><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig">StaticConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.EnvironmentConfig" href="#continuous_delivery_scripts.utils.configuration.EnvironmentConfig">EnvironmentConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.FileConfig" href="#continuous_delivery_scripts.utils.configuration.FileConfig">FileConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.ProjectConfiguration" href="#continuous_delivery_scripts.utils.configuration.ProjectConfiguration">ProjectConfiguration</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.StaticConfig" href="#continuous_delivery_scripts.utils.configuration.StaticConfig">StaticConfig</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value"><code class="name flex">
-<span>def <span class="ident">get_value</span></span>(<span>self, key: Union[str, <a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>]) ‑> Any</span>
+<dt id="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value"><code class="name flex">
+<span>def <span class="ident">get_value</span></span>(<span>self, key: Union[str, <a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>]) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets a configuration value.</p>
@@ -817,8 +873,8 @@ def config(self) -&gt; dict:
     return self._fetch_value(key_str)</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default"><code class="name flex">
-<span>def <span class="ident">get_value_or_default</span></span>(<span>self, key: Union[str, <a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>], default_value: Any) ‑> Any</span>
+<dt id="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default"><code class="name flex">
+<span>def <span class="ident">get_value_or_default</span></span>(<span>self, key: Union[str, <a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a>], default_value: Any) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets a configuration value.</p>
@@ -861,9 +917,9 @@ default value if the variable is not defined.</p></div>
 </dd>
 </dl>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.ProjectConfiguration"><code class="flex name class">
 <span>class <span class="ident">ProjectConfiguration</span></span>
-<span>(</span><span>sources: List[<a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a>])</span>
+<span>(</span><span>sources: List[<a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a>])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Overall project's configuration.</p>
@@ -899,20 +955,20 @@ default value if the variable is not defined.</p></div>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<li><code><b><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
 <ul class="hlist">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig"><code class="flex name class">
 <span>class <span class="ident">StaticConfig</span></span>
 </code></dt>
 <dd>
@@ -941,8 +997,8 @@ defined in toml.</p></div>
     LOGGER_FORMAT = &#34;%(levelname)s: %(message)s&#34;
     BOT_USERNAME = &#34;Monty Bot&#34;
     BOT_EMAIL = &#34;monty-bot@arm.com&#34;
-    ORGANISATION = &#34;Arm Mbed&#34;
-    ORGANISATION_EMAIL = &#34;support@mbed.com&#34;
+    ORGANISATION = &#34;Arm&#34;
+    ORGANISATION_EMAIL = &#34;support@arm.com&#34;
     FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
     COPYRIGHT_START_DATE = 2020
     ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
@@ -956,77 +1012,77 @@ defined in toml.</p></div>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
+<li><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES"><code class="name">var <span class="ident">ACCEPTED_THIRD_PARTY_LICENCES</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES"><code class="name">var <span class="ident">ACCEPTED_THIRD_PARTY_LICENCES</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE"><code class="name">var <span class="ident">PACKAGES_WITH_CHECKED_LICENCE</span> : List[str]</code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE"><code class="name">var <span class="ident">PACKAGES_WITH_CHECKED_LICENCE</span> : List[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
+<li><code><b><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></b></code>:
 <ul class="hlist">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="mbed_tools_ci_scripts.utils.configuration.Undefined"><code class="flex name class">
+<dt id="continuous_delivery_scripts.utils.configuration.Undefined"><code class="flex name class">
 <span>class <span class="ident">Undefined</span></span>
-<span>(</span><span>...)</span>
+<span>(</span><span>*args, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Exception raised when a configuration value is not defined.</p></div>
@@ -1056,86 +1112,88 @@ defined in toml.</p></div>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools_ci_scripts.utils" href="index.html">mbed_tools_ci_scripts.utils</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils" href="index.html">continuous_delivery_scripts.utils</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a></code></h4>
 <ul class="">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES">ACCEPTED_THIRD_PARTY_LICENCES</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET">AWS_BUCKET</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH">BETA_BRANCH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL">BOT_EMAIL</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME">BOT_USERNAME</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH">CHANGELOG_FILE_PATH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH">DOCUMENTATION_DEFAULT_OUTPUT_PATH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD">IGNORE_PYPI_TEST_UPLOAD</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT">MODULE_TO_DOCUMENT</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR">NEWS_DIR</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION">ORGANISATION</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE">PACKAGES_WITH_CHECKED_LICENCE</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME">PACKAGE_NAME</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG">PROJECT_CONFIG</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME">PROJECT_NAME</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT">PROJECT_ROOT</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID">PROJECT_UUID</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH" href="#mbed_tools_ci_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH">VERSION_FILE_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES">ACCEPTED_THIRD_PARTY_LICENCES</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET">AWS_BUCKET</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH">BETA_BRANCH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL">BOT_EMAIL</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME">BOT_USERNAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH">CHANGELOG_FILE_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH">DOCUMENTATION_DEFAULT_OUTPUT_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD">IGNORE_PYPI_TEST_UPLOAD</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT">MODULE_TO_DOCUMENT</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR">NEWS_DIR</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION">ORGANISATION</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE">PACKAGES_WITH_CHECKED_LICENCE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME">PACKAGE_NAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG">PROJECT_CONFIG</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME">PROJECT_NAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT">PROJECT_ROOT</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID">PROJECT_UUID</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH">VERSION_FILE_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.choices" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.choices">choices</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.parse" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.parse">parse</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig" href="#mbed_tools_ci_scripts.utils.configuration.EnvironmentConfig">EnvironmentConfig</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.EnvironmentConfig" href="#continuous_delivery_scripts.utils.configuration.EnvironmentConfig">EnvironmentConfig</a></code></h4>
 </li>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig">FileConfig</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.FileConfig" href="#continuous_delivery_scripts.utils.configuration.FileConfig">FileConfig</a></code></h4>
 <ul class="">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME">CONFIG_FILE_NAME</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.CONFIG_SECTION">CONFIG_SECTION</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.PATH_TOKEN">PATH_TOKEN</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.FileConfig.config" href="#mbed_tools_ci_scripts.utils.configuration.FileConfig.config">config</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME" href="#continuous_delivery_scripts.utils.configuration.FileConfig.CONFIG_FILE_NAME">CONFIG_FILE_NAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.FileConfig.CONFIG_SECTION" href="#continuous_delivery_scripts.utils.configuration.FileConfig.CONFIG_SECTION">CONFIG_SECTION</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.FileConfig.PATH_TOKEN" href="#continuous_delivery_scripts.utils.configuration.FileConfig.PATH_TOKEN">PATH_TOKEN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.FileConfig.config" href="#continuous_delivery_scripts.utils.configuration.FileConfig.config">config</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig">GenericConfig</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig" href="#continuous_delivery_scripts.utils.configuration.GenericConfig">GenericConfig</a></code></h4>
 <ul class="">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#mbed_tools_ci_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value">get_value</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default" href="#continuous_delivery_scripts.utils.configuration.GenericConfig.get_value_or_default">get_value_or_default</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration" href="#mbed_tools_ci_scripts.utils.configuration.ProjectConfiguration">ProjectConfiguration</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.ProjectConfiguration" href="#continuous_delivery_scripts.utils.configuration.ProjectConfiguration">ProjectConfiguration</a></code></h4>
 </li>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig">StaticConfig</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig" href="#continuous_delivery_scripts.utils.configuration.StaticConfig">StaticConfig</a></code></h4>
 <ul class="">
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES">ACCEPTED_THIRD_PARTY_LICENCES</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BETA_BRANCH">BETA_BRANCH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_EMAIL">BOT_EMAIL</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.BOT_USERNAME">BOT_USERNAME</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION">ORGANISATION</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE">PACKAGES_WITH_CHECKED_LICENCE</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
-<li><code><a title="mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#mbed_tools_ci_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES">ACCEPTED_THIRD_PARTY_LICENCES</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.BETA_BRANCH" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.BETA_BRANCH">BETA_BRANCH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_EMAIL" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_EMAIL">BOT_EMAIL</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_USERNAME" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_USERNAME">BOT_USERNAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION">ORGANISATION</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE">PACKAGES_WITH_CHECKED_LICENCE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="mbed_tools_ci_scripts.utils.configuration.Undefined" href="#mbed_tools_ci_scripts.utils.configuration.Undefined">Undefined</a></code></h4>
+<h4><code><a title="continuous_delivery_scripts.utils.configuration.Undefined" href="#continuous_delivery_scripts.utils.configuration.Undefined">Undefined</a></code></h4>
 </li>
 </ul>
 </li>
@@ -1143,7 +1201,7 @@ defined in toml.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

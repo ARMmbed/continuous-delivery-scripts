@@ -1,10 +1,10 @@
-                                3rd party IP report for mbed-tools-ci-scripts
+                                3rd party IP report for continuous-delivery-scripts
 
-                                         2020-07-08 17:04:05.692904
+                                         2020-11-26 15:13:56.536943
 
 # Summary:
     Licence compliance: Compliant
-    Details: Project [mbed-tools-ci-scripts]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.
+    Details: Project [continuous-delivery-scripts]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.
 
 # More details:
 
@@ -83,6 +83,13 @@
     [X] Dependency?
     URL: https://github.com/tartley/colorama
     Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- continuous-delivery-scripts:
+    [X] Compliant?
+    [] Dependency?
+    URL: https://github.com/ARMmbed/continuous-delivery-scripts
+    Licence: Apache-2.0
     Licence compliance: Licence is compliant.
 
 - cryptography:
@@ -211,13 +218,6 @@
     Licence: BSD-3-Clause
     Licence compliance: Licence is compliant.
 
-- mbed-tools-ci-scripts:
-    [X] Compliant?
-    [] Dependency?
-    URL: https://github.com/ARMmbed/mbed-tools-ci-scripts
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
-
 - packaging:
     [X] Compliant?
     [X] Dependency?
@@ -313,7 +313,7 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://bitbucket.org/mrabarnett/mrab-regex
-    Licence: Python-2.0
+    Licence: Apache-2.0
     Licence compliance: Licence is compliant.
 
 - requests:
