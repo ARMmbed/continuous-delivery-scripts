@@ -2,7 +2,7 @@
 
 ![Package](https://badgen.net/badge/Package/continuous-delivery-scripts/grey)
 [![Documentation](https://badgen.net/badge/Documentation/GitHub%20Pages/blue?icon=github)](https://armmbed.github.io/continuous-delivery-scripts)
-[![PyPI](https://badgen.net/pypi/v/continuous-delivery-scripts)](https://pypi.org/projectcontinuous-delivery-scripts/)
+[![PyPI](https://badgen.net/pypi/v/continuous-delivery-scripts)](https://pypi.org/project/continuous-delivery-scripts/)
 [![PyPI - Status](https://img.shields.io/pypi/status/continuous-delivery-scripts)](https://pypi.org/project/continuous-delivery-scripts/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/continuous-delivery-scripts)](https://pypi.org/project/continuous-delivery-scripts/)
 
