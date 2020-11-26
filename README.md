@@ -1,4 +1,4 @@
-# CI/CD Automation Scripts
+# Automation Scripts for CI/CD
 
 ![Package](https://badgen.net/badge/Package/continuous-delivery-scripts/grey)
 [![Documentation](https://badgen.net/badge/Documentation/GitHub%20Pages/blue?icon=github)](https://armmbed.github.io/continuous-delivery-scripts)
