@@ -56,7 +56,7 @@ def determine_matching_stats(string1: str, string2: str) -> MatchingStats:
         string1=string1,
         string2=string2,
         damerau_levenshtein_distance=jellyfish.damerau_levenshtein_distance(string1, string2),
-        jaro_winkler_distance=jellyfish.jaro_winkler(string1, string2),
+        jaro_winkler_distance=jellyfish.jaro_winkler_similarity(string1, string2),
         match_rating_approach_comparison=jellyfish.match_rating_comparison(string1, string2),
         exact_match=string1.strip().lower() == string2.strip().lower(),
     )

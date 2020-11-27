@@ -8,9 +8,10 @@ from unittest import mock, TestCase
 
 from pyfakefs.fake_filesystem_unittest import Patcher
 
+from continuous_delivery_scripts.plugins.python import _generate_pdoc_command_list, Python
+
 from continuous_delivery_scripts.generate_docs import (
     _clear_previous_docs,
-    _generate_pdoc_command_list,
     generate_documentation,
     generate_docs,
 )
@@ -35,9 +36,11 @@ class TestGenerateDocs(TestCase):
         _clear_previous_docs(fake_output_dir)
 
     @mock.patch("continuous_delivery_scripts.generate_docs._clear_previous_docs")
-    @mock.patch("continuous_delivery_scripts.generate_docs.check_call")
-    @mock.patch("continuous_delivery_scripts.generate_docs.TemporaryDirectory")
-    def test_generate_docs(self, TemporaryDirectory, check_call, _clear_previous_docs):
+    @mock.patch("continuous_delivery_scripts.plugins.python.check_call")
+    @mock.patch("continuous_delivery_scripts.plugins.python.TemporaryDirectory")
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    def test_generate_docs(self, get_language_specifics, TemporaryDirectory, check_call, _clear_previous_docs):
+        get_language_specifics.return_value = Python()
         fake_output_dir = pathlib.Path("fake/docs")
         fake_module = "module"
         with Patcher():
@@ -51,9 +54,13 @@ class TestGenerateDocs(TestCase):
 
     @mock.patch("continuous_delivery_scripts.generate_docs._clear_previous_docs")
     @mock.patch("continuous_delivery_scripts.generate_docs.log_exception")
-    @mock.patch("continuous_delivery_scripts.generate_docs.check_call")
-    @mock.patch("continuous_delivery_scripts.generate_docs.TemporaryDirectory")
-    def test_generate_docs_errors(self, TemporaryDirectory, check_call, log_exception, _clear_previous_docs):
+    @mock.patch("continuous_delivery_scripts.plugins.python.check_call")
+    @mock.patch("continuous_delivery_scripts.plugins.python.TemporaryDirectory")
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    def test_generate_docs_errors(
+        self, get_language_specifics, TemporaryDirectory, check_call, log_exception, _clear_previous_docs
+    ):
+        get_language_specifics.return_value = Python()
         check_call.side_effect = CalledProcessError(returncode=2, cmd=["pdoc", "some", "stuff"])
         fake_output_dir = pathlib.Path("fake/docs")
         fake_module = "module"
@@ -68,12 +75,14 @@ class TestGenerateDocs(TestCase):
             check_call.assert_called_once_with(_generate_pdoc_command_list(temp_dir, fake_module))
             log_exception.assert_called_once()
 
-    @mock.patch("continuous_delivery_scripts.generate_docs.TemporaryDirectory")
-    @mock.patch("continuous_delivery_scripts.generate_docs._call_pdoc")
-    def test_update_docs(self, _call_pdoc, TemporaryDictionary):
+    @mock.patch("continuous_delivery_scripts.plugins.python.TemporaryDirectory")
+    @mock.patch("continuous_delivery_scripts.plugins.python._call_pdoc")
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    def test_update_docs(self, get_language_specifics, _call_pdoc, TemporaryDictionary):
         with Patcher() as patcher:
             temp_dir = pathlib.Path("temp")
             TemporaryDictionary.return_value = temp_dir
+            get_language_specifics.return_value = Python()
 
             module_name = "module_name"
             docs_dir = pathlib.Path("docs")

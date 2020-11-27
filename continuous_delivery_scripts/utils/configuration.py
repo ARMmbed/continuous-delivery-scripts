@@ -43,11 +43,12 @@ class ConfigurationVariable(enum.Enum):
     PROJECT_UUID = 22
     PACKAGE_NAME = 23
     SOURCE_DIR = 24
-    IGNORE_PYPI_TEST_UPLOAD = 25
+    IGNORE_REPOSITORY_TEST_UPLOAD = 25
     FILE_LICENCE_IDENTIFIER = 26
     COPYRIGHT_START_DATE = 27
     ACCEPTED_THIRD_PARTY_LICENCES = 28
     PACKAGES_WITH_CHECKED_LICENCE = 29
+    PROGRAMMING_LANGUAGE = 30
 
     @staticmethod
     def choices() -> List[str]:
@@ -148,6 +149,7 @@ class StaticConfig(GenericConfig):
     ORGANISATION_EMAIL = "support@arm.com"
     FILE_LICENCE_IDENTIFIER = "Apache-2.0"
     COPYRIGHT_START_DATE = 2020
+    PROGRAMMING_LANGUAGE = "NoOp"
     ACCEPTED_THIRD_PARTY_LICENCES = ["Apache-2.0", "BSD*", "JSON", "MIT", "Python-2.0", "PSF-2.0", "MPL-2.0"]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 

@@ -15,14 +15,11 @@ import tempfile
 from datetime import datetime
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
-from continuous_delivery_scripts.utils.python_helpers import flatten_dictionary
+from continuous_delivery_scripts.utils.python.python_helpers import flatten_dictionary
+from continuous_delivery_scripts.language_specifics import get_language_specifics
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
-
-LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author}. All rights reserved.
-SPDX-License-Identifier: {licence_identifier}
-"""
 
 FILES_TO_IGNORE = ["*.yml", "*.yaml"]
 
@@ -34,7 +31,9 @@ def add_licence_header(verbose_count: int) -> None:
     """
     # copyright (https://github.com/knipknap/copyright) was first considered but
     # comprises quite a few bugs and does not seem active anymore.
-    template_string = _generate_header_template()
+    if not get_language_specifics().can_add_licence_headers():
+        return
+    template_string = get_language_specifics().generate_source_licence_header_template()
     with tempfile.NamedTemporaryFile(suffix=".tmpl", delete=False) as template_file:
         template_file_path = Path(template_file.name)
         logger.debug(f"Creates template file in {str(template_file_path)}")
@@ -42,15 +41,6 @@ def add_licence_header(verbose_count: int) -> None:
         template_file.close()
         copyright_config = get_tool_config(template_file_path)
         _call_licensehearders(copyright_config, verbose_count)
-
-
-def _generate_header_template() -> str:
-    """Generates the header template which is put at the top of source files."""
-    return LICENCE_HEADER_TEMPLATE.format(
-        licence_identifier=configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER),
-        author="${owner}",
-        date="${years}",
-    )
 
 
 def _call_licensehearders(config: dict, verbose_count: int) -> None:
@@ -83,7 +73,7 @@ def get_tool_config(template_file: Path) -> dict:
         "projname": configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         "tmpl": str(template_file),
         "years": copyright_dates,
-        "additional-extensions": "python=.toml",
+        "additional-extensions": "python=.toml c=.go",
         "exclude": FILES_TO_IGNORE,
     }
 

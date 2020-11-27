@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.utils.package_helpers import (
-    ProjectMetadataParser,
+from continuous_delivery_scripts.utils.python.package_helpers import (
+    PythonProjectMetadataFetcher,
     parse_package_metadata_lines,
     generate_package_info,
     get_all_packages_metadata_lines,
@@ -42,7 +42,7 @@ class TestPackaging(unittest.TestCase):
     def test_package_metadata_parser(self):
         generate_package_info()
         current_package = configuration.get_value(ConfigurationVariable.PACKAGE_NAME)
-        parser = ProjectMetadataParser(package_name=current_package)
+        parser = PythonProjectMetadataFetcher(package_name=current_package)
         metadata = parser.project_metadata
         self.assertIsNotNone(metadata)
         self.assertEqual(metadata.package_name, current_package)

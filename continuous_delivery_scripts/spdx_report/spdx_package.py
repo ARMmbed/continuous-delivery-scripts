@@ -16,7 +16,7 @@ from typing import List, Optional
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
 from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_value, list_project_files_for_licensing
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
-from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
     UNKNOWN_LICENCE,
     cleanse_licence_expression,

@@ -3,32 +3,26 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Orchestrates release process."""
-import sys
-
 import argparse
 import datetime
 import logging
-import subprocess
+import sys
 from pathlib import Path
 from typing import Optional, Tuple
 
-from continuous_delivery_scripts.license_files import add_licence_header
 from continuous_delivery_scripts.generate_docs import generate_documentation
 from continuous_delivery_scripts.generate_news import version_project
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.filesystem_helpers import cd
-from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
-from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.language_specifics import get_language_specifics
+from continuous_delivery_scripts.license_files import add_licence_header
 from continuous_delivery_scripts.report_third_party_ip import (
-    get_current_spdx_project,
     generate_spdx_project_reports,
     SpdxProject,
 )
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 
-ENVVAR_TWINE_USERNAME = "TWINE_USERNAME"
-ENVVAR_TWINE_PASSWORD = "TWINE_PASSWORD"
-OUTPUT_DIRECTORY = "release-dist"
 SPDX_REPORTS_DIRECTORY = "licensing"
 
 logger = logging.getLogger(__name__)
@@ -45,7 +39,7 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
         be determined (e.g. on CI)
 
     """
-    _check_credentials()
+    get_language_specifics().check_credentials()
     is_new_version, version = version_project(mode)
     logger.info(f"Current version: {version}")
     if not version:
@@ -59,8 +53,10 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     add_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
-        _generate_spdx_reports(spdx_project)
-        _release_to_pypi()
+        if spdx_project:
+            _generate_spdx_reports(spdx_project)
+        get_language_specifics().package_software()
+        get_language_specifics().release_package_to_repository()
 
 
 def _get_documentation_config() -> Tuple[Path, str]:
@@ -71,20 +67,20 @@ def _get_documentation_config() -> Tuple[Path, str]:
 
 
 def _update_documentation() -> None:
-    """Ensures the documentation is in the correct location for releasing.
-
-    Pdoc nests its docs output in a folder with the module's name.
-    This process removes this unwanted folder.
-    """
+    """Ensures the documentation is in the correct location for releasing."""
     docs_dir, module_to_document = _get_documentation_config()
     generate_documentation(docs_dir, module_to_document)
 
 
-def _update_licensing_summary() -> SpdxProject:
-    project = get_current_spdx_project()
-    project.generate_licensing_summary(
-        Path(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
-    )
+def _update_licensing_summary() -> Optional[SpdxProject]:
+    if not get_language_specifics().can_get_project_metadata():
+        return None
+
+    project = get_language_specifics().get_current_spdx_project()
+    if project:
+        project.generate_licensing_summary(
+            Path(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
+        )
     return project
 
 
@@ -127,64 +123,6 @@ def _commit_changes(commit_message: str, git: GitWrapper) -> None:
     git.commit(f"{commit_message}\n[skip ci]")
     git.push()
     git.pull()
-
-
-def _check_credentials() -> None:
-    # Checks the GitHub token is defined
-    configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-    # Checks that twine username is defined
-    configuration.get_value(ENVVAR_TWINE_USERNAME)
-    # Checks that twine password is defined
-    configuration.get_value(ENVVAR_TWINE_PASSWORD)
-
-
-def _release_to_pypi() -> None:
-    logger.info("Releasing to PyPI")
-    logger.info("Generating a release package")
-    root = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
-    with cd(root):
-        subprocess.check_call(
-            [
-                sys.executable,
-                "setup.py",
-                "clean",
-                "--all",
-                "sdist",
-                "-d",
-                OUTPUT_DIRECTORY,
-                "--formats=gztar",
-                "bdist_wheel",
-                "-d",
-                OUTPUT_DIRECTORY,
-            ]
-        )
-        _upload_to_test_pypi()
-        _upload_to_pypi()
-
-
-def _upload_to_pypi() -> None:
-    logger.info("Uploading to PyPI")
-    subprocess.check_call([sys.executable, "-m", "twine", "upload", f"{OUTPUT_DIRECTORY}/*"])
-    logger.info("Success 👍")
-
-
-def _upload_to_test_pypi() -> None:
-    if configuration.get_value_or_default(ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD, False):
-        logger.warning("Not testing package upload on PyPI test (https://test.pypi.org)")
-        return
-    logger.info("Uploading to test PyPI")
-    subprocess.check_call(
-        [
-            sys.executable,
-            "-m",
-            "twine",
-            "upload",
-            "--repository-url",
-            "https://test.pypi.org/legacy/",
-            f"{OUTPUT_DIRECTORY}/*",
-        ]
-    )
-    logger.info("Success 👍")
 
 
 def main() -> None:
