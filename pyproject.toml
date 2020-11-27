@@ -8,7 +8,7 @@
 MASTER_BRANCH = "main"
 PROJECT_NAME = "Continuous Delivery Scripts"
 PACKAGE_NAME = "continuous-delivery-scripts"
-PROJECT_UUID = '79d8e41a-d0cf-4503-808a-0862fb8f971c'
+PROJECT_UUID = 'f0cfd7a4-30b4-11eb-adc1-0242ac120002'
 PROJECT_ROOT = "."
 NEWS_DIR = "news/"
 SOURCE_DIR = "continuous_delivery_scripts"
@@ -16,7 +16,7 @@ RELEASE_BRANCH_PATTERN = "^release.*$"
 MODULE_TO_DOCUMENT = "continuous_delivery_scripts"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
-VERSION_FILE_PATH = "continuous-delivery-scripts/_version.py"
+VERSION_FILE_PATH = "continuous_delivery_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 AWS_BUCKET=""
 
@@ -97,4 +97,4 @@ line-length = 120
 [spdx]
 CreatorWebsite = "spdx.org"
 PathToSpdx = "spdx/spdxdocs"
-UUID="b1cae91a-69c6-4c3b-81c2-f7230fc13ba1"
+UUID="d9e2187c-30b4-11eb-adc1-0242ac120002"
