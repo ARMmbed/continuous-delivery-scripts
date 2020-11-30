@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2020 Arm. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """No Operation plugin."""
 import logging
 from pathlib import Path

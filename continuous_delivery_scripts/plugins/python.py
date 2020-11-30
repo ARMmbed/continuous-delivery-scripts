@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2020 Arm. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Plugin for Python projects."""
 import logging
 import shutil
