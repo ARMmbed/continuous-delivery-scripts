@@ -34,7 +34,7 @@ class TestCreateNewsFile(TestCase):
 class TestDetermineNewsFilePath(TestCase):
     def test_finds_first_available_file_path_in_news_dir(self):
         news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
-        news_file_name_today = datetime.now().strftime("%Y%m%d%H%M%S")
+        news_file_name_today = datetime.now().strftime("%Y%m%d%H%M")
         news_file_path_today = str(pathlib.Path(news_dir, news_file_name_today))
 
         for news_type in NewsType:
