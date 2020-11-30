@@ -22,6 +22,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 FILES_TO_IGNORE = ["*.yml", "*.yaml"]
+ADDITIONAL_EXTENSIONS = ["python=.toml", "c=.go"]
 
 
 def add_licence_header(verbose_count: int) -> None:
@@ -73,7 +74,7 @@ def get_tool_config(template_file: Path) -> dict:
         "projname": configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         "tmpl": str(template_file),
         "years": copyright_dates,
-        "additional-extensions": "python=.toml c=.go",
+        "additional-extensions": ADDITIONAL_EXTENSIONS,
         "exclude": FILES_TO_IGNORE,
     }
 

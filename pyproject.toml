@@ -33,6 +33,7 @@ pdoc3="Accepted for this project since not distributed"
 python-dotenv="BSD-3-Clause"
 twine="Apache-2.0"
 jellyfish="BSD-2-Clause"
+packaging="either Apache-2.0 or BSD-2-Clause"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"
