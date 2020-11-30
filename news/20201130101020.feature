@@ -1,1 +1,0 @@
-Added a Docker plugin

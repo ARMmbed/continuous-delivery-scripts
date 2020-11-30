@@ -34,7 +34,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Apply copyright and licensing to all source files present in a project.
@@ -50,16 +50,14 @@ import tempfile
 from datetime import datetime
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
-from continuous_delivery_scripts.utils.python_helpers import flatten_dictionary
+from continuous_delivery_scripts.utils.python.python_helpers import flatten_dictionary
+from continuous_delivery_scripts.language_specifics import get_language_specifics
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-LICENCE_HEADER_TEMPLATE = &#34;&#34;&#34;Copyright (C) {date} {author}. All rights reserved.
-SPDX-License-Identifier: {licence_identifier}
-&#34;&#34;&#34;
-
 FILES_TO_IGNORE = [&#34;*.yml&#34;, &#34;*.yaml&#34;]
+ADDITIONAL_EXTENSIONS = [&#34;python=.toml&#34;, &#34;c=.go&#34;]
 
 
 def add_licence_header(verbose_count: int) -&gt; None:
@@ -69,7 +67,9 @@ def add_licence_header(verbose_count: int) -&gt; None:
     &#34;&#34;&#34;
     # copyright (https://github.com/knipknap/copyright) was first considered but
     # comprises quite a few bugs and does not seem active anymore.
-    template_string = _generate_header_template()
+    if not get_language_specifics().can_add_licence_headers():
+        return
+    template_string = get_language_specifics().generate_source_licence_header_template()
     with tempfile.NamedTemporaryFile(suffix=&#34;.tmpl&#34;, delete=False) as template_file:
         template_file_path = Path(template_file.name)
         logger.debug(f&#34;Creates template file in {str(template_file_path)}&#34;)
@@ -77,15 +77,6 @@ def add_licence_header(verbose_count: int) -&gt; None:
         template_file.close()
         copyright_config = get_tool_config(template_file_path)
         _call_licensehearders(copyright_config, verbose_count)
-
-
-def _generate_header_template() -&gt; str:
-    &#34;&#34;&#34;Generates the header template which is put at the top of source files.&#34;&#34;&#34;
-    return LICENCE_HEADER_TEMPLATE.format(
-        licence_identifier=configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER),
-        author=&#34;${owner}&#34;,
-        date=&#34;${years}&#34;,
-    )
 
 
 def _call_licensehearders(config: dict, verbose_count: int) -&gt; None:
@@ -118,7 +109,7 @@ def get_tool_config(template_file: Path) -&gt; dict:
         &#34;projname&#34;: configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         &#34;tmpl&#34;: str(template_file),
         &#34;years&#34;: copyright_dates,
-        &#34;additional-extensions&#34;: &#34;python=.toml&#34;,
+        &#34;additional-extensions&#34;: ADDITIONAL_EXTENSIONS,
         &#34;exclude&#34;: FILES_TO_IGNORE,
     }
 
@@ -165,7 +156,9 @@ if __name__ == &#34;__main__&#34;:
     &#34;&#34;&#34;
     # copyright (https://github.com/knipknap/copyright) was first considered but
     # comprises quite a few bugs and does not seem active anymore.
-    template_string = _generate_header_template()
+    if not get_language_specifics().can_add_licence_headers():
+        return
+    template_string = get_language_specifics().generate_source_licence_header_template()
     with tempfile.NamedTemporaryFile(suffix=&#34;.tmpl&#34;, delete=False) as template_file:
         template_file_path = Path(template_file.name)
         logger.debug(f&#34;Creates template file in {str(template_file_path)}&#34;)
@@ -193,7 +186,7 @@ if __name__ == &#34;__main__&#34;:
         &#34;projname&#34;: configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         &#34;tmpl&#34;: str(template_file),
         &#34;years&#34;: copyright_dates,
-        &#34;additional-extensions&#34;: &#34;python=.toml&#34;,
+        &#34;additional-extensions&#34;: ADDITIONAL_EXTENSIONS,
         &#34;exclude&#34;: FILES_TO_IGNORE,
     }</code></pre>
 </details>

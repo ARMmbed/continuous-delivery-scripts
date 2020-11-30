@@ -13,6 +13,27 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.0.0" (2020-11-30)
+====================
+
+Major changes
+-------------
+
+- Implemented a plugin system for programming language specific actions. (#20201127193355)
+
+
+Features
+--------
+
+- Added a Docker plugin (#20201130101020)
+
+
+Bugfixes
+--------
+
+- Changed News files name granularity to the minute rather than second (#20201130095841)
+
+
 "1.0.1" (2020-11-27)
 ====================
 

@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Definition of an SPDX report for a Python project.&#34;&#34;&#34;
@@ -45,7 +45,7 @@ from typing import Optional, List, cast, Tuple, Dict
 from continuous_delivery_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
 from continuous_delivery_scripts.spdx_report.spdx_document import SpdxDocument
 from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file
-from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataParser
+from continuous_delivery_scripts.utils.python.package_helpers import ProjectMetadataFetcher
 from continuous_delivery_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
 from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
 
@@ -57,7 +57,7 @@ class SpdxProject:
         See https://certification.openchainproject.or
     &#34;&#34;&#34;
 
-    def __init__(self, parser: ProjectMetadataParser) -&gt; None:
+    def __init__(self, parser: ProjectMetadataFetcher) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._parser = parser
         self._main_document: Optional[SpdxDocument] = None
@@ -202,7 +202,7 @@ def _check_package_licence(package_document: SpdxDocument) -&gt; Tuple[bool, boo
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject"><code class="flex name class">
 <span>class <span class="ident">SpdxProject</span></span>
-<span>(</span><span>parser: <a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.ProjectMetadataParser">ProjectMetadataParser</a>)</span>
+<span>(</span><span>parser: <a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher">ProjectMetadataFetcher</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>SPDX for a project.</p>
@@ -220,7 +220,7 @@ See <a href="https://certification.openchainproject.or">https://certification.op
         See https://certification.openchainproject.or
     &#34;&#34;&#34;
 
-    def __init__(self, parser: ProjectMetadataParser) -&gt; None:
+    def __init__(self, parser: ProjectMetadataFetcher) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._parser = parser
         self._main_document: Optional[SpdxDocument] = None

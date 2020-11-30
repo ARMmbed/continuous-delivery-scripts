@@ -34,7 +34,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Easy news files generation.
@@ -96,7 +96,7 @@ def _write_file(file_path: pathlib.Path, text: str) -&gt; None:
 
 
 def _determine_todays_news_file_name() -&gt; str:
-    return datetime.now().strftime(&#34;%Y%m%d%H%M%S&#34;)
+    return datetime.now().strftime(&#34;%Y%m%d%H%M&#34;)
 
 
 def main() -&gt; int:

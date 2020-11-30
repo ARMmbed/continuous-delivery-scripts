@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utilities in charge of fetching configuration values for the ci scripts.&#34;&#34;&#34;
@@ -76,11 +76,12 @@ class ConfigurationVariable(enum.Enum):
     PROJECT_UUID = 22
     PACKAGE_NAME = 23
     SOURCE_DIR = 24
-    IGNORE_PYPI_TEST_UPLOAD = 25
+    IGNORE_REPOSITORY_TEST_UPLOAD = 25
     FILE_LICENCE_IDENTIFIER = 26
     COPYRIGHT_START_DATE = 27
     ACCEPTED_THIRD_PARTY_LICENCES = 28
     PACKAGES_WITH_CHECKED_LICENCE = 29
+    PROGRAMMING_LANGUAGE = 30
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -181,6 +182,7 @@ class StaticConfig(GenericConfig):
     ORGANISATION_EMAIL = &#34;support@arm.com&#34;
     FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
     COPYRIGHT_START_DATE = 2020
+    PROGRAMMING_LANGUAGE = &#34;NoOp&#34;
     ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
@@ -364,11 +366,12 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     PROJECT_UUID = 22
     PACKAGE_NAME = 23
     SOURCE_DIR = 24
-    IGNORE_PYPI_TEST_UPLOAD = 25
+    IGNORE_REPOSITORY_TEST_UPLOAD = 25
     FILE_LICENCE_IDENTIFIER = 26
     COPYRIGHT_START_DATE = 27
     ACCEPTED_THIRD_PARTY_LICENCES = 28
     PACKAGES_WITH_CHECKED_LICENCE = 29
+    PROGRAMMING_LANGUAGE = 30
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -444,7 +447,7 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_PYPI_TEST_UPLOAD</span></code></dt>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_REPOSITORY_TEST_UPLOAD</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -477,6 +480,10 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <div class="desc"></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME"><code class="name">var <span class="ident">PACKAGE_NAME</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROGRAMMING_LANGUAGE"><code class="name">var <span class="ident">PROGRAMMING_LANGUAGE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1001,6 +1008,7 @@ defined in toml.</p></div>
     ORGANISATION_EMAIL = &#34;support@arm.com&#34;
     FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
     COPYRIGHT_START_DATE = 2020
+    PROGRAMMING_LANGUAGE = &#34;NoOp&#34;
     ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
@@ -1058,6 +1066,10 @@ defined in toml.</p></div>
 <div class="desc"></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE"><code class="name">var <span class="ident">PACKAGES_WITH_CHECKED_LICENCE</span> : List[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE"><code class="name">var <span class="ident">PROGRAMMING_LANGUAGE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1131,7 +1143,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
-<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_PYPI_TEST_UPLOAD">IGNORE_PYPI_TEST_UPLOAD</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD">IGNORE_REPOSITORY_TEST_UPLOAD</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT">MODULE_TO_DOCUMENT</a></code></li>
@@ -1140,6 +1152,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE">PACKAGES_WITH_CHECKED_LICENCE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME">PACKAGE_NAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROGRAMMING_LANGUAGE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROGRAMMING_LANGUAGE">PROGRAMMING_LANGUAGE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG">PROJECT_CONFIG</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME">PROJECT_NAME</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT">PROJECT_ROOT</a></code></li>
@@ -1188,6 +1201,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION">ORGANISATION</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.ORGANISATION_EMAIL">ORGANISATION_EMAIL</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.PACKAGES_WITH_CHECKED_LICENCE">PACKAGES_WITH_CHECKED_LICENCE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE">PROGRAMMING_LANGUAGE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
 </ul>

@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2020-11-27 14:19:55.302230
+                                         2020-11-30 12:04:31.935476
 
 # Summary:
     Licence compliance: Compliant
@@ -222,8 +222,8 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://github.com/pypa/packaging
-    Licence: Apache-2.0 OR BSD-2-Clause
-    Licence compliance: Licence is compliant.
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: either Apache-2.0 or BSD-2-Clause
 
 - pdoc3:
     [X] Compliant?

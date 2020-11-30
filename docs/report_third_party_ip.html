@@ -38,7 +38,7 @@ specification (i.e. with relationships).</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Script providing information about licensing and third party IP in order to comply with OpenChain.
@@ -50,28 +50,17 @@ Therefore, some changes will have to be carried out when the later version is
 supported so that third-party IP gets documented as described by the
 specification (i.e. with relationships).
 &#34;&#34;&#34;
-import sys
-
 import argparse
 import logging
+import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
+
+from continuous_delivery_scripts.language_specifics import get_language_specifics
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
-from continuous_delivery_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
 
 logger = logging.getLogger(__name__)
-
-
-def get_current_spdx_project() -&gt; SpdxProject:
-    &#34;&#34;&#34;Gets information about the current project/package.&#34;&#34;&#34;
-    logger.info(&#34;Generating package information.&#34;)
-    try:
-        # Trying to generate the egg for the package but this may fail. If so, continue.
-        generate_package_info()
-    except Exception as e:
-        log_exception(logger, e)
-    return SpdxProject(CurrentProjectMetadataParser())
 
 
 def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) -&gt; SpdxProject:
@@ -83,9 +72,11 @@ def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) 
     return project
 
 
-def generate_spdx_reports(output_directory: Path) -&gt; SpdxProject:
+def generate_spdx_reports(output_directory: Path) -&gt; Optional[SpdxProject]:
     &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
-    project = get_current_spdx_project()
+    project = get_language_specifics().get_current_spdx_project()
+    if not project:
+        return None
     return generate_spdx_project_reports(project, output_directory)
 
 
@@ -106,8 +97,10 @@ def main() -&gt; int:
     set_log_level(args.verbose)
 
     try:
-        project = generate_spdx_reports(args.output_dir)
-        project.check_licence_compliance()
+        if get_language_specifics().can_get_project_metadata():
+            project = generate_spdx_reports(args.output_dir)
+            if project:
+                project.check_licence_compliance()
         return 0
     except Exception as e:
         log_exception(logger, e)
@@ -144,7 +137,7 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports"><code class="name flex">
-<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a></span>
+<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path) ‑> Union[<a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>, NoneType]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates all the SPDX reports for the current project.</p></div>
@@ -152,30 +145,12 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_spdx_reports(output_directory: Path) -&gt; SpdxProject:
+<pre><code class="python">def generate_spdx_reports(output_directory: Path) -&gt; Optional[SpdxProject]:
     &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
-    project = get_current_spdx_project()
+    project = get_language_specifics().get_current_spdx_project()
+    if not project:
+        return None
     return generate_spdx_project_reports(project, output_directory)</code></pre>
-</details>
-</dd>
-<dt id="continuous_delivery_scripts.report_third_party_ip.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Gets information about the current project/package.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_current_spdx_project() -&gt; SpdxProject:
-    &#34;&#34;&#34;Gets information about the current project/package.&#34;&#34;&#34;
-    logger.info(&#34;Generating package information.&#34;)
-    try:
-        # Trying to generate the egg for the package but this may fail. If so, continue.
-        generate_package_info()
-    except Exception as e:
-        log_exception(logger, e)
-    return SpdxProject(CurrentProjectMetadataParser())</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.report_third_party_ip.main"><code class="name flex">
@@ -204,8 +179,10 @@ if __name__ == &#34;__main__&#34;:
     set_log_level(args.verbose)
 
     try:
-        project = generate_spdx_reports(args.output_dir)
-        project.check_licence_compliance()
+        if get_language_specifics().can_get_project_metadata():
+            project = generate_spdx_reports(args.output_dir)
+            if project:
+                project.check_licence_compliance()
         return 0
     except Exception as e:
         log_exception(logger, e)
@@ -232,7 +209,6 @@ if __name__ == &#34;__main__&#34;:
 <ul class="">
 <li><code><a title="continuous_delivery_scripts.report_third_party_ip.generate_spdx_project_reports" href="#continuous_delivery_scripts.report_third_party_ip.generate_spdx_project_reports">generate_spdx_project_reports</a></code></li>
 <li><code><a title="continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports" href="#continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports">generate_spdx_reports</a></code></li>
-<li><code><a title="continuous_delivery_scripts.report_third_party_ip.get_current_spdx_project" href="#continuous_delivery_scripts.report_third_party_ip.get_current_spdx_project">get_current_spdx_project</a></code></li>
 <li><code><a title="continuous_delivery_scripts.report_third_party_ip.main" href="#continuous_delivery_scripts.report_third_party_ip.main">main</a></code></li>
 </ul>
 </li>
