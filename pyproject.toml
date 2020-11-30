@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 [ProjectConfig]
@@ -19,6 +19,7 @@ DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
 VERSION_FILE_PATH = "continuous_delivery_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 AWS_BUCKET=""
+PROGRAMMING_LANGUAGE = "Python"
 
 [ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
 jeepney="MIT"
@@ -32,6 +33,7 @@ pdoc3="Accepted for this project since not distributed"
 python-dotenv="BSD-3-Clause"
 twine="Apache-2.0"
 jellyfish="BSD-2-Clause"
+packaging="either Apache-2.0 or BSD-2-Clause"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

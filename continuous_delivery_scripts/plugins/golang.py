@@ -1,0 +1,50 @@
+#
+# Copyright (C) 2020 Arm. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+"""Plugin for Golang projects."""
+import logging
+from pathlib import Path
+from typing import Optional
+from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+
+logger = logging.getLogger(__name__)
+
+
+class Go(BaseLanguage):
+    """Specific actions for a Golang project."""
+
+    def get_related_language(self) -> str:
+        """Gets the related language."""
+        return get_language_from_file_name(__file__)
+
+    def package_software(self) -> None:
+        """No operation."""
+        super().package_software()
+
+    def release_package_to_repository(self) -> None:
+        """No operation."""
+        super().release_package_to_repository()
+
+    def check_credentials(self) -> None:
+        """Checks any credentials."""
+        super().check_credentials()
+
+    def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
+        """Generates the code documentation."""
+        super().generate_code_documentation(output_directory, module_to_document)
+        # TODO
+
+    def can_add_licence_headers(self) -> bool:
+        """States that licence headers can be added."""
+        return True
+
+    def can_get_project_metadata(self) -> bool:
+        """States whether project metadata can be retrieved."""
+        return False
+
+    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+        """Gets current SPDX description."""
+        # TODO
+        return None

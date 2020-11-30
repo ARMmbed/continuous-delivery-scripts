@@ -17,7 +17,6 @@ pyfakefs = "*"
 pytest-cov = "*"
 wheel = "*"
 continuous-delivery-scripts = {editable = true, path = "."}
-mbed-tools-ci-scripts = "*"
 pre-commit = "*"
 
 [pipenv]

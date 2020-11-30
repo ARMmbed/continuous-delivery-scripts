@@ -1,8 +1,8 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from continuous_delivery_scripts.utils.python_helpers import flatten_dictionary
+from continuous_delivery_scripts.utils.python.python_helpers import flatten_dictionary
 import unittest
 
 

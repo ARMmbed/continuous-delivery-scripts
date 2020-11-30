@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Script providing information about licensing and third party IP in order to comply with OpenChain.
@@ -11,28 +11,17 @@ Therefore, some changes will have to be carried out when the later version is
 supported so that third-party IP gets documented as described by the
 specification (i.e. with relationships).
 """
-import sys
-
 import argparse
 import logging
+import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
+
+from continuous_delivery_scripts.language_specifics import get_language_specifics
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
-from continuous_delivery_scripts.utils.package_helpers import CurrentProjectMetadataParser, generate_package_info
 
 logger = logging.getLogger(__name__)
-
-
-def get_current_spdx_project() -> SpdxProject:
-    """Gets information about the current project/package."""
-    logger.info("Generating package information.")
-    try:
-        # Trying to generate the egg for the package but this may fail. If so, continue.
-        generate_package_info()
-    except Exception as e:
-        log_exception(logger, e)
-    return SpdxProject(CurrentProjectMetadataParser())
 
 
 def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) -> SpdxProject:
@@ -44,9 +33,11 @@ def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) 
     return project
 
 
-def generate_spdx_reports(output_directory: Path) -> SpdxProject:
+def generate_spdx_reports(output_directory: Path) -> Optional[SpdxProject]:
     """Generates all the SPDX reports for the current project."""
-    project = get_current_spdx_project()
+    project = get_language_specifics().get_current_spdx_project()
+    if not project:
+        return None
     return generate_spdx_project_reports(project, output_directory)
 
 
@@ -67,8 +58,10 @@ def main() -> int:
     set_log_level(args.verbose)
 
     try:
-        project = generate_spdx_reports(args.output_dir)
-        project.check_licence_compliance()
+        if get_language_specifics().can_get_project_metadata():
+            project = generate_spdx_reports(args.output_dir)
+            if project:
+                project.check_licence_compliance()
         return 0
     except Exception as e:
         log_exception(logger, e)

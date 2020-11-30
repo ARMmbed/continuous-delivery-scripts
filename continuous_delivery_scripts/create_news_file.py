@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Easy news files generation.
@@ -61,7 +61,7 @@ def _write_file(file_path: pathlib.Path, text: str) -> None:
 
 
 def _determine_todays_news_file_name() -> str:
-    return datetime.now().strftime("%Y%m%d%H%M%S")
+    return datetime.now().strftime("%Y%m%d%H%M")
 
 
 def main() -> int:

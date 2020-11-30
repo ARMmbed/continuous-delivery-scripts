@@ -4,7 +4,7 @@ parameters:
   currentBranch: ''
 
 steps:
-  - bash: tag-and-release -b ${{ parameters.currentBranch }} --release-type=${{ parameters.releaseType }} -vv
+  - bash: cd-tag-and-release -b ${{ parameters.currentBranch }} --release-type=${{ parameters.releaseType }} -vv
     displayName: ${{ parameters.message }}
     env:
       GIT_TOKEN: $(GIT_TOKEN)

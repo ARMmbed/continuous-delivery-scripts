@@ -1,8 +1,8 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Tests for continuous_delivery_scripts.tag_and_release documentation update functions."""
+"""Tests for  documentation update functions."""
 import os
 from unittest import mock, TestCase
 
@@ -10,12 +10,15 @@ import pathlib
 from pyfakefs.fake_filesystem_unittest import Patcher
 
 from continuous_delivery_scripts.tag_and_release import _update_documentation
+from continuous_delivery_scripts.plugins.python import Python
 
 
 class TestAddNewDocumentation(TestCase):
-    @mock.patch("continuous_delivery_scripts.generate_docs._call_pdoc")
+    @mock.patch("continuous_delivery_scripts.plugins.python._call_pdoc")
     @mock.patch("continuous_delivery_scripts.tag_and_release._get_documentation_config")
-    def test_update_docs(self, _get_documentation_config, _call_pdoc):
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    def test_update_docs(self, get_language_specifics, _get_documentation_config, _call_pdoc):
+        get_language_specifics.return_value = Python()
         with Patcher() as patcher:
             module_name = "module_name"
             docs_dir = pathlib.Path("docs")

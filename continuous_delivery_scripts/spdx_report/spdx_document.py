@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Definition of an SPDX Document."""
@@ -15,7 +15,7 @@ from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_
 from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
-from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
 
 TOOL_NAME = "mbed-spdx-generator"
 

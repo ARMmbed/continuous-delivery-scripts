@@ -1,19 +1,15 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utilities for retrieving Python's package information."""
 
 import logging
-import re
-from typing import List, Any, Optional, cast
-
-import pkg_resources
+from abc import ABC, abstractmethod
+from typing import List, Optional
 
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
-from .definitions import UNKNOWN
-import sys
-import subprocess
+from continuous_delivery_scripts.utils.definitions import UNKNOWN
 
 logger = logging.getLogger(__name__)
 
@@ -125,78 +121,30 @@ class ProjectMetadata:
         return f"{project_str}: {metadata_str};  {other_str}"
 
 
-class ProjectMetadataParser:
-    """Parser of python package metadata."""
-
-    ENTRY_PATTERN = r"^([^:]*):(.*)$"
+class ProjectMetadataFetcher(ABC):
+    """Fetches package metadata e.g. dependencies."""
 
     def __init__(self, package_name: str) -> None:
         """Constructor."""
         self._project_metadata: Optional[ProjectMetadata] = None
         self._package_name = package_name
 
-    def _get_project_metadata(self) -> ProjectMetadata:
-        """Parses package metadata."""
-        project_metadata = ProjectMetadata(self._package_name)
-        for metadata in get_all_packages_metadata_lines(self._package_name):
-            info = parse_package_metadata_lines(metadata)
-            if info.name == self._package_name:
-                project_metadata.project_metadata = info
-            else:
-                project_metadata.add_dependency_metadata(info)
-        return project_metadata
-
     @property
     def project_metadata(self) -> ProjectMetadata:
         """Gets project metadata."""
         if not self._project_metadata:
-            self._project_metadata = self._get_project_metadata()
+            self._project_metadata = self.fetch_project_metadata()
         return self._project_metadata
 
+    @abstractmethod
+    def fetch_project_metadata(self) -> ProjectMetadata:
+        """Fetches the project metadata."""
+        pass
 
-class CurrentProjectMetadataParser(ProjectMetadataParser):
-    """Parser for current project metadata."""
+
+class CurrentProjectMetadataFetcher(ProjectMetadataFetcher):
+    """Fetches the current project metadata."""
 
     def __init__(self) -> None:
         """Constructor."""
         super().__init__(configuration.get_value(ConfigurationVariable.PACKAGE_NAME))
-
-
-def get_package_metadata_lines(package: Any) -> list:
-    """Determines the metadata lines of a package.
-
-    Depending on the package, there may be a METADATA or a PKG-INFO file.
-    We need to try both to get the metadata lines and
-    the underlying `get_metadata_lines` function used raises an exception if the file does not exist.
-    We hence need to try to catch all exceptions
-    """
-    try:
-        return cast(list, package.get_metadata_lines("METADATA"))
-    except Exception as e:
-        logger.warning(e)
-    try:
-        return cast(list, package.get_metadata_lines("PKG-INFO"))
-    except Exception as e:
-        logger.warning(e)
-    return list()
-
-
-def get_all_packages_metadata_lines(package_name: str) -> List[list]:
-    """Determines the metadata lines for the present package as well as for all its dependencies."""
-    return [get_package_metadata_lines(package) for package in pkg_resources.require(package_name)]
-
-
-def parse_package_metadata_lines(metadata: list) -> PackageMetadata:
-    """Parses package metadata lines and retains relevant information."""
-    metadata_dict = dict()
-    for line in metadata:
-        match = re.search(ProjectMetadataParser.ENTRY_PATTERN, line)
-        if match:
-            metadata_dict[match.group(1).strip()] = match.group(2).strip()
-    return PackageMetadata(metadata_dict)
-
-
-def generate_package_info() -> None:
-    """Generates package information (egg)."""
-    command = [sys.executable, "setup.py", "develop", "-v"]
-    subprocess.check_call(command, cwd=configuration.get_value(ConfigurationVariable.PROJECT_ROOT))

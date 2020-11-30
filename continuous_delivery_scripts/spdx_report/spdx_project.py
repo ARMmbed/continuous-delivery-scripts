@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (C) 2020 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Definition of an SPDX report for a Python project."""
@@ -12,7 +12,7 @@ from typing import Optional, List, cast, Tuple, Dict
 from continuous_delivery_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
 from continuous_delivery_scripts.spdx_report.spdx_document import SpdxDocument
 from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file
-from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataParser
+from continuous_delivery_scripts.utils.python.package_helpers import ProjectMetadataFetcher
 from continuous_delivery_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
 from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
 
@@ -24,7 +24,7 @@ class SpdxProject:
         See https://certification.openchainproject.or
     """
 
-    def __init__(self, parser: ProjectMetadataParser) -> None:
+    def __init__(self, parser: ProjectMetadataFetcher) -> None:
         """Constructor."""
         self._parser = parser
         self._main_document: Optional[SpdxDocument] = None
