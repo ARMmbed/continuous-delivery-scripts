@@ -40,7 +40,7 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
 
     """
     get_language_specifics().check_credentials()
-    is_new_version, version = version_project(mode)
+    is_new_version, version, _ = version_project(mode)
     logger.info(f"Current version: {version}")
     if not version:
         raise ValueError("Undefined version.")

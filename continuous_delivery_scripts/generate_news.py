@@ -14,12 +14,12 @@ from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 
 logger = logging.getLogger(__name__)
 
 
-def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str]]:
+def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str], Dict[str, str]]:
     """Versions the project.
 
     Args:
@@ -30,12 +30,12 @@ def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str]]:
         (is new version, the new version)
     """
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version = _calculate_version(commit_type, use_news_files)
+    is_new_version, new_version, version_elements = _calculate_version(commit_type, use_news_files)
     _generate_changelog(new_version, use_news_files)
-    return is_new_version, new_version
+    return is_new_version, new_version, version_elements
 
 
-def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[bool, Optional[str]]:
+def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[bool, Optional[str], Dict[str, str]]:
     """Calculates the version for the release.
 
     eg. "0.1.2"
@@ -66,13 +66,44 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[b
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
         # This is why the following needs to be done to determine the version
-        for k, v in updates.items():
-            if "version" in str(k).lower():
-                new_version = updates[k]
+        version_elements = _get_version_elements(updates)
+        new_version = version_elements.get(auto_version_tool.Constants.VERSION_FIELD, new_version)
         is_new_version = old != new_version
     logger.info(":: Determining the new version")
     logger.info(f"Version: {new_version}")
-    return is_new_version, new_version
+    return is_new_version, new_version, version_elements
+
+
+def _update_version_string(
+    commit_type: CommitType, new_version: Optional[str], version_elements: Dict[str, str]
+) -> Optional[str]:
+    """Updates the version string for development releases.
+
+    Args:
+        commit_type: commit type
+        new_version: the new version
+        version_elements: version elements
+    """
+    if commit_type == CommitType.DEVELOPMENT:
+        return "%s-%s.%s" % (
+            new_version,
+            auto_version_tool.config.BUILD_TOKEN,
+            version_elements.get(auto_version_tool.Constants.COMMIT_FIELD),
+        )
+    return new_version
+
+
+def _get_version_elements(native_version_elements: Dict[str, str]) -> Dict[str, str]:
+    """Determines the different version elements.
+
+    Args:
+        native_version_elements: native version elements as understood by autoversion
+    """
+    return {
+        key: native_version_elements[native]
+        for native, key in auto_version_tool.config.key_aliases.items()
+        if native in native_version_elements
+    }
 
 
 def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
@@ -102,7 +133,10 @@ def main() -> None:
     set_log_level(args.verbose)
 
     try:
-        version_project(CommitType.parse(args.release_type))
+        commit_type = CommitType.parse(args.release_type)
+        is_new_version, new_version, version_elements = version_project(commit_type)
+        version_to_print = _update_version_string(commit_type, new_version, version_elements)
+        print(version_to_print)
     except Exception as e:
         log_exception(logger, e)
         sys.exit(1)
