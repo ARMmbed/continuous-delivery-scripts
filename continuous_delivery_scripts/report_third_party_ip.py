@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Script providing information about licensing and third party IP in order to comply with OpenChain.
