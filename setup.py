@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Package definition for PyPI."""
@@ -59,7 +59,7 @@ setup(
         "twine",
         "boto3",
         "packaging",
-        "licenseheaders",
+        "licenseheaders<0.8.6",
         "spdx-tools",
         "license-expression",
         "wcmatch",

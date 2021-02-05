@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Handles usage of towncrier for automated changelog generation and pyautoversion for versioning."""
@@ -57,7 +57,7 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[b
     new_version: Optional[str] = None
     is_new_version: bool = False
     with cd(os.path.dirname(project_config_path)):
-        old, _, updates = auto_version_tool.main(
+        old, new_version, updates = auto_version_tool.main(
             release=is_release,
             enable_file_triggers=enable_file_triggers,
             commit_count_as=bump,
@@ -66,7 +66,9 @@ def _calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[b
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
         # This is why the following needs to be done to determine the version
-        new_version = updates["__version__"]
+        for k, v in updates.items():
+            if "version" in str(k).lower():
+                new_version = updates[k]
         is_new_version = old != new_version
     logger.info(":: Determining the new version")
     logger.info(f"Version: {new_version}")

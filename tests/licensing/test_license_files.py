@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 from continuous_delivery_scripts.license_files import _to_copyright_date_string

@@ -16,8 +16,11 @@ pytest = "*"
 pyfakefs = "*"
 pytest-cov = "*"
 wheel = "*"
-continuous-delivery-scripts = {editable = true, path = "."}
+continuous-delivery-scripts = {path = "."}
 pre-commit = "*"
 
 [pipenv]
 allow_prereleases = true
+
+[packages]
+continuous-delivery-scripts = {path = "."}

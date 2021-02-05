@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 [ProjectConfig]
@@ -34,6 +34,8 @@ python-dotenv="BSD-3-Clause"
 twine="Apache-2.0"
 jellyfish="BSD-2-Clause"
 packaging="either Apache-2.0 or BSD-2-Clause"
+importlib-metadata="Apache-2.0 or Python-2.0"
+typing-extensions="PSF-2.0"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

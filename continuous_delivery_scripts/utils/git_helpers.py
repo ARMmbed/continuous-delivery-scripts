@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utility script to abstract git operations for our CI scripts."""
@@ -10,7 +10,7 @@ import shutil
 from pathlib import Path
 from typing import Optional, List, Union, Any, Tuple
 
-from git import Repo, Actor
+from git import Repo, Actor, GitCommandError
 from packaging import version
 
 from .configuration import configuration, ConfigurationVariable
@@ -59,9 +59,19 @@ class GitWrapper:
         Returns:
             a wrapper over the cloned repository
         """
-        git_clone = self.repo.clone_from(
-            url=self.get_remote_url(), to_path=str(path), multi_options=["--recurse-submodules"]
-        )
+        try:
+            git_clone = self.repo.clone_from(
+                url=self.get_remote_url(), to_path=str(path), multi_options=["--recurse-submodules"]
+            )
+        except GitCommandError as e:
+            logger.info("failed cloning repository: %s" % e)
+            logger.info("trying with authentication")
+            git_clone = self.repo.clone_from(
+                url=self._git_url_ssh_to_https(self.get_remote_url()),
+                to_path=str(path),
+                multi_options=["--recurse-submodules"],
+            )
+
         clone = GitWrapper(path=path, repo=git_clone)
         clone.set_remote_url(self.get_remote_url())
         clone.fetch()
