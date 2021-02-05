@@ -1,19 +1,12 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2020-11-30 12:04:31.935476
+                                         2021-02-05 01:19:20.300205
 
 # Summary:
     Licence compliance: Compliant
     Details: Project [continuous-delivery-scripts]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.
 
 # More details:
-
-- backrefs:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/facelessuser/backrefs
-    Licence: MIT
-    Licence compliance: Licence is compliant.
 
 - bleach:
     [X] Compliant?
@@ -130,9 +123,9 @@
 - importlib-metadata:
     [X] Compliant?
     [X] Dependency?
-    URL: http://importlib-metadata.readthedocs.io/
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
+    URL: https://github.com/python/importlib_metadata
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: Apache-2.0 or Python-2.0
 
 - incremental:
     [X] Compliant?
@@ -222,8 +215,8 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://github.com/pypa/packaging
-    Licence: Unknown
-    Licence compliance: Package's licence manually checked: either Apache-2.0 or BSD-2-Clause
+    Licence: Apache-2.0 OR BSD-2-Clause
+    Licence compliance: Licence is compliant.
 
 - pdoc3:
     [X] Compliant?
@@ -291,7 +284,7 @@
 - PyYAML:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/yaml/pyyaml
+    URL: https://pyyaml.org/
     Licence: MIT
     Licence compliance: Licence is compliant.
 
@@ -413,6 +406,13 @@
     URL: https://twine.readthedocs.io/
     Licence: Unknown
     Licence compliance: Package's licence manually checked: Apache-2.0
+
+- typing-extensions:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/python/typing/blob/master/typing_extensions/README.rst
+    Licence: ISC
+    Licence compliance: Package's licence manually checked: PSF-2.0
 
 - urllib3:
     [X] Compliant?

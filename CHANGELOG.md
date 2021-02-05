@@ -13,6 +13,22 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.0.1" (2021-02-05)
+====================
+
+Bugfixes
+--------
+
+- Fix for clones of private repository (#212102041830)
+- The 0.8.6 release of the `licenseheaders` contains a bug. Pin its version until it is fixed upstream. (#20210205001245)
+
+
+Improved Documentation
+----------------------
+
+- Updated Copyright (#20210205000735)
+
+
 "2.0.0" (2020-11-30)
 ====================
 
