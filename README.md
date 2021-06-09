@@ -15,7 +15,7 @@
 
 ## Overview
 
-Project initially forked from ARMmbed/mbed-tools-ci-scripts but modified so that it can be used for any projects and any languages.
+Project initially forked from [ARMmbed/mbed-tools-ci-scripts](https://github.com/ARMmbed/continuous-delivery-scripts) but modified so that it can be used for any projects and any languages.
 
 Continuous Delivery scripts for any projects:
 - Automated release flows (i.e. changelog generation, git tags, versioning)
