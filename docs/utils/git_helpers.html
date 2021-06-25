@@ -194,7 +194,11 @@ class GitWrapper:
         Returns:
             corresponding branch
         &#34;&#34;&#34;
-        return self.get_branch(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+        main = configuration.get_value(ConfigurationVariable.MASTER_BRANCH)
+        branch = self.get_branch(main)
+        if branch:
+            return branch
+        return self.get_remote_branch(main)
 
     def get_beta_branch(self) -&gt; Any:
         &#34;&#34;&#34;Gets the `beta` branch.
@@ -202,7 +206,11 @@ class GitWrapper:
         Returns:
             corresponding branch
         &#34;&#34;&#34;
-        return self.get_branch(configuration.get_value(ConfigurationVariable.BETA_BRANCH))
+        beta = configuration.get_value(ConfigurationVariable.BETA_BRANCH)
+        branch = self.get_branch(beta)
+        if branch:
+            return branch
+        return self.get_remote_branch(beta)
 
     def is_release_branch(self, branch_name: Optional[str]) -&gt; bool:
         &#34;&#34;&#34;Checks whether the branch is a `release` branch or not.
@@ -554,7 +562,7 @@ class GitWrapper:
 
     def list_files_added_on_current_branch(self) -&gt; List[str]:
         &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
-        master_branch_commit = self.repo.commit(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+        master_branch_commit = self.repo.commit(self.get_master_branch())
         current_branch_commit = self.repo.commit(self.get_current_branch())
         changes = self.get_changes_list(
             self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type=&#34;a&#34;
@@ -1155,7 +1163,11 @@ def initial_location(self) -&gt; Path:
         Returns:
             corresponding branch
         &#34;&#34;&#34;
-        return self.get_branch(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+        main = configuration.get_value(ConfigurationVariable.MASTER_BRANCH)
+        branch = self.get_branch(main)
+        if branch:
+            return branch
+        return self.get_remote_branch(main)
 
     def get_beta_branch(self) -&gt; Any:
         &#34;&#34;&#34;Gets the `beta` branch.
@@ -1163,7 +1175,11 @@ def initial_location(self) -&gt; Path:
         Returns:
             corresponding branch
         &#34;&#34;&#34;
-        return self.get_branch(configuration.get_value(ConfigurationVariable.BETA_BRANCH))
+        beta = configuration.get_value(ConfigurationVariable.BETA_BRANCH)
+        branch = self.get_branch(beta)
+        if branch:
+            return branch
+        return self.get_remote_branch(beta)
 
     def is_release_branch(self, branch_name: Optional[str]) -&gt; bool:
         &#34;&#34;&#34;Checks whether the branch is a `release` branch or not.
@@ -1515,7 +1531,7 @@ def initial_location(self) -&gt; Path:
 
     def list_files_added_on_current_branch(self) -&gt; List[str]:
         &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
-        master_branch_commit = self.repo.commit(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+        master_branch_commit = self.repo.commit(self.get_master_branch())
         current_branch_commit = self.repo.commit(self.get_current_branch())
         changes = self.get_changes_list(
             self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type=&#34;a&#34;
@@ -2056,7 +2072,11 @@ Tags are also pushed as part of the process</p></div>
     Returns:
         corresponding branch
     &#34;&#34;&#34;
-    return self.get_branch(configuration.get_value(ConfigurationVariable.BETA_BRANCH))</code></pre>
+    beta = configuration.get_value(ConfigurationVariable.BETA_BRANCH)
+    branch = self.get_branch(beta)
+    if branch:
+        return branch
+    return self.get_remote_branch(beta)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_branch"><code class="name flex">
@@ -2288,7 +2308,11 @@ before the current commit.</p>
     Returns:
         corresponding branch
     &#34;&#34;&#34;
-    return self.get_branch(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))</code></pre>
+    main = configuration.get_value(ConfigurationVariable.MASTER_BRANCH)
+    branch = self.get_branch(main)
+    if branch:
+        return branch
+    return self.get_remote_branch(main)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_branch"><code class="name flex">
@@ -2454,7 +2478,7 @@ before the current commit.</p>
 </summary>
 <pre><code class="python">def list_files_added_on_current_branch(self) -&gt; List[str]:
     &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
-    master_branch_commit = self.repo.commit(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+    master_branch_commit = self.repo.commit(self.get_master_branch())
     current_branch_commit = self.repo.commit(self.get_current_branch())
     changes = self.get_changes_list(
         self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type=&#34;a&#34;

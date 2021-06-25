@@ -13,6 +13,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.1.1" (2021-06-25)
+====================
+
+Bugfixes
+--------
+
+- Retrieve branches (master, beta) from remote repository if they have not yet locally (#202106251705)
+
+
 "2.1.0" (2021-02-05)
 ====================
 

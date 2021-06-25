@@ -13,7 +13,7 @@ True,continuous-delivery-scripts,False,https://github.com/ARMmbed/continuous-del
 True,cryptography,True,https://github.com/pyca/cryptography,0BSD OR Apache-2.0,Licence is compliant.
 True,docutils,True,http://docutils.sourceforge.net/,Python-2.0,Licence is compliant.
 True,gitdb,True,https://github.com/gitpython-developers/gitdb,0BSD,Licence is compliant.
-True,GitPython,True,https://github.com/gitpython-developers/GitPython,Unknown,Package's licence manually checked: BSD-3-Clause
+True,GitPython,True,https://github.com/gitpython-developers/GitPython,0BSD,Licence is compliant.
 True,idna,True,https://github.com/kjd/idna,0BSD,Licence is compliant.
 True,importlib-metadata,True,https://github.com/python/importlib_metadata,Unknown,Package's licence manually checked: Apache-2.0 or Python-2.0
 True,incremental,True,https://github.com/twisted/incremental,MIT,Licence is compliant.
@@ -37,7 +37,7 @@ True,pycparser,True,https://github.com/eliben/pycparser,0BSD,Licence is complian
 True,Pygments,True,https://pygments.org/,0BSD,Licence is compliant.
 True,pyparsing,True,https://github.com/pyparsing/pyparsing/,MIT,Licence is compliant.
 True,python-dateutil,True,https://dateutil.readthedocs.io,Unknown,Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
-True,python-dotenv,True,https://github.com/theskumar/python-dotenv,Unknown,Package's licence manually checked: BSD-3-Clause
+True,python-dotenv,True,https://github.com/theskumar/python-dotenv,BSD-3-Clause,Licence is compliant.
 True,PyYAML,True,https://pyyaml.org/,MIT,Licence is compliant.
 True,rdflib,True,https://github.com/RDFLib/rdflib,BSD-3-Clause,Licence is compliant.
 True,readme-renderer,True,https://github.com/pypa/readme_renderer,Apache-2.0,Licence is compliant.
@@ -48,13 +48,12 @@ True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
 True,s3transfer,True,https://github.com/boto/s3transfer,Apache-2.0,Licence is compliant.
 True,SecretStorage,True,https://github.com/mitya57/secretstorage,BSD-1-Clause,Licence is compliant.
 True,semver,True,https://github.com/python-semver/python-semver,0BSD,Licence is compliant.
-True,setuptools,True,https://github.com/pypa/setuptools,Unknown,Package's licence manually checked: MIT
 True,six,True,https://github.com/benjaminp/six,MIT,Licence is compliant.
 True,smmap,True,https://github.com/gitpython-developers/smmap,0BSD,Licence is compliant.
 True,spdx-tools,True,https://github.com/spdx/tools-python,Apache-2.0,Licence is compliant.
 True,toml,True,https://github.com/uiri/toml,MIT,Licence is compliant.
 True,towncrier,True,https://github.com/hawkowl/towncrier,MIT,Licence is compliant.
-True,tqdm,True,https://github.com/tqdm/tqdm,MPL-2.0,Licence is compliant.
+True,tqdm,True,https://tqdm.github.io,MPL-2.0,Licence is compliant.
 True,twine,True,https://twine.readthedocs.io/,Unknown,Package's licence manually checked: Apache-2.0
 True,typing-extensions,True,https://github.com/python/typing/blob/master/typing_extensions/README.rst,ISC,Package's licence manually checked: PSF-2.0
 True,urllib3,True,https://urllib3.readthedocs.io/,MIT,Licence is compliant.
