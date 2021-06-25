@@ -161,7 +161,11 @@ class GitWrapper:
         Returns:
             corresponding branch
         """
-        return self.get_branch(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+        main = configuration.get_value(ConfigurationVariable.MASTER_BRANCH)
+        branch = self.get_branch(main)
+        if branch:
+            return branch
+        return self.get_remote_branch(main)
 
     def get_beta_branch(self) -> Any:
         """Gets the `beta` branch.
@@ -169,7 +173,11 @@ class GitWrapper:
         Returns:
             corresponding branch
         """
-        return self.get_branch(configuration.get_value(ConfigurationVariable.BETA_BRANCH))
+        beta = configuration.get_value(ConfigurationVariable.BETA_BRANCH)
+        branch = self.get_branch(beta)
+        if branch:
+            return branch
+        return self.get_remote_branch(beta)
 
     def is_release_branch(self, branch_name: Optional[str]) -> bool:
         """Checks whether the branch is a `release` branch or not.
@@ -521,7 +529,7 @@ class GitWrapper:
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
-        master_branch_commit = self.repo.commit(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+        master_branch_commit = self.repo.commit(self.get_master_branch())
         current_branch_commit = self.repo.commit(self.get_current_branch())
         changes = self.get_changes_list(
             self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type="a"
