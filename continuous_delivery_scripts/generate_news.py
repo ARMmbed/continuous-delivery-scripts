@@ -85,9 +85,10 @@ def _update_version_string(
         version_elements: version elements
     """
     if commit_type == CommitType.DEVELOPMENT:
-        return "%s-%s+%s" % (
+        return "%s-%s.%s+%s" % (
             new_version,
             auto_version_tool.config.BUILD_TOKEN,
+            version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD),
             version_elements.get(auto_version_tool.Constants.COMMIT_FIELD),
         )
     return new_version
