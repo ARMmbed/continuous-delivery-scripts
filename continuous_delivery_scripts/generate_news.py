@@ -11,6 +11,7 @@ import os
 import subprocess
 from auto_version import auto_version_tool
 from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
@@ -85,13 +86,17 @@ def _update_version_string(
         version_elements: version elements
     """
     if commit_type == CommitType.DEVELOPMENT:
+        commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD)
+        if not commit_count:
+            with LocalProjectRepository() as git:
+                commit_count = git.get_commit_count()
         return "%s-%s.%s+%s" % (
             new_version,
             auto_version_tool.config.BUILD_TOKEN,
-            version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD),
+            commit_count,
             version_elements.get(auto_version_tool.Constants.COMMIT_FIELD),
         )
-    return new_version
+        return new_version
 
 
 def _get_version_elements(native_version_elements: Dict[str, str]) -> Dict[str, str]:
