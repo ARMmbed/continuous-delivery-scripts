@@ -23,4 +23,4 @@ pre-commit = "*"
 allow_prereleases = true
 
 [packages]
-continuous-delivery-scripts = {path = "."}
+continuous-delivery-scripts = {editable = true, path = "."}

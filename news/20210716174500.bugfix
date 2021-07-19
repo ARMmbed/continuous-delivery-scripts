@@ -1,0 +1,1 @@
+Fix development versions so that they can be used by any package managers i.e. pip and npm
