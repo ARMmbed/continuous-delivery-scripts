@@ -14,10 +14,7 @@ from continuous_delivery_scripts.generate_docs import generate_documentation
 from continuous_delivery_scripts.generate_news import version_project
 from continuous_delivery_scripts.language_specifics import get_language_specifics
 from continuous_delivery_scripts.license_files import add_licence_header
-from continuous_delivery_scripts.report_third_party_ip import (
-    generate_spdx_project_reports,
-    SpdxProject,
-)
+from continuous_delivery_scripts.report_third_party_ip import generate_spdx_project_reports, SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper

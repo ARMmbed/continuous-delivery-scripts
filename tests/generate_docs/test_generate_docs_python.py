@@ -10,11 +10,7 @@ from pyfakefs.fake_filesystem_unittest import Patcher
 
 from continuous_delivery_scripts.plugins.python import _generate_pdoc_command_list, Python
 
-from continuous_delivery_scripts.generate_docs import (
-    _clear_previous_docs,
-    generate_documentation,
-    generate_docs,
-)
+from continuous_delivery_scripts.generate_docs import _clear_previous_docs, generate_documentation, generate_docs
 
 
 class TestGenerateDocs(TestCase):
