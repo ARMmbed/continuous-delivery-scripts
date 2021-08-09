@@ -540,7 +540,8 @@ class GitWrapper:
             branch_point = beta_branch_point
         elif beta_branch and master_branch:
             if beta_branch_point.committed_datetime > master_branch_point.committed_datetime:
-                # The branch point off `beta` is more recent than off `master`. Hence, the difference between current and `beta` should be considered
+                # The branch point off `beta` is more recent than off `master`.
+                # Hence, the difference between current and `beta` should be considered.
                 branch_point = beta_branch_point
         changes = self.get_changes_list(branch_point, current_branch_commit, change_type="a")
         return changes
@@ -554,7 +555,7 @@ class GitWrapper:
         return not (is_master or is_beta or is_release)
 
     def is_current_branch_of_type(self, pattern: str) -> (bool, Optional[List[Any]]):
-        """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any"""
+        """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any."""
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
     def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -> (bool, Optional[List[Any]]):

@@ -107,9 +107,7 @@ def add_news_files(git: GitWrapper, news_dir: str) -> None:
     if not is_dependency_update:
         raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
     if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
-        raise EnvironmentError(
-            f"Branch {current_branch} must contain a news file as they are not automatically created for dependency upgrade"
-        )
+        raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
 
     create_news_file(
         news_dir,
@@ -121,7 +119,7 @@ def add_news_files(git: GitWrapper, news_dir: str) -> None:
 
 
 def _commit_news_file(git: GitWrapper, news_dir: str) -> None:
-    logger.info(f"Committing news file...")
+    logger.info("Committing news file...")
     git.add(news_dir)
     git.commit("Adding news file")
     git.push()
