@@ -27,6 +27,8 @@ class TestGenerateDocs(TestCase):
 
     def test_clear_previous_docs_none_exist(self):
         fake_output_dir = pathlib.Path("local_docs")
+        if fake_output_dir.exists():
+            fake_output_dir.rmdir()
         self.assertFalse(fake_output_dir.is_dir())
 
         _clear_previous_docs(fake_output_dir)

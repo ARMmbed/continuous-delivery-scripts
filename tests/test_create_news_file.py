@@ -7,8 +7,8 @@ from unittest import TestCase, mock
 from datetime import datetime
 from tempfile import TemporaryDirectory
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.news_file import NewsType
 from continuous_delivery_scripts.create_news_file import (
-    NewsType,
     create_news_file,
     determine_news_file_path,
     _write_file,

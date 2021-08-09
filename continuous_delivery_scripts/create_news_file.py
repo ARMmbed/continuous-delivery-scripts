@@ -8,7 +8,6 @@ Usage:
     create-news-file "Fixed a bug" --type bugfix
 """
 import argparse
-import enum
 import logging
 import pathlib
 import sys
@@ -17,22 +16,11 @@ from datetime import datetime
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.assert_news import validate_news_file
 from continuous_delivery_scripts.utils.logging import log_exception
+from continuous_delivery_scripts.utils.news_file import NewsType
 
 logger = logging.getLogger(__name__)
 
-
 NEWS_DIR = configuration.get_value(ConfigurationVariable.NEWS_DIR)
-
-
-class NewsType(enum.Enum):
-    """Describes the type of news we're writing."""
-
-    bugfix = 0
-    doc = 1
-    feature = 2
-    major = 3
-    misc = 4
-    removal = 5
 
 
 def create_news_file(news_text: str, news_type: NewsType) -> pathlib.Path:

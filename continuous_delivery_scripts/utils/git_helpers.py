@@ -529,11 +529,22 @@ class GitWrapper:
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
-        master_branch_commit = self.repo.commit(self.get_master_branch())
+        master_branch = self.get_master_branch()
+        beta_branch = self.get_beta_branch()
+        master_branch_commit = self.repo.commit(master_branch)
+        beta_branch_commit = self.repo.commit(beta_branch)
         current_branch_commit = self.repo.commit(self.get_current_branch())
-        changes = self.get_changes_list(
-            self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type="a"
-        )
+        # Finding the baseline branch to consider
+        master_branch_point = self.repo.commit(self.get_branch_point(master_branch_commit, current_branch_commit))
+        beta_branch_point = self.repo.commit(self.get_branch_point(beta_branch_commit, current_branch_commit))
+        branch_point = master_branch_point
+        if not master_branch:
+            branch_point = beta_branch_point
+        elif beta_branch and master_branch:
+            if beta_branch_point.committed_datetime > master_branch_point.committed_datetime:
+                # The branch point off `beta` is more recent than off `master`. Hence, the difference between current and `beta` should be considered
+                branch_point = beta_branch_point
+        changes = self.get_changes_list(branch_point, current_branch_commit, change_type="a")
         return changes
 
     def is_current_branch_feature(self) -> bool:

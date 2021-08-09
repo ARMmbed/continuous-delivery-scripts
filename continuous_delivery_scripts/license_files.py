@@ -25,7 +25,17 @@ FILES_TO_IGNORE = ["*.yml", "*.yaml"]
 ADDITIONAL_EXTENSIONS = ["python=.toml", "c=.go"]
 
 
-def add_licence_header(verbose_count: int) -> None:
+def insert_licence_header(verbose_count: int) -> None:
+    """Inserts a copyright notice at the top of every source file of the current project.
+
+    Wrapper over the [licenseheaders tool](https://github.com/johann-petrak/licenseheaders).
+    """
+    # copyright (https://github.com/knipknap/copyright) was first considered but
+    # comprises quite a few bugs and does not seem active anymore.
+    add_licence_header(verbose_count, Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)))
+
+
+def add_licence_header(verbose_count: int, src: Path) -> None:
     """Puts a copyright notice at the top of every source file.
 
     Wrapper over the [licenseheaders tool](https://github.com/johann-petrak/licenseheaders).
@@ -40,7 +50,7 @@ def add_licence_header(verbose_count: int) -> None:
         logger.debug(f"Creates template file in {str(template_file_path)}")
         template_file.write(template_string.encode("utf8"))
         template_file.close()
-        copyright_config = get_tool_config(template_file_path)
+        copyright_config = get_tool_config(template_file_path, src)
         _call_licensehearders(copyright_config, verbose_count)
 
 
@@ -65,12 +75,12 @@ def _to_copyright_date_string(start: int, current: int) -> str:
     return f"{current}" if current == start else f"{start}-{current}"
 
 
-def get_tool_config(template_file: Path) -> dict:
+def get_tool_config(template_file: Path, src: Path) -> dict:
     """Gets the configuration for licenseheaders."""
     copyright_dates = _determines_copyright_dates()
     return {
         "owner": configuration.get_value(ConfigurationVariable.ORGANISATION),
-        "dir": configuration.get_value(ConfigurationVariable.PROJECT_ROOT),
+        "dir": src,
         "projname": configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         "tmpl": str(template_file),
         "years": copyright_dates,
@@ -86,7 +96,7 @@ def main() -> int:
     args = parser.parse_args()
     set_log_level(args.verbose)
     try:
-        add_licence_header(args.verbose)
+        insert_licence_header(args.verbose)
     except Exception as e:
         log_exception(logger, e)
         return 1

@@ -117,9 +117,9 @@ stages:
 
         steps:
           - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
+            displayName: 'Use Python 3.9'
             inputs:
-              versionSpec: '3.7'
+              versionSpec: '3.9'
 
           - template: steps/determine-current-branch.yml
 
@@ -140,9 +140,9 @@ stages:
 
         steps:
           - task: UsePythonVersion@0
-            displayName: 'Use Python 3.8'
+            displayName: 'Use Python 3.9'
             inputs:
-              versionSpec: '3.8'
+              versionSpec: '3.9'
 
           - template: steps/install-development-dependencies.yml
 
@@ -163,9 +163,9 @@ stages:
 
         steps:
           - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
+            displayName: 'Use Python 3.9'
             inputs:
-              versionSpec: '3.7'
+              versionSpec: '3.9'
 
           - template: steps/install-development-dependencies.yml
 
@@ -207,7 +207,7 @@ stages:
               steps:
                 - task: UsePythonVersion@0
                   inputs:
-                    versionSpec: '3.8'
+                    versionSpec: '3.9'
 
                 - template: steps/determine-current-branch.yml
 
@@ -242,7 +242,7 @@ stages:
               steps:
                 - task: UsePythonVersion@0
                   inputs:
-                    versionSpec: '3.8'
+                    versionSpec: '3.9'
 
                 - template: steps/determine-current-branch.yml
 
