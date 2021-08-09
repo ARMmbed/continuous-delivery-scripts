@@ -39,6 +39,11 @@ stages:
             Linux_Py_3_8:
               python.version: '3.8'
               vmImageName: ubuntu-latest
+              uploadCoverage: "false"
+
+            Linux_Py_3_9:
+              python.version: '3.9'
+              vmImageName: ubuntu-latest
               uploadCoverage: "true"
 
             Windows_Py_3_6:
@@ -135,9 +140,9 @@ stages:
 
         steps:
           - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
+            displayName: 'Use Python 3.8'
             inputs:
-              versionSpec: '3.7'
+              versionSpec: '3.8'
 
           - template: steps/install-development-dependencies.yml
 
@@ -202,7 +207,7 @@ stages:
               steps:
                 - task: UsePythonVersion@0
                   inputs:
-                    versionSpec: '3.7'
+                    versionSpec: '3.8'
 
                 - template: steps/determine-current-branch.yml
 
@@ -237,7 +242,7 @@ stages:
               steps:
                 - task: UsePythonVersion@0
                   inputs:
-                    versionSpec: '3.7'
+                    versionSpec: '3.8'
 
                 - template: steps/determine-current-branch.yml
 
