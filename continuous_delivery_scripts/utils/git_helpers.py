@@ -189,10 +189,8 @@ class GitWrapper:
             True if the branch is used for `release` code; False otherwise
         """
         branch_pattern = configuration.get_value(ConfigurationVariable.RELEASE_BRANCH_PATTERN)
-        if not branch_pattern or not branch_name:
-            return False
-        is_release: Optional[Any] = re.search(branch_pattern, str(branch_name))
-        return True if is_release else False
+        is_release, _ = self._is_branch_of_type(branch_name, branch_pattern)
+        return is_release
 
     def fetch(self) -> None:
         """Fetches latest changes."""
@@ -554,6 +552,18 @@ class GitWrapper:
         is_beta = current_branch == self.get_beta_branch()
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
+
+    def is_current_branch_of_type(self, pattern: str) -> (bool, Optional[List[Any]]):
+        """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any"""
+        return self._is_branch_of_type(self.get_current_branch(), pattern)
+
+    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -> (bool, Optional[List[Any]]):
+        if not pattern:
+            return False, None
+        if not branch_name:
+            return False, None
+        match = re.search(pattern, str(branch_name))
+        return True if match else False, match.groups() if match else None
 
     @property
     def uncommitted_changes(self) -> List[Path]:
