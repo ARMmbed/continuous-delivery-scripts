@@ -39,6 +39,7 @@
 import enum
 import pathlib
 from datetime import datetime
+from typing import Any
 
 
 class NewsType(enum.Enum):
@@ -52,9 +53,14 @@ class NewsType(enum.Enum):
     removal = 5
 
 
-def create_news_file(news_dir: str, news_text: str, news_type: NewsType) -&gt; pathlib.Path:
+def create_news_file(news_dir: str, news_text: str, news_type: Any) -&gt; pathlib.Path:
     &#34;&#34;&#34;Facilitates creating a news file, determining it&#39;s file name based on the type.&#34;&#34;&#34;
-    file_path = determine_news_file_path(news_dir, news_type)
+    message_type = NewsType.misc
+    if isinstance(news_type, str):
+        message_type = NewsType[news_type]
+    elif isinstance(news_type, NewsType):
+        message_type = news_type
+    file_path = determine_news_file_path(news_dir, message_type)
     _write_file(file_path, news_text)
     return file_path
 
@@ -89,7 +95,7 @@ def _determine_todays_news_file_name() -&gt; str:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.utils.news_file.create_news_file"><code class="name flex">
-<span>def <span class="ident">create_news_file</span></span>(<span>news_dir: str, news_text: str, news_type: <a title="continuous_delivery_scripts.utils.news_file.NewsType" href="#continuous_delivery_scripts.utils.news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
+<span>def <span class="ident">create_news_file</span></span>(<span>news_dir: str, news_text: str, news_type: Any) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Facilitates creating a news file, determining it's file name based on the type.</p></div>
@@ -97,9 +103,14 @@ def _determine_todays_news_file_name() -&gt; str:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_news_file(news_dir: str, news_text: str, news_type: NewsType) -&gt; pathlib.Path:
+<pre><code class="python">def create_news_file(news_dir: str, news_text: str, news_type: Any) -&gt; pathlib.Path:
     &#34;&#34;&#34;Facilitates creating a news file, determining it&#39;s file name based on the type.&#34;&#34;&#34;
-    file_path = determine_news_file_path(news_dir, news_type)
+    message_type = NewsType.misc
+    if isinstance(news_type, str):
+        message_type = NewsType[news_type]
+    elif isinstance(news_type, NewsType):
+        message_type = news_type
+    file_path = determine_news_file_path(news_dir, message_type)
     _write_file(file_path, news_text)
     return file_path</code></pre>
 </details>
