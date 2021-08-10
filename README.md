@@ -10,7 +10,8 @@
 [![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/continuous-delivery-scripts/third_party_IP_report.html)
 
 [![Build Status](https://dev.azure.com/cmsis-tools/continuous-delivery-scripts/_apis/build/status/Build%20and%20Release?branchName=main&stageName=CI%20Checkpoint)](https://dev.azure.com/cmsis-tools/continuous-delivery-scripts/_build/latest?definitionId=8&branchName=main)
-[![Test Coverage](https://codecov.io/gh/ARMmbed/continuous-delivery-scripts/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/continuous-delivery-scripts)
+
+[![Test Coverage](https://codecov.io/gh/ARMmbed/continuous-delivery-scripts/branch/main/graph/badge.svg?token=EAW9owYyjW)](https://codecov.io/gh/ARMmbed/continuous-delivery-scripts)
 [![Maintainability](https://api.codeclimate.com/v1/badges/41301e959f22986b7b2b/maintainability)](https://codeclimate.com/github/ARMmbed/continuous-delivery-scripts/maintainability)
 
 ## Overview
