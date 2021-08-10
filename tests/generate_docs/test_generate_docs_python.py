@@ -10,11 +10,7 @@ from pyfakefs.fake_filesystem_unittest import Patcher
 
 from continuous_delivery_scripts.plugins.python import _generate_pdoc_command_list, Python
 
-from continuous_delivery_scripts.generate_docs import (
-    _clear_previous_docs,
-    generate_documentation,
-    generate_docs,
-)
+from continuous_delivery_scripts.generate_docs import _clear_previous_docs, generate_documentation, generate_docs
 
 
 class TestGenerateDocs(TestCase):
@@ -31,6 +27,8 @@ class TestGenerateDocs(TestCase):
 
     def test_clear_previous_docs_none_exist(self):
         fake_output_dir = pathlib.Path("local_docs")
+        if fake_output_dir.exists():
+            fake_output_dir.rmdir()
         self.assertFalse(fake_output_dir.is_dir())
 
         _clear_previous_docs(fake_output_dir)

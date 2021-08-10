@@ -20,7 +20,7 @@ def get_language_from_file_name(filename: str) -> str:
     return Path(filename).resolve().with_suffix("").name
 
 
-GENERIC_LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author}. All rights reserved.
+GENERIC_LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author} or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
 """
 

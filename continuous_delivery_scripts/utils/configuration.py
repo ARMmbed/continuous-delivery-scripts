@@ -13,6 +13,7 @@ import dotenv
 import toml
 
 from .filesystem_helpers import find_file_in_tree
+from .news_file import NewsType
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +50,10 @@ class ConfigurationVariable(enum.Enum):
     ACCEPTED_THIRD_PARTY_LICENCES = 28
     PACKAGES_WITH_CHECKED_LICENCE = 29
     PROGRAMMING_LANGUAGE = 30
+    AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = 31
+    DEPENDENCY_UPDATE_BRANCH_PATTERN = 32
+    DEPENDENCY_UPDATE_NEWS_MESSAGE = 33
+    DEPENDENCY_UPDATE_NEWS_TYPE = 34
 
     @staticmethod
     def choices() -> List[str]:
@@ -145,11 +150,16 @@ class StaticConfig(GenericConfig):
     LOGGER_FORMAT = "%(levelname)s: %(message)s"
     BOT_USERNAME = "Monty Bot"
     BOT_EMAIL = "monty-bot@arm.com"
-    ORGANISATION = "Arm"
+    ORGANISATION = "Arm Limited"
     ORGANISATION_EMAIL = "support@arm.com"
     FILE_LICENCE_IDENTIFIER = "Apache-2.0"
     COPYRIGHT_START_DATE = 2020
     PROGRAMMING_LANGUAGE = "NoOp"
+    AWS_BUCKET = "Unknown"
+    AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
+    DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
+    DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix.name
+    DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
     ACCEPTED_THIRD_PARTY_LICENCES = ["Apache-2.0", "BSD*", "JSON", "MIT", "Python-2.0", "PSF-2.0", "MPL-2.0"]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 

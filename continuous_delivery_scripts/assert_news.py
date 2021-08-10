@@ -13,6 +13,7 @@ import pathlib
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.utils.news_file import create_news_file
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +93,39 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         validate_news_file(absolute_file_path)
 
 
+def add_news_files(git: GitWrapper, news_dir: str) -> None:
+    """Adds a news file if the branch corresponds to an dependency update.
+
+    Args:
+        git: Instance of GitWrapper.
+        news_dir: Relative path to news directory.
+    """
+    current_branch = str(git.get_current_branch())
+    is_dependency_update, groups = git.is_current_branch_of_type(
+        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN))
+    )
+    if not is_dependency_update:
+        raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
+    if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
+        raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
+
+    create_news_file(
+        news_dir,
+        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
+            message=", ".join(groups)
+        ),
+        configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
+    )
+
+
+def _commit_news_file(git: GitWrapper, news_dir: str) -> None:
+    logger.info("Committing news file...")
+    git.add(news_dir)
+    git.commit("Adding news file")
+    git.push()
+    git.pull()
+
+
 def main() -> None:
     """Asserts the new PR comprises at least one news file and it adheres to the required standard."""
     parser = argparse.ArgumentParser(description="Check correctly formatted news files exist on feature branch.")
@@ -114,7 +148,12 @@ def main() -> None:
                 validate_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
             except Exception as e:
                 log_exception(logger, e)
-                sys.exit(1)
+                try:
+                    add_news_files(git, absolute_news_dir)
+                    _commit_news_file(git, absolute_news_dir)
+                except Exception as e2:
+                    log_exception(logger, e2)
+                    sys.exit(1)
 
 
 if __name__ == "__main__":

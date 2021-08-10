@@ -32,6 +32,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Software Development :: Build Tools",
     ],
     description="Continuous Delivery scripts to increase automation",
@@ -53,7 +54,8 @@ setup(
         "gitpython",
         "towncrier==19.2.0",
         "pyautoversion~=1.2.0",
-        "pdoc3",
+        # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
+        "pdoc3==0.9.1",
         "toml",
         "python-dotenv",
         "twine",

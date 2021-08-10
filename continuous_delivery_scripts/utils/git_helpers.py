@@ -189,10 +189,8 @@ class GitWrapper:
             True if the branch is used for `release` code; False otherwise
         """
         branch_pattern = configuration.get_value(ConfigurationVariable.RELEASE_BRANCH_PATTERN)
-        if not branch_pattern or not branch_name:
-            return False
-        is_release: Optional[Any] = re.search(branch_pattern, str(branch_name))
-        return True if is_release else False
+        is_release, _ = self._is_branch_of_type(branch_name, branch_pattern)
+        return is_release
 
     def fetch(self) -> None:
         """Fetches latest changes."""
@@ -529,11 +527,23 @@ class GitWrapper:
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
-        master_branch_commit = self.repo.commit(self.get_master_branch())
+        master_branch = self.get_master_branch()
+        beta_branch = self.get_beta_branch()
+        master_branch_commit = self.repo.commit(master_branch)
+        beta_branch_commit = self.repo.commit(beta_branch)
         current_branch_commit = self.repo.commit(self.get_current_branch())
-        changes = self.get_changes_list(
-            self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type="a"
-        )
+        # Finding the baseline branch to consider
+        master_branch_point = self.repo.commit(self.get_branch_point(master_branch_commit, current_branch_commit))
+        beta_branch_point = self.repo.commit(self.get_branch_point(beta_branch_commit, current_branch_commit))
+        branch_point = master_branch_point
+        if not master_branch:
+            branch_point = beta_branch_point
+        elif beta_branch and master_branch:
+            if beta_branch_point.committed_datetime > master_branch_point.committed_datetime:
+                # The branch point off `beta` is more recent than off `master`.
+                # Hence, the difference between current and `beta` should be considered.
+                branch_point = beta_branch_point
+        changes = self.get_changes_list(branch_point, current_branch_commit, change_type="a")
         return changes
 
     def is_current_branch_feature(self) -> bool:
@@ -543,6 +553,18 @@ class GitWrapper:
         is_beta = current_branch == self.get_beta_branch()
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
+
+    def is_current_branch_of_type(self, pattern: str) -> (bool, Optional[List[Any]]):
+        """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any."""
+        return self._is_branch_of_type(self.get_current_branch(), pattern)
+
+    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -> (bool, Optional[List[Any]]):
+        if not pattern:
+            return False, None
+        if not branch_name:
+            return False, None
+        match = re.search(pattern, str(branch_name))
+        return True if match else False, match.groups() if match else None
 
     @property
     def uncommitted_changes(self) -> List[Path]:

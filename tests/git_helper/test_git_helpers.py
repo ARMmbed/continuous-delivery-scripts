@@ -53,6 +53,23 @@ class TestGitTempClone(TestCase):
             self.assertTrue(clone.is_current_branch_feature())
             self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
 
+    def test_current_branch(self):
+        """Ensures current branch is as expected."""
+        with ProjectTempClone(desired_branch_name="main") as clone:
+            self.assertTrue(isinstance(clone, GitWrapper))
+            self.assertEqual("main", str(clone.get_current_branch()))
+            branch = clone.create_branch("blahblaaah")
+            self.assertIsNotNone(branch)
+            clone.checkout_branch(str(branch))
+            follows_pattern, groups = clone.is_current_branch_of_type(r"(.+)h(.+)h")
+            self.assertTrue(follows_pattern)
+            self.assertEqual(2, len(groups))
+            self.assertEqual("bla", groups[0])
+            self.assertEqual("blaaa", groups[1])
+            follows_pattern, groups = clone.is_current_branch_of_type(r"(.+)v(.+)v")
+            self.assertFalse(follows_pattern)
+            self.assertIsNone(groups)
+
     def test_file_addition(self):
         """Test basic git branch actions on the clone."""
         with ProjectTempClone(desired_branch_name="main") as clone:

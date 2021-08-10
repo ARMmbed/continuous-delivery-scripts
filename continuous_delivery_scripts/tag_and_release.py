@@ -13,11 +13,8 @@ from typing import Optional, Tuple
 from continuous_delivery_scripts.generate_docs import generate_documentation
 from continuous_delivery_scripts.generate_news import version_project
 from continuous_delivery_scripts.language_specifics import get_language_specifics
-from continuous_delivery_scripts.license_files import add_licence_header
-from continuous_delivery_scripts.report_third_party_ip import (
-    generate_spdx_project_reports,
-    SpdxProject,
-)
+from continuous_delivery_scripts.license_files import insert_licence_header
+from continuous_delivery_scripts.report_third_party_ip import generate_spdx_project_reports, SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
@@ -50,7 +47,7 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     _update_documentation()
     # Adding the licensing summaries in /docs after folder has been cleared and regenerated.
     spdx_project = _update_licensing_summary()
-    add_licence_header(0)
+    insert_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
         if spdx_project:

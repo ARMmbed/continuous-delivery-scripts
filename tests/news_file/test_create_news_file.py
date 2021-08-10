@@ -7,27 +7,28 @@ from unittest import TestCase, mock
 from datetime import datetime
 from tempfile import TemporaryDirectory
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.create_news_file import (
+from continuous_delivery_scripts.utils.news_file import (
     NewsType,
-    create_news_file,
     determine_news_file_path,
+    create_news_file,
     _write_file,
 )
+from continuous_delivery_scripts.create_news_file import NEWS_DIR
 
 
 class TestCreateNewsFile(TestCase):
-    @mock.patch("continuous_delivery_scripts.create_news_file.determine_news_file_path")
-    @mock.patch("continuous_delivery_scripts.create_news_file._write_file")
+    @mock.patch("continuous_delivery_scripts.utils.news_file.determine_news_file_path")
+    @mock.patch("continuous_delivery_scripts.utils.news_file._write_file")
     def test_creates_a_file_with_available_file_name_and_returns_its_path(self, _write_file, determine_news_file_path):
         news_file_path = pathlib.Path("some/1234501.feature")
         determine_news_file_path.return_value = news_file_path
         news_text = "Cool feature"
         news_type = NewsType.feature
 
-        file_path = create_news_file(news_text, news_type)
+        file_path = create_news_file(NEWS_DIR, news_text, news_type)
 
         self.assertEqual(file_path, news_file_path)
-        determine_news_file_path.assert_called_once_with(news_type)
+        determine_news_file_path.assert_called_once_with(NEWS_DIR, news_type)
         _write_file.assert_called_once_with(file_path, news_text)
 
 
@@ -43,7 +44,7 @@ class TestDetermineNewsFilePath(TestCase):
                     pathlib.Path(tmp_dir, f"{news_file_path_today}.{news_type.name}").touch()
                     pathlib.Path(tmp_dir, f"{news_file_path_today}01.{news_type.name}").touch()
 
-                    file_path = determine_news_file_path(news_type)
+                    file_path = determine_news_file_path(NEWS_DIR, news_type)
 
                     self.assertEqual(file_path, pathlib.Path(news_dir, f"{news_file_name_today}02.{news_type.name}"))
 
