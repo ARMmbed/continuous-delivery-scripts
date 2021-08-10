@@ -13,6 +13,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.2.2" (2021-08-10)
+====================
+
+Bugfixes
+--------
+
+- Authenticate before committed changes to GitHub (#202108101821)
+
+
 "2.2.1" (2021-08-10)
 ====================
 

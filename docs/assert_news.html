@@ -153,8 +153,9 @@ def add_news_files(git: GitWrapper, news_dir: str) -&gt; None:
 
 def _commit_news_file(git: GitWrapper, news_dir: str) -&gt; None:
     logger.info(&#34;Committing news file...&#34;)
+    git.configure_for_github()
     git.add(news_dir)
-    git.commit(&#34;Adding news file&#34;)
+    git.commit(&#34;📰 Automatic changes ⚙ Adding news file&#34;)
     git.push()
     git.pull()
 
