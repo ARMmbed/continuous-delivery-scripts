@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm. All rights reserved.
+-- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>continuous_delivery_scripts.utils.configuration API documentation</title>
 <meta name="description" content="Utilities in charge of fetching configuration values for the ci scripts." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -46,6 +46,7 @@ import dotenv
 import toml
 
 from .filesystem_helpers import find_file_in_tree
+from .news_file import NewsType
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +83,10 @@ class ConfigurationVariable(enum.Enum):
     ACCEPTED_THIRD_PARTY_LICENCES = 28
     PACKAGES_WITH_CHECKED_LICENCE = 29
     PROGRAMMING_LANGUAGE = 30
+    AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = 31
+    DEPENDENCY_UPDATE_BRANCH_PATTERN = 32
+    DEPENDENCY_UPDATE_NEWS_MESSAGE = 33
+    DEPENDENCY_UPDATE_NEWS_TYPE = 34
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -178,11 +183,16 @@ class StaticConfig(GenericConfig):
     LOGGER_FORMAT = &#34;%(levelname)s: %(message)s&#34;
     BOT_USERNAME = &#34;Monty Bot&#34;
     BOT_EMAIL = &#34;monty-bot@arm.com&#34;
-    ORGANISATION = &#34;Arm&#34;
+    ORGANISATION = &#34;Arm Limited&#34;
     ORGANISATION_EMAIL = &#34;support@arm.com&#34;
     FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
     COPYRIGHT_START_DATE = 2020
     PROGRAMMING_LANGUAGE = &#34;NoOp&#34;
+    AWS_BUCKET = &#34;Unknown&#34;
+    AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
+    DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
+    DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix.name
+    DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
     ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
@@ -372,6 +382,10 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     ACCEPTED_THIRD_PARTY_LICENCES = 28
     PACKAGES_WITH_CHECKED_LICENCE = 29
     PROGRAMMING_LANGUAGE = 30
+    AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = 31
+    DEPENDENCY_UPDATE_BRANCH_PATTERN = 32
+    DEPENDENCY_UPDATE_NEWS_MESSAGE = 33
+    DEPENDENCY_UPDATE_NEWS_TYPE = 34
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -407,6 +421,10 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE"><code class="name">var <span class="ident">AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -428,6 +446,18 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <div class="desc"></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_BRANCH_PATTERN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_MESSAGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_TYPE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1004,11 +1034,16 @@ defined in toml.</p></div>
     LOGGER_FORMAT = &#34;%(levelname)s: %(message)s&#34;
     BOT_USERNAME = &#34;Monty Bot&#34;
     BOT_EMAIL = &#34;monty-bot@arm.com&#34;
-    ORGANISATION = &#34;Arm&#34;
+    ORGANISATION = &#34;Arm Limited&#34;
     ORGANISATION_EMAIL = &#34;support@arm.com&#34;
     FILE_LICENCE_IDENTIFIER = &#34;Apache-2.0&#34;
     COPYRIGHT_START_DATE = 2020
     PROGRAMMING_LANGUAGE = &#34;NoOp&#34;
+    AWS_BUCKET = &#34;Unknown&#34;
+    AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
+    DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
+    DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix.name
+    DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
     ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
@@ -1029,6 +1064,14 @@ defined in toml.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE"><code class="name">var <span class="ident">AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -1042,6 +1085,18 @@ defined in toml.</p></div>
 <div class="desc"></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_BRANCH_PATTERN"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_BRANCH_PATTERN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_MESSAGE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_MESSAGE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_TYPE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_TYPE</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1133,12 +1188,16 @@ defined in toml.</p></div>
 <h4><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable">ConfigurationVariable</a></code></h4>
 <ul class="">
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES">ACCEPTED_THIRD_PARTY_LICENCES</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE">AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET">AWS_BUCKET</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH">BETA_BRANCH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL">BOT_EMAIL</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME">BOT_USERNAME</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH">CHANGELOG_FILE_PATH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN">DEPENDENCY_UPDATE_BRANCH_PATTERN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE">DEPENDENCY_UPDATE_NEWS_MESSAGE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE">DEPENDENCY_UPDATE_NEWS_TYPE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH">DOCUMENTATION_DEFAULT_OUTPUT_PATH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
@@ -1191,10 +1250,15 @@ defined in toml.</p></div>
 <h4><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig" href="#continuous_delivery_scripts.utils.configuration.StaticConfig">StaticConfig</a></code></h4>
 <ul class="">
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.ACCEPTED_THIRD_PARTY_LICENCES">ACCEPTED_THIRD_PARTY_LICENCES</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE">AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.AWS_BUCKET" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.AWS_BUCKET">AWS_BUCKET</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.BETA_BRANCH" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.BETA_BRANCH">BETA_BRANCH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_EMAIL" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_EMAIL">BOT_EMAIL</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_USERNAME" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.BOT_USERNAME">BOT_USERNAME</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.COPYRIGHT_START_DATE">COPYRIGHT_START_DATE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_BRANCH_PATTERN">DEPENDENCY_UPDATE_BRANCH_PATTERN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_MESSAGE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_MESSAGE">DEPENDENCY_UPDATE_NEWS_MESSAGE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_TYPE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_TYPE">DEPENDENCY_UPDATE_NEWS_TYPE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
@@ -1215,7 +1279,7 @@ defined in toml.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

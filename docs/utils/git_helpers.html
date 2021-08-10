@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm. All rights reserved.
+-- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>continuous_delivery_scripts.utils.git_helpers API documentation</title>
 <meta name="description" content="Utility script to abstract git operations for our CI scripts." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -222,10 +222,8 @@ class GitWrapper:
             True if the branch is used for `release` code; False otherwise
         &#34;&#34;&#34;
         branch_pattern = configuration.get_value(ConfigurationVariable.RELEASE_BRANCH_PATTERN)
-        if not branch_pattern or not branch_name:
-            return False
-        is_release: Optional[Any] = re.search(branch_pattern, str(branch_name))
-        return True if is_release else False
+        is_release, _ = self._is_branch_of_type(branch_name, branch_pattern)
+        return is_release
 
     def fetch(self) -&gt; None:
         &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
@@ -562,11 +560,23 @@ class GitWrapper:
 
     def list_files_added_on_current_branch(self) -&gt; List[str]:
         &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
-        master_branch_commit = self.repo.commit(self.get_master_branch())
+        master_branch = self.get_master_branch()
+        beta_branch = self.get_beta_branch()
+        master_branch_commit = self.repo.commit(master_branch)
+        beta_branch_commit = self.repo.commit(beta_branch)
         current_branch_commit = self.repo.commit(self.get_current_branch())
-        changes = self.get_changes_list(
-            self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type=&#34;a&#34;
-        )
+        # Finding the baseline branch to consider
+        master_branch_point = self.repo.commit(self.get_branch_point(master_branch_commit, current_branch_commit))
+        beta_branch_point = self.repo.commit(self.get_branch_point(beta_branch_commit, current_branch_commit))
+        branch_point = master_branch_point
+        if not master_branch:
+            branch_point = beta_branch_point
+        elif beta_branch and master_branch:
+            if beta_branch_point.committed_datetime &gt; master_branch_point.committed_datetime:
+                # The branch point off `beta` is more recent than off `master`.
+                # Hence, the difference between current and `beta` should be considered.
+                branch_point = beta_branch_point
+        changes = self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
         return changes
 
     def is_current_branch_feature(self) -&gt; bool:
@@ -576,6 +586,18 @@ class GitWrapper:
         is_beta = current_branch == self.get_beta_branch()
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
+
+    def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+        &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
+        return self._is_branch_of_type(self.get_current_branch(), pattern)
+
+    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -&gt; (bool, Optional[List[Any]]):
+        if not pattern:
+            return False, None
+        if not branch_name:
+            return False, None
+        match = re.search(pattern, str(branch_name))
+        return True if match else False, match.groups() if match else None
 
     @property
     def uncommitted_changes(self) -&gt; List[Path]:
@@ -930,6 +952,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_url">get_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type">is_current_branch_of_type</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
@@ -949,7 +972,7 @@ def initial_location(self) -&gt; Path:
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitTempClone"><code class="flex name class">
 <span>class <span class="ident">GitTempClone</span></span>
-<span>(</span><span>desired_branch_name: Union[str, NoneType], repository_to_clone: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>)</span>
+<span>(</span><span>desired_branch_name: Optional[str], repository_to_clone: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Context manager providing a temporary cloned repository.</p>
@@ -1191,10 +1214,8 @@ def initial_location(self) -&gt; Path:
             True if the branch is used for `release` code; False otherwise
         &#34;&#34;&#34;
         branch_pattern = configuration.get_value(ConfigurationVariable.RELEASE_BRANCH_PATTERN)
-        if not branch_pattern or not branch_name:
-            return False
-        is_release: Optional[Any] = re.search(branch_pattern, str(branch_name))
-        return True if is_release else False
+        is_release, _ = self._is_branch_of_type(branch_name, branch_pattern)
+        return is_release
 
     def fetch(self) -&gt; None:
         &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
@@ -1531,11 +1552,23 @@ def initial_location(self) -&gt; Path:
 
     def list_files_added_on_current_branch(self) -&gt; List[str]:
         &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
-        master_branch_commit = self.repo.commit(self.get_master_branch())
+        master_branch = self.get_master_branch()
+        beta_branch = self.get_beta_branch()
+        master_branch_commit = self.repo.commit(master_branch)
+        beta_branch_commit = self.repo.commit(beta_branch)
         current_branch_commit = self.repo.commit(self.get_current_branch())
-        changes = self.get_changes_list(
-            self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type=&#34;a&#34;
-        )
+        # Finding the baseline branch to consider
+        master_branch_point = self.repo.commit(self.get_branch_point(master_branch_commit, current_branch_commit))
+        beta_branch_point = self.repo.commit(self.get_branch_point(beta_branch_commit, current_branch_commit))
+        branch_point = master_branch_point
+        if not master_branch:
+            branch_point = beta_branch_point
+        elif beta_branch and master_branch:
+            if beta_branch_point.committed_datetime &gt; master_branch_point.committed_datetime:
+                # The branch point off `beta` is more recent than off `master`.
+                # Hence, the difference between current and `beta` should be considered.
+                branch_point = beta_branch_point
+        changes = self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
         return changes
 
     def is_current_branch_feature(self) -&gt; bool:
@@ -1545,6 +1578,18 @@ def initial_location(self) -&gt; Path:
         is_beta = current_branch == self.get_beta_branch()
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
+
+    def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+        &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
+        return self._is_branch_of_type(self.get_current_branch(), pattern)
+
+    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -&gt; (bool, Optional[List[Any]]):
+        if not pattern:
+            return False, None
+        if not branch_name:
+            return False, None
+        match = re.search(pattern, str(branch_name))
+        return True if match else False, match.groups() if match else None
 
     @property
     def uncommitted_changes(self) -&gt; List[Path]:
@@ -1846,7 +1891,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit"><code class="name flex">
-<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Union[Tuple[str, Any], NoneType]) ‑> NoneType</span>
+<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Optional[Tuple[str, Any]]) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Commits changes to the repository.</p>
@@ -1936,7 +1981,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.create_tag"><code class="name flex">
-<span>def <span class="ident">create_tag</span></span>(<span>self, tag_name: str, message: Union[str, NoneType] = None) ‑> Any</span>
+<span>def <span class="ident">create_tag</span></span>(<span>self, tag_name: str, message: Optional[str] = None) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a new tag.</p>
@@ -2148,7 +2193,7 @@ if no branches with this <code>branch_name</code> were found</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_changes_list"><code class="name flex">
-<span>def <span class="ident">get_changes_list</span></span>(<span>self, commit1: Any, commit2: Any, change_type: Union[str, NoneType] = None, dir: Union[str, NoneType] = None) ‑> List[str]</span>
+<span>def <span class="ident">get_changes_list</span></span>(<span>self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None) ‑> List[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets change list.</p>
@@ -2316,7 +2361,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_branch"><code class="name flex">
-<span>def <span class="ident">get_remote_branch</span></span>(<span>self, branch_name: str) ‑> Union[Any, NoneType]</span>
+<span>def <span class="ident">get_remote_branch</span></span>(<span>self, branch_name: str) ‑> Optional[Any]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the branch present in the remote repository.</p>
@@ -2414,8 +2459,22 @@ before the current commit.</p>
     return not (is_master or is_beta or is_release)</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type"><code class="name flex">
+<span>def <span class="ident">is_current_branch_of_type</span></span>(<span>self, pattern: str) ‑> (<class 'bool'>, typing.Optional[typing.List[typing.Any]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+    &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
+    return self._is_branch_of_type(self.get_current_branch(), pattern)</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch"><code class="name flex">
-<span>def <span class="ident">is_release_branch</span></span>(<span>self, branch_name: Union[str, NoneType]) ‑> bool</span>
+<span>def <span class="ident">is_release_branch</span></span>(<span>self, branch_name: Optional[str]) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks whether the branch is a <code>release</code> branch or not.</p>
@@ -2440,10 +2499,8 @@ before the current commit.</p>
         True if the branch is used for `release` code; False otherwise
     &#34;&#34;&#34;
     branch_pattern = configuration.get_value(ConfigurationVariable.RELEASE_BRANCH_PATTERN)
-    if not branch_pattern or not branch_name:
-        return False
-    is_release: Optional[Any] = re.search(branch_pattern, str(branch_name))
-    return True if is_release else False</code></pre>
+    is_release, _ = self._is_branch_of_type(branch_name, branch_pattern)
+    return is_release</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches"><code class="name flex">
@@ -2478,11 +2535,23 @@ before the current commit.</p>
 </summary>
 <pre><code class="python">def list_files_added_on_current_branch(self) -&gt; List[str]:
     &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
-    master_branch_commit = self.repo.commit(self.get_master_branch())
+    master_branch = self.get_master_branch()
+    beta_branch = self.get_beta_branch()
+    master_branch_commit = self.repo.commit(master_branch)
+    beta_branch_commit = self.repo.commit(beta_branch)
     current_branch_commit = self.repo.commit(self.get_current_branch())
-    changes = self.get_changes_list(
-        self.get_branch_point(master_branch_commit, current_branch_commit), current_branch_commit, change_type=&#34;a&#34;
-    )
+    # Finding the baseline branch to consider
+    master_branch_point = self.repo.commit(self.get_branch_point(master_branch_commit, current_branch_commit))
+    beta_branch_point = self.repo.commit(self.get_branch_point(beta_branch_commit, current_branch_commit))
+    branch_point = master_branch_point
+    if not master_branch:
+        branch_point = beta_branch_point
+    elif beta_branch and master_branch:
+        if beta_branch_point.committed_datetime &gt; master_branch_point.committed_datetime:
+            # The branch point off `beta` is more recent than off `master`.
+            # Hence, the difference between current and `beta` should be considered.
+            branch_point = beta_branch_point
+    changes = self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
     return changes</code></pre>
 </details>
 </dd>
@@ -2746,6 +2815,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_url">get_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type">is_current_branch_of_type</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
@@ -2765,7 +2835,7 @@ Tags are also pushed as part of the process</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.ProjectTempClone"><code class="flex name class">
 <span>class <span class="ident">ProjectTempClone</span></span>
-<span>(</span><span>desired_branch_name: Union[str, NoneType] = None)</span>
+<span>(</span><span>desired_branch_name: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Temporary cloned repository for current project.</p>
@@ -2859,6 +2929,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_remote_url">get_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type">is_current_branch_of_type</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
@@ -2889,7 +2960,7 @@ will work in most cases but probably not on CI.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

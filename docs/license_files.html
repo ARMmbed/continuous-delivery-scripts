@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm. All rights reserved.
+-- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>continuous_delivery_scripts.license_files API documentation</title>
 <meta name="description" content="Apply copyright and licensing to all source files present in a project …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -60,7 +60,17 @@ FILES_TO_IGNORE = [&#34;*.yml&#34;, &#34;*.yaml&#34;]
 ADDITIONAL_EXTENSIONS = [&#34;python=.toml&#34;, &#34;c=.go&#34;]
 
 
-def add_licence_header(verbose_count: int) -&gt; None:
+def insert_licence_header(verbose_count: int) -&gt; None:
+    &#34;&#34;&#34;Inserts a copyright notice at the top of every source file of the current project.
+
+    Wrapper over the [licenseheaders tool](https://github.com/johann-petrak/licenseheaders).
+    &#34;&#34;&#34;
+    # copyright (https://github.com/knipknap/copyright) was first considered but
+    # comprises quite a few bugs and does not seem active anymore.
+    add_licence_header(verbose_count, Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)))
+
+
+def add_licence_header(verbose_count: int, src: Path) -&gt; None:
     &#34;&#34;&#34;Puts a copyright notice at the top of every source file.
 
     Wrapper over the [licenseheaders tool](https://github.com/johann-petrak/licenseheaders).
@@ -75,7 +85,7 @@ def add_licence_header(verbose_count: int) -&gt; None:
         logger.debug(f&#34;Creates template file in {str(template_file_path)}&#34;)
         template_file.write(template_string.encode(&#34;utf8&#34;))
         template_file.close()
-        copyright_config = get_tool_config(template_file_path)
+        copyright_config = get_tool_config(template_file_path, src)
         _call_licensehearders(copyright_config, verbose_count)
 
 
@@ -100,12 +110,12 @@ def _to_copyright_date_string(start: int, current: int) -&gt; str:
     return f&#34;{current}&#34; if current == start else f&#34;{start}-{current}&#34;
 
 
-def get_tool_config(template_file: Path) -&gt; dict:
+def get_tool_config(template_file: Path, src: Path) -&gt; dict:
     &#34;&#34;&#34;Gets the configuration for licenseheaders.&#34;&#34;&#34;
     copyright_dates = _determines_copyright_dates()
     return {
         &#34;owner&#34;: configuration.get_value(ConfigurationVariable.ORGANISATION),
-        &#34;dir&#34;: configuration.get_value(ConfigurationVariable.PROJECT_ROOT),
+        &#34;dir&#34;: src,
         &#34;projname&#34;: configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         &#34;tmpl&#34;: str(template_file),
         &#34;years&#34;: copyright_dates,
@@ -121,7 +131,7 @@ def main() -&gt; int:
     args = parser.parse_args()
     set_log_level(args.verbose)
     try:
-        add_licence_header(args.verbose)
+        insert_licence_header(args.verbose)
     except Exception as e:
         log_exception(logger, e)
         return 1
@@ -140,7 +150,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.license_files.add_licence_header"><code class="name flex">
-<span>def <span class="ident">add_licence_header</span></span>(<span>verbose_count: int) ‑> NoneType</span>
+<span>def <span class="ident">add_licence_header</span></span>(<span>verbose_count: int, src: pathlib.Path) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Puts a copyright notice at the top of every source file.</p>
@@ -149,7 +159,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_licence_header(verbose_count: int) -&gt; None:
+<pre><code class="python">def add_licence_header(verbose_count: int, src: Path) -&gt; None:
     &#34;&#34;&#34;Puts a copyright notice at the top of every source file.
 
     Wrapper over the [licenseheaders tool](https://github.com/johann-petrak/licenseheaders).
@@ -164,12 +174,12 @@ if __name__ == &#34;__main__&#34;:
         logger.debug(f&#34;Creates template file in {str(template_file_path)}&#34;)
         template_file.write(template_string.encode(&#34;utf8&#34;))
         template_file.close()
-        copyright_config = get_tool_config(template_file_path)
+        copyright_config = get_tool_config(template_file_path, src)
         _call_licensehearders(copyright_config, verbose_count)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.license_files.get_tool_config"><code class="name flex">
-<span>def <span class="ident">get_tool_config</span></span>(<span>template_file: pathlib.Path) ‑> dict</span>
+<span>def <span class="ident">get_tool_config</span></span>(<span>template_file: pathlib.Path, src: pathlib.Path) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the configuration for licenseheaders.</p></div>
@@ -177,18 +187,38 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_tool_config(template_file: Path) -&gt; dict:
+<pre><code class="python">def get_tool_config(template_file: Path, src: Path) -&gt; dict:
     &#34;&#34;&#34;Gets the configuration for licenseheaders.&#34;&#34;&#34;
     copyright_dates = _determines_copyright_dates()
     return {
         &#34;owner&#34;: configuration.get_value(ConfigurationVariable.ORGANISATION),
-        &#34;dir&#34;: configuration.get_value(ConfigurationVariable.PROJECT_ROOT),
+        &#34;dir&#34;: src,
         &#34;projname&#34;: configuration.get_value(ConfigurationVariable.PROJECT_NAME),
         &#34;tmpl&#34;: str(template_file),
         &#34;years&#34;: copyright_dates,
         &#34;additional-extensions&#34;: ADDITIONAL_EXTENSIONS,
         &#34;exclude&#34;: FILES_TO_IGNORE,
     }</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.license_files.insert_licence_header"><code class="name flex">
+<span>def <span class="ident">insert_licence_header</span></span>(<span>verbose_count: int) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Inserts a copyright notice at the top of every source file of the current project.</p>
+<p>Wrapper over the <a href="https://github.com/johann-petrak/licenseheaders">licenseheaders tool</a>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def insert_licence_header(verbose_count: int) -&gt; None:
+    &#34;&#34;&#34;Inserts a copyright notice at the top of every source file of the current project.
+
+    Wrapper over the [licenseheaders tool](https://github.com/johann-petrak/licenseheaders).
+    &#34;&#34;&#34;
+    # copyright (https://github.com/knipknap/copyright) was first considered but
+    # comprises quite a few bugs and does not seem active anymore.
+    add_licence_header(verbose_count, Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.license_files.main"><code class="name flex">
@@ -207,7 +237,7 @@ if __name__ == &#34;__main__&#34;:
     args = parser.parse_args()
     set_log_level(args.verbose)
     try:
-        add_licence_header(args.verbose)
+        insert_licence_header(args.verbose)
     except Exception as e:
         log_exception(logger, e)
         return 1
@@ -234,6 +264,7 @@ if __name__ == &#34;__main__&#34;:
 <ul class="">
 <li><code><a title="continuous_delivery_scripts.license_files.add_licence_header" href="#continuous_delivery_scripts.license_files.add_licence_header">add_licence_header</a></code></li>
 <li><code><a title="continuous_delivery_scripts.license_files.get_tool_config" href="#continuous_delivery_scripts.license_files.get_tool_config">get_tool_config</a></code></li>
+<li><code><a title="continuous_delivery_scripts.license_files.insert_licence_header" href="#continuous_delivery_scripts.license_files.insert_licence_header">insert_licence_header</a></code></li>
 <li><code><a title="continuous_delivery_scripts.license_files.main" href="#continuous_delivery_scripts.license_files.main">main</a></code></li>
 </ul>
 </li>
@@ -241,7 +272,7 @@ if __name__ == &#34;__main__&#34;:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

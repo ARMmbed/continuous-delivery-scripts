@@ -48,6 +48,7 @@ True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
 True,s3transfer,True,https://github.com/boto/s3transfer,Apache-2.0,Licence is compliant.
 True,SecretStorage,True,https://github.com/mitya57/secretstorage,BSD-1-Clause,Licence is compliant.
 True,semver,True,https://github.com/python-semver/python-semver,0BSD,Licence is compliant.
+True,setuptools,True,https://github.com/pypa/setuptools,Unknown,Package's licence manually checked: MIT
 True,six,True,https://github.com/benjaminp/six,MIT,Licence is compliant.
 True,smmap,True,https://github.com/gitpython-developers/smmap,0BSD,Licence is compliant.
 True,spdx-tools,True,https://github.com/spdx/tools-python,Apache-2.0,Licence is compliant.
@@ -55,7 +56,6 @@ True,toml,True,https://github.com/uiri/toml,MIT,Licence is compliant.
 True,towncrier,True,https://github.com/hawkowl/towncrier,MIT,Licence is compliant.
 True,tqdm,True,https://tqdm.github.io,MPL-2.0,Licence is compliant.
 True,twine,True,https://twine.readthedocs.io/,Unknown,Package's licence manually checked: Apache-2.0
-True,typing-extensions,True,https://github.com/python/typing/blob/master/typing_extensions/README.rst,ISC,Package's licence manually checked: PSF-2.0
 True,urllib3,True,https://urllib3.readthedocs.io/,MIT,Licence is compliant.
 True,wcmatch,True,https://github.com/facelessuser/wcmatch,MIT,Licence is compliant.
 True,webencodings,True,https://github.com/SimonSapin/python-webencodings,0BSD,Licence is compliant.

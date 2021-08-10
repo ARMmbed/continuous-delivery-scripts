@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2021-07-19 08:10:42.479605
+                                         2021-08-10 10:38:59.122764
 
 # Summary:
     Licence compliance: Compliant
@@ -351,6 +351,13 @@
     Licence: 0BSD
     Licence compliance: Licence is compliant.
 
+- setuptools:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pypa/setuptools
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
+
 - six:
     [X] Compliant?
     [X] Dependency?
@@ -399,13 +406,6 @@
     URL: https://twine.readthedocs.io/
     Licence: Unknown
     Licence compliance: Package's licence manually checked: Apache-2.0
-
-- typing-extensions:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/python/typing/blob/master/typing_extensions/README.rst
-    Licence: ISC
-    Licence compliance: Package's licence manually checked: PSF-2.0
 
 - urllib3:
     [X] Compliant?

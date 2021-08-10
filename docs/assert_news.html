@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm. All rights reserved.
+-- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>continuous_delivery_scripts.assert_news API documentation</title>
 <meta name="description" content="Checks if valid news files are created for changes in the project." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -46,6 +46,7 @@ import pathlib
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.utils.news_file import create_news_file
 
 logger = logging.getLogger(__name__)
 
@@ -125,6 +126,39 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; Non
         validate_news_file(absolute_file_path)
 
 
+def add_news_files(git: GitWrapper, news_dir: str) -&gt; None:
+    &#34;&#34;&#34;Adds a news file if the branch corresponds to an dependency update.
+
+    Args:
+        git: Instance of GitWrapper.
+        news_dir: Relative path to news directory.
+    &#34;&#34;&#34;
+    current_branch = str(git.get_current_branch())
+    is_dependency_update, groups = git.is_current_branch_of_type(
+        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN))
+    )
+    if not is_dependency_update:
+        raise EnvironmentError(f&#34;Branch {current_branch} must contain a news file.&#34;)
+    if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
+        raise EnvironmentError(f&#34;Branch {current_branch} must contain a news file.&#34;)
+
+    create_news_file(
+        news_dir,
+        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
+            message=&#34;, &#34;.join(groups)
+        ),
+        configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
+    )
+
+
+def _commit_news_file(git: GitWrapper, news_dir: str) -&gt; None:
+    logger.info(&#34;Committing news file...&#34;)
+    git.add(news_dir)
+    git.commit(&#34;Adding news file&#34;)
+    git.push()
+    git.pull()
+
+
 def main() -&gt; None:
     &#34;&#34;&#34;Asserts the new PR comprises at least one news file and it adheres to the required standard.&#34;&#34;&#34;
     parser = argparse.ArgumentParser(description=&#34;Check correctly formatted news files exist on feature branch.&#34;)
@@ -147,7 +181,12 @@ def main() -&gt; None:
                 validate_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
             except Exception as e:
                 log_exception(logger, e)
-                sys.exit(1)
+                try:
+                    add_news_files(git, absolute_news_dir)
+                    _commit_news_file(git, absolute_news_dir)
+                except Exception as e2:
+                    log_exception(logger, e2)
+                    sys.exit(1)
 
 
 if __name__ == &#34;__main__&#34;:
@@ -161,6 +200,47 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="continuous_delivery_scripts.assert_news.add_news_files"><code class="name flex">
+<span>def <span class="ident">add_news_files</span></span>(<span>git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="utils/git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, news_dir: str) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds a news file if the branch corresponds to an dependency update.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>git</code></strong></dt>
+<dd>Instance of GitWrapper.</dd>
+<dt><strong><code>news_dir</code></strong></dt>
+<dd>Relative path to news directory.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_news_files(git: GitWrapper, news_dir: str) -&gt; None:
+    &#34;&#34;&#34;Adds a news file if the branch corresponds to an dependency update.
+
+    Args:
+        git: Instance of GitWrapper.
+        news_dir: Relative path to news directory.
+    &#34;&#34;&#34;
+    current_branch = str(git.get_current_branch())
+    is_dependency_update, groups = git.is_current_branch_of_type(
+        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN))
+    )
+    if not is_dependency_update:
+        raise EnvironmentError(f&#34;Branch {current_branch} must contain a news file.&#34;)
+    if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
+        raise EnvironmentError(f&#34;Branch {current_branch} must contain a news file.&#34;)
+
+    create_news_file(
+        news_dir,
+        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
+            message=&#34;, &#34;.join(groups)
+        ),
+        configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
+    )</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.assert_news.find_news_files"><code class="name flex">
 <span>def <span class="ident">find_news_files</span></span>(<span>git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="utils/git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, root_dir: str, news_dir: str) ‑> List[str]</span>
 </code></dt>
@@ -233,7 +313,12 @@ if __name__ == &#34;__main__&#34;:
                 validate_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
             except Exception as e:
                 log_exception(logger, e)
-                sys.exit(1)</code></pre>
+                try:
+                    add_news_files(git, absolute_news_dir)
+                    _commit_news_file(git, absolute_news_dir)
+                except Exception as e2:
+                    log_exception(logger, e2)
+                    sys.exit(1)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.assert_news.validate_news_file"><code class="name flex">
@@ -410,6 +495,7 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="continuous_delivery_scripts.assert_news.add_news_files" href="#continuous_delivery_scripts.assert_news.add_news_files">add_news_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.assert_news.find_news_files" href="#continuous_delivery_scripts.assert_news.find_news_files">find_news_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.assert_news.main" href="#continuous_delivery_scripts.assert_news.main">main</a></code></li>
 <li><code><a title="continuous_delivery_scripts.assert_news.validate_news_file" href="#continuous_delivery_scripts.assert_news.validate_news_file">validate_news_file</a></code></li>
@@ -432,7 +518,7 @@ if __name__ == &#34;__main__&#34;:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>

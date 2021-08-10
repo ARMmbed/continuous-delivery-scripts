@@ -13,6 +13,25 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.2.0" (2021-08-10)
+====================
+
+Features
+--------
+
+- create news file on dependency update (#202108092028)
+- Refactored APIs for creating news files (#202108100018)
+
+
+Bugfixes
+--------
+
+- Modified copyright template (#202108061642)
+- check news files on branches off beta branch (#202108092254)
+- Fix pdoc version as there is a bug in >= 0.9.2 (#202108101002)
+- Test on Python 3.9 (#202108101003)
+
+
 "2.1.3" (2021-07-19)
 ====================
 

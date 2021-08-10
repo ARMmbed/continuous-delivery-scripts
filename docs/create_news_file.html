@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm. All rights reserved.
+-- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.2" />
+<meta name="generator" content="pdoc 0.9.1" />
 <title>continuous_delivery_scripts.create_news_file API documentation</title>
 <meta name="description" content="Easy news files generation …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -43,60 +43,18 @@ Usage:
     create-news-file &#34;Fixed a bug&#34; --type bugfix
 &#34;&#34;&#34;
 import argparse
-import enum
 import logging
-import pathlib
+
 import sys
-from datetime import datetime
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.assert_news import validate_news_file
 from continuous_delivery_scripts.utils.logging import log_exception
+from continuous_delivery_scripts.utils.news_file import NewsType, create_news_file
 
 logger = logging.getLogger(__name__)
 
-
 NEWS_DIR = configuration.get_value(ConfigurationVariable.NEWS_DIR)
-
-
-class NewsType(enum.Enum):
-    &#34;&#34;&#34;Describes the type of news we&#39;re writing.&#34;&#34;&#34;
-
-    bugfix = 0
-    doc = 1
-    feature = 2
-    major = 3
-    misc = 4
-    removal = 5
-
-
-def create_news_file(news_text: str, news_type: NewsType) -&gt; pathlib.Path:
-    &#34;&#34;&#34;Facilitates creating a news file, determining it&#39;s file name based on the type.&#34;&#34;&#34;
-    file_path = determine_news_file_path(news_type)
-    _write_file(file_path, news_text)
-    return file_path
-
-
-def determine_news_file_path(news_type: NewsType) -&gt; pathlib.Path:
-    &#34;&#34;&#34;Returns an available file path for given news type.&#34;&#34;&#34;
-    news_file_name = _determine_todays_news_file_name()
-    news_file_path = pathlib.Path(NEWS_DIR, f&#34;{news_file_name}.{news_type.name}&#34;)
-    inc = 0
-    while news_file_path.exists():
-        inc += 1
-        news_file_path = news_file_path.with_name(f&#34;{news_file_name}{inc:0=2}.{news_type.name}&#34;)
-    return news_file_path
-
-
-def _write_file(file_path: pathlib.Path, text: str) -&gt; None:
-    file_path.parent.mkdir(parents=True, exist_ok=True)
-    if not text.endswith(&#34;\n&#34;):
-        text = f&#34;{text}\n&#34;
-    file_path.write_text(text)
-
-
-def _determine_todays_news_file_name() -&gt; str:
-    return datetime.now().strftime(&#34;%Y%m%d%H%M&#34;)
 
 
 def main() -&gt; int:
@@ -106,7 +64,7 @@ def main() -&gt; int:
     parser.add_argument(&#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;)
 
     args = parser.parse_args()
-    created_file = create_news_file(args.news_text, NewsType[args.type])
+    created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
 
     try:
         validate_news_file(created_file)
@@ -129,42 +87,6 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="continuous_delivery_scripts.create_news_file.create_news_file"><code class="name flex">
-<span>def <span class="ident">create_news_file</span></span>(<span>news_text: str, news_type: <a title="continuous_delivery_scripts.create_news_file.NewsType" href="#continuous_delivery_scripts.create_news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Facilitates creating a news file, determining it's file name based on the type.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def create_news_file(news_text: str, news_type: NewsType) -&gt; pathlib.Path:
-    &#34;&#34;&#34;Facilitates creating a news file, determining it&#39;s file name based on the type.&#34;&#34;&#34;
-    file_path = determine_news_file_path(news_type)
-    _write_file(file_path, news_text)
-    return file_path</code></pre>
-</details>
-</dd>
-<dt id="continuous_delivery_scripts.create_news_file.determine_news_file_path"><code class="name flex">
-<span>def <span class="ident">determine_news_file_path</span></span>(<span>news_type: <a title="continuous_delivery_scripts.create_news_file.NewsType" href="#continuous_delivery_scripts.create_news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Returns an available file path for given news type.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def determine_news_file_path(news_type: NewsType) -&gt; pathlib.Path:
-    &#34;&#34;&#34;Returns an available file path for given news type.&#34;&#34;&#34;
-    news_file_name = _determine_todays_news_file_name()
-    news_file_path = pathlib.Path(NEWS_DIR, f&#34;{news_file_name}.{news_type.name}&#34;)
-    inc = 0
-    while news_file_path.exists():
-        inc += 1
-        news_file_path = news_file_path.with_name(f&#34;{news_file_name}{inc:0=2}.{news_type.name}&#34;)
-    return news_file_path</code></pre>
-</details>
-</dd>
 <dt id="continuous_delivery_scripts.create_news_file.main"><code class="name flex">
 <span>def <span class="ident">main</span></span>(<span>) ‑> int</span>
 </code></dt>
@@ -181,7 +103,7 @@ if __name__ == &#34;__main__&#34;:
     parser.add_argument(&#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;)
 
     args = parser.parse_args()
-    created_file = create_news_file(args.news_text, NewsType[args.type])
+    created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
 
     try:
         validate_news_file(created_file)
@@ -196,61 +118,6 @@ if __name__ == &#34;__main__&#34;:
 </dl>
 </section>
 <section>
-<h2 class="section-title" id="header-classes">Classes</h2>
-<dl>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType"><code class="flex name class">
-<span>class <span class="ident">NewsType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Describes the type of news we're writing.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class NewsType(enum.Enum):
-    &#34;&#34;&#34;Describes the type of news we&#39;re writing.&#34;&#34;&#34;
-
-    bugfix = 0
-    doc = 1
-    feature = 2
-    major = 3
-    misc = 4
-    removal = 5</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>enum.Enum</li>
-</ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType.bugfix"><code class="name">var <span class="ident">bugfix</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType.doc"><code class="name">var <span class="ident">doc</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType.feature"><code class="name">var <span class="ident">feature</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType.major"><code class="name">var <span class="ident">major</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType.misc"><code class="name">var <span class="ident">misc</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="continuous_delivery_scripts.create_news_file.NewsType.removal"><code class="name">var <span class="ident">removal</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-</dd>
-</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -266,31 +133,14 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="continuous_delivery_scripts.create_news_file.create_news_file" href="#continuous_delivery_scripts.create_news_file.create_news_file">create_news_file</a></code></li>
-<li><code><a title="continuous_delivery_scripts.create_news_file.determine_news_file_path" href="#continuous_delivery_scripts.create_news_file.determine_news_file_path">determine_news_file_path</a></code></li>
 <li><code><a title="continuous_delivery_scripts.create_news_file.main" href="#continuous_delivery_scripts.create_news_file.main">main</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-classes">Classes</a></h3>
-<ul>
-<li>
-<h4><code><a title="continuous_delivery_scripts.create_news_file.NewsType" href="#continuous_delivery_scripts.create_news_file.NewsType">NewsType</a></code></h4>
-<ul class="two-column">
-<li><code><a title="continuous_delivery_scripts.create_news_file.NewsType.bugfix" href="#continuous_delivery_scripts.create_news_file.NewsType.bugfix">bugfix</a></code></li>
-<li><code><a title="continuous_delivery_scripts.create_news_file.NewsType.doc" href="#continuous_delivery_scripts.create_news_file.NewsType.doc">doc</a></code></li>
-<li><code><a title="continuous_delivery_scripts.create_news_file.NewsType.feature" href="#continuous_delivery_scripts.create_news_file.NewsType.feature">feature</a></code></li>
-<li><code><a title="continuous_delivery_scripts.create_news_file.NewsType.major" href="#continuous_delivery_scripts.create_news_file.NewsType.major">major</a></code></li>
-<li><code><a title="continuous_delivery_scripts.create_news_file.NewsType.misc" href="#continuous_delivery_scripts.create_news_file.NewsType.misc">misc</a></code></li>
-<li><code><a title="continuous_delivery_scripts.create_news_file.NewsType.removal" href="#continuous_delivery_scripts.create_news_file.NewsType.removal">removal</a></code></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
 </footer>
 </body>
 </html>
