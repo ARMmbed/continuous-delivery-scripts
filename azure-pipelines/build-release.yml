@@ -128,7 +128,8 @@ stages:
           - script: |
               cd-assert-news -b $(current_branch)
             displayName: 'Run check'
-
+            env:
+              GIT_TOKEN: $(GIT_TOKEN)
   - stage: DocBuild
     displayName: 'Build Documentation'
     dependsOn: []
