@@ -6,6 +6,7 @@
 import enum
 import pathlib
 from datetime import datetime
+from typing import Any
 
 
 class NewsType(enum.Enum):
@@ -19,9 +20,14 @@ class NewsType(enum.Enum):
     removal = 5
 
 
-def create_news_file(news_dir: str, news_text: str, news_type: NewsType) -> pathlib.Path:
+def create_news_file(news_dir: str, news_text: str, news_type: Any) -> pathlib.Path:
     """Facilitates creating a news file, determining it's file name based on the type."""
-    file_path = determine_news_file_path(news_dir, news_type)
+    message_type = NewsType.misc
+    if isinstance(news_type, str):
+        message_type = NewsType[news_type]
+    elif isinstance(news_type, NewsType):
+        message_type = news_type
+    file_path = determine_news_file_path(news_dir, message_type)
     _write_file(file_path, news_text)
     return file_path
 
