@@ -31,6 +31,20 @@ class TestCreateNewsFile(TestCase):
         determine_news_file_path.assert_called_once_with(NEWS_DIR, news_type)
         _write_file.assert_called_once_with(file_path, news_text)
 
+    @mock.patch("continuous_delivery_scripts.utils.news_file.determine_news_file_path")
+    @mock.patch("continuous_delivery_scripts.utils.news_file._write_file")
+    def test_creates_a_file_with_message_type_string(self, _write_file, determine_news_file_path):
+        news_file_path = pathlib.Path("some/1234501.feature")
+        determine_news_file_path.return_value = news_file_path
+        news_text = "Cool feature"
+        news_type = NewsType.feature
+
+        file_path = create_news_file(NEWS_DIR, news_text, news_type.name)
+
+        self.assertEqual(file_path, news_file_path)
+        determine_news_file_path.assert_called_once_with(NEWS_DIR, news_type)
+        _write_file.assert_called_once_with(file_path, news_text)
+
 
 class TestDetermineNewsFilePath(TestCase):
     def test_finds_first_available_file_path_in_news_dir(self):
