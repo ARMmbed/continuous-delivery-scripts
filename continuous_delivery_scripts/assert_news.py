@@ -93,7 +93,7 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         validate_news_file(absolute_file_path)
 
 
-def add_news_files(git: GitWrapper, news_dir: str) -> None:
+def generate_news_file(git: GitWrapper, news_dir: str) -> pathlib.Path:
     """Adds a news file if the branch corresponds to an dependency update.
 
     Args:
@@ -109,19 +109,21 @@ def add_news_files(git: GitWrapper, news_dir: str) -> None:
     if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
         raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
 
-    create_news_file(
+    message = str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
+        message=", ".join(groups)
+    )
+    logger.info(f"Generating a news file with content: {message}...")
+    return create_news_file(
         news_dir,
-        str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
-            message=", ".join(groups)
-        ),
+        message,
         configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
     )
 
 
-def _commit_news_file(git: GitWrapper, news_dir: str) -> None:
-    logger.info("Committing news file...")
+def _commit_news_file(git: GitWrapper, news_file: pathlib.Path) -> None:
+    logger.info(f"Committing news file {str(news_file)}...")
     git.configure_for_github()
-    git.add(news_dir)
+    git.add(str(news_file))
     git.commit("📰 Automatic changes ⚙ Adding news file")
     git.push()
     git.pull()
@@ -150,11 +152,11 @@ def main() -> None:
             except Exception as e:
                 log_exception(logger, e)
                 try:
-                    add_news_files(git, absolute_news_dir)
-                    _commit_news_file(git, absolute_news_dir)
+                    news_file = generate_news_file(git, absolute_news_dir)
+                    _commit_news_file(git, news_file)
                 except Exception as e2:
                     log_exception(logger, e2)
-                    sys.exit(1)
+                sys.exit(1)
 
 
 if __name__ == "__main__":
