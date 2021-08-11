@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Checks if valid news files are created for changes in the project."""
