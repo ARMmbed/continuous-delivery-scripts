@@ -1,3 +1,7 @@
+<!--
+Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 # Changelog
 
 <!--
@@ -12,6 +16,22 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"2.3.0" (2021-08-11)
+====================
+
+Features
+--------
+
+- Added a command to determine project's version (#202108111437)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: licenseheaders-lt-0.8.9 (#202108110242)
+- Fix bug in determining the new release/beta version (#202108111347)
+
 
 "2.2.4" (2021-08-11)
 ====================

@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>continuous_delivery_scripts.generate_news API documentation</title>
-<meta name="description" content="Handles usage of towncrier for automated changelog generation and pyautoversion for versioning." />
+<title>continuous_delivery_scripts.get_version API documentation</title>
+<meta name="description" content="Determine the project new version." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,10 +23,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>continuous_delivery_scripts.generate_news</code></h1>
+<h1 class="title">Module <code>continuous_delivery_scripts.get_version</code></h1>
 </header>
 <section id="section-intro">
-<p>Handles usage of towncrier for automated changelog generation and pyautoversion for versioning.</p>
+<p>Determine the project new version.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,26 +35,21 @@
 # Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Handles usage of towncrier for automated changelog generation and pyautoversion for versioning.&#34;&#34;&#34;
+&#34;&#34;&#34;Determine the project new version.&#34;&#34;&#34;
 import sys
 
 import argparse
 import logging
-import os
-import subprocess
 from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
-from typing import Optional, Tuple, Dict
 
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.filesystem_helpers import cd
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
 
 
-def version_project(commit_type: CommitType) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
-    &#34;&#34;&#34;Versions the project.
+def get_project_version_string(commit_type: CommitType) -&gt; str:
+    &#34;&#34;&#34;Determine the project version string.
 
     Args:
         commit_type: states what is the type of the commit
@@ -64,30 +59,14 @@ def version_project(commit_type: CommitType) -&gt; Tuple[bool, Optional[str], Di
         (is new version, the new version)
     &#34;&#34;&#34;
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version, version_elements = calculate_version(commit_type, use_news_files)
-    _generate_changelog(new_version, use_news_files)
-    return is_new_version, new_version, version_elements
-
-
-def _generate_changelog(version: Optional[str], use_news_files: bool) -&gt; None:
-    &#34;&#34;&#34;Creates a towncrier log of the release.
-
-    Will only create a log entry if we are using news files.
-
-    Args:
-        version: the semver version of the release
-        use_news_files: are we generating the release from news files
-    &#34;&#34;&#34;
-    if use_news_files:
-        logger.info(&#34;:: Generating a new changelog&#34;)
-        project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
-        with cd(os.path.dirname(project_config_path)):
-            subprocess.check_call([&#34;towncrier&#34;, &#34;--yes&#34;, &#39;--name=&#34;&#34;&#39;, f&#39;--version=&#34;{version}&#34;&#39;])
+    _, new_version, version_elements = calculate_version(commit_type, use_news_files)
+    version_string = determine_version_string(commit_type, new_version, version_elements)
+    return version_string
 
 
 def main() -&gt; None:
-    &#34;&#34;&#34;Handle command line arguments to generate a version and changelog file.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(description=&#34;Versions the project.&#34;)
+    &#34;&#34;&#34;Handle command line arguments to determine version string.&#34;&#34;&#34;
+    parser = argparse.ArgumentParser(description=&#34;Determine project&#39;s version.&#34;)
     parser.add_argument(
         &#34;-t&#34;, &#34;--release-type&#34;, help=&#34;type of release to perform&#34;, required=True, type=str, choices=CommitType.choices()
     )
@@ -97,8 +76,7 @@ def main() -&gt; None:
 
     try:
         commit_type = CommitType.parse(args.release_type)
-        is_new_version, new_version, version_elements = version_project(commit_type)
-        version_to_print = determine_version_string(commit_type, new_version, version_elements)
+        version_to_print = get_project_version_string(commit_type)
         print(version_to_print)
     except Exception as e:
         log_exception(logger, e)
@@ -116,40 +94,11 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="continuous_delivery_scripts.generate_news.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>) ‑> NoneType</span>
+<dt id="continuous_delivery_scripts.get_version.get_project_version_string"><code class="name flex">
+<span>def <span class="ident">get_project_version_string</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Handle command line arguments to generate a version and changelog file.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def main() -&gt; None:
-    &#34;&#34;&#34;Handle command line arguments to generate a version and changelog file.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(description=&#34;Versions the project.&#34;)
-    parser.add_argument(
-        &#34;-t&#34;, &#34;--release-type&#34;, help=&#34;type of release to perform&#34;, required=True, type=str, choices=CommitType.choices()
-    )
-    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
-    args = parser.parse_args()
-    set_log_level(args.verbose)
-
-    try:
-        commit_type = CommitType.parse(args.release_type)
-        is_new_version, new_version, version_elements = version_project(commit_type)
-        version_to_print = determine_version_string(commit_type, new_version, version_elements)
-        print(version_to_print)
-    except Exception as e:
-        log_exception(logger, e)
-        sys.exit(1)</code></pre>
-</details>
-</dd>
-<dt id="continuous_delivery_scripts.generate_news.version_project"><code class="name flex">
-<span>def <span class="ident">version_project</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>) ‑> Tuple[bool, Optional[str], Dict[str, str]]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Versions the project.</p>
+<div class="desc"><p>Determine the project version string.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>commit_type</code></strong></dt>
@@ -161,8 +110,8 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def version_project(commit_type: CommitType) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
-    &#34;&#34;&#34;Versions the project.
+<pre><code class="python">def get_project_version_string(commit_type: CommitType) -&gt; str:
+    &#34;&#34;&#34;Determine the project version string.
 
     Args:
         commit_type: states what is the type of the commit
@@ -172,9 +121,37 @@ if __name__ == &#34;__main__&#34;:
         (is new version, the new version)
     &#34;&#34;&#34;
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version, version_elements = calculate_version(commit_type, use_news_files)
-    _generate_changelog(new_version, use_news_files)
-    return is_new_version, new_version, version_elements</code></pre>
+    _, new_version, version_elements = calculate_version(commit_type, use_news_files)
+    version_string = determine_version_string(commit_type, new_version, version_elements)
+    return version_string</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.get_version.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Handle command line arguments to determine version string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main() -&gt; None:
+    &#34;&#34;&#34;Handle command line arguments to determine version string.&#34;&#34;&#34;
+    parser = argparse.ArgumentParser(description=&#34;Determine project&#39;s version.&#34;)
+    parser.add_argument(
+        &#34;-t&#34;, &#34;--release-type&#34;, help=&#34;type of release to perform&#34;, required=True, type=str, choices=CommitType.choices()
+    )
+    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
+    args = parser.parse_args()
+    set_log_level(args.verbose)
+
+    try:
+        commit_type = CommitType.parse(args.release_type)
+        version_to_print = get_project_version_string(commit_type)
+        print(version_to_print)
+    except Exception as e:
+        log_exception(logger, e)
+        sys.exit(1)</code></pre>
 </details>
 </dd>
 </dl>
@@ -195,8 +172,8 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="continuous_delivery_scripts.generate_news.main" href="#continuous_delivery_scripts.generate_news.main">main</a></code></li>
-<li><code><a title="continuous_delivery_scripts.generate_news.version_project" href="#continuous_delivery_scripts.generate_news.version_project">version_project</a></code></li>
+<li><code><a title="continuous_delivery_scripts.get_version.get_project_version_string" href="#continuous_delivery_scripts.get_version.get_project_version_string">get_project_version_string</a></code></li>
+<li><code><a title="continuous_delivery_scripts.get_version.main" href="#continuous_delivery_scripts.get_version.main">main</a></code></li>
 </ul>
 </li>
 </ul>
