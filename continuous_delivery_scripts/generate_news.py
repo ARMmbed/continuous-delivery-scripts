@@ -96,7 +96,7 @@ def _update_version_string(
             commit_count,
             version_elements.get(auto_version_tool.Constants.COMMIT_FIELD),
         )
-        return new_version
+    return new_version
 
 
 def _get_version_elements(native_version_elements: Dict[str, str]) -> Dict[str, str]:
