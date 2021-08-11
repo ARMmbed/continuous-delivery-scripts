@@ -13,6 +13,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.2.3" (2021-08-11)
+====================
+
+Bugfixes
+--------
+
+- Improved logging when creating and asserting news files (#202108110106)
+
+
 "2.2.2" (2021-08-10)
 ====================
 
