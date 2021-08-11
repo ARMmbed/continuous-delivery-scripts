@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.3.1" (2021-08-11)
+====================
+
+Bugfixes
+--------
+
+- Made `cd-determine-version` idempotent (#202108111624)
+
+
 "2.3.0" (2021-08-11)
 ====================
 

@@ -50,7 +50,9 @@ from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository
 logger = logging.getLogger(__name__)
 
 
-def calculate_version(commit_type: CommitType, use_news_files: bool) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
+def calculate_version(
+    commit_type: CommitType, use_news_files: bool, record_state: bool
+) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
     &#34;&#34;&#34;Calculates the version for the release.
 
     eg. &#34;0.1.2&#34;
@@ -77,6 +79,7 @@ def calculate_version(commit_type: CommitType, use_news_files: bool) -&gt; Tuple
             enable_file_triggers=enable_file_triggers,
             commit_count_as=bump,
             config_path=project_config_path,
+            dry_run=not record_state,
         )
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
@@ -138,7 +141,7 @@ def _get_version_elements(native_version_elements: Dict[str, str]) -&gt; Dict[st
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.utils.versioning.calculate_version"><code class="name flex">
-<span>def <span class="ident">calculate_version</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, use_news_files: bool) ‑> Tuple[bool, Optional[str], Dict[str, str]]</span>
+<span>def <span class="ident">calculate_version</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, use_news_files: bool, record_state: bool) ‑> Tuple[bool, Optional[str], Dict[str, str]]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Calculates the version for the release.</p>
@@ -158,7 +161,9 @@ A semver-style version for the latest release</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def calculate_version(commit_type: CommitType, use_news_files: bool) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
+<pre><code class="python">def calculate_version(
+    commit_type: CommitType, use_news_files: bool, record_state: bool
+) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
     &#34;&#34;&#34;Calculates the version for the release.
 
     eg. &#34;0.1.2&#34;
@@ -185,6 +190,7 @@ A semver-style version for the latest release</p></div>
             enable_file_triggers=enable_file_triggers,
             commit_count_as=bump,
             config_path=project_config_path,
+            dry_run=not record_state,
         )
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
