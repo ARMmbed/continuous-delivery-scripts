@@ -61,7 +61,7 @@ setup(
         "twine",
         "boto3",
         "packaging",
-        "licenseheaders<0.8.6",
+        "licenseheaders<0.8.9",
         "spdx-tools",
         "license-expression",
         "wcmatch",
