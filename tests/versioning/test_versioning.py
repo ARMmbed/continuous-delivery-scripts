@@ -10,12 +10,12 @@ from continuous_delivery_scripts.utils.definitions import CommitType
 class TestVersioning(unittest.TestCase):
     def test_calculate_version(self):
         for release_type in CommitType.choices():
-            _, new_version, version_elements = calculate_version(CommitType.RELEASE, False)
+            _, new_version, version_elements = calculate_version(CommitType.RELEASE, False, False)
             self.assertIsNotNone(new_version)
             self.assertNotEquals(new_version, "")
             self.assertIsNotNone(version_elements)
             self.assertGreater(len(version_elements), 0)
-            _, new_version, version_elements = calculate_version(CommitType.RELEASE, True)
+            _, new_version, version_elements = calculate_version(CommitType.RELEASE, True, False)
             self.assertIsNotNone(new_version)
             self.assertNotEquals(new_version, "")
             self.assertIsNotNone(version_elements)
