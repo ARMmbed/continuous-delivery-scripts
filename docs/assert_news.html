@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2021 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Checks if valid news files are created for changes in the project.&#34;&#34;&#34;
@@ -126,12 +126,12 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; Non
         validate_news_file(absolute_file_path)
 
 
-def generate_news_file(git: GitWrapper, news_dir: str) -&gt; pathlib.Path:
+def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -&gt; pathlib.Path:
     &#34;&#34;&#34;Adds a news file if the branch corresponds to an dependency update.
 
     Args:
         git: Instance of GitWrapper.
-        news_dir: Relative path to news directory.
+        news_dir: path to news directory.
     &#34;&#34;&#34;
     current_branch = str(git.get_current_branch())
     is_dependency_update, groups = git.is_current_branch_of_type(
@@ -147,19 +147,21 @@ def generate_news_file(git: GitWrapper, news_dir: str) -&gt; pathlib.Path:
     )
     logger.info(f&#34;Generating a news file with content: {message}...&#34;)
     return create_news_file(
-        news_dir,
+        str(news_dir),
         message,
         configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
     )
 
 
-def _commit_news_file(git: GitWrapper, news_file: pathlib.Path) -&gt; None:
+def _commit_news_file(git: GitWrapper, news_file: pathlib.Path, local: bool) -&gt; None:
     logger.info(f&#34;Committing news file {str(news_file)}...&#34;)
-    git.configure_for_github()
+    if not local:
+        git.configure_for_github()
     git.add(str(news_file))
     git.commit(&#34;📰 Automatic changes ⚙ Adding news file&#34;)
-    git.push()
-    git.pull()
+    if not local:
+        git.push()
+        git.pull()
 
 
 def main() -&gt; None:
@@ -185,8 +187,8 @@ def main() -&gt; None:
             except Exception as e:
                 log_exception(logger, e)
                 try:
-                    news_file = generate_news_file(git, absolute_news_dir)
-                    _commit_news_file(git, news_file)
+                    news_file = generate_news_file(git, git.get_corresponding_path(pathlib.Path(news_dir)))
+                    _commit_news_file(git, news_file, args.local)
                 except Exception as e2:
                     log_exception(logger, e2)
                 sys.exit(1)
@@ -245,7 +247,7 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.assert_news.generate_news_file"><code class="name flex">
-<span>def <span class="ident">generate_news_file</span></span>(<span>git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="utils/git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, news_dir: str) ‑> pathlib.Path</span>
+<span>def <span class="ident">generate_news_file</span></span>(<span>git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="utils/git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, news_dir: pathlib.Path) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a news file if the branch corresponds to an dependency update.</p>
@@ -254,18 +256,18 @@ if __name__ == &#34;__main__&#34;:
 <dt><strong><code>git</code></strong></dt>
 <dd>Instance of GitWrapper.</dd>
 <dt><strong><code>news_dir</code></strong></dt>
-<dd>Relative path to news directory.</dd>
+<dd>path to news directory.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_news_file(git: GitWrapper, news_dir: str) -&gt; pathlib.Path:
+<pre><code class="python">def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -&gt; pathlib.Path:
     &#34;&#34;&#34;Adds a news file if the branch corresponds to an dependency update.
 
     Args:
         git: Instance of GitWrapper.
-        news_dir: Relative path to news directory.
+        news_dir: path to news directory.
     &#34;&#34;&#34;
     current_branch = str(git.get_current_branch())
     is_dependency_update, groups = git.is_current_branch_of_type(
@@ -281,7 +283,7 @@ if __name__ == &#34;__main__&#34;:
     )
     logger.info(f&#34;Generating a news file with content: {message}...&#34;)
     return create_news_file(
-        news_dir,
+        str(news_dir),
         message,
         configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
     )</code></pre>
@@ -319,8 +321,8 @@ if __name__ == &#34;__main__&#34;:
             except Exception as e:
                 log_exception(logger, e)
                 try:
-                    news_file = generate_news_file(git, absolute_news_dir)
-                    _commit_news_file(git, news_file)
+                    news_file = generate_news_file(git, git.get_corresponding_path(pathlib.Path(news_dir)))
+                    _commit_news_file(git, news_file, args.local)
                 except Exception as e2:
                     log_exception(logger, e2)
                 sys.exit(1)</code></pre>

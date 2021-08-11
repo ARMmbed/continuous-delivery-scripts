@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2021 Arm. All rights reserved.
+# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utility script to abstract git operations for our CI scripts.&#34;&#34;&#34;
@@ -638,6 +638,23 @@ class GitWrapper:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+
+    def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
+        &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
+
+        If current repository is not a clone, then identical absolute path is returned.
+
+        Args:
+            path_in_initial_repo: path to a file/directory in initial repository.
+
+        Returns:
+             corresponding path.
+        &#34;&#34;&#34;
+        return (
+            path_in_initial_repo
+            if path_in_initial_repo.is_absolute()
+            else Path(self.root).joinpath(path_in_initial_repo)
+        )
 
 
 class ProjectGitWrapper(GitWrapper):
@@ -1629,7 +1646,24 @@ def initial_location(self) -&gt; Path:
             if f.exists():
                 GitWrapper._apply_modifications(destination, f)
             else:
-                GitWrapper._apply_deletions(destination)</code></pre>
+                GitWrapper._apply_deletions(destination)
+
+    def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
+        &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
+
+        If current repository is not a clone, then identical absolute path is returned.
+
+        Args:
+            path_in_initial_repo: path to a file/directory in initial repository.
+
+        Returns:
+             corresponding path.
+        &#34;&#34;&#34;
+        return (
+            path_in_initial_repo
+            if path_in_initial_repo.is_absolute()
+            else Path(self.root).joinpath(path_in_initial_repo)
+        )</code></pre>
 </details>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -2288,6 +2322,41 @@ before the current commit.</p>
     return str(self.get_current_commit())</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_corresponding_path"><code class="name flex">
+<span>def <span class="ident">get_corresponding_path</span></span>(<span>self, path_in_initial_repo: pathlib.Path) ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the path in current repository corresponding to path in initial repository.</p>
+<p>If current repository is not a clone, then identical absolute path is returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path_in_initial_repo</code></strong></dt>
+<dd>path to a file/directory in initial repository.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>corresponding path.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
+    &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
+
+    If current repository is not a clone, then identical absolute path is returned.
+
+    Args:
+        path_in_initial_repo: path to a file/directory in initial repository.
+
+    Returns:
+         corresponding path.
+    &#34;&#34;&#34;
+    return (
+        path_in_initial_repo
+        if path_in_initial_repo.is_absolute()
+        else Path(self.root).joinpath(path_in_initial_repo)
+    )</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_branch"><code class="name flex">
 <span>def <span class="ident">get_current_branch</span></span>(<span>self) ‑> Any</span>
 </code></dt>
@@ -2808,6 +2877,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_changes_list" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_changes_list">get_changes_list</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_count" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_count">get_commit_count</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_hash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_hash">get_commit_hash</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_corresponding_path" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_corresponding_path">get_corresponding_path</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_branch">get_current_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_commit">get_current_commit</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_master_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_master_branch">get_master_branch</a></code></li>
@@ -2922,6 +2992,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_changes_list" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_changes_list">get_changes_list</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_count" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_count">get_commit_count</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_hash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_commit_hash">get_commit_hash</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_corresponding_path" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_corresponding_path">get_corresponding_path</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_branch">get_current_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_current_commit">get_current_commit</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_master_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.get_master_branch">get_master_branch</a></code></li>
