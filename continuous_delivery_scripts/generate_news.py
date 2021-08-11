@@ -31,7 +31,7 @@ def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str], Dict[
         (is new version, the new version)
     """
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version, version_elements = calculate_version(commit_type, use_news_files)
+    is_new_version, new_version, version_elements = calculate_version(commit_type, use_news_files, True)
     _generate_changelog(new_version, use_news_files)
     return is_new_version, new_version, version_elements
 

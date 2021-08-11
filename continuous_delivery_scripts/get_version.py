@@ -26,7 +26,7 @@ def get_project_version_string(commit_type: CommitType) -> str:
         (is new version, the new version)
     """
     use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    _, new_version, version_elements = calculate_version(commit_type, use_news_files)
+    _, new_version, version_elements = calculate_version(commit_type, use_news_files, False)
     version_string = determine_version_string(commit_type, new_version, version_elements)
     return version_string
 

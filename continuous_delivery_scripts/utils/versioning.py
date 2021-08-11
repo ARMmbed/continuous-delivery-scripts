@@ -17,7 +17,9 @@ from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository
 logger = logging.getLogger(__name__)
 
 
-def calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[bool, Optional[str], Dict[str, str]]:
+def calculate_version(
+    commit_type: CommitType, use_news_files: bool, record_state: bool
+) -> Tuple[bool, Optional[str], Dict[str, str]]:
     """Calculates the version for the release.
 
     eg. "0.1.2"
@@ -44,6 +46,7 @@ def calculate_version(commit_type: CommitType, use_news_files: bool) -> Tuple[bo
             enable_file_triggers=enable_file_triggers,
             commit_count_as=bump,
             config_path=project_config_path,
+            dry_run=not record_state,
         )
         # Autoversion second returned value is not actually the new version
         # There seem to be a bug in autoversion.
