@@ -49,6 +49,10 @@ class BaseLanguage(ABC):
         """Gets the name of the corresponding language."""
         pass
 
+    def get_version_tag(self, version: str) -> str:
+        """Generates a tag based on the version string."""
+        return version
+
     def generate_source_licence_header_template(self) -> str:
         """Generates the template of the licence header which is put at the top of source files."""
         return _generate_generic_licence_header_template()
@@ -68,15 +72,15 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def package_software(self) -> None:
+    def package_software(self, version: str) -> None:
         """Package the software so that it can get released."""
-        logger.info("Generating a release package")
+        logger.info(f"Generating a release package [{version}]")
         pass
 
     @abstractmethod
-    def release_package_to_repository(self) -> None:
+    def release_package_to_repository(self, version: str) -> None:
         """Release the package to the official software repository."""
-        logger.info("Uploading the package")
+        logger.info(f"Uploading the package [{version}]")
         pass
 
     @abstractmethod

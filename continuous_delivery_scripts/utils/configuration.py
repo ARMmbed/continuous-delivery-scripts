@@ -22,38 +22,70 @@ class ConfigurationVariable(enum.Enum):
     """Project's configuration variables."""
 
     PROJECT_ROOT = 1
+    """Relative path to the root of the project from pyproject.toml."""
     PROJECT_CONFIG = 2
+    """Relative path to the file comprising project's configuration."""
     NEWS_DIR = 3
+    """Relative path to the directory comprising news files."""
     VERSION_FILE_PATH = 4
+    """Relative path to the file comprising project's version."""
     CHANGELOG_FILE_PATH = 5
+    """Relative path to the changelog file."""
     MODULE_TO_DOCUMENT = 6
+    """Name of the module to generate documentation for."""
     DOCUMENTATION_DEFAULT_OUTPUT_PATH = 7
     DOCUMENTATION_PRODUCTION_OUTPUT_PATH = 8
+    """Relative path to the folder where documentation will be generated."""
     GIT_TOKEN = 9
+    """GIT token allowing committing back to the repository."""
     BETA_BRANCH = 10
+    """Name of beta/QA branch."""
     MASTER_BRANCH = 11
+    """Name of the main/production branch."""
     RELEASE_BRANCH_PATTERN = 12
+    """Pattern of release branches."""
     REMOTE_ALIAS = 13
+    """Git's remote alias."""
     LOGGER_FORMAT = 14
+    """Tools' logger format."""
     BOT_USERNAME = 15
+    """Username of the Git bot account."""
     BOT_EMAIL = 16
+    """Email of the Git bot account."""
     ORGANISATION = 17
+    """Name of the organisation managing the project."""
     ORGANISATION_EMAIL = 18
+    """Email of the organisation managing the project."""
     AWS_BUCKET = 19
+    """AWS bucket to use if needed."""
     PROJECT_NAME = 21
+    """Name of the project."""
     PROJECT_UUID = 22
+    """UUID of the project to use in SPDX reports."""
     PACKAGE_NAME = 23
+    """Name of the package."""
     SOURCE_DIR = 24
+    """Relative path to the source of the project."""
     IGNORE_REPOSITORY_TEST_UPLOAD = 25
+    """States whether to release package to a test registry (e.g. pypi test) test before release."""
     FILE_LICENCE_IDENTIFIER = 26
+    """SPDX identifier for the project's licence."""
     COPYRIGHT_START_DATE = 27
+    """Project's copyright start year."""
     ACCEPTED_THIRD_PARTY_LICENCES = 28
+    """List of accepted 3rd party licences for dependencies."""
     PACKAGES_WITH_CHECKED_LICENCE = 29
+    """List of dependencies whose licence was manually checked."""
     PROGRAMMING_LANGUAGE = 30
+    """Project's programming language."""
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = 31
+    """States whether news file should be generated on dependency updates."""
     DEPENDENCY_UPDATE_BRANCH_PATTERN = 32
+    """Pattern of branches comprising dependency updates (e.g. dependabot)."""
     DEPENDENCY_UPDATE_NEWS_MESSAGE = 33
+    """Pattern of the news message for dependency update."""
     DEPENDENCY_UPDATE_NEWS_TYPE = 34
+    """News file type for dependency update."""
 
     @staticmethod
     def choices() -> List[str]:

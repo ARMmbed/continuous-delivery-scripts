@@ -91,7 +91,7 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
             _commit_release_changes(git, version, commit_message)
         if is_new_version:
             logger.info("Tagging commit")
-            git.create_tag(version, message=f"release {version}")
+            git.create_tag(get_language_specifics().get_version_tag(version), message=f"release {version}")
             git.force_push_tag()
 
 
