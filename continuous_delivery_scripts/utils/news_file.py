@@ -5,8 +5,11 @@
 """Helpers with regards to news files."""
 import enum
 import pathlib
+import logging
 from datetime import datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 class NewsType(enum.Enum):
@@ -44,6 +47,7 @@ def determine_news_file_path(news_dir: str, news_type: NewsType) -> pathlib.Path
 
 
 def _write_file(file_path: pathlib.Path, text: str) -> None:
+    logger.info(f"Writing news file: {file_path}")
     file_path.parent.mkdir(parents=True, exist_ok=True)
     if not text.endswith("\n"):
         text = f"{text}\n"

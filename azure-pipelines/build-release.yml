@@ -126,7 +126,7 @@ stages:
           - template: steps/install-development-dependencies.yml
 
           - script: |
-              cd-assert-news -b $(current_branch)
+              cd-assert-news -vv -b $(current_branch)
             displayName: 'Run check'
             env:
               GIT_TOKEN: $(GIT_TOKEN)
