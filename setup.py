@@ -40,6 +40,7 @@ setup(
         "console_scripts": [
             f"cd-assert-news={SOURCE_DIR}.assert_news:main",
             f"cd-generate-news={SOURCE_DIR}.generate_news:main",
+            f"cd-determine-version={SOURCE_DIR}.get_version:main",
             f"cd-create-news-file={SOURCE_DIR}.create_news_file:main",
             f"cd-generate-docs={SOURCE_DIR}.generate_docs:main",
             f"cd-tag-and-release={SOURCE_DIR}.tag_and_release:main",
