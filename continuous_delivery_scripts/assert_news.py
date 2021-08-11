@@ -93,12 +93,12 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         validate_news_file(absolute_file_path)
 
 
-def generate_news_file(git: GitWrapper, news_dir: str) -> pathlib.Path:
+def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -> pathlib.Path:
     """Adds a news file if the branch corresponds to an dependency update.
 
     Args:
         git: Instance of GitWrapper.
-        news_dir: Relative path to news directory.
+        news_dir: path to news directory.
     """
     current_branch = str(git.get_current_branch())
     is_dependency_update, groups = git.is_current_branch_of_type(
@@ -114,19 +114,21 @@ def generate_news_file(git: GitWrapper, news_dir: str) -> pathlib.Path:
     )
     logger.info(f"Generating a news file with content: {message}...")
     return create_news_file(
-        news_dir,
+        str(news_dir),
         message,
         configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
     )
 
 
-def _commit_news_file(git: GitWrapper, news_file: pathlib.Path) -> None:
+def _commit_news_file(git: GitWrapper, news_file: pathlib.Path, local: bool) -> None:
     logger.info(f"Committing news file {str(news_file)}...")
-    git.configure_for_github()
+    if not local:
+        git.configure_for_github()
     git.add(str(news_file))
     git.commit("📰 Automatic changes ⚙ Adding news file")
-    git.push()
-    git.pull()
+    if not local:
+        git.push()
+        git.pull()
 
 
 def main() -> None:
@@ -152,8 +154,8 @@ def main() -> None:
             except Exception as e:
                 log_exception(logger, e)
                 try:
-                    news_file = generate_news_file(git, absolute_news_dir)
-                    _commit_news_file(git, news_file)
+                    news_file = generate_news_file(git, git.get_corresponding_path(pathlib.Path(news_dir)))
+                    _commit_news_file(git, news_file, args.local)
                 except Exception as e2:
                     log_exception(logger, e2)
                 sys.exit(1)

@@ -606,6 +606,23 @@ class GitWrapper:
             else:
                 GitWrapper._apply_deletions(destination)
 
+    def get_corresponding_path(self, path_in_initial_repo: Path) -> Path:
+        """Gets the path in current repository corresponding to path in initial repository.
+
+        If current repository is not a clone, then identical absolute path is returned.
+
+        Args:
+            path_in_initial_repo: path to a file/directory in initial repository.
+
+        Returns:
+             corresponding path.
+        """
+        return (
+            path_in_initial_repo
+            if path_in_initial_repo.is_absolute()
+            else Path(self.root).joinpath(path_in_initial_repo)
+        )
+
 
 class ProjectGitWrapper(GitWrapper):
     """Wrapper class over project's repository."""
