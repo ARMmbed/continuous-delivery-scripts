@@ -17,6 +17,21 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.4.0" (2021-08-12)
+====================
+
+Features
+--------
+
+- Added a golang plugin (#202108112203)
+
+
+Improved Documentation
+----------------------
+
+- Improved configuration documentation (#202108111714)
+
+
 "2.3.1" (2021-08-11)
 ====================
 

@@ -53,13 +53,13 @@ class NoOp(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;No Op.&#34;&#34;&#34;
-        super().package_software()
+        super().package_software(version)
 
-    def release_package_to_repository(self) -&gt; None:
+    def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;No Op.&#34;&#34;&#34;
-        super().release_package_to_repository()
+        super().release_package_to_repository(version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;No Op.&#34;&#34;&#34;
@@ -108,13 +108,13 @@ class NoOp(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;No Op.&#34;&#34;&#34;
-        super().package_software()
+        super().package_software(version)
 
-    def release_package_to_repository(self) -&gt; None:
+    def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;No Op.&#34;&#34;&#34;
-        super().release_package_to_repository()
+        super().release_package_to_repository(version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;No Op.&#34;&#34;&#34;
@@ -230,7 +230,7 @@ class NoOp(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.noop.NoOp.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>No Op.</p></div>
@@ -238,13 +238,13 @@ class NoOp(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def package_software(self) -&gt; None:
+<pre><code class="python">def package_software(self, version: str) -&gt; None:
     &#34;&#34;&#34;No Op.&#34;&#34;&#34;
-    super().package_software()</code></pre>
+    super().package_software(version)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.noop.NoOp.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>No Op.</p></div>
@@ -252,9 +252,9 @@ class NoOp(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def release_package_to_repository(self) -&gt; None:
+<pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
     &#34;&#34;&#34;No Op.&#34;&#34;&#34;
-    super().release_package_to_repository()</code></pre>
+    super().release_package_to_repository(version)</code></pre>
 </details>
 </dd>
 </dl>
@@ -263,6 +263,7 @@ class NoOp(BaseLanguage):
 <li><code><b><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage">BaseLanguage</a></b></code>:
 <ul class="hlist">
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template">generate_source_licence_header_template</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
 </ul>
 </li>
 </ul>

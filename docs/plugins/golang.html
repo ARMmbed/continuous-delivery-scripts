@@ -37,12 +37,79 @@
 #
 &#34;&#34;&#34;Plugin for Golang projects.&#34;&#34;&#34;
 import logging
+import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
+from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 
 logger = logging.getLogger(__name__)
+
+SRC_DIR = configuration.get_value(ConfigurationVariable.SOURCE_DIR)
+ENVVAR_GORELEASER_GIT_TOKEN = &#34;GITHUB_TOKEN&#34;
+ENVVAR_GORELEASER_CUSTOMISED_TAG = &#34;GORELEASER_CURRENT_TAG&#34;
+
+
+def _generate_golds_command_list(output_directory: Path, module: str) -&gt; List[str]:
+    return [&#34;golds&#34;, &#34;-gen&#34;, &#34;-wdpkgs-listing=promoted&#34;, f&#34;-dir={str(output_directory)}&#34;, &#34;-nouses&#34;, f&#34;{module}&#34;]
+
+
+def _generate_goreleaser_release_command_list(changelog: Path) -&gt; List[str]:
+    return [
+        &#34;goreleaser&#34;,
+        &#34;release&#34;,
+        &#34;--rm-dist&#34;,
+        &#34;--release-notes&#34;,
+        f&#34;{str(changelog)}&#34;,
+    ]
+
+
+def _generate_goreleaser_check_command_list() -&gt; List[str]:
+    return [
+        &#34;goreleaser&#34;,
+        &#34;check&#34;,
+    ]
+
+
+def _install_golds_command_list() -&gt; List[str]:
+    return [&#34;go&#34;, &#34;install&#34;, &#34;go101.org/golds@latest&#34;]
+
+
+def _install_goreleaser_command_list() -&gt; List[str]:
+    return [&#34;go&#34;, &#34;install&#34;, &#34;github.com/goreleaser/goreleaser@latest&#34;]
+
+
+def _call_golds(output_directory: Path, module: str) -&gt; None:
+    &#34;&#34;&#34;Calls Golds for generating the docs.&#34;&#34;&#34;
+    logger.info(&#34;Installing Golds if missing.&#34;)
+    check_call(_install_golds_command_list())
+    logger.info(&#34;Creating Golds documentation.&#34;)
+    check_call(_generate_golds_command_list(output_directory, module), cwd=SRC_DIR)
+
+
+def _call_goreleaser_check(version: str) -&gt; None:
+    &#34;&#34;&#34;Calls go releaser check to verify configuration.&#34;&#34;&#34;
+    logger.info(&#34;Installing GoReleaser if missing.&#34;)
+    check_call(_install_goreleaser_command_list())
+    logger.info(&#34;Checking GoReleaser configuration.&#34;)
+    env = os.environ
+    env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
+    env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+    check_call(_generate_goreleaser_check_command_list(), cwd=SRC_DIR)
+
+
+def _call_goreleaser_release(version: str) -&gt; None:
+    &#34;&#34;&#34;Calls go releaser release to upload packages.&#34;&#34;&#34;
+    logger.info(&#34;Installing GoReleaser if missing.&#34;)
+    check_call(_install_goreleaser_command_list())
+    logger.info(&#34;Release package.&#34;)
+    changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
+    env = os.environ
+    env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
+    env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+    check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=SRC_DIR, env=env)
 
 
 class Go(BaseLanguage):
@@ -52,22 +119,30 @@ class Go(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -&gt; None:
-        &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().package_software()
+    def get_version_tag(self, version: str):
+        &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
+        cleansed_version = version.strip().lstrip(&#34;v&#34;)
+        return f&#34;v{cleansed_version}&#34;
 
-    def release_package_to_repository(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().release_package_to_repository()
+        super().package_software(version)
+        _call_goreleaser_check(version)
+
+    def release_package_to_repository(self, version: str) -&gt; None:
+        &#34;&#34;&#34;No operation.&#34;&#34;&#34;
+        super().release_package_to_repository(version)
+        _call_goreleaser_release(version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
         super().check_credentials()
+        configuration.get_value(ConfigurationVariable.GIT_TOKEN)
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
         super().generate_code_documentation(output_directory, module_to_document)
-        # TODO
+        _call_golds(output_directory, &#34;./...&#34;)
 
     def can_add_licence_headers(self) -&gt; bool:
         &#34;&#34;&#34;States that licence headers can be added.&#34;&#34;&#34;
@@ -108,22 +183,30 @@ class Go(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -&gt; None:
-        &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().package_software()
+    def get_version_tag(self, version: str):
+        &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
+        cleansed_version = version.strip().lstrip(&#34;v&#34;)
+        return f&#34;v{cleansed_version}&#34;
 
-    def release_package_to_repository(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().release_package_to_repository()
+        super().package_software(version)
+        _call_goreleaser_check(version)
+
+    def release_package_to_repository(self, version: str) -&gt; None:
+        &#34;&#34;&#34;No operation.&#34;&#34;&#34;
+        super().release_package_to_repository(version)
+        _call_goreleaser_release(version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
         super().check_credentials()
+        configuration.get_value(ConfigurationVariable.GIT_TOKEN)
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
         super().generate_code_documentation(output_directory, module_to_document)
-        # TODO
+        _call_golds(output_directory, &#34;./...&#34;)
 
     def can_add_licence_headers(self) -&gt; bool:
         &#34;&#34;&#34;States that licence headers can be added.&#34;&#34;&#34;
@@ -170,7 +253,8 @@ class Go(BaseLanguage):
 </summary>
 <pre><code class="python">def check_credentials(self) -&gt; None:
     &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
-    super().check_credentials()</code></pre>
+    super().check_credentials()
+    configuration.get_value(ConfigurationVariable.GIT_TOKEN)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.get_current_spdx_project"><code class="name flex">
@@ -202,8 +286,23 @@ class Go(BaseLanguage):
     return get_language_from_file_name(__file__)</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.plugins.golang.Go.get_version_tag"><code class="name flex">
+<span>def <span class="ident">get_version_tag</span></span>(<span>self, version: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets tag based on version.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_version_tag(self, version: str):
+    &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
+    cleansed_version = version.strip().lstrip(&#34;v&#34;)
+    return f&#34;v{cleansed_version}&#34;</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>No operation.</p></div>
@@ -211,13 +310,14 @@ class Go(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def package_software(self) -&gt; None:
+<pre><code class="python">def package_software(self, version: str) -&gt; None:
     &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-    super().package_software()</code></pre>
+    super().package_software(version)
+    _call_goreleaser_check(version)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>No operation.</p></div>
@@ -225,9 +325,10 @@ class Go(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def release_package_to_repository(self) -&gt; None:
+<pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
     &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-    super().release_package_to_repository()</code></pre>
+    super().release_package_to_repository(version)
+    _call_goreleaser_release(version)</code></pre>
 </details>
 </dd>
 </dl>
@@ -265,6 +366,7 @@ class Go(BaseLanguage):
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.check_credentials" href="#continuous_delivery_scripts.plugins.golang.Go.check_credentials">check_credentials</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.get_current_spdx_project" href="#continuous_delivery_scripts.plugins.golang.Go.get_current_spdx_project">get_current_spdx_project</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.get_related_language" href="#continuous_delivery_scripts.plugins.golang.Go.get_related_language">get_related_language</a></code></li>
+<li><code><a title="continuous_delivery_scripts.plugins.golang.Go.get_version_tag" href="#continuous_delivery_scripts.plugins.golang.Go.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.package_software" href="#continuous_delivery_scripts.plugins.golang.Go.package_software">package_software</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository" href="#continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository">release_package_to_repository</a></code></li>
 </ul>

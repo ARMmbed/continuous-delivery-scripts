@@ -82,6 +82,10 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;Gets the name of the corresponding language.&#34;&#34;&#34;
         pass
 
+    def get_version_tag(self, version: str) -&gt; str:
+        &#34;&#34;&#34;Generates a tag based on the version string.&#34;&#34;&#34;
+        return version
+
     def generate_source_licence_header_template(self) -&gt; str:
         &#34;&#34;&#34;Generates the template of the licence header which is put at the top of source files.&#34;&#34;&#34;
         return _generate_generic_licence_header_template()
@@ -101,15 +105,15 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def package_software(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;Package the software so that it can get released.&#34;&#34;&#34;
-        logger.info(&#34;Generating a release package&#34;)
+        logger.info(f&#34;Generating a release package [{version}]&#34;)
         pass
 
     @abstractmethod
-    def release_package_to_repository(self) -&gt; None:
+    def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;Release the package to the official software repository.&#34;&#34;&#34;
-        logger.info(&#34;Uploading the package&#34;)
+        logger.info(f&#34;Uploading the package [{version}]&#34;)
         pass
 
     @abstractmethod
@@ -174,6 +178,10 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;Gets the name of the corresponding language.&#34;&#34;&#34;
         pass
 
+    def get_version_tag(self, version: str) -&gt; str:
+        &#34;&#34;&#34;Generates a tag based on the version string.&#34;&#34;&#34;
+        return version
+
     def generate_source_licence_header_template(self) -&gt; str:
         &#34;&#34;&#34;Generates the template of the licence header which is put at the top of source files.&#34;&#34;&#34;
         return _generate_generic_licence_header_template()
@@ -193,15 +201,15 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def package_software(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;Package the software so that it can get released.&#34;&#34;&#34;
-        logger.info(&#34;Generating a release package&#34;)
+        logger.info(f&#34;Generating a release package [{version}]&#34;)
         pass
 
     @abstractmethod
-    def release_package_to_repository(self) -&gt; None:
+    def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;Release the package to the official software repository.&#34;&#34;&#34;
-        logger.info(&#34;Uploading the package&#34;)
+        logger.info(f&#34;Uploading the package [{version}]&#34;)
         pass
 
     @abstractmethod
@@ -330,8 +338,22 @@ def get_related_language(self) -&gt; str:
     pass</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag"><code class="name flex">
+<span>def <span class="ident">get_version_tag</span></span>(<span>self, version: str) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generates a tag based on the version string.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_version_tag(self, version: str) -&gt; str:
+    &#34;&#34;&#34;Generates a tag based on the version string.&#34;&#34;&#34;
+    return version</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Package the software so that it can get released.</p></div>
@@ -340,14 +362,14 @@ def get_related_language(self) -&gt; str:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
-def package_software(self) -&gt; None:
+def package_software(self, version: str) -&gt; None:
     &#34;&#34;&#34;Package the software so that it can get released.&#34;&#34;&#34;
-    logger.info(&#34;Generating a release package&#34;)
+    logger.info(f&#34;Generating a release package [{version}]&#34;)
     pass</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Release the package to the official software repository.</p></div>
@@ -356,9 +378,9 @@ def package_software(self) -&gt; None:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
-def release_package_to_repository(self) -&gt; None:
+def release_package_to_repository(self, version: str) -&gt; None:
     &#34;&#34;&#34;Release the package to the official software repository.&#34;&#34;&#34;
-    logger.info(&#34;Uploading the package&#34;)
+    logger.info(f&#34;Uploading the package [{version}]&#34;)
     pass</code></pre>
 </details>
 </dd>
@@ -395,6 +417,7 @@ def release_package_to_repository(self) -&gt; None:
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template">generate_source_licence_header_template</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_current_spdx_project" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_current_spdx_project">get_current_spdx_project</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_related_language" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_related_language">get_related_language</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software">package_software</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository">release_package_to_repository</a></code></li>
 </ul>

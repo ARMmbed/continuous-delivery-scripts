@@ -55,38 +55,70 @@ class ConfigurationVariable(enum.Enum):
     &#34;&#34;&#34;Project&#39;s configuration variables.&#34;&#34;&#34;
 
     PROJECT_ROOT = 1
+    &#34;&#34;&#34;Relative path to the root of the project from pyproject.toml.&#34;&#34;&#34;
     PROJECT_CONFIG = 2
+    &#34;&#34;&#34;Relative path to the file comprising project&#39;s configuration.&#34;&#34;&#34;
     NEWS_DIR = 3
+    &#34;&#34;&#34;Relative path to the directory comprising news files.&#34;&#34;&#34;
     VERSION_FILE_PATH = 4
+    &#34;&#34;&#34;Relative path to the file comprising project&#39;s version.&#34;&#34;&#34;
     CHANGELOG_FILE_PATH = 5
+    &#34;&#34;&#34;Relative path to the changelog file.&#34;&#34;&#34;
     MODULE_TO_DOCUMENT = 6
+    &#34;&#34;&#34;Name of the module to generate documentation for.&#34;&#34;&#34;
     DOCUMENTATION_DEFAULT_OUTPUT_PATH = 7
     DOCUMENTATION_PRODUCTION_OUTPUT_PATH = 8
+    &#34;&#34;&#34;Relative path to the folder where documentation will be generated.&#34;&#34;&#34;
     GIT_TOKEN = 9
+    &#34;&#34;&#34;GIT token allowing committing back to the repository.&#34;&#34;&#34;
     BETA_BRANCH = 10
+    &#34;&#34;&#34;Name of beta/QA branch.&#34;&#34;&#34;
     MASTER_BRANCH = 11
+    &#34;&#34;&#34;Name of the main/production branch.&#34;&#34;&#34;
     RELEASE_BRANCH_PATTERN = 12
+    &#34;&#34;&#34;Pattern of release branches.&#34;&#34;&#34;
     REMOTE_ALIAS = 13
+    &#34;&#34;&#34;Git&#39;s remote alias.&#34;&#34;&#34;
     LOGGER_FORMAT = 14
+    &#34;&#34;&#34;Tools&#39; logger format.&#34;&#34;&#34;
     BOT_USERNAME = 15
+    &#34;&#34;&#34;Username of the Git bot account.&#34;&#34;&#34;
     BOT_EMAIL = 16
+    &#34;&#34;&#34;Email of the Git bot account.&#34;&#34;&#34;
     ORGANISATION = 17
+    &#34;&#34;&#34;Name of the organisation managing the project.&#34;&#34;&#34;
     ORGANISATION_EMAIL = 18
+    &#34;&#34;&#34;Email of the organisation managing the project.&#34;&#34;&#34;
     AWS_BUCKET = 19
+    &#34;&#34;&#34;AWS bucket to use if needed.&#34;&#34;&#34;
     PROJECT_NAME = 21
+    &#34;&#34;&#34;Name of the project.&#34;&#34;&#34;
     PROJECT_UUID = 22
+    &#34;&#34;&#34;UUID of the project to use in SPDX reports.&#34;&#34;&#34;
     PACKAGE_NAME = 23
+    &#34;&#34;&#34;Name of the package.&#34;&#34;&#34;
     SOURCE_DIR = 24
+    &#34;&#34;&#34;Relative path to the source of the project.&#34;&#34;&#34;
     IGNORE_REPOSITORY_TEST_UPLOAD = 25
+    &#34;&#34;&#34;States whether to release package to a test registry (e.g. pypi test) test before release.&#34;&#34;&#34;
     FILE_LICENCE_IDENTIFIER = 26
+    &#34;&#34;&#34;SPDX identifier for the project&#39;s licence.&#34;&#34;&#34;
     COPYRIGHT_START_DATE = 27
+    &#34;&#34;&#34;Project&#39;s copyright start year.&#34;&#34;&#34;
     ACCEPTED_THIRD_PARTY_LICENCES = 28
+    &#34;&#34;&#34;List of accepted 3rd party licences for dependencies.&#34;&#34;&#34;
     PACKAGES_WITH_CHECKED_LICENCE = 29
+    &#34;&#34;&#34;List of dependencies whose licence was manually checked.&#34;&#34;&#34;
     PROGRAMMING_LANGUAGE = 30
+    &#34;&#34;&#34;Project&#39;s programming language.&#34;&#34;&#34;
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = 31
+    &#34;&#34;&#34;States whether news file should be generated on dependency updates.&#34;&#34;&#34;
     DEPENDENCY_UPDATE_BRANCH_PATTERN = 32
+    &#34;&#34;&#34;Pattern of branches comprising dependency updates (e.g. dependabot).&#34;&#34;&#34;
     DEPENDENCY_UPDATE_NEWS_MESSAGE = 33
+    &#34;&#34;&#34;Pattern of the news message for dependency update.&#34;&#34;&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = 34
+    &#34;&#34;&#34;News file type for dependency update.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -354,38 +386,70 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     &#34;&#34;&#34;Project&#39;s configuration variables.&#34;&#34;&#34;
 
     PROJECT_ROOT = 1
+    &#34;&#34;&#34;Relative path to the root of the project from pyproject.toml.&#34;&#34;&#34;
     PROJECT_CONFIG = 2
+    &#34;&#34;&#34;Relative path to the file comprising project&#39;s configuration.&#34;&#34;&#34;
     NEWS_DIR = 3
+    &#34;&#34;&#34;Relative path to the directory comprising news files.&#34;&#34;&#34;
     VERSION_FILE_PATH = 4
+    &#34;&#34;&#34;Relative path to the file comprising project&#39;s version.&#34;&#34;&#34;
     CHANGELOG_FILE_PATH = 5
+    &#34;&#34;&#34;Relative path to the changelog file.&#34;&#34;&#34;
     MODULE_TO_DOCUMENT = 6
+    &#34;&#34;&#34;Name of the module to generate documentation for.&#34;&#34;&#34;
     DOCUMENTATION_DEFAULT_OUTPUT_PATH = 7
     DOCUMENTATION_PRODUCTION_OUTPUT_PATH = 8
+    &#34;&#34;&#34;Relative path to the folder where documentation will be generated.&#34;&#34;&#34;
     GIT_TOKEN = 9
+    &#34;&#34;&#34;GIT token allowing committing back to the repository.&#34;&#34;&#34;
     BETA_BRANCH = 10
+    &#34;&#34;&#34;Name of beta/QA branch.&#34;&#34;&#34;
     MASTER_BRANCH = 11
+    &#34;&#34;&#34;Name of the main/production branch.&#34;&#34;&#34;
     RELEASE_BRANCH_PATTERN = 12
+    &#34;&#34;&#34;Pattern of release branches.&#34;&#34;&#34;
     REMOTE_ALIAS = 13
+    &#34;&#34;&#34;Git&#39;s remote alias.&#34;&#34;&#34;
     LOGGER_FORMAT = 14
+    &#34;&#34;&#34;Tools&#39; logger format.&#34;&#34;&#34;
     BOT_USERNAME = 15
+    &#34;&#34;&#34;Username of the Git bot account.&#34;&#34;&#34;
     BOT_EMAIL = 16
+    &#34;&#34;&#34;Email of the Git bot account.&#34;&#34;&#34;
     ORGANISATION = 17
+    &#34;&#34;&#34;Name of the organisation managing the project.&#34;&#34;&#34;
     ORGANISATION_EMAIL = 18
+    &#34;&#34;&#34;Email of the organisation managing the project.&#34;&#34;&#34;
     AWS_BUCKET = 19
+    &#34;&#34;&#34;AWS bucket to use if needed.&#34;&#34;&#34;
     PROJECT_NAME = 21
+    &#34;&#34;&#34;Name of the project.&#34;&#34;&#34;
     PROJECT_UUID = 22
+    &#34;&#34;&#34;UUID of the project to use in SPDX reports.&#34;&#34;&#34;
     PACKAGE_NAME = 23
+    &#34;&#34;&#34;Name of the package.&#34;&#34;&#34;
     SOURCE_DIR = 24
+    &#34;&#34;&#34;Relative path to the source of the project.&#34;&#34;&#34;
     IGNORE_REPOSITORY_TEST_UPLOAD = 25
+    &#34;&#34;&#34;States whether to release package to a test registry (e.g. pypi test) test before release.&#34;&#34;&#34;
     FILE_LICENCE_IDENTIFIER = 26
+    &#34;&#34;&#34;SPDX identifier for the project&#39;s licence.&#34;&#34;&#34;
     COPYRIGHT_START_DATE = 27
+    &#34;&#34;&#34;Project&#39;s copyright start year.&#34;&#34;&#34;
     ACCEPTED_THIRD_PARTY_LICENCES = 28
+    &#34;&#34;&#34;List of accepted 3rd party licences for dependencies.&#34;&#34;&#34;
     PACKAGES_WITH_CHECKED_LICENCE = 29
+    &#34;&#34;&#34;List of dependencies whose licence was manually checked.&#34;&#34;&#34;
     PROGRAMMING_LANGUAGE = 30
+    &#34;&#34;&#34;Project&#39;s programming language.&#34;&#34;&#34;
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = 31
+    &#34;&#34;&#34;States whether news file should be generated on dependency updates.&#34;&#34;&#34;
     DEPENDENCY_UPDATE_BRANCH_PATTERN = 32
+    &#34;&#34;&#34;Pattern of branches comprising dependency updates (e.g. dependabot).&#34;&#34;&#34;
     DEPENDENCY_UPDATE_NEWS_MESSAGE = 33
+    &#34;&#34;&#34;Pattern of the news message for dependency update.&#34;&#34;&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = 34
+    &#34;&#34;&#34;News file type for dependency update.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -419,47 +483,47 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dl>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES"><code class="name">var <span class="ident">ACCEPTED_THIRD_PARTY_LICENCES</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>List of accepted 3rd party licences for dependencies.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE"><code class="name">var <span class="ident">AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>States whether news file should be generated on dependency updates.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.AWS_BUCKET"><code class="name">var <span class="ident">AWS_BUCKET</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>AWS bucket to use if needed.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BETA_BRANCH"><code class="name">var <span class="ident">BETA_BRANCH</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Name of beta/QA branch.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_EMAIL"><code class="name">var <span class="ident">BOT_EMAIL</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Email of the Git bot account.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.BOT_USERNAME"><code class="name">var <span class="ident">BOT_USERNAME</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Username of the Git bot account.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.CHANGELOG_FILE_PATH"><code class="name">var <span class="ident">CHANGELOG_FILE_PATH</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the changelog file.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.COPYRIGHT_START_DATE"><code class="name">var <span class="ident">COPYRIGHT_START_DATE</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Project's copyright start year.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_BRANCH_PATTERN"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_BRANCH_PATTERN</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Pattern of branches comprising dependency updates (e.g. dependabot).</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_MESSAGE</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Pattern of the news message for dependency update.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_TYPE</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>News file type for dependency update.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_DEFAULT_OUTPUT_PATH</span></code></dt>
 <dd>
@@ -467,87 +531,87 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the folder where documentation will be generated.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>SPDX identifier for the project's licence.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN"><code class="name">var <span class="ident">GIT_TOKEN</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>GIT token allowing committing back to the repository.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD"><code class="name">var <span class="ident">IGNORE_REPOSITORY_TEST_UPLOAD</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>States whether to release package to a test registry (e.g. pypi test) test before release.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Tools' logger format.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH"><code class="name">var <span class="ident">MASTER_BRANCH</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Name of the main/production branch.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT"><code class="name">var <span class="ident">MODULE_TO_DOCUMENT</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Name of the module to generate documentation for.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.NEWS_DIR"><code class="name">var <span class="ident">NEWS_DIR</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the directory comprising news files.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION"><code class="name">var <span class="ident">ORGANISATION</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Name of the organisation managing the project.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.ORGANISATION_EMAIL"><code class="name">var <span class="ident">ORGANISATION_EMAIL</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Email of the organisation managing the project.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGES_WITH_CHECKED_LICENCE"><code class="name">var <span class="ident">PACKAGES_WITH_CHECKED_LICENCE</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>List of dependencies whose licence was manually checked.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PACKAGE_NAME"><code class="name">var <span class="ident">PACKAGE_NAME</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Name of the package.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROGRAMMING_LANGUAGE"><code class="name">var <span class="ident">PROGRAMMING_LANGUAGE</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Project's programming language.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_CONFIG"><code class="name">var <span class="ident">PROJECT_CONFIG</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the file comprising project's configuration.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_NAME"><code class="name">var <span class="ident">PROJECT_NAME</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Name of the project.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_ROOT"><code class="name">var <span class="ident">PROJECT_ROOT</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the root of the project from pyproject.toml.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID"><code class="name">var <span class="ident">PROJECT_UUID</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>UUID of the project to use in SPDX reports.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN"><code class="name">var <span class="ident">RELEASE_BRANCH_PATTERN</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Pattern of release branches.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Git's remote alias.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the source of the project.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH"><code class="name">var <span class="ident">VERSION_FILE_PATH</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Relative path to the file comprising project's version.</p></div>
 </dd>
 </dl>
 <h3>Static methods</h3>

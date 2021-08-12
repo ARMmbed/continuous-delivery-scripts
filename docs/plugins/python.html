@@ -167,14 +167,14 @@ class Python(BaseLanguage):
         &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
-        super().package_software()
+        super().package_software(version)
         _create_wheel()
 
-    def release_package_to_repository(self) -&gt; None:
+    def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;Releases to PyPI.&#34;&#34;&#34;
-        super().release_package_to_repository()
+        super().release_package_to_repository(version)
         _release_to_pypi()
 
     def check_credentials(self) -&gt; None:
@@ -228,14 +228,14 @@ class Python(BaseLanguage):
         &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -&gt; None:
+    def package_software(self, version: str) -&gt; None:
         &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
-        super().package_software()
+        super().package_software(version)
         _create_wheel()
 
-    def release_package_to_repository(self) -&gt; None:
+    def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;Releases to PyPI.&#34;&#34;&#34;
-        super().release_package_to_repository()
+        super().release_package_to_repository(version)
         _release_to_pypi()
 
     def check_credentials(self) -&gt; None:
@@ -346,7 +346,7 @@ class Python(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.python.Python.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Packages the software into a wheel.</p></div>
@@ -354,14 +354,14 @@ class Python(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def package_software(self) -&gt; None:
+<pre><code class="python">def package_software(self, version: str) -&gt; None:
     &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
-    super().package_software()
+    super().package_software(version)
     _create_wheel()</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.python.Python.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Releases to PyPI.</p></div>
@@ -369,9 +369,9 @@ class Python(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def release_package_to_repository(self) -&gt; None:
+<pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
     &#34;&#34;&#34;Releases to PyPI.&#34;&#34;&#34;
-    super().release_package_to_repository()
+    super().release_package_to_repository(version)
     _release_to_pypi()</code></pre>
 </details>
 </dd>
@@ -382,6 +382,7 @@ class Python(BaseLanguage):
 <ul class="hlist">
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.can_get_project_metadata" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.can_get_project_metadata">can_get_project_metadata</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template">generate_source_licence_header_template</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
 </ul>
 </li>
 </ul>
