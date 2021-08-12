@@ -111,7 +111,7 @@ relevant place using the [reST include](https://docutils.sourceforge.io/docs/ref
 You can do a preview build of the documentation locally by running:
 
 ```bash
-generate-docs
+cd-generate-docs
 ```
 
 This will generate the docs and output them to `local_docs`.
