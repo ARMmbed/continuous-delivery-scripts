@@ -17,6 +17,21 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.5.0" (2021-08-13)"2.5.0" (2021-08-13)
+====================
+
+Features
+--------
+
+- Added a [pre-commit](https://pre-commit.com) hook for ease of use in other repositories (#202108131306)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: towncrier-21.3.0 (#202108110250)
+
+
 "2.4.0" (2021-08-12)
 ====================
 

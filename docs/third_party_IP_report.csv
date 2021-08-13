@@ -8,6 +8,7 @@ True,certifi,True,https://certifiio.readthedocs.io/en/latest/,MPL-2.0,Licence is
 True,cffi,True,http://cffi.readthedocs.org,MIT,Licence is compliant.
 True,charset-normalizer,True,https://github.com/ousret/charset_normalizer,MIT,Licence is compliant.
 True,click,True,https://palletsprojects.com/p/click/,BSD-3-Clause,Licence is compliant.
+True,click-default-group,True,https://github.com/sublee/click-default-group/,0BSD,Licence is compliant.
 True,colorama,True,https://github.com/tartley/colorama,0BSD,Licence is compliant.
 True,continuous-delivery-scripts,False,https://github.com/ARMmbed/continuous-delivery-scripts,Apache-2.0,Licence is compliant.
 True,cryptography,True,https://github.com/pyca/cryptography,0BSD OR Apache-2.0,Licence is compliant.

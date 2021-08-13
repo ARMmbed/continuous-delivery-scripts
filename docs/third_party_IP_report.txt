@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2021-08-12 08:35:46.201373
+                                         2021-08-13 13:08:41.223298
 
 # Summary:
     Licence compliance: Compliant
@@ -69,6 +69,13 @@
     [X] Dependency?
     URL: https://palletsprojects.com/p/click/
     Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- click-default-group:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/sublee/click-default-group/
+    Licence: 0BSD
     Licence compliance: Licence is compliant.
 
 - colorama:
