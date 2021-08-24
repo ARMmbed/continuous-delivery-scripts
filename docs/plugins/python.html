@@ -198,6 +198,10 @@ class Python(BaseLanguage):
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return True
 
+    def should_include_spdx_in_package(self) -&gt; bool:
+        &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
+        return True
+
     def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
         &#34;&#34;&#34;Gets the current SPDX description.&#34;&#34;&#34;
         return _get_current_spdx_project()</code></pre>
@@ -257,6 +261,10 @@ class Python(BaseLanguage):
 
     def can_get_project_metadata(self) -&gt; bool:
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
+        return True
+
+    def should_include_spdx_in_package(self) -&gt; bool:
+        &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
         return True
 
     def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
@@ -383,6 +391,7 @@ class Python(BaseLanguage):
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.can_get_project_metadata" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.can_get_project_metadata">can_get_project_metadata</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template">generate_source_licence_header_template</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package" href="../utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package">should_include_spdx_in_package</a></code></li>
 </ul>
 </li>
 </ul>
