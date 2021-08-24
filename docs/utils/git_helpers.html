@@ -526,6 +526,13 @@ class GitWrapper:
         if self.is_dirty():
             self.repo.git.clean(force=True, x=True, d=True)
 
+    def stash(self) -&gt; None:
+        &#34;&#34;&#34;Stashes the repository.
+
+        Performs a stash.
+        &#34;&#34;&#34;
+        self.repo.git.stash(all=True, quiet=True)
+
     def configure_for_github(self) -&gt; None:
         &#34;&#34;&#34;Reconfigures the repository.
 
@@ -999,6 +1006,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.root" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
 </li>
@@ -1551,6 +1559,13 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;
         if self.is_dirty():
             self.repo.git.clean(force=True, x=True, d=True)
+
+    def stash(self) -&gt; None:
+        &#34;&#34;&#34;Stashes the repository.
+
+        Performs a stash.
+        &#34;&#34;&#34;
+        self.repo.git.stash(all=True, quiet=True)
 
     def configure_for_github(self) -&gt; None:
         &#34;&#34;&#34;Reconfigures the repository.
@@ -2867,6 +2882,24 @@ Tags are also pushed as part of the process</p></div>
         self.repo.git.branch(&#34;--set-upstream-to&#34;, self.get_remote_branch(branch_name))</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash"><code class="name flex">
+<span>def <span class="ident">stash</span></span>(<span>self) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stashes the repository.</p>
+<p>Performs a stash.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stash(self) -&gt; None:
+    &#34;&#34;&#34;Stashes the repository.
+
+    Performs a stash.
+    &#34;&#34;&#34;
+    self.repo.git.stash(all=True, quiet=True)</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.LocalProjectRepository"><code class="flex name class">
@@ -2969,6 +3002,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.root" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
 </li>
@@ -3086,6 +3120,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.root" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
 </li>

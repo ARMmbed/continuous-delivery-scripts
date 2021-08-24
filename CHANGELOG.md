@@ -17,6 +17,16 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.7.0" (2021-08-24)"2.7.0" (2021-08-24)
+====================
+
+Features
+--------
+
+- Added a stash repository step (#202108242058)
+- Added a language specific option to clean repository before packaging (#202108242145)
+
+
 "2.6.2" (2021-08-24)"2.6.2" (2021-08-24)
 ====================
 

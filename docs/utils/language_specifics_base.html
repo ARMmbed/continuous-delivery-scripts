@@ -102,6 +102,10 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
         return False
 
+    def should_clean_before_packaging(self) -&gt; bool:
+        &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
+        return False
+
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
@@ -200,6 +204,10 @@ class BaseLanguage(ABC):
 
     def should_include_spdx_in_package(self) -&gt; bool:
         &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
+        return False
+
+    def should_clean_before_packaging(self) -&gt; bool:
+        &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return False
 
     @abstractmethod
@@ -392,6 +400,20 @@ def release_package_to_repository(self, version: str) -&gt; None:
     pass</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_clean_before_packaging"><code class="name flex">
+<span>def <span class="ident">should_clean_before_packaging</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>States whether the repository must be cleaned before packaging happens.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def should_clean_before_packaging(self) -&gt; bool:
+    &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
+    return False</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package"><code class="name flex">
 <span>def <span class="ident">should_include_spdx_in_package</span></span>(<span>self) ‑> bool</span>
 </code></dt>
@@ -442,6 +464,7 @@ def release_package_to_repository(self, version: str) -&gt; None:
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software">package_software</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository">release_package_to_repository</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_clean_before_packaging" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_clean_before_packaging">should_clean_before_packaging</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package">should_include_spdx_in_package</a></code></li>
 </ul>
 </li>
