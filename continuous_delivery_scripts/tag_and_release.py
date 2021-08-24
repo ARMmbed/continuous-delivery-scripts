@@ -50,7 +50,8 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     insert_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
-        _clean_repository()
+        if get_language_specifics().should_clean_before_packaging():
+            _clean_repository()
         if spdx_project and get_language_specifics().should_include_spdx_in_package():
             _generate_spdx_reports(spdx_project)
         get_language_specifics().package_software(version)
@@ -94,9 +95,6 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
             logger.info("Tagging commit")
             git.create_tag(get_language_specifics().get_version_tag(version), message=f"release {version}")
             git.force_push_tag()
-        git.fetch()
-        git.pull()
-        git.clean()
 
 
 def _clean_repository() -> None:

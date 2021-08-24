@@ -124,3 +124,7 @@ class Go(BaseLanguage):
         """Gets current SPDX description."""
         # TODO
         return None
+
+    def should_clean_before_packaging(self) -> bool:
+        """States whether the repository must be cleaned before packaging happens."""
+        return True
