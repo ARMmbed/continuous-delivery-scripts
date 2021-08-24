@@ -26,7 +26,9 @@ def main() -> int:
     """Parses cli arguments and creates a news file."""
     parser = argparse.ArgumentParser()
     parser.add_argument("news_text", help="Contents of the news file.")
-    parser.add_argument("-t", "--type", help="News type to create.", choices=[t.name for t in NewsType], default="feature")
+    parser.add_argument(
+        "-t", "--type", help="News type to create.", choices=[t.name for t in NewsType], default="feature"
+    )
 
     args = parser.parse_args()
     created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
