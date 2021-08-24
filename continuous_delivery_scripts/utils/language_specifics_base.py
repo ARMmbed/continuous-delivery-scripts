@@ -65,6 +65,10 @@ class BaseLanguage(ABC):
         """States whether project metadata can be retrieved."""
         return False
 
+    def should_include_spdx_in_package(self) -> bool:
+        """States whether the SPDX documents should be included in the package."""
+        return False
+
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""

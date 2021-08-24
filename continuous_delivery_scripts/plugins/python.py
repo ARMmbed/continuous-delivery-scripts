@@ -165,6 +165,10 @@ class Python(BaseLanguage):
         """States whether project metadata can be retrieved."""
         return True
 
+    def should_include_spdx_in_package(self) -> bool:
+        """States whether the SPDX documents should be included in the package."""
+        return True
+
     def get_current_spdx_project(self) -> Optional[SpdxProject]:
         """Gets the current SPDX description."""
         return _get_current_spdx_project()
