@@ -103,8 +103,9 @@ def _clean_repository() -> None:
     """Cleans the local repository."""
     with LocalProjectRepository() as git:
         logger.info("Cleaning repository")
+        git.clean()
         git.fetch()
-        git.pull()
+        git.force_pull()
         git.clean()
 
 
