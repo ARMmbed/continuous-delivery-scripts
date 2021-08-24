@@ -493,6 +493,13 @@ class GitWrapper:
         if self.is_dirty():
             self.repo.git.clean(force=True, x=True, d=True)
 
+    def stash(self) -> None:
+        """Stashes the repository.
+
+        Performs a stash.
+        """
+        self.repo.git.stash(all=True, quiet=True)
+
     def configure_for_github(self) -> None:
         """Reconfigures the repository.
 
