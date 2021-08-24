@@ -17,7 +17,7 @@ from continuous_delivery_scripts.license_files import insert_licence_header
 from continuous_delivery_scripts.report_third_party_ip import generate_spdx_project_reports, SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 
 SPDX_REPORTS_DIRECTORY = "licensing"
@@ -50,6 +50,7 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     insert_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
+        _clean_repository()
         if spdx_project and get_language_specifics().should_include_spdx_in_package():
             _generate_spdx_reports(spdx_project)
         get_language_specifics().package_software(version)
@@ -93,6 +94,15 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
             logger.info("Tagging commit")
             git.create_tag(get_language_specifics().get_version_tag(version), message=f"release {version}")
             git.force_push_tag()
+        git.fetch()
+        git.pull()
+        git.clean()
+
+
+def _clean_repository() -> None:
+    """Cleans the local repository."""
+    with LocalProjectRepository() as git:
+        logger.info("Cleaning repository")
         git.fetch()
         git.pull()
         git.clean()

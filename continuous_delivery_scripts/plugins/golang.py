@@ -15,6 +15,7 @@ from continuous_delivery_scripts.utils.configuration import configuration, Confi
 logger = logging.getLogger(__name__)
 
 SRC_DIR = configuration.get_value(ConfigurationVariable.SOURCE_DIR)
+ROOT_DIR = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
 ENVVAR_GORELEASER_GIT_TOKEN = "GITHUB_TOKEN"
 ENVVAR_GORELEASER_CUSTOMISED_TAG = "GORELEASER_CURRENT_TAG"
 
@@ -64,7 +65,7 @@ def _call_goreleaser_check(version: str) -> None:
     env = os.environ
     env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
     env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-    check_call(_generate_goreleaser_check_command_list(), cwd=SRC_DIR)
+    check_call(_generate_goreleaser_check_command_list(), cwd=ROOT_DIR)
 
 
 def _call_goreleaser_release(version: str) -> None:
@@ -76,7 +77,7 @@ def _call_goreleaser_release(version: str) -> None:
     env = os.environ
     env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
     env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-    check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=SRC_DIR, env=env)
+    check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)
 
 
 class Go(BaseLanguage):
