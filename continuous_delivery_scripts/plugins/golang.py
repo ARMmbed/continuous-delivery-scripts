@@ -11,6 +11,7 @@ from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository
 
 logger = logging.getLogger(__name__)
 
@@ -68,18 +69,6 @@ def _call_goreleaser_check(version: str) -> None:
     check_call(_generate_goreleaser_check_command_list(), cwd=ROOT_DIR)
 
 
-def _call_goreleaser_release(version: str) -> None:
-    """Calls go releaser release to upload packages."""
-    logger.info("Installing GoReleaser if missing.")
-    check_call(_install_goreleaser_command_list())
-    logger.info("Release package.")
-    changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
-    env = os.environ
-    env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
-    env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-    check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)
-
-
 class Go(BaseLanguage):
     """Specific actions for a Golang project."""
 
@@ -100,7 +89,7 @@ class Go(BaseLanguage):
     def release_package_to_repository(self, version: str) -> None:
         """No operation."""
         super().release_package_to_repository(version)
-        _call_goreleaser_release(version)
+        self._call_goreleaser_release(version)
 
     def check_credentials(self) -> None:
         """Checks any credentials."""
@@ -128,3 +117,22 @@ class Go(BaseLanguage):
     def should_clean_before_packaging(self) -> bool:
         """States whether the repository must be cleaned before packaging happens."""
         return True
+
+    def _call_goreleaser_release(self, version: str) -> None:
+        """Calls go releaser release to upload packages."""
+        logger.info("Installing GoReleaser if missing.")
+        check_call(_install_goreleaser_command_list())
+        tag = self.get_version_tag(version)
+        # The tag of the release must be retrieved
+        # See https://github.com/goreleaser/goreleaser/discussions/1426
+        logger.info(f"Checking out tag: {tag}.")
+        with LocalProjectRepository() as git:
+            git.configure_for_github()
+            git.fetch()
+            git.checkout(f"tags/{tag}")
+        logger.info("Release package.")
+        changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
+        env = os.environ
+        env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
+        env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+        check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)
