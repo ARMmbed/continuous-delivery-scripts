@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.6.1" (2021-08-24)"2.6.1" (2021-08-24)
+====================
+
+Bugfixes
+--------
+
+- Fixed Golang packaging (#202108241747)
+
+
 "2.6.0" (2021-08-24)"2.6.0" (2021-08-24)
 ====================
 
