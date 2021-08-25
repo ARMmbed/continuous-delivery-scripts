@@ -11,14 +11,16 @@ from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository
+from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository, GitWrapper
 
 logger = logging.getLogger(__name__)
 
-SRC_DIR = configuration.get_value(ConfigurationVariable.SOURCE_DIR)
-ROOT_DIR = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
+SRC_DIR = Path(str(configuration.get_value(ConfigurationVariable.SOURCE_DIR)))
+ROOT_DIR = Path(str(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)))
 ENVVAR_GORELEASER_GIT_TOKEN = "GITHUB_TOKEN"
 ENVVAR_GORELEASER_CUSTOMISED_TAG = "GORELEASER_CURRENT_TAG"
+ENVVAR_GO_MOD = "GO111MODULE"
+GO_MOD_ON_VALUE = "on"
 
 
 def _generate_golds_command_list(output_directory: Path, module: str) -> List[str]:
@@ -53,20 +55,43 @@ def _install_goreleaser_command_list() -> List[str]:
 def _call_golds(output_directory: Path, module: str) -> None:
     """Calls Golds for generating the docs."""
     logger.info("Installing Golds if missing.")
-    check_call(_install_golds_command_list())
+    env = os.environ
+    env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+    check_call(_install_golds_command_list(), env=env)
     logger.info("Creating Golds documentation.")
-    check_call(_generate_golds_command_list(output_directory, module), cwd=SRC_DIR)
+    check_call(_generate_golds_command_list(output_directory, module), cwd=SRC_DIR, env=env)
 
 
 def _call_goreleaser_check(version: str) -> None:
     """Calls go releaser check to verify configuration."""
     logger.info("Installing GoReleaser if missing.")
-    check_call(_install_goreleaser_command_list())
-    logger.info("Checking GoReleaser configuration.")
     env = os.environ
+    env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+    check_call(_install_goreleaser_command_list(), env=env)
+    logger.info("Checking GoReleaser configuration.")
     env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
     env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-    check_call(_generate_goreleaser_check_command_list(), cwd=ROOT_DIR)
+    check_call(_generate_goreleaser_check_command_list(), cwd=ROOT_DIR, env=env)
+
+
+def _determine_go_module_tag(version) -> Optional[str]:
+    """Determines go module for tagging.
+
+    See https://golang.org/ref/mod#vcs-version.
+    and https://github.com/golang/go/wiki/Modules#should-i-have-multiple-modules-in-a-single-repository.
+    """
+    module = ""
+    try:
+        module = str(SRC_DIR.relative_to(ROOT_DIR))
+    except ValueError:
+        try:
+            module = str(ROOT_DIR.relative_to(SRC_DIR))
+        except ValueError as exception:
+            logger.warning(exception)
+    if module == "." or len(module) == 0:
+        return None
+    module = module.rstrip("/")
+    return f"{module}/{version}"
 
 
 class Go(BaseLanguage):
@@ -118,10 +143,19 @@ class Go(BaseLanguage):
         """States whether the repository must be cleaned before packaging happens."""
         return True
 
+    def tag_release(self, git: GitWrapper, version: str) -> None:
+        """Tags release commit."""
+        super().tag_release(git, version)
+        go_tag = _determine_go_module_tag(self.get_version_tag(version))
+        if go_tag:
+            git.create_tag(go_tag, message=f"Golang module release: {go_tag}")
+
     def _call_goreleaser_release(self, version: str) -> None:
         """Calls go releaser release to upload packages."""
         logger.info("Installing GoReleaser if missing.")
-        check_call(_install_goreleaser_command_list())
+        env = os.environ
+        env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+        check_call(_install_goreleaser_command_list(), env=env)
         tag = self.get_version_tag(version)
         # The tag of the release must be retrieved
         # See https://github.com/goreleaser/goreleaser/discussions/1426
@@ -132,7 +166,6 @@ class Go(BaseLanguage):
             git.checkout(f"tags/{tag}")
         logger.info("Release package.")
         changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
-        env = os.environ
         env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = tag
         env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
         check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)
