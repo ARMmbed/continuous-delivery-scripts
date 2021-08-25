@@ -133,6 +133,6 @@ class Go(BaseLanguage):
         logger.info("Release package.")
         changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
         env = os.environ
-        env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
+        env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = tag
         env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
         check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)
