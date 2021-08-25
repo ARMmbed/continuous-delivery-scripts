@@ -11,6 +11,7 @@ from typing import Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,11 @@ class BaseLanguage(ABC):
     def should_clean_before_packaging(self) -> bool:
         """States whether the repository must be cleaned before packaging happens."""
         return False
+
+    def tag_release(self, git: GitWrapper, version: str) -> None:
+        """Tags release commit."""
+        logger.info(f"Tagging commit as release {version}")
+        git.create_tag(self.get_version_tag(version), message=f"release {version}")
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
