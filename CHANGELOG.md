@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.8.0" (2021-08-26)"2.8.0" (2021-08-26)
+====================
+
+Features
+--------
+
+- Made release tagging language configurable. (#202108251834)
+
+
 "2.7.2" (2021-08-25)"2.7.2" (2021-08-25)
 ====================
 
