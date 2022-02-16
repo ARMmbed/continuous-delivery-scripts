@@ -39,32 +39,32 @@ stages:
             Linux_Py_3_9:
               python.version: '3.9'
               vmImageName: ubuntu-latest
-              uploadCoverage: "false"
+              uploadCoverage: "true"
 
             Linux_Py_3_10:
               python.version: '3.10'
               vmImageName: ubuntu-latest
-              uploadCoverage: "true"
+              uploadCoverage: "false"
 
             Windows_Py_3_7:
               python.version: '3.7'
               vmImageName: windows-latest
               uploadCoverage: "false"
 
-            Windows_Py_3_8:
-              python.version: '3.8'
-              vmImageName: windows-latest
-              uploadCoverage: "false"
+#            Windows_Py_3_9:
+#             python.version: '3.9'
+#             vmImageName: windows-latest
+#             uploadCoverage: "false"
 
-            macOS_Py_3_7:
-              python.version: '3.7'
-              vmImageName: macOS-latest
-              uploadCoverage: "false"
+#            macOS_Py_3_7:
+#              python.version: '3.7'
+#              vmImageName: macOS-latest
+#              uploadCoverage: "false"
 
-            macOS_Py_3_8:
-              python.version: '3.8'
-              vmImageName: macOS-latest
-              uploadCoverage: "false"
+#            macOS_Py_3_8:
+#              python.version: '3.8'
+#              vmImageName: macOS-latest
+#              uploadCoverage: "false"
 
             macOS_Py_3_9:
               python.version: '3.9'
