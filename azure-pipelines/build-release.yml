@@ -26,10 +26,10 @@ stages:
         strategy:
           maxParallel: 10
           matrix:
-            Linux_Py_3_7:
-              python.version: '3.7'
-              vmImageName: ubuntu-latest
-              uploadCoverage: "false"
+#            Linux_Py_3_7:
+#              python.version: '3.7'
+#              vmImageName: ubuntu-latest
+#              uploadCoverage: "false"
 
             Linux_Py_3_8:
               python.version: '3.8'
@@ -136,9 +136,9 @@ stages:
 
         steps:
           - task: UsePythonVersion@0
-            displayName: 'Use Python 3.9'
+            displayName: 'Use Python 3.8'
             inputs:
-              versionSpec: '3.9'
+              versionSpec: '3.8'
 
           - template: steps/install-development-dependencies.yml
 
