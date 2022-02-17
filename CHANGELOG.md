@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
 # Changelog
@@ -16,6 +16,27 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"2.8.1" (2022-02-17)"2.8.1" (2022-02-17)
+====================
+
+Bugfixes
+--------
+
+- [GO] Fixed [golds version](https://github.com/go101/golds/issues/26) by fixing the version to v0.4.1 (#202202171446)
+
+
+Improved Documentation
+----------------------
+
+- Documented how to update the secret checkers (#202202171830)
+
+
+Misc
+----
+
+- #202202171829
+
 
 "2.8.0" (2021-08-26)"2.8.0" (2021-08-26)
 ====================

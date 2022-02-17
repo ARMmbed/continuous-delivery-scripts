@@ -42,7 +42,7 @@ True,python-dotenv,True,https://github.com/theskumar/python-dotenv,BSD-3-Clause,
 True,PyYAML,True,https://pyyaml.org/,MIT,Licence is compliant.
 True,rdflib,True,https://github.com/RDFLib/rdflib,BSD-3-Clause,Licence is compliant.
 True,readme-renderer,True,https://github.com/pypa/readme_renderer,Apache-2.0,Licence is compliant.
-True,regex,True,https://bitbucket.org/mrabarnett/mrab-regex,Apache-2.0,Licence is compliant.
+True,regex,True,https://github.com/mrabarnett/mrab-regex,Apache-2.0,Licence is compliant.
 True,requests,True,https://requests.readthedocs.io,Apache-2.0,Licence is compliant.
 True,requests-toolbelt,True,https://toolbelt.readthedocs.org,Apache-2.0,Licence is compliant.
 True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
