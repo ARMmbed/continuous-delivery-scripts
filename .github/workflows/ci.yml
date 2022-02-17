@@ -14,67 +14,211 @@ env:
   python_cache_ubuntu_path: |
     ~/.cache/pip
 jobs:
+  # Check that a news file has been added to this branch when a PR is created
+  assert-news:
+    name: Assert news files (See CONTRIBUTING.md)
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout with full history for to allow compare with base branch
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Load Python Dependencies from cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.python_cache_ubuntu_path }}
+          key:  linux-pip-3-continuous-delivery-scripts
+      - name: Install CI/CD tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install continuous-delivery-scripts
+          python -m pip list
+      - name: Assert news
+        run: cd-assert-news -b ${CI_ACTION_REF_NAME}
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_SECRET }}
+      - name: Report failure if needed
+        if: ${{ failure() }}
+        run: |
+          echo "::error:: News file missing (See CONTRIBUTING.md guide for details)."
+
+
+  generate-docs:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Determine dependencies
+        # Note
+        # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
+        # normal dependencies from setup.py).
+        # This code also forces the system to install latest tools as the ones present on the CI system may be too old
+        # for the process to go through properly.
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+          python -m pip install flake8 pipenv pytest
+          python -m pipenv lock --dev -r --pre > dev-requirements.txt
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Load Python Dependencies from cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.python_cache_ubuntu_path }}
+          key:  linux-pip-3-continuous-delivery-scripts
+      - name: Install dependencies
+        # Note
+        # As a virtual machine is already being used, pipenv
+        # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
+        # location for development dependencies.
+        run: |
+          python -m pip install -r dev-requirements.txt
+          python -m pip list
+      - name: Generate Documentation
+        run: |
+          cd-generate-docs --output_dir $(cd-get-config --key DOCUMENTATION_PRODUCTION_OUTPUT_PATH)
+      - name: Add copyright/licence notice.
+        run: |
+          cd-license-files
+
+  tpip:
+    name: Report licences in use (SPDX)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - name: Determine dependencies
+        # Note
+        # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
+        # normal dependencies from setup.py).
+        # This code also forces the system to install latest tools as the ones present on the CI system may be too old
+        # for the process to go through properly.
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+          python -m pip install flake8 pipenv pytest
+          python -m pipenv lock --dev -r --pre > dev-requirements.txt
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Load Python Dependencies from cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.python_cache_ubuntu_path }}
+          key:  linux-pip-3-continuous-delivery-scripts
+      - name: Install dependencies
+        # Note
+        # As a virtual machine is already being used, pipenv
+        # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
+        # location for development dependencies.
+        run: |
+          python -m pip install -r dev-requirements.txt
+          python -m pip list
+      - name: Generate SPDX documents
+        run: |
+          mkdir -p ./spdx-tmp
+          cd-generate-spdx --output-dir ./spdx-tmp
+      - name: Add copyright/licence notice.
+        run: |
+          cd-license-files
+      - uses: actions/upload-artifact@v2
+        with:
+          name: spdx
+          path: ./spdx-tmp
+
+  detect-secrets:
+    name: Check for secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v2
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install detect-secrets==1.0.3
+          python -m pip list
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Check for secrets using gitleaks
+        uses: zricethezav/gitleaks-action@master
+        with:
+          config-path: .gitleaks.toml
+      - name: Check for secrets using detect-secrets
+        run: |
+          git ls-files -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline --exclude-files 'Pipfile\.lock$' --exclude-files '.*\.html$' --exclude-files '.*\.properties$' --exclude-files 'ci.yml' --exclude-files '\.git'
+        working-directory: .
+
   build-and-test:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10"]
-        go-module: [utils]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         multi-platform:
           - ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
+#        include:
+#          - os: windows-latest
+#            cache_path: ${{ env.python_cache_windows_path }}
+#          - os: macOS-latest
+#            cache_path: ${{ env.python_cache_macOS_path }}
+#          - os: ubuntu-latest
+#            cache_path: ${{ env.python_cache_ubuntu_path }}
         exclude:
           - os: macOS-latest
             multi-platform: false
+          - os: macOS-latest
+            python-version: 3.10
+          - os: macOS-latest
+            python-version: 3.8
+          - os: macOS-latest
+            python-version: 3.7
           - os: windows-latest
             multi-platform: false
+
     name: Build and test
-    runs-on: ${{ matrix.os }}      
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Determine dependencies [OS:${{ matrix.os }}, Python:${{ matrix.python-version }}]
-      # Note
-      # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
-      # normal dependencies from setup.py).
-      # This code also forces the system to install latest tools as the ones present on the CI system may be too old
-      # for the process to go through properly.
-      run: |
-        python -m pip install --upgrade pip wheel setuptools
-        python -m pip install flake8 pipenv pytest
-        python -m pipenv lock --dev -r --pre > dev-requirements.txt
-        
-    - if: ${{ startsWith(matrix.os, 'macOS') }}
-      run: echo "CACHE_PATH=${{ env.python_cache_macOS_path }}" >> $GITHUB_ENV
-    - if: ${{ startsWith(matrix.os, 'windows') }}
-      run: echo "CACHE_PATH=${{ env.python_cache_windows_path }}" >> $GITHUB_ENV
-    - if: ${{ startsWith(matrix.os, 'ubuntu') }}
-      run: echo "CACHE_PATH=${{ env.python_cache_ubuntu_path }}" >> $GITHUB_ENV
-    - name: Load Python Dependencies from cache
-      uses: actions/cache@v2
-      with:
-        path: |
-          ${{ env.CACHE_PATH }}
-          ~/go/pkg/mod
-        key:  ${{ matrix.os  }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/dev-requirements.txt') }}
-        restore-keys: |
-          ${{ matrix.os  }}-pip-${{ matrix.python-version }}    
-    - name: Install dependencies
-      # Note
-      # As a virtual machine is already being used, pipenv
-      # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
-      # location for development dependencies.
-      run: |
-        python -m pip install -r dev-requirements.txt
-        python -m pip list
-    - name: Static Analysis - general (flake8)
-      run: |
-        flake8 --count --show-source --statistics
-    - name: Test with pytest
-      run: |
-        pytest
-    - name: Upload coverage reports to Codecov with GitHub Action
-      uses: codecov/codecov-action@v2
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Determine dependencies [OS:${{ matrix.os }}, Python:${{ matrix.python-version }}]
+        # Note
+        # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
+        # normal dependencies from setup.py).
+        # This code also forces the system to install latest tools as the ones present on the CI system may be too old
+        # for the process to go through properly.
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+          python -m pip install flake8 pipenv pytest
+          python -m pipenv lock --dev -r --pre > dev-requirements.txt
+      - if: ${{ startsWith(matrix.os, 'macOS') }}
+        run: echo "CACHE_PATH=${{ env.python_cache_macOS_path }}" >> $GITHUB_ENV
+      - if: ${{ startsWith(matrix.os, 'windows') }}
+        run: echo "CACHE_PATH=${{ env.python_cache_windows_path }}" >> $GITHUB_ENV
+      - if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: echo "CACHE_PATH=${{ env.python_cache_ubuntu_path }}" >> $GITHUB_ENV
+      - name: Load Python Dependencies from cache
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.CACHE_PATH }}
+          key:  ${{ matrix.os  }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/dev-requirements.txt') }}
+          restore-keys: |
+            ${{ matrix.os  }}-pip-${{ matrix.python-version }}
+#        env:
+#          CACHE_PATH: ${{ matrix.cache_path }}
+      - name: Install dependencies
+        # Note
+        # As a virtual machine is already being used, pipenv
+        # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
+        # location for development dependencies.
+        run: |
+          python -m pip install -r dev-requirements.txt
+          python -m pip list
+      - name: Static Analysis - general (flake8)
+        run: |
+          flake8 --count --show-source --statistics
+      - name: Test with pytest
+        run: |
+          pytest
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v2
