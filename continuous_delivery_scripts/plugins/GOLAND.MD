@@ -10,3 +10,4 @@ Therefore, a `.goreleaser.yml` file must be present in the go source directory i
 
 ## Documentation
 The plugin uses [golds](https://github.com/go101/golds) to generate the code reference documentation.
+It currently uses version 0.4.1 as later versions comprise [an issue](https://github.com/go101/golds/issues/26)

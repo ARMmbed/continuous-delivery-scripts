@@ -24,7 +24,15 @@ GO_MOD_ON_VALUE = "on"
 
 
 def _generate_golds_command_list(output_directory: Path, module: str) -> List[str]:
-    return ["golds", "-gen", "-wdpkgs-listing=promoted", f"-dir={str(output_directory)}", "-nouses", f"{module}"]
+    return [
+        "golds",
+        "-gen",
+        "-wdpkgs-listing=solo",
+        "-only-list-exporteds",
+        f"-dir={str(output_directory)}",
+        "-nouses",
+        f"{module}",
+    ]
 
 
 def _generate_goreleaser_release_command_list(changelog: Path) -> List[str]:
@@ -45,7 +53,11 @@ def _generate_goreleaser_check_command_list() -> List[str]:
 
 
 def _install_golds_command_list() -> List[str]:
-    return ["go", "install", "go101.org/golds@latest"]
+    return [
+        "go",
+        "install",
+        "go101.org/golds@v0.4.1",
+    ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
 
 
 def _install_goreleaser_command_list() -> List[str]:
