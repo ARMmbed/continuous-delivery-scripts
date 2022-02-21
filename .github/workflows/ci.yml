@@ -146,7 +146,7 @@ jobs:
           config-path: .gitleaks.toml
       - name: Check for secrets using detect-secrets
         run: |
-          git ls-files -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline --exclude-files 'Pipfile\.lock$' --exclude-files '.*\.html$' --exclude-files '.*\.properties$' --exclude-files 'ci.yml' --exclude-files '\.git'
+          git ls-files -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline --exclude-files 'Pipfile\.lock$' --exclude-files '.*\.html$' --exclude-files '.*\.properties$' --exclude-files 'ci.yml' --exclude-files '\.git' --exclude-files '.*_version.py'
         working-directory: .
 
   build-and-test:
