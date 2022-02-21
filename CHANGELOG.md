@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.8.2" (2022-02-21)"2.8.2" (2022-02-21)
+====================
+
+Bugfixes
+--------
+
+- Fixing markupsafe version to solve Jinja's(dependency issue)[https://github.com/pallets/markupsafe/issues/284] (#202202211807)
+
+
 "2.8.1" (2022-02-17)"2.8.1" (2022-02-17)
 ====================
 

@@ -1,1 +1,0 @@
-Fixing markupsafe version to solve Jinja's(dependency issue)[https://github.com/pallets/markupsafe/issues/284]
