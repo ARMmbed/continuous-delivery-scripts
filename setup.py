@@ -68,7 +68,7 @@ setup(
         "license-expression",
         "wcmatch",
         "jellyfish",
-        "jinja2==2.11.3",
+        "jinja2==3.0.3",
         "dataclasses; python_version<'3.7'",
         # FIXME fixing markupsafe to solve https://github.com/pallets/markupsafe/issues/284 until jinja is upgraded
         "markupsafe==2.0.1",
