@@ -65,12 +65,28 @@ To install a specific release:
 pip install continuous-delivery-scripts==<version>
 ```
 
-## Usage
+## Usage & Documentation
 
-Interface definition and usage documentation is available for the most recent
+Code documentation is available for the most recent
 production release here:
 
 - [GitHub Pages](https://armmbed.github.io/continuous-delivery-scripts)
+
+The package follows the [**Unix tools philosophy**](https://tldp.org/LDP/GNU-Linux-Tools-Summary/html/c1089.htm):
+
+> The tools philosophy was to have small programs to accomplish a particular task instead of trying to develop large monolithic programs to do a large number of tasks. To accomplish more complex tasks, tools would simply be connected together, using pipes.
+
+Therefore, it installs the following tools which can be used anywhere within a project/repository comprising a pyproject.toml file such as the [one defining this project](./
+pyproject.toml ):
+* `cd-assert-news`: Asserts that the PR/Branch contains a news file describing the changes introduced
+* `cd-determine-version`: Returns the version of the tool
+* `cd-generate-news`: Generates a changelog file based on the news files present in the repository
+* `cd-get-config`: Returns project configuration values
+* `cd-tag-and-release`: Releases the project (Language specific actions are run, See [plugins](./continuous_delivery_scripts/plugins)
+* `cd-create-news-file`: Generates a news file
+* `cd-generate-docs`: Generates project Code documentation which can then be rendered by GitHub pages (See [docs folder](./docs)
+* `cd-generate-spdx`: Generates SPDX documents for the project (3rd party IP reporting/ OpenChain)
+* `cd-license-files`: Updates the Licence header and copyright to all the source code files
 
 ## Project Structure
 
