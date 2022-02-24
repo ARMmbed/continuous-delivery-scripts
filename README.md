@@ -82,9 +82,9 @@ pyproject.toml ):
 * `cd-determine-version`: Returns the version of the tool
 * `cd-generate-news`: Generates a changelog file based on the news files present in the repository
 * `cd-get-config`: Returns project configuration values
-* `cd-tag-and-release`: Releases the project (Language specific actions are run, See [plugins](./continuous_delivery_scripts/plugins)
+* `cd-tag-and-release`: Releases the project (Language specific actions are run, See [plugins](./continuous_delivery_scripts/plugins))
 * `cd-create-news-file`: Generates a news file
-* `cd-generate-docs`: Generates project Code documentation which can then be rendered by GitHub pages (See [docs folder](./docs)
+* `cd-generate-docs`: Generates project Code documentation which can then be rendered by GitHub pages (See [docs folder](./docs))
 * `cd-generate-spdx`: Generates SPDX documents for the project (3rd party IP reporting/ OpenChain)
 * `cd-license-files`: Updates the Licence header and copyright to all the source code files
 
