@@ -76,8 +76,7 @@ The package follows the [**Unix tools philosophy**](https://tldp.org/LDP/GNU-Lin
 
 > The tools philosophy was to have small programs to accomplish a particular task instead of trying to develop large monolithic programs to do a large number of tasks. To accomplish more complex tasks, tools would simply be connected together, using pipes.
 
-Therefore, it installs the following tools which can be used anywhere within a project/repository comprising a pyproject.toml file such as the [one defining this project](./
-pyproject.toml ):
+Therefore, it installs the following tools which can be used anywhere within a project/repository comprising a pyproject.toml file such as the [one defining this project](./pyproject.toml):
 * `cd-assert-news`: Asserts that the PR/Branch contains a news file describing the changes introduced
 * `cd-determine-version`: Returns the version of the tool
 * `cd-generate-news`: Generates a changelog file based on the news files present in the repository
