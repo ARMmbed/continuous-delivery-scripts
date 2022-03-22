@@ -56,7 +56,7 @@ def _install_golds_command_list() -> List[str]:
     return [
         "go",
         "install",
-        "go101.org/golds@v0.4.1",
+        "go101.org/golds@main",
     ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
 
 
