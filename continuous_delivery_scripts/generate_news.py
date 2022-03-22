@@ -49,7 +49,7 @@ def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
         logger.info(":: Generating a new changelog")
         project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
         with cd(os.path.dirname(project_config_path)):
-            subprocess.check_call(["towncrier", "--yes", '--name=""', f'--version="{version}"'])
+            subprocess.check_call(["towncrier", "build", "--yes", '--name=""', f'--version="{version}"'])
 
 
 def main() -> None:
