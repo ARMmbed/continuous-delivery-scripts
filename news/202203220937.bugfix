@@ -1,0 +1,1 @@
+[GOLANG] Fix golds version so that it works on go > 1.18 required by latest goreleaser
