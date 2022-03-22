@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.8.5" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Disabling code documentation generation until [issue](https://github.com/go101/golds/issues/26) with `golds` is fixed (#202203221358)
+
+
 "2.8.4" (2022-03-22)
 ====================
 
