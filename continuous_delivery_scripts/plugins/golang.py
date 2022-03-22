@@ -72,7 +72,12 @@ def _call_golds(output_directory: Path, module: str) -> None:
     check_call(_install_golds_command_list(), env=env)
     logger.info("Creating Code documentation.")
     logger.info(f"Running Golds over [{module}] in [{SRC_DIR}].")
-    check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
+    # check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
+    # FIXME
+    logger.warning(
+        "Currently not running golds because there is an issue with latest versions: "
+        + "https://github.com/go101/golds/issues/26"
+    )
 
 
 def _call_goreleaser_check(version: str) -> None:
