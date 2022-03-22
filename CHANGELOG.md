@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.8.4" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Fixing how golds is called (#202203221309)
+
+
 "2.8.3" (2022-03-22)
 ====================
 
