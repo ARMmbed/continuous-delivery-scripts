@@ -10,7 +10,7 @@ env:
   python_cache_macOS_path: ~/Library/Caches/pip
   python_cache_windows_path: ~\AppData\Local\pip\Cache
   python_cache_ubuntu_path: ~/.cache/pip
-  pipenv_version: 2021.11.9 # FIXME upgrade pipenv when https://github.com/pypa/pipenv/issues/4430 is actually fixed
+  pipenv_version: 2022.11.25
 
 jobs:
   # Check that a news file has been added to this branch when a PR is created
@@ -61,7 +61,8 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           python -m pip install pipenv==${{ env.pipenv_version }}
           echo "Locking dependencies"
-          python -m pipenv lock --dev -r > dev-requirements.txt
+          python -m pipenv lock --dev
+          python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
         uses: actions/cache@v2
@@ -100,7 +101,8 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           python -m pip install pipenv==${{ env.pipenv_version }}
           echo "Locking dependencies"
-          python -m pipenv lock --dev -r > dev-requirements.txt
+          python -m pipenv lock --dev
+          python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
         uses: actions/cache@v2
