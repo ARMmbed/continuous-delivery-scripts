@@ -208,7 +208,8 @@ jobs:
         # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
         # normal dependencies from setup.py).
         run: |
-          python -m pipenv lock --dev -r > dev-requirements.txt
+          python -m pipenv lock --dev
+          python -m pipenv requirements > dev-requirements.txt
       - if: ${{ startsWith(matrix.os, 'macOS') }}
         run: echo "CACHE_PATH=${{ env.python_cache_macOS_path }}" >> $GITHUB_ENV
       - if: ${{ startsWith(matrix.os, 'windows') }}
