@@ -61,7 +61,7 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           python -m pip install pipenv==${{ env.pipenv_version }}
           echo "Locking dependencies"
-          python -m pipenv lock --dev
+          python -m pipenv lock
           python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
@@ -101,7 +101,7 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           python -m pip install pipenv==${{ env.pipenv_version }}
           echo "Locking dependencies"
-          python -m pipenv lock --dev
+          python -m pipenv lock
           python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
