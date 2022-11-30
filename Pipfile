@@ -5,7 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 black = "*"
-coverage = "*"
+coverage = "6.5.0"
 flake8-docstrings = "*"
 flake8-black = "*"
 flake8-copyright = "*"
@@ -15,11 +15,11 @@ pytest = "*"
 pyfakefs = "*"
 pytest-cov = "*"
 wheel = "*"
-continuous-delivery-scripts = {editable = true, path = "."}
 pre-commit = "*"
+continuous-delivery-scripts = {editable = true, path = "."}
 
 [pipenv]
-allow_prereleases = true
+allow_prereleases = false
 
 [packages]
 continuous-delivery-scripts = {editable = true, path = "."}
