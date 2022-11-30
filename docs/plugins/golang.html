@@ -89,7 +89,7 @@ def _install_golds_command_list() -&gt; List[str]:
     return [
         &#34;go&#34;,
         &#34;install&#34;,
-        &#34;go101.org/golds@v0.4.1&#34;,
+        &#34;go101.org/golds@main&#34;,
     ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
 
 
@@ -103,8 +103,14 @@ def _call_golds(output_directory: Path, module: str) -&gt; None:
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
     check_call(_install_golds_command_list(), env=env)
-    logger.info(&#34;Creating Golds documentation.&#34;)
-    check_call(_generate_golds_command_list(output_directory, module), cwd=SRC_DIR, env=env)
+    logger.info(&#34;Creating Code documentation.&#34;)
+    logger.info(f&#34;Running Golds over [{module}] in [{SRC_DIR}].&#34;)
+    # check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
+    # FIXME
+    logger.warning(
+        &#34;Currently not running golds because there is an issue with latest versions: &#34;
+        + &#34;https://github.com/go101/golds/issues/26&#34;
+    )
 
 
 def _call_goreleaser_check(version: str) -&gt; None:

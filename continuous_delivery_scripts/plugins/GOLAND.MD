@@ -2,7 +2,7 @@
 
 This plugin is used for golang projects when `PROGRAMMING_LANGUAGE` is set to `golang`.
 
-In order to work, `go > 1.16` is required.
+In order to work, `go > 1.18` is required.
 
 ## Release
 The plugin leverages [goreleaser](https://goreleaser.com/) to package and release projects.

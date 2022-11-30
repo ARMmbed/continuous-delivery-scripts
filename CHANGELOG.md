@@ -17,6 +17,35 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.8.5" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Disabling code documentation generation until [issue](https://github.com/go101/golds/issues/26) with `golds` is fixed (#202203221358)
+
+
+"2.8.4" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Fixing how golds is called (#202203221309)
+
+
+"2.8.3" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: towncrier-21.9.0 (#202202241608)
+- [GOLANG] Fix golds version so that it works on go > 1.18 required by latest goreleaser (#202203220937)
+- Change `towncrier` CLI command as no longer backward compatible (#202203221036)
+
+
 "2.8.2" (2022-02-21)"2.8.2" (2022-02-21)
 ====================
 

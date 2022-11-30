@@ -54,6 +54,7 @@ True,six,True,https://github.com/benjaminp/six,MIT,Licence is compliant.
 True,smmap,True,https://github.com/gitpython-developers/smmap,0BSD,Licence is compliant.
 True,spdx-tools,True,https://github.com/spdx/tools-python,Apache-2.0,Licence is compliant.
 True,toml,True,https://github.com/uiri/toml,MIT,Licence is compliant.
+True,tomli,True,None,Unknown,Package's licence manually checked: MIT
 True,towncrier,True,https://github.com/hawkowl/towncrier,MIT,Licence is compliant.
 True,tqdm,True,https://tqdm.github.io,MPL-2.0,Licence is compliant.
 True,twine,True,https://twine.readthedocs.io/,Unknown,Package's licence manually checked: Apache-2.0
