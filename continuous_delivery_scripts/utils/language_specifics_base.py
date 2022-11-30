@@ -23,7 +23,7 @@ def get_language_from_file_name(filename: str) -> str:
 
 GENERIC_LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author} or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
-"""   # noqa: E501
+"""  # noqa: E501
 
 
 def _generate_generic_licence_header_template() -> str:
