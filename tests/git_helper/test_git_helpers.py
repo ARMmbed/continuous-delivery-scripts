@@ -71,7 +71,7 @@ class TestGitTempClone(TestCase):
             self.assertIsNone(groups)
 
     def test_file_addition(self):
-        """Test basic git branch actions on the clone."""
+        """Test basic git add actions on the clone."""
         with ProjectTempClone(desired_branch_name="main") as clone:
             branch = clone.create_branch(f"test-{uuid4()}")
             clone.checkout(branch)
@@ -88,6 +88,41 @@ class TestGitTempClone(TestCase):
             self.assertEqual(previous_count + 1, clone.get_commit_count())
             added_files = [Path(clone.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
             self.assertTrue(test_file in added_files)
+
+    def test_repo_clean(self):
+        """Test basic git clean on the clone."""
+        with ProjectTempClone(desired_branch_name="main") as clone:
+            branch = clone.create_branch(f"test-{uuid4()}")
+            clone.checkout(branch)
+            self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
+            test_file = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
+            test_file.touch()
+            uncommitted_changes = clone.uncommitted_changes
+            self.assertTrue(test_file in uncommitted_changes)
+            self.assertTrue(clone.is_dirty())
+            clone.clean()
+            self.assertFalse(clone.is_dirty())
+            uncommitted_changes = clone.uncommitted_changes
+            self.assertTrue(len(uncommitted_changes) == 0)
+
+    def test_repo_stash(self):
+        """Test basic git clean on the clone."""
+        with ProjectTempClone(desired_branch_name="main") as clone:
+            branch = clone.create_branch(f"test-{uuid4()}")
+            clone.checkout(branch)
+            self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
+            test_file1 = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
+            test_file1.touch()
+            test_file2 = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
+            test_file2.touch()
+            clone.add(test_file2)
+            uncommitted_changes = clone.uncommitted_changes
+            self.assertTrue(test_file1 in uncommitted_changes)
+            self.assertTrue(clone.is_dirty())
+            clone.stash()
+            self.assertFalse(clone.is_dirty())
+            uncommitted_changes = clone.uncommitted_changes
+            self.assertTrue(len(uncommitted_changes) == 0)
 
     def test_file_addition_with_paths_to_initial_repository(self):
         """Test basic git add on the clone."""

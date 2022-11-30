@@ -19,13 +19,13 @@ class Docker(BaseLanguage):
         """Gets the related language."""
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -> None:
+    def package_software(self, version: str) -> None:
         """Todo build docker image."""
-        super().package_software()
+        super().package_software(version)
 
-    def release_package_to_repository(self) -> None:
+    def release_package_to_repository(self, version: str) -> None:
         """Todo push image to repository e.g. ecr, artifactory."""
-        super().release_package_to_repository()
+        super().release_package_to_repository(version)
 
     def check_credentials(self) -> None:
         """Checks any credentials."""

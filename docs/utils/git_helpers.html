@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utility script to abstract git operations for our CI scripts.&#34;&#34;&#34;
@@ -511,6 +511,28 @@ class GitWrapper:
         &#34;&#34;&#34;
         self.repo.git.push(force=True, tags=True)
 
+    def is_dirty(self) -&gt; bool:
+        &#34;&#34;&#34;Determines whether repository is dirty.
+
+        Repository is considered dirty when git status returns elements which are not committed.
+        &#34;&#34;&#34;
+        return self.repo.is_dirty(untracked_files=True)
+
+    def clean(self) -&gt; None:
+        &#34;&#34;&#34;Cleans the repository.
+
+        Performs a force clean.
+        &#34;&#34;&#34;
+        if self.is_dirty():
+            self.repo.git.clean(force=True, x=True, d=True)
+
+    def stash(self) -&gt; None:
+        &#34;&#34;&#34;Stashes the repository.
+
+        Performs a stash.
+        &#34;&#34;&#34;
+        self.repo.git.stash(all=True, quiet=True)
+
     def configure_for_github(self) -&gt; None:
         &#34;&#34;&#34;Reconfigures the repository.
 
@@ -945,6 +967,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout">checkout</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout_branch">checkout_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick">cherry_pick</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean">clean</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone">clone</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit">commit</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author">configure_author</a></code></li>
@@ -970,6 +993,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type">is_current_branch_of_type</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty">is_dirty</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
@@ -982,6 +1006,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.root" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
 </li>
@@ -1520,6 +1545,28 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;
         self.repo.git.push(force=True, tags=True)
 
+    def is_dirty(self) -&gt; bool:
+        &#34;&#34;&#34;Determines whether repository is dirty.
+
+        Repository is considered dirty when git status returns elements which are not committed.
+        &#34;&#34;&#34;
+        return self.repo.is_dirty(untracked_files=True)
+
+    def clean(self) -&gt; None:
+        &#34;&#34;&#34;Cleans the repository.
+
+        Performs a force clean.
+        &#34;&#34;&#34;
+        if self.is_dirty():
+            self.repo.git.clean(force=True, x=True, d=True)
+
+    def stash(self) -&gt; None:
+        &#34;&#34;&#34;Stashes the repository.
+
+        Performs a stash.
+        &#34;&#34;&#34;
+        self.repo.git.stash(all=True, quiet=True)
+
     def configure_for_github(self) -&gt; None:
         &#34;&#34;&#34;Reconfigures the repository.
 
@@ -1878,6 +1925,25 @@ def uncommitted_changes(self) -&gt; List[Path]:
         commit: commit to cherry pick
     &#34;&#34;&#34;
     self.repo.git.cherry_pick(str(commit))</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean"><code class="name flex">
+<span>def <span class="ident">clean</span></span>(<span>self) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cleans the repository.</p>
+<p>Performs a force clean.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clean(self) -&gt; None:
+    &#34;&#34;&#34;Cleans the repository.
+
+    Performs a force clean.
+    &#34;&#34;&#34;
+    if self.is_dirty():
+        self.repo.git.clean(force=True, x=True, d=True)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone"><code class="name flex">
@@ -2542,6 +2608,24 @@ before the current commit.</p>
     return self._is_branch_of_type(self.get_current_branch(), pattern)</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty"><code class="name flex">
+<span>def <span class="ident">is_dirty</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Determines whether repository is dirty.</p>
+<p>Repository is considered dirty when git status returns elements which are not committed.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_dirty(self) -&gt; bool:
+    &#34;&#34;&#34;Determines whether repository is dirty.
+
+    Repository is considered dirty when git status returns elements which are not committed.
+    &#34;&#34;&#34;
+    return self.repo.is_dirty(untracked_files=True)</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch"><code class="name flex">
 <span>def <span class="ident">is_release_branch</span></span>(<span>self, branch_name: Optional[str]) ‑> bool</span>
 </code></dt>
@@ -2798,6 +2882,24 @@ Tags are also pushed as part of the process</p></div>
         self.repo.git.branch(&#34;--set-upstream-to&#34;, self.get_remote_branch(branch_name))</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash"><code class="name flex">
+<span>def <span class="ident">stash</span></span>(<span>self) ‑> NoneType</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Stashes the repository.</p>
+<p>Performs a stash.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def stash(self) -&gt; None:
+    &#34;&#34;&#34;Stashes the repository.
+
+    Performs a stash.
+    &#34;&#34;&#34;
+    self.repo.git.stash(all=True, quiet=True)</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.LocalProjectRepository"><code class="flex name class">
@@ -2860,6 +2962,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout">checkout</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout_branch">checkout_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick">cherry_pick</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean">clean</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone">clone</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit">commit</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author">configure_author</a></code></li>
@@ -2886,6 +2989,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type">is_current_branch_of_type</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty">is_dirty</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
@@ -2898,6 +3002,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.root" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
 </li>
@@ -2975,6 +3080,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout">checkout</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout_branch">checkout_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick">cherry_pick</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean">clean</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.clone">clone</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit">commit</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author">configure_author</a></code></li>
@@ -3001,6 +3107,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.git_version">git_version</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_feature">is_current_branch_feature</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type">is_current_branch_of_type</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_dirty">is_dirty</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
@@ -3013,6 +3120,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.root" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.root">root</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url">set_remote_url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
 </ul>
 </li>

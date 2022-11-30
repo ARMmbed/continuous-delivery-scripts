@@ -21,7 +21,13 @@ CHANGELOG_FILE_PATH = "CHANGELOG.md"
 PROGRAMMING_LANGUAGE = "Python"
 
 [ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
+wcmatch="MIT"
+bracex="MIT"
 jeepney="MIT"
+pyparsing="MIT"
+jaraco-classes="MIT"
+idna="BSD-3-Clause"
+more-itertools="MIT"
 chardet="LGPL-2.1+ but accepted for this project since not distributed."
 zipp="MIT"
 python-dateutil="All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License."
@@ -35,6 +41,7 @@ jellyfish="BSD-2-Clause"
 packaging="either Apache-2.0 or BSD-2-Clause"
 importlib-metadata="Apache-2.0 or Python-2.0"
 typing-extensions="PSF-2.0"
+tomli="MIT"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

@@ -11,6 +11,7 @@ from typing import Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +23,7 @@ def get_language_from_file_name(filename: str) -> str:
 
 GENERIC_LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author} or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
-"""
+"""  # noqa: E501
 
 
 def _generate_generic_licence_header_template() -> str:
@@ -49,6 +50,10 @@ class BaseLanguage(ABC):
         """Gets the name of the corresponding language."""
         pass
 
+    def get_version_tag(self, version: str) -> str:
+        """Generates a tag based on the version string."""
+        return version
+
     def generate_source_licence_header_template(self) -> str:
         """Generates the template of the licence header which is put at the top of source files."""
         return _generate_generic_licence_header_template()
@@ -61,6 +66,19 @@ class BaseLanguage(ABC):
         """States whether project metadata can be retrieved."""
         return False
 
+    def should_include_spdx_in_package(self) -> bool:
+        """States whether the SPDX documents should be included in the package."""
+        return False
+
+    def should_clean_before_packaging(self) -> bool:
+        """States whether the repository must be cleaned before packaging happens."""
+        return False
+
+    def tag_release(self, git: GitWrapper, version: str) -> None:
+        """Tags release commit."""
+        logger.info(f"Tagging commit as release {version}")
+        git.create_tag(self.get_version_tag(version), message=f"release {version}")
+
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""
@@ -68,15 +86,15 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def package_software(self) -> None:
+    def package_software(self, version: str) -> None:
         """Package the software so that it can get released."""
-        logger.info("Generating a release package")
+        logger.info(f"Generating a release package [{version}]")
         pass
 
     @abstractmethod
-    def release_package_to_repository(self) -> None:
+    def release_package_to_repository(self, version: str) -> None:
         """Release the package to the official software repository."""
-        logger.info("Uploading the package")
+        logger.info(f"Uploading the package [{version}]")
         pass
 
     @abstractmethod

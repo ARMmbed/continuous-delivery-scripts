@@ -478,6 +478,28 @@ class GitWrapper:
         """
         self.repo.git.push(force=True, tags=True)
 
+    def is_dirty(self) -> bool:
+        """Determines whether repository is dirty.
+
+        Repository is considered dirty when git status returns elements which are not committed.
+        """
+        return self.repo.is_dirty(untracked_files=True)
+
+    def clean(self) -> None:
+        """Cleans the repository.
+
+        Performs a force clean.
+        """
+        if self.is_dirty():
+            self.repo.git.clean(force=True, x=True, d=True)
+
+    def stash(self) -> None:
+        """Stashes the repository.
+
+        Performs a stash.
+        """
+        self.repo.git.stash(all=True, quiet=True)
+
     def configure_for_github(self) -> None:
         """Reconfigures the repository.
 

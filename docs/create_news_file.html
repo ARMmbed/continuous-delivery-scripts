@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -34,7 +34,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Easy news files generation.
@@ -61,7 +61,9 @@ def main() -&gt; int:
     &#34;&#34;&#34;Parses cli arguments and creates a news file.&#34;&#34;&#34;
     parser = argparse.ArgumentParser()
     parser.add_argument(&#34;news_text&#34;, help=&#34;Contents of the news file.&#34;)
-    parser.add_argument(&#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;)
+    parser.add_argument(
+        &#34;-t&#34;, &#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;
+    )
 
     args = parser.parse_args()
     created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
@@ -100,7 +102,9 @@ if __name__ == &#34;__main__&#34;:
     &#34;&#34;&#34;Parses cli arguments and creates a news file.&#34;&#34;&#34;
     parser = argparse.ArgumentParser()
     parser.add_argument(&#34;news_text&#34;, help=&#34;Contents of the news file.&#34;)
-    parser.add_argument(&#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;)
+    parser.add_argument(
+        &#34;-t&#34;, &#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;
+    )
 
     args = parser.parse_args()
     created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])

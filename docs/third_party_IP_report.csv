@@ -8,6 +8,7 @@ True,certifi,True,https://certifiio.readthedocs.io/en/latest/,MPL-2.0,Licence is
 True,cffi,True,http://cffi.readthedocs.org,MIT,Licence is compliant.
 True,charset-normalizer,True,https://github.com/ousret/charset_normalizer,MIT,Licence is compliant.
 True,click,True,https://palletsprojects.com/p/click/,BSD-3-Clause,Licence is compliant.
+True,click-default-group,True,https://github.com/sublee/click-default-group/,0BSD,Licence is compliant.
 True,colorama,True,https://github.com/tartley/colorama,0BSD,Licence is compliant.
 True,continuous-delivery-scripts,False,https://github.com/ARMmbed/continuous-delivery-scripts,Apache-2.0,Licence is compliant.
 True,cryptography,True,https://github.com/pyca/cryptography,0BSD OR Apache-2.0,Licence is compliant.
@@ -41,7 +42,7 @@ True,python-dotenv,True,https://github.com/theskumar/python-dotenv,BSD-3-Clause,
 True,PyYAML,True,https://pyyaml.org/,MIT,Licence is compliant.
 True,rdflib,True,https://github.com/RDFLib/rdflib,BSD-3-Clause,Licence is compliant.
 True,readme-renderer,True,https://github.com/pypa/readme_renderer,Apache-2.0,Licence is compliant.
-True,regex,True,https://bitbucket.org/mrabarnett/mrab-regex,Apache-2.0,Licence is compliant.
+True,regex,True,https://github.com/mrabarnett/mrab-regex,Apache-2.0,Licence is compliant.
 True,requests,True,https://requests.readthedocs.io,Apache-2.0,Licence is compliant.
 True,requests-toolbelt,True,https://toolbelt.readthedocs.org,Apache-2.0,Licence is compliant.
 True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
@@ -53,6 +54,7 @@ True,six,True,https://github.com/benjaminp/six,MIT,Licence is compliant.
 True,smmap,True,https://github.com/gitpython-developers/smmap,0BSD,Licence is compliant.
 True,spdx-tools,True,https://github.com/spdx/tools-python,Apache-2.0,Licence is compliant.
 True,toml,True,https://github.com/uiri/toml,MIT,Licence is compliant.
+True,tomli,True,None,Unknown,Package's licence manually checked: MIT
 True,towncrier,True,https://github.com/hawkowl/towncrier,MIT,Licence is compliant.
 True,tqdm,True,https://tqdm.github.io,MPL-2.0,Licence is compliant.
 True,twine,True,https://twine.readthedocs.io/,Unknown,Package's licence manually checked: Apache-2.0

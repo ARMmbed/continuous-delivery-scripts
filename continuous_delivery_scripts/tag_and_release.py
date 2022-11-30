@@ -17,7 +17,7 @@ from continuous_delivery_scripts.license_files import insert_licence_header
 from continuous_delivery_scripts.report_third_party_ip import generate_spdx_project_reports, SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitWrapper
+from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 
 SPDX_REPORTS_DIRECTORY = "licensing"
@@ -50,10 +50,12 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     insert_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch)
     if is_new_version:
-        if spdx_project:
+        if get_language_specifics().should_clean_before_packaging():
+            _clean_repository()
+        if spdx_project and get_language_specifics().should_include_spdx_in_package():
             _generate_spdx_reports(spdx_project)
-        get_language_specifics().package_software()
-        get_language_specifics().release_package_to_repository()
+        get_language_specifics().package_software(version)
+        get_language_specifics().release_package_to_repository(version)
 
 
 def _get_documentation_config() -> Tuple[Path, str]:
@@ -90,9 +92,19 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
         if mode == CommitType.RELEASE:
             _commit_release_changes(git, version, commit_message)
         if is_new_version:
-            logger.info("Tagging commit")
-            git.create_tag(version, message=f"release {version}")
+            get_language_specifics().tag_release(git, version)
             git.force_push_tag()
+
+
+def _clean_repository() -> None:
+    """Cleans the local repository."""
+    with LocalProjectRepository() as git:
+        logger.info("Cleaning repository")
+        git.stash()
+        git.clean()
+        git.fetch()
+        git.pull()
+        git.clean()
 
 
 def _generate_spdx_reports(project: SpdxProject) -> None:

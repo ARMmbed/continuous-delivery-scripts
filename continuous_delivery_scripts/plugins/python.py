@@ -134,14 +134,14 @@ class Python(BaseLanguage):
         """Gets related language."""
         return get_language_from_file_name(__file__)
 
-    def package_software(self) -> None:
+    def package_software(self, version: str) -> None:
         """Packages the software into a wheel."""
-        super().package_software()
+        super().package_software(version)
         _create_wheel()
 
-    def release_package_to_repository(self) -> None:
+    def release_package_to_repository(self, version: str) -> None:
         """Releases to PyPI."""
-        super().release_package_to_repository()
+        super().release_package_to_repository(version)
         _release_to_pypi()
 
     def check_credentials(self) -> None:
@@ -163,6 +163,10 @@ class Python(BaseLanguage):
 
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
+        return True
+
+    def should_include_spdx_in_package(self) -> bool:
+        """States whether the SPDX documents should be included in the package."""
         return True
 
     def get_current_spdx_project(self) -> Optional[SpdxProject]:

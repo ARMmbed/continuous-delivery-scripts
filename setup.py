@@ -29,10 +29,10 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Topic :: Software Development :: Build Tools",
     ],
     description="Continuous Delivery scripts to increase automation",
@@ -40,6 +40,7 @@ setup(
         "console_scripts": [
             f"cd-assert-news={SOURCE_DIR}.assert_news:main",
             f"cd-generate-news={SOURCE_DIR}.generate_news:main",
+            f"cd-determine-version={SOURCE_DIR}.get_version:main",
             f"cd-create-news-file={SOURCE_DIR}.create_news_file:main",
             f"cd-generate-docs={SOURCE_DIR}.generate_docs:main",
             f"cd-tag-and-release={SOURCE_DIR}.tag_and_release:main",
@@ -52,7 +53,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "gitpython",
-        "towncrier==19.2.0",
+        "towncrier==21.9.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
         "pdoc3==0.10.0",
@@ -68,13 +69,15 @@ setup(
         "jellyfish",
         "jinja2==2.11.3",
         "dataclasses; python_version<'3.7'",
+        # FIXME fixing markupsafe to solve https://github.com/pallets/markupsafe/issues/284 until jinja is upgraded
+        "markupsafe==2.0.1",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
     long_description=long_description,
     name=PROJECT_SLUG,
     packages=[SOURCE_DIR],
-    python_requires=">=3.6,<4",
+    python_requires=">=3.7,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     version=__version__,
 )

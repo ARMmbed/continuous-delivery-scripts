@@ -2,7 +2,7 @@
   hooks:
     - id: licensing
       name: licensing
-      entry: license-files
+      entry: cd-license-files
       language: python
       types: [file]
       require_serial: true
