@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
 # Changelog
@@ -16,6 +16,65 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"2.8.5" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Disabling code documentation generation until [issue](https://github.com/go101/golds/issues/26) with `golds` is fixed (#202203221358)
+
+
+"2.8.4" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Fixing how golds is called (#202203221309)
+
+
+"2.8.3" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: towncrier-21.9.0 (#202202241608)
+- [GOLANG] Fix golds version so that it works on go > 1.18 required by latest goreleaser (#202203220937)
+- Change `towncrier` CLI command as no longer backward compatible (#202203221036)
+
+
+"2.8.2" (2022-02-21)"2.8.2" (2022-02-21)
+====================
+
+Bugfixes
+--------
+
+- Fixing markupsafe version to solve Jinja's(dependency issue)[https://github.com/pallets/markupsafe/issues/284] (#202202211807)
+
+
+"2.8.1" (2022-02-17)"2.8.1" (2022-02-17)
+====================
+
+Bugfixes
+--------
+
+- [GO] Fixed [golds version](https://github.com/go101/golds/issues/26) by fixing the version to v0.4.1 (#202202171446)
+
+
+Improved Documentation
+----------------------
+
+- Documented how to update the secret checkers (#202202171830)
+
+
+Misc
+----
+
+- #202202171829
+
 
 "2.8.0" (2021-08-26)"2.8.0" (2021-08-26)
 ====================

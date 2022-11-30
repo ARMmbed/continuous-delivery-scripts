@@ -24,7 +24,15 @@ GO_MOD_ON_VALUE = "on"
 
 
 def _generate_golds_command_list(output_directory: Path, module: str) -> List[str]:
-    return ["golds", "-gen", "-wdpkgs-listing=promoted", f"-dir={str(output_directory)}", "-nouses", f"{module}"]
+    return [
+        "golds",
+        "-gen",
+        "-wdpkgs-listing=solo",
+        "-only-list-exporteds",
+        f"-dir={str(output_directory)}",
+        "-nouses",
+        f"{module}",
+    ]
 
 
 def _generate_goreleaser_release_command_list(changelog: Path) -> List[str]:
@@ -45,7 +53,11 @@ def _generate_goreleaser_check_command_list() -> List[str]:
 
 
 def _install_golds_command_list() -> List[str]:
-    return ["go", "install", "go101.org/golds@latest"]
+    return [
+        "go",
+        "install",
+        "go101.org/golds@main",
+    ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
 
 
 def _install_goreleaser_command_list() -> List[str]:
@@ -58,8 +70,14 @@ def _call_golds(output_directory: Path, module: str) -> None:
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
     check_call(_install_golds_command_list(), env=env)
-    logger.info("Creating Golds documentation.")
-    check_call(_generate_golds_command_list(output_directory, module), cwd=SRC_DIR, env=env)
+    logger.info("Creating Code documentation.")
+    logger.info(f"Running Golds over [{module}] in [{SRC_DIR}].")
+    # check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
+    # FIXME
+    logger.warning(
+        "Currently not running golds because there is an issue with latest versions: "
+        + "https://github.com/go101/golds/issues/26"
+    )
 
 
 def _call_goreleaser_check(version: str) -> None:

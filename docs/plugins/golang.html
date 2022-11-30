@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Plugin for Golang projects.&#34;&#34;&#34;
@@ -57,7 +57,15 @@ GO_MOD_ON_VALUE = &#34;on&#34;
 
 
 def _generate_golds_command_list(output_directory: Path, module: str) -&gt; List[str]:
-    return [&#34;golds&#34;, &#34;-gen&#34;, &#34;-wdpkgs-listing=promoted&#34;, f&#34;-dir={str(output_directory)}&#34;, &#34;-nouses&#34;, f&#34;{module}&#34;]
+    return [
+        &#34;golds&#34;,
+        &#34;-gen&#34;,
+        &#34;-wdpkgs-listing=solo&#34;,
+        &#34;-only-list-exporteds&#34;,
+        f&#34;-dir={str(output_directory)}&#34;,
+        &#34;-nouses&#34;,
+        f&#34;{module}&#34;,
+    ]
 
 
 def _generate_goreleaser_release_command_list(changelog: Path) -&gt; List[str]:
@@ -78,7 +86,11 @@ def _generate_goreleaser_check_command_list() -&gt; List[str]:
 
 
 def _install_golds_command_list() -&gt; List[str]:
-    return [&#34;go&#34;, &#34;install&#34;, &#34;go101.org/golds@latest&#34;]
+    return [
+        &#34;go&#34;,
+        &#34;install&#34;,
+        &#34;go101.org/golds@main&#34;,
+    ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
 
 
 def _install_goreleaser_command_list() -&gt; List[str]:
@@ -91,8 +103,14 @@ def _call_golds(output_directory: Path, module: str) -&gt; None:
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
     check_call(_install_golds_command_list(), env=env)
-    logger.info(&#34;Creating Golds documentation.&#34;)
-    check_call(_generate_golds_command_list(output_directory, module), cwd=SRC_DIR, env=env)
+    logger.info(&#34;Creating Code documentation.&#34;)
+    logger.info(f&#34;Running Golds over [{module}] in [{SRC_DIR}].&#34;)
+    # check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
+    # FIXME
+    logger.warning(
+        &#34;Currently not running golds because there is an issue with latest versions: &#34;
+        + &#34;https://github.com/go101/golds/issues/26&#34;
+    )
 
 
 def _call_goreleaser_check(version: str) -&gt; None:

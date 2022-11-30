@@ -10,6 +10,7 @@
 [![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/continuous-delivery-scripts/third_party_IP_report.html)
 
 [![Build Status](https://dev.azure.com/cmsis-tools/continuous-delivery-scripts/_apis/build/status/Build%20and%20Release?branchName=main&stageName=CI%20Checkpoint)](https://dev.azure.com/cmsis-tools/continuous-delivery-scripts/_build/latest?definitionId=8&branchName=main)
+[![Build Status](https://github.com/ARMmbed/continuous-delivery-scripts/actions/workflows/ci.yml/badge.svg)](https://github.com/ARMmbed/continuous-delivery-scripts/actions/workflows/ci.yml)
 
 [![Test Coverage](https://codecov.io/gh/ARMmbed/continuous-delivery-scripts/branch/main/graph/badge.svg?token=EAW9owYyjW)](https://codecov.io/gh/ARMmbed/continuous-delivery-scripts)
 [![Maintainability](https://api.codeclimate.com/v1/badges/41301e959f22986b7b2b/maintainability)](https://codeclimate.com/github/ARMmbed/continuous-delivery-scripts/maintainability)
@@ -64,18 +65,34 @@ To install a specific release:
 pip install continuous-delivery-scripts==<version>
 ```
 
-## Usage
+## Usage & Documentation
 
-Interface definition and usage documentation is available for the most recent
+Code documentation is available for the most recent
 production release here:
 
 - [GitHub Pages](https://armmbed.github.io/continuous-delivery-scripts)
+
+The package follows the [**Unix tools philosophy**](https://tldp.org/LDP/GNU-Linux-Tools-Summary/html/c1089.htm):
+
+> The tools philosophy was to have small programs to accomplish a particular task instead of trying to develop large monolithic programs to do a large number of tasks. To accomplish more complex tasks, tools would simply be connected together, using pipes.
+
+Therefore, it installs the following tools which can be used anywhere within a project/repository comprising a pyproject.toml file such as the [one defining this project](./pyproject.toml):
+* `cd-assert-news`: Asserts that the PR/Branch contains a news file describing the changes introduced
+* `cd-determine-version`: Returns the version of the tool
+* `cd-generate-news`: Generates a changelog file based on the news files present in the repository
+* `cd-get-config`: Returns project configuration values
+* `cd-tag-and-release`: Releases the project (Language specific actions are run, See [plugins](./continuous_delivery_scripts/plugins))
+* `cd-create-news-file`: Generates a news file
+* `cd-generate-docs`: Generates project Code documentation which can then be rendered by GitHub pages (See [docs folder](./docs))
+* `cd-generate-spdx`: Generates SPDX documents for the project (3rd party IP reporting/ OpenChain)
+* `cd-license-files`: Updates the Licence header and copyright to all the source code files
 
 ## Project Structure
 
 The follow described the major aspects of the project structure:
 
 - `azure-pipelines/` - CI configuration files for Azure Pipelines.
+- `.githubg` - CI and GitHub configuration files.
 - `docs/` - Interface definition and usage documentation.
 - `examples/` - Usage examples.
 - `continuous-delivery-scripts/` - Python source files.
