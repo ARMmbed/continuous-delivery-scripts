@@ -1,0 +1,1 @@
+fix how manually checked licences are expressed in the project configuration files to accommodate `.` in package names

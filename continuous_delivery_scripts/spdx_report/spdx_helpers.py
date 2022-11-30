@@ -145,5 +145,7 @@ def get_package_manual_check(package_name: str) -> Tuple[bool, Optional[str]]:
 
 def is_package_licence_manually_checked(package_name: str) -> bool:
     """States whether the licence of a package has been manually checked and hence, that its licence is compliant."""
-    checked, _ = get_package_manual_check(package_name.replace(".", "-"))
+    checked, _ = get_package_manual_check(package_name)
+    if not checked:
+        checked, _ = get_package_manual_check(package_name.replace(".", "-"))
     return checked
