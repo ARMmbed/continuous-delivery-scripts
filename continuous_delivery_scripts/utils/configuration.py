@@ -86,6 +86,8 @@ class ConfigurationVariable(enum.Enum):
     """Pattern of the news message for dependency update."""
     DEPENDENCY_UPDATE_NEWS_TYPE = 34
     """News file type for dependency update."""
+    TAG_LATEST = 35
+    """States whether the release should be tagged with `latest`"""
 
     @staticmethod
     def choices() -> List[str]:
@@ -189,6 +191,7 @@ class StaticConfig(GenericConfig):
     PROGRAMMING_LANGUAGE = "NoOp"
     AWS_BUCKET = "Unknown"
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
+    TAG_LATEST = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"

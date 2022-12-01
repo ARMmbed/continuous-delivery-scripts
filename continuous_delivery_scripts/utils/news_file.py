@@ -24,7 +24,7 @@ class NewsType(enum.Enum):
 
 
 def create_news_file(news_dir: str, news_text: str, news_type: Any) -> pathlib.Path:
-    """Facilitates creating a news file, determining it's file name based on the type."""
+    """Facilitates creating a news file, determining its file name based on the type."""
     message_type = NewsType.misc
     if isinstance(news_type, str):
         message_type = NewsType[news_type]
@@ -55,4 +55,4 @@ def _write_file(file_path: pathlib.Path, text: str) -> None:
 
 
 def _determine_todays_news_file_name() -> str:
-    return datetime.now().strftime("%Y%m%d%H%M")
+    return datetime.now().strftime("%Y%m%d%H%M%S")
