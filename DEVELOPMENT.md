@@ -1,3 +1,7 @@
+<!--
+Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 # Development and Testing
 
 For development and testing purposes, it is essential to use a virtual environment. It is recommended that `pipenv` is used.
