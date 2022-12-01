@@ -17,6 +17,39 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.9.0" (2022-12-01)
+====================
+
+Features
+--------
+
+- :sparkles: New plugin for CI projects (#202212011749)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: pdoc3-0.10.0 (#202108110629)
+- Dependency upgrade: mypy-0.921 (#202112220825)
+- Dependency upgrade: towncrier-22.8.0 (#202208310626)
+- fix how manually checked licences are expressed in the project configuration files to accommodate `.` in package names (#202211301646)
+- Dependency upgrade: codeql-action-2 (#202211301827)
+- Dependency upgrade: fetch-metadata-1.3.5 (#202211301829)
+- Dependency upgrade: cache-3 (#202211301830)
+- Dependency upgrade: codecov-action-3 (#202211301832)
+- Dependency upgrade: upload-artifact-3 (#202211301833)
+- Dependency upgrade: checkout-3 (#202211301834)
+- Dependency upgrade: mypy-0.991 (#202211301940)
+- Dependency upgrade: dependency-review-action-3 (#202212010715)
+- :bug: Change the news file name to avoid conflicts (#20221201175408059814)
+
+
+Misc
+----
+
+- #202211301645, #202212011822
+
+
 "2.8.5" (2022-03-22)
 ====================
 

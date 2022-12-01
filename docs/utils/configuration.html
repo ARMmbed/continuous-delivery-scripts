@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.configuration API documentation</title>
 <meta name="description" content="Utilities in charge of fetching configuration values for the ci scripts." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -119,6 +119,8 @@ class ConfigurationVariable(enum.Enum):
     &#34;&#34;&#34;Pattern of the news message for dependency update.&#34;&#34;&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = 34
     &#34;&#34;&#34;News file type for dependency update.&#34;&#34;&#34;
+    TAG_LATEST = 35
+    &#34;&#34;&#34;States whether the release should be tagged with `latest`&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -222,6 +224,7 @@ class StaticConfig(GenericConfig):
     PROGRAMMING_LANGUAGE = &#34;NoOp&#34;
     AWS_BUCKET = &#34;Unknown&#34;
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
+    TAG_LATEST = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
@@ -450,6 +453,8 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     &#34;&#34;&#34;Pattern of the news message for dependency update.&#34;&#34;&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = 34
     &#34;&#34;&#34;News file type for dependency update.&#34;&#34;&#34;
+    TAG_LATEST = 35
+    &#34;&#34;&#34;States whether the release should be tagged with `latest`&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -608,6 +613,10 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
 <dd>
 <div class="desc"><p>Relative path to the source of the project.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST"><code class="name">var <span class="ident">TAG_LATEST</span></code></dt>
+<dd>
+<div class="desc"><p>States whether the release should be tagged with <code>latest</code></p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH"><code class="name">var <span class="ident">VERSION_FILE_PATH</span></code></dt>
 <dd>
@@ -1105,6 +1114,7 @@ defined in toml.</p></div>
     PROGRAMMING_LANGUAGE = &#34;NoOp&#34;
     AWS_BUCKET = &#34;Unknown&#34;
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
+    TAG_LATEST = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
@@ -1200,6 +1210,10 @@ defined in toml.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST"><code class="name">var <span class="ident">TAG_LATEST</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
@@ -1283,6 +1297,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST">TAG_LATEST</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.VERSION_FILE_PATH">VERSION_FILE_PATH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.choices" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.choices">choices</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.parse" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.parse">parse</a></code></li>
@@ -1332,6 +1347,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE">PROGRAMMING_LANGUAGE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST">TAG_LATEST</a></code></li>
 </ul>
 </li>
 <li>
@@ -1343,7 +1359,7 @@ defined in toml.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

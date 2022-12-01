@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.language_specifics_base API documentation</title>
 <meta name="description" content="Base class for all Language plugins." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -56,7 +56,7 @@ def get_language_from_file_name(filename: str) -&gt; str:
 
 GENERIC_LICENCE_HEADER_TEMPLATE = &#34;&#34;&#34;Copyright (C) {date} {author} or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
-&#34;&#34;&#34;
+&#34;&#34;&#34;  # noqa: E501
 
 
 def _generate_generic_licence_header_template() -&gt; str:
@@ -111,6 +111,8 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
         git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
+        if configuration.get_value(ConfigurationVariable.TAG_LATEST):
+            git.create_tag(&#34;latest&#34;, message=&#34;latest release&#34;)
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
@@ -220,6 +222,8 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
         git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
+        if configuration.get_value(ConfigurationVariable.TAG_LATEST):
+            git.create_tag(&#34;latest&#34;, message=&#34;latest release&#34;)
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
@@ -255,6 +259,7 @@ class BaseLanguage(ABC):
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="continuous_delivery_scripts.plugins.ci.CI" href="../plugins/ci.html#continuous_delivery_scripts.plugins.ci.CI">CI</a></li>
 <li><a title="continuous_delivery_scripts.plugins.docker.Docker" href="../plugins/docker.html#continuous_delivery_scripts.plugins.docker.Docker">Docker</a></li>
 <li><a title="continuous_delivery_scripts.plugins.golang.Go" href="../plugins/golang.html#continuous_delivery_scripts.plugins.golang.Go">Go</a></li>
 <li><a title="continuous_delivery_scripts.plugins.noop.NoOp" href="../plugins/noop.html#continuous_delivery_scripts.plugins.noop.NoOp">NoOp</a></li>
@@ -291,7 +296,7 @@ class BaseLanguage(ABC):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.check_credentials"><code class="name flex">
-<span>def <span class="ident">check_credentials</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">check_credentials</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks necessary credentials are set for releasing.</p></div>
@@ -306,7 +311,7 @@ class BaseLanguage(ABC):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_code_documentation"><code class="name flex">
-<span>def <span class="ident">generate_code_documentation</span></span>(<span>self, output_directory: pathlib.Path, module_to_document: str) ‑> NoneType</span>
+<span>def <span class="ident">generate_code_documentation</span></span>(<span>self, output_directory: pathlib.Path, module_to_document: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates the code documentation.</p></div>
@@ -380,7 +385,7 @@ def get_related_language(self) -&gt; str:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> NoneType</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Package the software so that it can get released.</p></div>
@@ -396,7 +401,7 @@ def package_software(self, version: str) -&gt; None:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> NoneType</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Release the package to the official software repository.</p></div>
@@ -440,7 +445,7 @@ def release_package_to_repository(self, version: str) -&gt; None:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.tag_release"><code class="name flex">
-<span>def <span class="ident">tag_release</span></span>(<span>self, git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, version: str) ‑> NoneType</span>
+<span>def <span class="ident">tag_release</span></span>(<span>self, git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Tags release commit.</p></div>
@@ -451,7 +456,9 @@ def release_package_to_repository(self, version: str) -&gt; None:
 <pre><code class="python">def tag_release(self, git: GitWrapper, version: str) -&gt; None:
     &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
     logger.info(f&#34;Tagging commit as release {version}&#34;)
-    git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)</code></pre>
+    git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
+    if configuration.get_value(ConfigurationVariable.TAG_LATEST):
+        git.create_tag(&#34;latest&#34;, message=&#34;latest release&#34;)</code></pre>
 </details>
 </dd>
 </dl>
@@ -501,7 +508,7 @@ def release_package_to_repository(self, version: str) -&gt; None:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

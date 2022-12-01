@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.git_helpers API documentation</title>
 <meta name="description" content="Utility script to abstract git operations for our CI scripts." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -1765,7 +1765,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.add"><code class="name flex">
-<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) ‑> NoneType</span>
+<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a file or a list of files.</p>
@@ -1792,7 +1792,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes"><code class="name flex">
-<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>) ‑> NoneType</span>
+<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies the uncommitted changes found in current repository to another.</p>
@@ -1849,7 +1849,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout"><code class="name flex">
-<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) ‑> NoneType</span>
+<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks out a branch.</p>
@@ -1905,7 +1905,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick"><code class="name flex">
-<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) ‑> NoneType</span>
+<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cherry picks a specific commit.</p>
@@ -1928,7 +1928,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean"><code class="name flex">
-<span>def <span class="ident">clean</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">clean</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cleans the repository.</p>
@@ -1991,7 +1991,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit"><code class="name flex">
-<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Optional[Tuple[str, Any]]) ‑> NoneType</span>
+<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Optional[Tuple[str, Any]]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Commits changes to the repository.</p>
@@ -2018,7 +2018,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author"><code class="name flex">
-<span>def <span class="ident">configure_author</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">configure_author</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the author.</p></div>
@@ -2033,7 +2033,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_for_github"><code class="name flex">
-<span>def <span class="ident">configure_for_github</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">configure_for_github</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Reconfigures the repository.</p>
@@ -2112,7 +2112,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.delete_branch"><code class="name flex">
-<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) ‑> NoneType</span>
+<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Deletes a branch.</p>
@@ -2135,7 +2135,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.fetch"><code class="name flex">
-<span>def <span class="ident">fetch</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">fetch</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches latest changes.</p></div>
@@ -2149,7 +2149,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_pull"><code class="name flex">
-<span>def <span class="ident">force_pull</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">force_pull</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Force pulls changes from the remote repository.</p></div>
@@ -2163,7 +2163,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_push"><code class="name flex">
-<span>def <span class="ident">force_push</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">force_push</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits with force.</p>
@@ -2181,7 +2181,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_push_tag"><code class="name flex">
-<span>def <span class="ident">force_push_tag</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">force_push_tag</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits and tags with force.</p>
@@ -2709,7 +2709,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge"><code class="name flex">
-<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) ‑> NoneType</span>
+<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Merges <code>branch</code> to current branch.</p>
@@ -2735,7 +2735,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull"><code class="name flex">
-<span>def <span class="ident">pull</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">pull</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pulls changes on current branch from the remote repository.</p></div>
@@ -2750,7 +2750,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all"><code class="name flex">
-<span>def <span class="ident">pull_all</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">pull_all</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pulls all changes from all remotes.</p></div>
@@ -2764,7 +2764,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.push"><code class="name flex">
-<span>def <span class="ident">push</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">push</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits.</p>
@@ -2784,7 +2784,7 @@ Pushes also relevant annotated tags when pushing branches out.</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.push_tag"><code class="name flex">
-<span>def <span class="ident">push_tag</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">push_tag</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits and tags.</p>
@@ -2833,7 +2833,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url"><code class="name flex">
-<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) ‑> NoneType</span>
+<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the URL of the remote repository.</p>
@@ -2859,7 +2859,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch"><code class="name flex">
-<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) ‑> NoneType</span>
+<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the upstream branch of the current branch.</p>
@@ -2883,7 +2883,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash"><code class="name flex">
-<span>def <span class="ident">stash</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">stash</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Stashes the repository.</p>
@@ -3139,7 +3139,7 @@ will work in most cases but probably not on CI.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>
