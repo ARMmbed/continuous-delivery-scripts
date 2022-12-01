@@ -79,7 +79,7 @@ class BaseLanguage(ABC):
         logger.info(f"Tagging commit as release {version}")
         git.create_tag(self.get_version_tag(version), message=f"release {version}")
         if configuration.get_value(ConfigurationVariable.TAG_LATEST):
-            git.create_tag("latest", message=f"latest release")
+            git.create_tag("latest", message="latest release")
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:

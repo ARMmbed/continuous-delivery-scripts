@@ -3,9 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import pathlib
-from unittest import TestCase, mock
-from datetime import datetime
 from tempfile import TemporaryDirectory
+from unittest import TestCase, mock
+
+from continuous_delivery_scripts.create_news_file import NEWS_DIR
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.news_file import (
     NewsType,
@@ -14,7 +15,6 @@ from continuous_delivery_scripts.utils.news_file import (
     create_news_file,
     _write_file,
 )
-from continuous_delivery_scripts.create_news_file import NEWS_DIR
 
 
 class TestCreateNewsFile(TestCase):
