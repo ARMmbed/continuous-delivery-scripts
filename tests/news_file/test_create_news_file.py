@@ -10,6 +10,7 @@ from continuous_delivery_scripts.utils.configuration import configuration, Confi
 from continuous_delivery_scripts.utils.news_file import (
     NewsType,
     determine_news_file_path,
+    determine_basic_new_news_file_name,
     create_news_file,
     _write_file,
 )
@@ -49,7 +50,7 @@ class TestCreateNewsFile(TestCase):
 class TestDetermineNewsFilePath(TestCase):
     def test_finds_first_available_file_path_in_news_dir(self):
         news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
-        news_file_name_today = datetime.now().strftime("%Y%m%d%H%M")
+        news_file_name_today = determine_basic_new_news_file_name()
         news_file_path_today = str(pathlib.Path(news_dir, news_file_name_today))
 
         for news_type in NewsType:

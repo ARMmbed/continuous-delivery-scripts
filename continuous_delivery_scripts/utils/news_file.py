@@ -37,7 +37,7 @@ def create_news_file(news_dir: str, news_text: str, news_type: Any) -> pathlib.P
 
 def determine_news_file_path(news_dir: str, news_type: NewsType) -> pathlib.Path:
     """Returns an available file path for given news type."""
-    news_file_name = _determine_todays_news_file_name()
+    news_file_name = determine_basic_new_news_file_name()
     news_file_path = pathlib.Path(news_dir, f"{news_file_name}.{news_type.name}")
     inc = 0
     while news_file_path.exists():
@@ -54,5 +54,6 @@ def _write_file(file_path: pathlib.Path, text: str) -> None:
     file_path.write_text(text)
 
 
-def _determine_todays_news_file_name() -> str:
+def determine_basic_new_news_file_name() -> str:
+    """Returns a new news file name."""
     return datetime.now().strftime("%Y%m%d%H%M%S")
