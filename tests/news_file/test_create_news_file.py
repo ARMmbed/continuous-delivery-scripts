@@ -1,19 +1,20 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 import pathlib
-from unittest import TestCase, mock
-from datetime import datetime
 from tempfile import TemporaryDirectory
+from unittest import TestCase, mock
+
+from continuous_delivery_scripts.create_news_file import NEWS_DIR
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.news_file import (
     NewsType,
     determine_news_file_path,
+    determine_basic_new_news_file_name,
     create_news_file,
     _write_file,
 )
-from continuous_delivery_scripts.create_news_file import NEWS_DIR
 
 
 class TestCreateNewsFile(TestCase):
@@ -49,7 +50,7 @@ class TestCreateNewsFile(TestCase):
 class TestDetermineNewsFilePath(TestCase):
     def test_finds_first_available_file_path_in_news_dir(self):
         news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
-        news_file_name_today = datetime.now().strftime("%Y%m%d%H%M")
+        news_file_name_today = determine_basic_new_news_file_name()
         news_file_path_today = str(pathlib.Path(news_dir, news_file_name_today))
 
         for news_type in NewsType:

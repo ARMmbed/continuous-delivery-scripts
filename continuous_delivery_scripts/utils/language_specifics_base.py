@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Base class for all Language plugins."""
@@ -78,6 +78,8 @@ class BaseLanguage(ABC):
         """Tags release commit."""
         logger.info(f"Tagging commit as release {version}")
         git.create_tag(self.get_version_tag(version), message=f"release {version}")
+        if configuration.get_value(ConfigurationVariable.TAG_LATEST):
+            git.create_tag("latest", message="latest release")
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
