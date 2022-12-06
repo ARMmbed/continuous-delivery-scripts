@@ -73,7 +73,6 @@ class CI(BaseLanguage):
     def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
         super().release_package_to_repository(version)
-        self._call_goreleaser_release(version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
@@ -145,7 +144,6 @@ class CI(BaseLanguage):
     def release_package_to_repository(self, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
         super().release_package_to_repository(version)
-        self._call_goreleaser_release(version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
@@ -279,8 +277,7 @@ class CI(BaseLanguage):
 </summary>
 <pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
     &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-    super().release_package_to_repository(version)
-    self._call_goreleaser_release(version)</code></pre>
+    super().release_package_to_repository(version)</code></pre>
 </details>
 </dd>
 </dl>
