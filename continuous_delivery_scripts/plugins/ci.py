@@ -40,7 +40,6 @@ class CI(BaseLanguage):
     def release_package_to_repository(self, version: str) -> None:
         """No operation."""
         super().release_package_to_repository(version)
-        self._call_goreleaser_release(version)
 
     def check_credentials(self) -> None:
         """Checks any credentials."""
