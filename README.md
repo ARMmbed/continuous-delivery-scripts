@@ -9,6 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 [![PyPI](https://badgen.net/pypi/v/continuous-delivery-scripts)](https://pypi.org/project/continuous-delivery-scripts/)
 [![PyPI - Status](https://img.shields.io/pypi/status/continuous-delivery-scripts)](https://pypi.org/project/continuous-delivery-scripts/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/continuous-delivery-scripts)](https://pypi.org/project/continuous-delivery-scripts/)
+[![Downloads](https://pepy.tech/badge/continuous-delivery-scripts)](https://pepy.tech/project/continuous-delivery-scripts)
 
 [![License](https://badgen.net/pypi/license/continuous-delivery-scripts)](https://github.com/ARMmbed/continuous-delivery-scripts/blob/master/LICENSE)
 [![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/continuous-delivery-scripts/third_party_IP_report.html)
