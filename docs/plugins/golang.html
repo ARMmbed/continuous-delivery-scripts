@@ -194,9 +194,9 @@ class Go(BaseLanguage):
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return True
 
-    def tag_release(self, git: GitWrapper, version: str) -&gt; None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
-        super().tag_release(git, version)
+        super().tag_release(git, version, shortcuts)
         go_tag = _determine_go_module_tag(self.get_version_tag(version))
         if go_tag:
             git.create_tag(go_tag, message=f&#34;Golang module release: {go_tag}&#34;)
@@ -289,9 +289,9 @@ class Go(BaseLanguage):
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return True
 
-    def tag_release(self, git: GitWrapper, version: str) -&gt; None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
-        super().tag_release(git, version)
+        super().tag_release(git, version, shortcuts)
         go_tag = _determine_go_module_tag(self.get_version_tag(version))
         if go_tag:
             git.create_tag(go_tag, message=f&#34;Golang module release: {go_tag}&#34;)

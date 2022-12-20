@@ -17,6 +17,22 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.10.0" (2022-12-20)
+=====================
+
+Features
+--------
+
+- Added a way to tag releases with version shortcuts such as 1.0 (#20221220194939)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: scorecard-action-2.1.0 (#20221215071255)
+- Dependency upgrade: coverage-7.0.0 (#20221219070757)
+
+
 "2.9.1" (2022-12-06)
 ====================
 

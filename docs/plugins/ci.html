@@ -38,7 +38,7 @@
 &#34;&#34;&#34;Plugin for CI projects.&#34;&#34;&#34;
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -96,9 +96,9 @@ class CI(BaseLanguage):
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return True
 
-    def tag_release(self, git: GitWrapper, version: str) -&gt; None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
-        super().tag_release(git, version)</code></pre>
+        super().tag_release(git, version, shortcuts)</code></pre>
 </details>
 </section>
 <section>
@@ -167,9 +167,9 @@ class CI(BaseLanguage):
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return True
 
-    def tag_release(self, git: GitWrapper, version: str) -&gt; None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
-        super().tag_release(git, version)</code></pre>
+        super().tag_release(git, version, shortcuts)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
