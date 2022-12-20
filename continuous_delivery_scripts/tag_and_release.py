@@ -8,7 +8,7 @@ import datetime
 import logging
 import sys
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 
 from continuous_delivery_scripts.generate_docs import generate_documentation
 from continuous_delivery_scripts.generate_news import version_project
@@ -19,6 +19,7 @@ from continuous_delivery_scripts.utils.configuration import configuration, Confi
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
+from continuous_delivery_scripts.utils.versioning import determine_version_shortcuts
 
 SPDX_REPORTS_DIRECTORY = "licensing"
 
@@ -37,7 +38,7 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
 
     """
     get_language_specifics().check_credentials()
-    is_new_version, version, _ = version_project(mode)
+    is_new_version, version, version_elements = version_project(mode)
     logger.info(f"Current version: {version}")
     if not version:
         raise ValueError("Undefined version.")
@@ -48,7 +49,7 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
     # Adding the licensing summaries in /docs after folder has been cleared and regenerated.
     spdx_project = _update_licensing_summary()
     insert_licence_header(0)
-    _update_repository(mode, is_new_version, version, current_branch)
+    _update_repository(mode, is_new_version, version, current_branch, version_elements)
     if is_new_version:
         if get_language_specifics().should_clean_before_packaging():
             _clean_repository()
@@ -83,7 +84,13 @@ def _update_licensing_summary() -> Optional[SpdxProject]:
     return project
 
 
-def _update_repository(mode: CommitType, is_new_version: bool, version: str, current_branch: Optional[str]) -> None:
+def _update_repository(
+    mode: CommitType,
+    is_new_version: bool,
+    version: str,
+    current_branch: Optional[str],
+    version_elements: Dict[str, str],
+) -> None:
     """Update repository with changes that happened."""
     with ProjectTempClone(desired_branch_name=current_branch) as git:
         git.configure_for_github()
@@ -92,7 +99,7 @@ def _update_repository(mode: CommitType, is_new_version: bool, version: str, cur
         if mode == CommitType.RELEASE:
             _commit_release_changes(git, version, commit_message)
         if is_new_version:
-            get_language_specifics().tag_release(git, version)
+            get_language_specifics().tag_release(git, version, determine_version_shortcuts(mode, version_elements))
             git.force_push_tag()
 
 

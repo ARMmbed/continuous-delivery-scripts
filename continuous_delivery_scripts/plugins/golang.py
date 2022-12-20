@@ -161,9 +161,9 @@ class Go(BaseLanguage):
         """States whether the repository must be cleaned before packaging happens."""
         return True
 
-    def tag_release(self, git: GitWrapper, version: str) -> None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -> None:
         """Tags release commit."""
-        super().tag_release(git, version)
+        super().tag_release(git, version, shortcuts)
         go_tag = _determine_go_module_tag(self.get_version_tag(version))
         if go_tag:
             git.create_tag(go_tag, message=f"Golang module release: {go_tag}")

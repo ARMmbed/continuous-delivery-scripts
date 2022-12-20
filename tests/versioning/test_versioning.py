@@ -3,8 +3,13 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import unittest
-from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
+from continuous_delivery_scripts.utils.versioning import (
+    calculate_version,
+    determine_version_string,
+    determine_version_shortcuts,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
+from auto_version.auto_version_tool import definitions, config
 
 
 class TestVersioning(unittest.TestCase):
@@ -26,3 +31,41 @@ class TestVersioning(unittest.TestCase):
         self.assertEqual("1.1.1", determine_version_string(CommitType.BETA, "1.1.1", {}))
         self.assertTrue("1.1.1" in determine_version_string(CommitType.DEVELOPMENT, "1.1.1", {}))
         self.assertGreaterEqual(len(determine_version_string(CommitType.DEVELOPMENT, "1.1.1", {})), len("1.1.1"))
+
+    def test_determine_version_shortcuts(self):
+        self.assertListEqual(
+            ["1", "1.1"],
+            determine_version_shortcuts(
+                CommitType.RELEASE, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+            ),
+        )
+        self.assertListEqual(
+            ["1"], determine_version_shortcuts(CommitType.RELEASE, {definitions.SemVerSigFig.major: "1"})
+        )
+        self.assertListEqual([], determine_version_shortcuts(CommitType.RELEASE, {definitions.SemVerSigFig.minor: "1"}))
+        self.assertListEqual(
+            ["1", "1.1", config.PRERELEASE_TOKEN],
+            determine_version_shortcuts(
+                CommitType.BETA, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+            ),
+        )
+        self.assertTrue(
+            "1.1"
+            in determine_version_shortcuts(
+                CommitType.DEVELOPMENT, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+            )
+        )
+        self.assertTrue(
+            "1"
+            in determine_version_shortcuts(
+                CommitType.DEVELOPMENT, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+            )
+        )
+        self.assertGreaterEqual(
+            len(
+                determine_version_shortcuts(
+                    CommitType.DEVELOPMENT, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+                )
+            ),
+            2,
+        )

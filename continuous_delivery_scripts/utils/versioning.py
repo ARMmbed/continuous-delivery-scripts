@@ -7,7 +7,7 @@
 import logging
 import os
 from auto_version import auto_version_tool
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, List
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
@@ -85,6 +85,36 @@ def determine_version_string(
             commit_hash,
         )
     return new_version
+
+
+def determine_version_shortcuts(commit_type: CommitType, version_elements: Dict[str, str]) -> List[str]:
+    """Determine the different version shortcuts i.e. major, major.minor, pre depending on the release type
+
+    Args:
+        commit_type: commit type
+        version_elements: version elements
+    """
+    shortcuts = []
+    major_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.major, None)
+    if major_version:
+        shortcuts.append(major_version)
+    minor_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.minor, None)
+    if minor_version and major_version:
+        shortcuts.append(f"{major_version}.{minor_version}")
+    if commit_type == CommitType.BETA:
+        shortcuts.append(auto_version_tool.config.PRERELEASE_TOKEN)
+    if commit_type == CommitType.DEVELOPMENT:
+        commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
+        if not commit_count:
+            with LocalProjectRepository() as git:
+                commit_count = git.get_commit_count()
+        commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
+        if not commit_hash:
+            with LocalProjectRepository() as git:
+                commit_hash = git.get_commit_hash()
+        shortcuts.append(f"{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}")
+
+    return shortcuts
 
 
 def _get_version_elements(native_version_elements: Dict[str, str]) -> Dict[str, str]:
