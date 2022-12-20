@@ -33,7 +33,7 @@ def get_project_version_string(commit_type: CommitType) -> str:
 
 def main() -> None:
     """Handle command line arguments to determine version string."""
-    parser = argparse.ArgumentParser(description="Determine project's version.")
+    parser = argparse.ArgumentParser(description="Determine project's new version.")
     parser.add_argument(
         "-t", "--release-type", help="type of release to perform", required=True, type=str, choices=CommitType.choices()
     )
