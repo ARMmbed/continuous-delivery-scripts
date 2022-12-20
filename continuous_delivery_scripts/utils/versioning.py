@@ -88,7 +88,7 @@ def determine_version_string(
 
 
 def determine_version_shortcuts(commit_type: CommitType, version_elements: Dict[str, str]) -> List[str]:
-    """Determine the different version shortcuts i.e. major, major.minor, pre depending on the release type
+    """Determine the different version shortcuts i.e. major, major.minor, pre depending on the release type.
 
     Args:
         commit_type: commit type
