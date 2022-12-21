@@ -87,23 +87,35 @@ def determine_version_string(
     return new_version
 
 
-def determine_version_shortcuts(commit_type: CommitType, version_elements: Dict[str, str]) -> List[str]:
+def determine_version_shortcuts(
+    commit_type: CommitType, tag_latest: bool, tag_shortcut: bool, version_elements: Dict[str, str]
+) -> Dict[str, bool]:
     """Determine the different version shortcuts i.e. major, major.minor, pre depending on the release type.
 
     Args:
         commit_type: commit type
+        tag_latest: whether to tag release with `Latest`
+        tag_shortcut: whether to set additional shortcuts
         version_elements: version elements
+
+    Returns:
+        dict: A dictionary of shortcuts and a flag specifying if it is a version string or bespoke shortcut such as latest
     """
-    shortcuts = []
+    shortcuts = {}
+    if commit_type == CommitType.RELEASE and tag_latest:
+        shortcuts["latest"] = False
+    if not tag_shortcut:
+        return shortcuts
     major_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.major, None)
     if major_version:
-        shortcuts.append(major_version)
+        shortcuts[major_version] = True
     minor_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.minor, None)
     if minor_version and major_version:
-        shortcuts.append(f"{major_version}.{minor_version}")
+        shortcuts[f"{major_version}.{minor_version}"] = True
     if commit_type == CommitType.BETA:
-        shortcuts.append(auto_version_tool.config.PRERELEASE_TOKEN)
+        shortcuts[auto_version_tool.config.PRERELEASE_TOKEN] = False
     if commit_type == CommitType.DEVELOPMENT:
+        shortcuts[auto_version_tool.config.BUILD_TOKEN] = False
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
@@ -112,7 +124,7 @@ def determine_version_shortcuts(commit_type: CommitType, version_elements: Dict[
         if not commit_hash:
             with LocalProjectRepository() as git:
                 commit_hash = git.get_commit_hash()
-        shortcuts.append(f"{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}")
+        shortcuts[f"{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}"] = False
 
     return shortcuts
 

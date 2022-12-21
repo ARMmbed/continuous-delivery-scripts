@@ -6,7 +6,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict
 from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
@@ -161,7 +161,7 @@ class Go(BaseLanguage):
         """States whether the repository must be cleaned before packaging happens."""
         return True
 
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -> None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
         """Tags release commit."""
         super().tag_release(git, version, shortcuts)
         go_tag = _determine_go_module_tag(self.get_version_tag(version))

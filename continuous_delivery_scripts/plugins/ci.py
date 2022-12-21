@@ -5,7 +5,7 @@
 """Plugin for CI projects."""
 import logging
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, Dict
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -63,6 +63,6 @@ class CI(BaseLanguage):
         """States whether the repository must be cleaned before packaging happens."""
         return True
 
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -> None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
         """Tags release commit."""
         super().tag_release(git, version, shortcuts)

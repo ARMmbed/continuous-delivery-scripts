@@ -33,38 +33,75 @@ class TestVersioning(unittest.TestCase):
         self.assertGreaterEqual(len(determine_version_string(CommitType.DEVELOPMENT, "1.1.1", {})), len("1.1.1"))
 
     def test_determine_version_shortcuts(self):
-        self.assertListEqual(
-            ["1", "1.1"],
+        self.assertDictEqual(
+            {"1": True, "1.1": True},
             determine_version_shortcuts(
-                CommitType.RELEASE, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+                CommitType.RELEASE,
+                False,
+                True,
+                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
             ),
         )
-        self.assertListEqual(
-            ["1"], determine_version_shortcuts(CommitType.RELEASE, {definitions.SemVerSigFig.major: "1"})
-        )
-        self.assertListEqual([], determine_version_shortcuts(CommitType.RELEASE, {definitions.SemVerSigFig.minor: "1"}))
-        self.assertListEqual(
-            ["1", "1.1", config.PRERELEASE_TOKEN],
+        self.assertDictEqual(
+            {"latest": False},
             determine_version_shortcuts(
-                CommitType.BETA, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+                CommitType.RELEASE,
+                True,
+                False,
+                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
+            ),
+        )
+        self.assertDictEqual(
+            {},
+            determine_version_shortcuts(
+                CommitType.RELEASE,
+                False,
+                False,
+                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
+            ),
+        )
+        self.assertDictEqual(
+            {"1": True},
+            determine_version_shortcuts(CommitType.RELEASE, False, True, {definitions.SemVerSigFig.major: "1"}),
+        )
+        self.assertDictEqual(
+            {"1": True, "latest": False},
+            determine_version_shortcuts(CommitType.RELEASE, True, True, {definitions.SemVerSigFig.major: "1"}),
+        )
+        self.assertDictEqual(
+            {}, determine_version_shortcuts(CommitType.RELEASE, False, True, {definitions.SemVerSigFig.minor: "1"})
+        )
+        self.assertDictEqual(
+            {"1": True, "1.1": True, config.PRERELEASE_TOKEN: False},
+            determine_version_shortcuts(
+                CommitType.BETA, True, True, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
             ),
         )
         self.assertTrue(
             "1.1"
             in determine_version_shortcuts(
-                CommitType.DEVELOPMENT, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
-            )
+                CommitType.DEVELOPMENT,
+                True,
+                True,
+                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
+            ).keys()
         )
         self.assertTrue(
             "1"
             in determine_version_shortcuts(
-                CommitType.DEVELOPMENT, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
-            )
+                CommitType.DEVELOPMENT,
+                True,
+                True,
+                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
+            ).keys()
         )
         self.assertGreaterEqual(
             len(
                 determine_version_shortcuts(
-                    CommitType.DEVELOPMENT, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
+                    CommitType.DEVELOPMENT,
+                    True,
+                    True,
+                    {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
                 )
             ),
             2,
