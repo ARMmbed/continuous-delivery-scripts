@@ -39,7 +39,7 @@ class TestGitTempClone(TestCase):
             self.assertNotEqual(git.root, clone.root)
 
     def test_git_clone_roll_over_changes(self):
-        """Ensures staged changes in original repository are applied in clone"""
+        """Ensures staged changes in original repository are applied in clone."""
         with ProjectTempClone(desired_branch_name="main") as origin:
             test_file = Path(origin.root).joinpath(f"file-test-{uuid4()}.txt")
             test_file.touch()
