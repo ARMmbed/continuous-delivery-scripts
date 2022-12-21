@@ -11,6 +11,7 @@ from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository, GitWrapper
 
 logger = logging.getLogger(__name__)
@@ -124,14 +125,14 @@ class Go(BaseLanguage):
         cleansed_version = version.strip().lstrip("v")
         return f"v{cleansed_version}"
 
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """No operation."""
         super().package_software(version)
         _call_goreleaser_check(version)
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """No operation."""
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         self._call_goreleaser_release(version)
 
     def check_credentials(self) -> None:
