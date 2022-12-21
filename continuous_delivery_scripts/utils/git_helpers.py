@@ -601,6 +601,19 @@ class GitWrapper:
 
         return [Path(self.root).joinpath(line.strip().split(" ")[-1]) for line in status.splitlines()]
 
+    @property
+    def uncommitted_staged_changes(self) -> List[Path]:
+        """Gets list of uncommitted staged changes.
+
+        Returns:
+             list of uncommitted staged changes
+        """
+        staged = self.repo.git.diff(staged=True, name_only=True)
+        if not staged:
+            return []
+
+        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
+
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -> None:
         logger.info(f"Applying change in {modified_file} to {destination}")
@@ -627,6 +640,8 @@ class GitWrapper:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+        for f in self.uncommitted_staged_changes:
+            other_repo.add(f.relative_to(self.root))
 
     def get_corresponding_path(self, path_in_initial_repo: Path) -> Path:
         """Gets the path in current repository corresponding to path in initial repository.

@@ -38,6 +38,35 @@ class TestGitTempClone(TestCase):
             self.assertEqual(git.get_remote_url(), clone.get_remote_url())
             self.assertNotEqual(git.root, clone.root)
 
+    def test_git_clone_roll_over_changes(self):
+        """Ensures staged changes in original repository are applied in clone"""
+        with ProjectTempClone(desired_branch_name="main") as origin:
+            test_file = Path(origin.root).joinpath(f"file-test-{uuid4()}.txt")
+            test_file.touch()
+
+            uncommitted_changes = origin.uncommitted_changes
+            staged_changes = origin.uncommitted_staged_changes
+            self.assertTrue(origin.is_dirty())
+            self.assertTrue(test_file in uncommitted_changes)
+            self.assertFalse(test_file in staged_changes)
+            origin.add(test_file)
+            uncommitted_changes = origin.uncommitted_changes
+            staged_changes = origin.uncommitted_staged_changes
+            self.assertTrue(origin.is_dirty())
+            self.assertTrue(test_file in uncommitted_changes)
+            self.assertTrue(test_file in staged_changes)
+
+            with GitTempClone(repository_to_clone=origin, desired_branch_name="main") as clone:
+                self.assertNotEqual(origin.root, clone.root)
+                self.assertTrue(clone.is_dirty())
+                uncommitted_changes = clone.uncommitted_changes
+                staged_changes = clone.uncommitted_staged_changes
+                cloned_test_file = clone.root.joinpath(test_file.relative_to(origin.root))
+                self.assertIsNotNone(uncommitted_changes)
+                self.assertIsNotNone(staged_changes)
+                self.assertTrue(cloned_test_file in uncommitted_changes)
+                self.assertTrue(cloned_test_file in staged_changes)
+
     def test_git_branch_actions(self):
         """Test basic git branch actions on the clone."""
         with ProjectTempClone(desired_branch_name="main") as clone:
