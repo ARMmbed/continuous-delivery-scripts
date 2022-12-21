@@ -7,7 +7,7 @@
 import logging
 import os
 from auto_version import auto_version_tool
-from typing import Optional, Tuple, Dict, List
+from typing import Optional, Tuple, Dict
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
@@ -99,7 +99,8 @@ def determine_version_shortcuts(
         version_elements: version elements
 
     Returns:
-        dict: A dictionary of shortcuts and a flag specifying if it is a version string or bespoke shortcut such as latest
+        dict: A dictionary of shortcuts and a flag specifying
+        whether it is a version string or bespoke shortcut such as latest
     """
     shortcuts = {}
     if commit_type == CommitType.RELEASE and tag_latest:
