@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.10.2" (2022-12-21)
+=====================
+
+Bugfixes
+--------
+
+- Fixed shortcut tag rendering when version contains `0` (#20221221151424)
+
+
 "2.10.1" (2022-12-21)
 =====================
 
