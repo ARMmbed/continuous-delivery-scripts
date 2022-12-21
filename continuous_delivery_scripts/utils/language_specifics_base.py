@@ -7,7 +7,7 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, Dict
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -74,15 +74,15 @@ class BaseLanguage(ABC):
         """States whether the repository must be cleaned before packaging happens."""
         return False
 
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -> None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
         """Tags release commit."""
         logger.info(f"Tagging commit as release {version}")
         git.create_tag(self.get_version_tag(version), message=f"release {version}")
-        if configuration.get_value(ConfigurationVariable.TAG_LATEST):
-            git.create_tag("latest", message="latest release")
-        if configuration.get_value(ConfigurationVariable.TAG_VERSION_SHORTCUTS):
-            for shortcut in shortcuts:
+        for shortcut, version in shortcuts.items():
+            if version:
                 git.create_tag(self.get_version_tag(shortcut), message=f"{shortcut} release")
+            else:
+                git.create_tag(shortcut, message=shortcut)
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
