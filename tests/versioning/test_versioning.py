@@ -39,7 +39,16 @@ class TestVersioning(unittest.TestCase):
                 CommitType.RELEASE,
                 False,
                 True,
-                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
+                {definitions.SemVerSigFig.major: 1, definitions.SemVerSigFig.minor: 1},
+            ),
+        )
+        self.assertDictEqual(
+            {"latest": False, "1": True, "1.0": True},
+            determine_version_shortcuts(
+                CommitType.RELEASE,
+                True,
+                True,
+                {definitions.SemVerSigFig.major: 1, definitions.SemVerSigFig.minor: 0},
             ),
         )
         self.assertDictEqual(
@@ -57,7 +66,7 @@ class TestVersioning(unittest.TestCase):
                 CommitType.RELEASE,
                 False,
                 False,
-                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"},
+                {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: 1},
             ),
         )
         self.assertDictEqual(
@@ -66,7 +75,7 @@ class TestVersioning(unittest.TestCase):
         )
         self.assertDictEqual(
             {"1": True, "latest": False},
-            determine_version_shortcuts(CommitType.RELEASE, True, True, {definitions.SemVerSigFig.major: "1"}),
+            determine_version_shortcuts(CommitType.RELEASE, True, True, {definitions.SemVerSigFig.major: 1}),
         )
         self.assertDictEqual(
             {}, determine_version_shortcuts(CommitType.RELEASE, False, True, {definitions.SemVerSigFig.minor: "1"})

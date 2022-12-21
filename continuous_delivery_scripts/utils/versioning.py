@@ -108,10 +108,10 @@ def determine_version_shortcuts(
     if not tag_shortcut:
         return shortcuts
     major_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.major, None)
-    if major_version:
-        shortcuts[major_version] = True
+    if major_version or major_version == 0:
+        shortcuts[f"{major_version}"] = True
     minor_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.minor, None)
-    if minor_version and major_version:
+    if (minor_version or minor_version == 0) and (major_version or major_version == 0):
         shortcuts[f"{major_version}.{minor_version}"] = True
     if commit_type == CommitType.BETA:
         shortcuts[auto_version_tool.config.PRERELEASE_TOKEN] = False
