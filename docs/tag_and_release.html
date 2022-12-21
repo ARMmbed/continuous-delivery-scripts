@@ -132,7 +132,16 @@ def _update_repository(
         if mode == CommitType.RELEASE:
             _commit_release_changes(git, version, commit_message)
         if is_new_version:
-            get_language_specifics().tag_release(git, version, determine_version_shortcuts(mode, version_elements))
+            get_language_specifics().tag_release(
+                git,
+                version,
+                determine_version_shortcuts(
+                    mode,
+                    configuration.get_value(ConfigurationVariable.TAG_LATEST),
+                    configuration.get_value(ConfigurationVariable.TAG_VERSION_SHORTCUTS),
+                    version_elements,
+                ),
+            )
             git.force_push_tag()
 
 

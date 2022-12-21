@@ -17,6 +17,16 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.10.1" (2022-12-21)
+=====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: scorecard-action-2.1.1 (#20221221071258)
+- Fixed shortcut tag rendering (#20221221110243)
+
+
 "2.10.0" (2022-12-20)
 =====================
 

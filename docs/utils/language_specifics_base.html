@@ -40,7 +40,7 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, Dict
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -107,15 +107,15 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return False
 
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
         git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
-        if configuration.get_value(ConfigurationVariable.TAG_LATEST):
-            git.create_tag(&#34;latest&#34;, message=&#34;latest release&#34;)
-        if configuration.get_value(ConfigurationVariable.TAG_VERSION_SHORTCUTS):
-            for shortcut in shortcuts:
+        for shortcut, version in shortcuts.items():
+            if version:
                 git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)
+            else:
+                git.create_tag(shortcut, message=shortcut)
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
@@ -221,15 +221,15 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return False
 
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
         git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
-        if configuration.get_value(ConfigurationVariable.TAG_LATEST):
-            git.create_tag(&#34;latest&#34;, message=&#34;latest release&#34;)
-        if configuration.get_value(ConfigurationVariable.TAG_VERSION_SHORTCUTS):
-            for shortcut in shortcuts:
+        for shortcut, version in shortcuts.items():
+            if version:
                 git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)
+            else:
+                git.create_tag(shortcut, message=shortcut)
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
@@ -451,7 +451,7 @@ def release_package_to_repository(self, version: str) -&gt; None:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.tag_release"><code class="name flex">
-<span>def <span class="ident">tag_release</span></span>(<span>self, git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, version: str, shortcuts: List[str]) ‑> None</span>
+<span>def <span class="ident">tag_release</span></span>(<span>self, git: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="git_helpers.html#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>, version: str, shortcuts: Dict[str, bool]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Tags release commit.</p></div>
@@ -459,15 +459,15 @@ def release_package_to_repository(self, version: str) -&gt; None:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def tag_release(self, git: GitWrapper, version: str, shortcuts: List[str]) -&gt; None:
+<pre><code class="python">def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -&gt; None:
     &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
     logger.info(f&#34;Tagging commit as release {version}&#34;)
     git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
-    if configuration.get_value(ConfigurationVariable.TAG_LATEST):
-        git.create_tag(&#34;latest&#34;, message=&#34;latest release&#34;)
-    if configuration.get_value(ConfigurationVariable.TAG_VERSION_SHORTCUTS):
-        for shortcut in shortcuts:
-            git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)</code></pre>
+    for shortcut, version in shortcuts.items():
+        if version:
+            git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)
+        else:
+            git.create_tag(shortcut, message=shortcut)</code></pre>
 </details>
 </dd>
 </dl>
