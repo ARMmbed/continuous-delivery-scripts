@@ -40,6 +40,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
@@ -52,13 +53,13 @@ class Docker(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -&gt; None:
+    def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Todo build docker image.&#34;&#34;&#34;
-        super().package_software(version)
+        super().package_software(mode, version)
 
-    def release_package_to_repository(self, version: str) -&gt; None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Todo push image to repository e.g. ecr, artifactory.&#34;&#34;&#34;
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
@@ -109,13 +110,13 @@ class Docker(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -&gt; None:
+    def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Todo build docker image.&#34;&#34;&#34;
-        super().package_software(version)
+        super().package_software(mode, version)
 
-    def release_package_to_repository(self, version: str) -&gt; None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Todo push image to repository e.g. ecr, artifactory.&#34;&#34;&#34;
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
 
     def check_credentials(self) -&gt; None:
         &#34;&#34;&#34;Checks any credentials.&#34;&#34;&#34;
@@ -206,7 +207,7 @@ class Docker(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.docker.Docker.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> None</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Todo build docker image.</p></div>
@@ -214,13 +215,13 @@ class Docker(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def package_software(self, version: str) -&gt; None:
+<pre><code class="python">def package_software(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;Todo build docker image.&#34;&#34;&#34;
-    super().package_software(version)</code></pre>
+    super().package_software(mode, version)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.docker.Docker.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> None</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Todo push image to repository e.g. ecr, artifactory.</p></div>
@@ -228,9 +229,9 @@ class Docker(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
+<pre><code class="python">def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;Todo push image to repository e.g. ecr, artifactory.&#34;&#34;&#34;
-    super().release_package_to_repository(version)</code></pre>
+    super().release_package_to_repository(mode, version)</code></pre>
 </details>
 </dd>
 </dl>

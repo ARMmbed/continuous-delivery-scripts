@@ -634,6 +634,19 @@ class GitWrapper:
 
         return [Path(self.root).joinpath(line.strip().split(&#34; &#34;)[-1]) for line in status.splitlines()]
 
+    @property
+    def uncommitted_staged_changes(self) -&gt; List[Path]:
+        &#34;&#34;&#34;Gets list of uncommitted staged changes.
+
+        Returns:
+             list of uncommitted staged changes
+        &#34;&#34;&#34;
+        staged = self.repo.git.diff(staged=True, name_only=True)
+        if not staged:
+            return []
+
+        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
+
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -&gt; None:
         logger.info(f&#34;Applying change in {modified_file} to {destination}&#34;)
@@ -660,6 +673,8 @@ class GitWrapper:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+        for f in self.uncommitted_staged_changes:
+            other_repo.add(f.relative_to(self.root))
 
     def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
         &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
@@ -1008,6 +1023,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes">uncommitted_staged_changes</a></code></li>
 </ul>
 </li>
 </ul>
@@ -1668,6 +1684,19 @@ def initial_location(self) -&gt; Path:
 
         return [Path(self.root).joinpath(line.strip().split(&#34; &#34;)[-1]) for line in status.splitlines()]
 
+    @property
+    def uncommitted_staged_changes(self) -&gt; List[Path]:
+        &#34;&#34;&#34;Gets list of uncommitted staged changes.
+
+        Returns:
+             list of uncommitted staged changes
+        &#34;&#34;&#34;
+        staged = self.repo.git.diff(staged=True, name_only=True)
+        if not staged:
+            return []
+
+        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
+
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -&gt; None:
         logger.info(f&#34;Applying change in {modified_file} to {destination}&#34;)
@@ -1694,6 +1723,8 @@ def initial_location(self) -&gt; Path:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+        for f in self.uncommitted_staged_changes:
+            other_repo.add(f.relative_to(self.root))
 
     def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
         &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
@@ -1761,6 +1792,29 @@ def uncommitted_changes(self) -&gt; List[Path]:
     return [Path(self.root).joinpath(line.strip().split(&#34; &#34;)[-1]) for line in status.splitlines()]</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes"><code class="name">var <span class="ident">uncommitted_staged_changes</span> : List[pathlib.Path]</code></dt>
+<dd>
+<div class="desc"><p>Gets list of uncommitted staged changes.</p>
+<h2 id="returns">Returns</h2>
+<p>list of uncommitted staged changes</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def uncommitted_staged_changes(self) -&gt; List[Path]:
+    &#34;&#34;&#34;Gets list of uncommitted staged changes.
+
+    Returns:
+         list of uncommitted staged changes
+    &#34;&#34;&#34;
+    staged = self.repo.git.diff(staged=True, name_only=True)
+    if not staged:
+        return []
+
+    return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]</code></pre>
+</details>
+</dd>
 </dl>
 <h3>Methods</h3>
 <dl>
@@ -1817,7 +1871,9 @@ def uncommitted_changes(self) -&gt; List[Path]:
         if f.exists():
             GitWrapper._apply_modifications(destination, f)
         else:
-            GitWrapper._apply_deletions(destination)</code></pre>
+            GitWrapper._apply_deletions(destination)
+    for f in self.uncommitted_staged_changes:
+        other_repo.add(f.relative_to(self.root))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.branch_exists"><code class="name flex">
@@ -3004,6 +3060,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes">uncommitted_staged_changes</a></code></li>
 </ul>
 </li>
 </ul>
@@ -3122,6 +3179,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes">uncommitted_staged_changes</a></code></li>
 </ul>
 </li>
 <li>

@@ -44,6 +44,7 @@ from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository, GitWrapper
 
 logger = logging.getLogger(__name__)
@@ -157,14 +158,14 @@ class Go(BaseLanguage):
         cleansed_version = version.strip().lstrip(&#34;v&#34;)
         return f&#34;v{cleansed_version}&#34;
 
-    def package_software(self, version: str) -&gt; None:
+    def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
         super().package_software(version)
         _call_goreleaser_check(version)
 
-    def release_package_to_repository(self, version: str) -&gt; None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         self._call_goreleaser_release(version)
 
     def check_credentials(self) -&gt; None:
@@ -252,14 +253,14 @@ class Go(BaseLanguage):
         cleansed_version = version.strip().lstrip(&#34;v&#34;)
         return f&#34;v{cleansed_version}&#34;
 
-    def package_software(self, version: str) -&gt; None:
+    def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
         super().package_software(version)
         _call_goreleaser_check(version)
 
-    def release_package_to_repository(self, version: str) -&gt; None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         self._call_goreleaser_release(version)
 
     def check_credentials(self) -&gt; None:
@@ -397,7 +398,7 @@ class Go(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> None</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>No operation.</p></div>
@@ -405,14 +406,14 @@ class Go(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def package_software(self, version: str) -&gt; None:
+<pre><code class="python">def package_software(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;No operation.&#34;&#34;&#34;
     super().package_software(version)
     _call_goreleaser_check(version)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> None</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>No operation.</p></div>
@@ -420,9 +421,9 @@ class Go(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
+<pre><code class="python">def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-    super().release_package_to_repository(version)
+    super().release_package_to_repository(mode, version)
     self._call_goreleaser_release(version)</code></pre>
 </details>
 </dd>

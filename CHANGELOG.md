@@ -17,6 +17,21 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"2.11.0" (2022-12-21)
+=====================
+
+Features
+--------
+
+- :sparkles: Added a `github_actions` plugin to manage actions or workflow projects (#20221221204057)
+
+
+Bugfixes
+--------
+
+- `[git]` :bug: make sure any staged changes are also applied to repository clones (#20221221183120)
+
+
 "2.10.2" (2022-12-21)
 =====================
 

@@ -47,6 +47,7 @@ from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
 from continuous_delivery_scripts.utils.logging import log_exception
@@ -167,14 +168,14 @@ class Python(BaseLanguage):
         &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -&gt; None:
+    def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
-        super().package_software(version)
+        super().package_software(mode, version)
         _create_wheel()
 
-    def release_package_to_repository(self, version: str) -&gt; None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Releases to PyPI.&#34;&#34;&#34;
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         _release_to_pypi()
 
     def check_credentials(self) -&gt; None:
@@ -232,14 +233,14 @@ class Python(BaseLanguage):
         &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -&gt; None:
+    def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
-        super().package_software(version)
+        super().package_software(mode, version)
         _create_wheel()
 
-    def release_package_to_repository(self, version: str) -&gt; None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Releases to PyPI.&#34;&#34;&#34;
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         _release_to_pypi()
 
     def check_credentials(self) -&gt; None:
@@ -354,7 +355,7 @@ class Python(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.python.Python.package_software"><code class="name flex">
-<span>def <span class="ident">package_software</span></span>(<span>self, version: str) ‑> None</span>
+<span>def <span class="ident">package_software</span></span>(<span>self, mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Packages the software into a wheel.</p></div>
@@ -362,14 +363,14 @@ class Python(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def package_software(self, version: str) -&gt; None:
+<pre><code class="python">def package_software(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
-    super().package_software(version)
+    super().package_software(mode, version)
     _create_wheel()</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.python.Python.release_package_to_repository"><code class="name flex">
-<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, version: str) ‑> None</span>
+<span>def <span class="ident">release_package_to_repository</span></span>(<span>self, mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>, version: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Releases to PyPI.</p></div>
@@ -377,9 +378,9 @@ class Python(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def release_package_to_repository(self, version: str) -&gt; None:
+<pre><code class="python">def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;Releases to PyPI.&#34;&#34;&#34;
-    super().release_package_to_repository(version)
+    super().release_package_to_repository(mode, version)
     _release_to_pypi()</code></pre>
 </details>
 </dd>
