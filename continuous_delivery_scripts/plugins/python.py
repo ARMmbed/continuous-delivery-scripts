@@ -14,6 +14,7 @@ from subprocess import check_call
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
 from continuous_delivery_scripts.utils.logging import log_exception
@@ -134,14 +135,14 @@ class Python(BaseLanguage):
         """Gets related language."""
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """Packages the software into a wheel."""
-        super().package_software(version)
+        super().package_software(mode, version)
         _create_wheel()
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """Releases to PyPI."""
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         _release_to_pypi()
 
     def check_credentials(self) -> None:

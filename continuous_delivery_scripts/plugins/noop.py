@@ -7,6 +7,7 @@ import logging
 from pathlib import Path
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from typing import Optional
 
@@ -20,13 +21,13 @@ class NoOp(BaseLanguage):
         """Gets the related language."""
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """No Op."""
-        super().package_software(version)
+        super().package_software(mode, version)
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """No Op."""
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
 
     def check_credentials(self) -> None:
         """No Op."""

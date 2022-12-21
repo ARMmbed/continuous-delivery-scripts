@@ -55,8 +55,8 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
             _clean_repository()
         if spdx_project and get_language_specifics().should_include_spdx_in_package():
             _generate_spdx_reports(spdx_project)
-        get_language_specifics().package_software(version)
-        get_language_specifics().release_package_to_repository(version)
+        get_language_specifics().package_software(mode, version)
+        get_language_specifics().release_package_to_repository(mode, version)
 
 
 def _get_documentation_config() -> Tuple[Path, str]:

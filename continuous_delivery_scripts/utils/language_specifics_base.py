@@ -11,6 +11,7 @@ from typing import Optional, Dict
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 
 logger = logging.getLogger(__name__)
@@ -91,13 +92,18 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """Package the software so that it can get released."""
-        logger.info(f"Generating a release package [{version}]")
+        if mode == CommitType.RELEASE:
+            logger.info(f"Generating a release package [{version}]")
+        elif mode == CommitType.BETA:
+            logger.info(f"Generating a pre-release package [{version}]")
+        else:
+            logger.info(f"Generating a development package [{version}]")
         pass
 
     @abstractmethod
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """Release the package to the official software repository."""
         logger.info(f"Uploading the package [{version}]")
         pass

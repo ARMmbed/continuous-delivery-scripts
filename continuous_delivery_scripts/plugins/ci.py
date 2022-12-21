@@ -9,6 +9,7 @@ from typing import Optional, Dict
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 
@@ -18,10 +19,9 @@ logger = logging.getLogger(__name__)
 class CI(BaseLanguage):
     """Specific actions for a CI project."""
 
-    def package_software(self, version: str) -> None:
-        """No operation."""
-        super().package_software(version)
-        # Nothing to do
+    def package_software(self, mode: CommitType, version: str) -> None:
+        """Nothing to do."""
+        pass
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""
@@ -37,9 +37,9 @@ class CI(BaseLanguage):
         cleansed_version = version.strip().lstrip("v")
         return f"v{cleansed_version}"
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """No operation."""
-        super().release_package_to_repository(version)
+        pass
 
     def check_credentials(self) -> None:
         """Checks any credentials."""
