@@ -3,17 +3,16 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for CI projects."""
-import logging, os
+import logging
+import os
 from pathlib import Path
-from typing import Optional, Dict, List
 from subprocess import check_call
+from typing import List
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from continuous_delivery_scripts.plugins.ci import CI
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 from continuous_delivery_scripts.utils.language_specifics_base import get_language_from_file_name
-from continuous_delivery_scripts.plugins.ci import CI
 
 logger = logging.getLogger(__name__)
 ENVVAR_GITHUB_CLI_GIT_TOKEN = "GITHUB_TOKEN"
