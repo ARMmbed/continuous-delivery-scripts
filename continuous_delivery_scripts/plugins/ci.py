@@ -5,12 +5,11 @@
 """Plugin for CI projects."""
 import logging
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 
 logger = logging.getLogger(__name__)
@@ -25,8 +24,7 @@ class CI(BaseLanguage):
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""
-        super().generate_code_documentation(output_directory, module_to_document)
-        # Nothing to do
+        pass
 
     def get_related_language(self) -> str:
         """Gets the related language."""
@@ -62,7 +60,3 @@ class CI(BaseLanguage):
     def should_clean_before_packaging(self) -> bool:
         """States whether the repository must be cleaned before packaging happens."""
         return True
-
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
-        """Tags release commit."""
-        super().tag_release(git, version, shortcuts)
