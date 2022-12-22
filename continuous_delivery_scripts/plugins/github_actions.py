@@ -23,8 +23,9 @@ def _generate_github_cli_release_command_list(
 ) -> List[str]:
     cmd = [
         "gh",
+        "create",
         "release",
-        "--latest",
+        f"{tag}",
         "--notes-file",
         f"{str(changelog)}",
     ]
@@ -36,7 +37,6 @@ def _generate_github_cli_release_command_list(
         title = f":news: Pre-release {version}"
     cmd.append("--title")
     cmd.append(title)
-    cmd.append(tag)
     return cmd
 
 
