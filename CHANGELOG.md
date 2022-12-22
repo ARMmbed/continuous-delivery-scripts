@@ -17,6 +17,27 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.0.0" (2022-12-22)
+====================
+
+Major changes
+-------------
+
+- :boom: Refactored the `NoOp` plugin to do no operation (#20221222001818)
+
+
+Features
+--------
+
+- :sparkles: Added a `basic` plugin to replace former `NoOp` plugin (#20221222001622)
+
+
+Bugfixes
+--------
+
+- :bug: Fixed the plugin loader to enable plugin inheritance (#20221222001917)
+
+
 "2.11.0" (2022-12-21)
 =====================
 

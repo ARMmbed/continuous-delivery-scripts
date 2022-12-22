@@ -37,11 +37,12 @@
 #
 &#34;&#34;&#34;Language specific actions.&#34;&#34;&#34;
 import glob
-import os
+from pathlib import Path
 
 all_plugin_files = [
-    os.path.splitext(os.path.basename(filename))[0]
-    for filename in glob.glob(os.path.join(os.path.dirname(__file__), &#34;*.py&#34;))
+    Path(filename).stem
+    for filename in glob.glob(str(Path(__file__).parent.joinpath(&#34;*.py&#34;)))
+    if not filename.endswith(&#34;__init__.py&#34;)
 ]
 __all__ = all_plugin_files</code></pre>
 </details>
@@ -49,6 +50,10 @@ __all__ = all_plugin_files</code></pre>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="continuous_delivery_scripts.plugins.basic" href="basic.html">continuous_delivery_scripts.plugins.basic</a></code></dt>
+<dd>
+<div class="desc"><p>Basic plugin.</p></div>
+</dd>
 <dt><code class="name"><a title="continuous_delivery_scripts.plugins.ci" href="ci.html">continuous_delivery_scripts.plugins.ci</a></code></dt>
 <dd>
 <div class="desc"><p>Plugin for CI projects.</p></div>
@@ -95,6 +100,7 @@ __all__ = all_plugin_files</code></pre>
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="continuous_delivery_scripts.plugins.basic" href="basic.html">continuous_delivery_scripts.plugins.basic</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.ci" href="ci.html">continuous_delivery_scripts.plugins.ci</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.docker" href="docker.html">continuous_delivery_scripts.plugins.docker</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.github_actions" href="github_actions.html">continuous_delivery_scripts.plugins.github_actions</a></code></li>

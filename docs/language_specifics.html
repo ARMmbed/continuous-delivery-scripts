@@ -38,7 +38,7 @@
 &#34;&#34;&#34;Language plugins Loader.&#34;&#34;&#34;
 
 import logging
-from typing import Optional, Dict, cast
+from typing import Optional, Dict, cast, Set, Type
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage
@@ -49,24 +49,48 @@ from continuous_delivery_scripts.plugins import *  # noqa
 logger = logging.getLogger(__name__)
 
 
-def _all_language_plugins() -&gt; Dict[str, BaseLanguage]:
-    &#34;&#34;&#34;Get all language plugins which inherit from BaseLanguage (with the exception of other base class).
+def _retrieve_all_subclasses(subclass: Type[BaseLanguage]) -&gt; Set[Type[BaseLanguage]]:
+    subclasses = set()
+    if not subclass:
+        return subclasses
+    if subclass != BaseLanguage:
+        subclasses.add(subclass)
+    for s in subclass.__subclasses__():
+        subclasses.update(_retrieve_all_subclasses(s))
+    return subclasses
 
-    :return: A list of classes containing language plugins
+
+def all_language_plugins() -&gt; Dict[str, BaseLanguage]:
+    &#34;&#34;&#34;Fetches all language plugins which inherit from BaseLanguage.
+
+    Returns:
+         A list of classes containing language plugins
     &#34;&#34;&#34;
-    all_plugins = BaseLanguage.__subclasses__()
-    return {
-        la.get_related_language().lower().strip(): la
-        for la in [lang() for lang in all_plugins if lang != BaseLanguage]  # type: ignore
-    }
+    all_plugins = _retrieve_all_subclasses(BaseLanguage)
+    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}  # type: ignore
 
 
-def _sanitise_program_language() -&gt; str:
-    return str(configuration.get_value(ConfigurationVariable.PROGRAMMING_LANGUAGE)).lower().strip()
+def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language: str) -&gt; BaseLanguage:
+    &#34;&#34;&#34;Fetches a language CD flow.
+
+    Arguments:
+        all_plugins: all the plugins at disposal
+        language: the language to select
+
+    Returns:
+         A language plugin corresponding to the language requested
+    &#34;&#34;&#34;
+    return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))
+
+
+def _sanitise_program_language(language: str) -&gt; str:
+    return language.lower().strip()
 
 
 def _fetch_project_language_specifics() -&gt; BaseLanguage:
-    return cast(BaseLanguage, _all_language_plugins().get(_sanitise_program_language()))
+    return fetch_project_language_plugin(
+        all_language_plugins(), str(configuration.get_value(ConfigurationVariable.PROGRAMMING_LANGUAGE))
+    )
 
 
 class PluginLoader:
@@ -97,6 +121,54 @@ def get_language_specifics() -&gt; BaseLanguage:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="continuous_delivery_scripts.language_specifics.all_language_plugins"><code class="name flex">
+<span>def <span class="ident">all_language_plugins</span></span>(<span>) ‑> Dict[str, <a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage" href="utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage">BaseLanguage</a>]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches all language plugins which inherit from BaseLanguage.</p>
+<h2 id="returns">Returns</h2>
+<p>A list of classes containing language plugins</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def all_language_plugins() -&gt; Dict[str, BaseLanguage]:
+    &#34;&#34;&#34;Fetches all language plugins which inherit from BaseLanguage.
+
+    Returns:
+         A list of classes containing language plugins
+    &#34;&#34;&#34;
+    all_plugins = _retrieve_all_subclasses(BaseLanguage)
+    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}  # type: ignore</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.language_specifics.fetch_project_language_plugin"><code class="name flex">
+<span>def <span class="ident">fetch_project_language_plugin</span></span>(<span>all_plugins: Dict[str, <a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage" href="utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage">BaseLanguage</a>], language: str) ‑> <a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage" href="utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage">BaseLanguage</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fetches a language CD flow.</p>
+<h2 id="arguments">Arguments</h2>
+<p>all_plugins: all the plugins at disposal
+language: the language to select</p>
+<h2 id="returns">Returns</h2>
+<p>A language plugin corresponding to the language requested</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language: str) -&gt; BaseLanguage:
+    &#34;&#34;&#34;Fetches a language CD flow.
+
+    Arguments:
+        all_plugins: all the plugins at disposal
+        language: the language to select
+
+    Returns:
+         A language plugin corresponding to the language requested
+    &#34;&#34;&#34;
+    return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.language_specifics.get_language_specifics"><code class="name flex">
 <span>def <span class="ident">get_language_specifics</span></span>(<span>) ‑> <a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage" href="utils/language_specifics_base.html#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage">BaseLanguage</a></span>
 </code></dt>
@@ -174,6 +246,8 @@ def languageSpecifics(self) -&gt; BaseLanguage:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="continuous_delivery_scripts.language_specifics.all_language_plugins" href="#continuous_delivery_scripts.language_specifics.all_language_plugins">all_language_plugins</a></code></li>
+<li><code><a title="continuous_delivery_scripts.language_specifics.fetch_project_language_plugin" href="#continuous_delivery_scripts.language_specifics.fetch_project_language_plugin">fetch_project_language_plugin</a></code></li>
 <li><code><a title="continuous_delivery_scripts.language_specifics.get_language_specifics" href="#continuous_delivery_scripts.language_specifics.get_language_specifics">get_language_specifics</a></code></li>
 </ul>
 </li>

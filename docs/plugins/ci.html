@@ -38,12 +38,11 @@
 &#34;&#34;&#34;Plugin for CI projects.&#34;&#34;&#34;
 import logging
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import GitWrapper
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 
 logger = logging.getLogger(__name__)
@@ -58,8 +57,7 @@ class CI(BaseLanguage):
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
-        super().generate_code_documentation(output_directory, module_to_document)
-        # Nothing to do
+        pass
 
     def get_related_language(self) -&gt; str:
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
@@ -94,11 +92,7 @@ class CI(BaseLanguage):
 
     def should_clean_before_packaging(self) -&gt; bool:
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
-        return True
-
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -&gt; None:
-        &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
-        super().tag_release(git, version, shortcuts)</code></pre>
+        return True</code></pre>
 </details>
 </section>
 <section>
@@ -128,8 +122,7 @@ class CI(BaseLanguage):
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
-        super().generate_code_documentation(output_directory, module_to_document)
-        # Nothing to do
+        pass
 
     def get_related_language(self) -&gt; str:
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
@@ -164,11 +157,7 @@ class CI(BaseLanguage):
 
     def should_clean_before_packaging(self) -&gt; bool:
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
-        return True
-
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -&gt; None:
-        &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
-        super().tag_release(git, version, shortcuts)</code></pre>
+        return True</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

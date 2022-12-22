@@ -38,18 +38,17 @@
 &#34;&#34;&#34;Plugin for Python projects.&#34;&#34;&#34;
 import logging
 import shutil
-
 import sys
 from pathlib import Path
+from subprocess import check_call
 from typing import List, Optional
 
-from subprocess import check_call
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
+from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
 from continuous_delivery_scripts.utils.logging import log_exception
 from continuous_delivery_scripts.utils.python.package_helpers import (
     CurrentPythonProjectMetadataFetcher,
