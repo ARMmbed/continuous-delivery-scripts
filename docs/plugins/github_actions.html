@@ -62,12 +62,12 @@ def _generate_github_cli_release_command_list(
         &#34;--notes-file&#34;,
         f&#34;{str(changelog)}&#34;,
     ]
-    title = f&#34;:sparkles: Release {version}&#34;
+    title = f&#34;Release {version}&#34;
     if is_latest:
         cmd.append(&#34;--latest&#34;)
     if is_prerelease:
         cmd.append(&#34;--prerelease&#34;)
-        title = f&#34;:news: Pre-release {version}&#34;
+        title = f&#34;Pre-release {version}&#34;
     cmd.append(&#34;--title&#34;)
     cmd.append(title)
     return cmd
@@ -82,7 +82,7 @@ def _generate_github_cli_check_command_list() -&gt; List[str]:
 
 def _call_github_cli_check() -&gt; None:
     &#34;&#34;&#34;Calls gh to verify its accessibility.&#34;&#34;&#34;
-    logger.info(&#34;Checking GitHub Actions is correctly installed.&#34;)
+    logger.info(&#34;Checking whether GitHub CLI is correctly installed.&#34;)
     env = os.environ
     env[ENVVAR_GITHUB_CLI_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
     check_call(_generate_github_cli_check_command_list(), env=env)
