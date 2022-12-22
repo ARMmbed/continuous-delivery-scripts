@@ -23,8 +23,8 @@ def _generate_github_cli_release_command_list(
 ) -> List[str]:
     cmd = [
         "gh",
-        "create",
         "release",
+        "create",
         f"{tag}",
         "--notes-file",
         f"{str(changelog)}",
