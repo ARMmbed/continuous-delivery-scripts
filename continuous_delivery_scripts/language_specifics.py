@@ -47,7 +47,6 @@ def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language
     Returns:
          A language plugin corresponding to the language requested
     """
-
     return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))
 
 

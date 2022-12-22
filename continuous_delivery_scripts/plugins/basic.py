@@ -5,11 +5,11 @@
 """Basic plugin."""
 import logging
 from pathlib import Path
+from typing import Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
-from typing import Optional
 
 logger = logging.getLogger(__name__)
 
