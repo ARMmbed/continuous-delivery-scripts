@@ -5,7 +5,7 @@
 """Language plugins Loader."""
 
 import logging
-from typing import Optional, Dict, cast
+from typing import Optional, Dict, cast, Set, Type
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage
@@ -16,24 +16,49 @@ from continuous_delivery_scripts.plugins import *  # noqa
 logger = logging.getLogger(__name__)
 
 
-def _all_language_plugins() -> Dict[str, BaseLanguage]:
-    """Get all language plugins which inherit from BaseLanguage (with the exception of other base class).
+def _retrieve_all_subclasses(subclass: Type[BaseLanguage]) -> Set[Type[BaseLanguage]]:
+    subclasses = set()
+    if not subclass:
+        return subclasses
+    if subclass != BaseLanguage:
+        subclasses.add(subclass)
+    for s in subclass.__subclasses__():
+        subclasses.update(_retrieve_all_subclasses(s))
+    return subclasses
 
-    :return: A list of classes containing language plugins
+
+def all_language_plugins() -> Dict[str, BaseLanguage]:
+    """Fetches all language plugins which inherit from BaseLanguage.
+
+    Returns:
+         A list of classes containing language plugins
     """
-    all_plugins = BaseLanguage.__subclasses__()
-    return {
-        la.get_related_language().lower().strip(): la
-        for la in [lang() for lang in all_plugins if lang != BaseLanguage]  # type: ignore
-    }
+    all_plugins = _retrieve_all_subclasses(BaseLanguage)
+    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}  # type: ignore
 
 
-def _sanitise_program_language() -> str:
-    return str(configuration.get_value(ConfigurationVariable.PROGRAMMING_LANGUAGE)).lower().strip()
+def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language: str) -> BaseLanguage:
+    """Fetches a language CD flow.
+
+    Arguments:
+        all_plugins: all the plugins at disposal
+        language: the language to select
+
+    Returns:
+         A language plugin corresponding to the language requested
+    """
+
+    return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))
+
+
+def _sanitise_program_language(language: str) -> str:
+    return language.lower().strip()
 
 
 def _fetch_project_language_specifics() -> BaseLanguage:
-    return cast(BaseLanguage, _all_language_plugins().get(_sanitise_program_language()))
+    return fetch_project_language_plugin(
+        all_language_plugins(), str(configuration.get_value(ConfigurationVariable.PROGRAMMING_LANGUAGE))
+    )
 
 
 class PluginLoader:

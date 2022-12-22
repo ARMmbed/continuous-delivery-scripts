@@ -25,8 +25,7 @@ class CI(BaseLanguage):
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""
-        super().generate_code_documentation(output_directory, module_to_document)
-        # Nothing to do
+        pass
 
     def get_related_language(self) -> str:
         """Gets the related language."""
@@ -62,7 +61,3 @@ class CI(BaseLanguage):
     def should_clean_before_packaging(self) -> bool:
         """States whether the repository must be cleaned before packaging happens."""
         return True
-
-    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
-        """Tags release commit."""
-        super().tag_release(git, version, shortcuts)
