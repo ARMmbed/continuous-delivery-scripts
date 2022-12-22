@@ -17,6 +17,17 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.0.5" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: scorecard-action-2.1.2 (#20221222071359)
+- Dependency upgrade: towncrier-22.12.0 (#20221222071646)
+- :bug: prerelease tag shortcuts (#20221222112207)
+
+
 "3.0.4" (2022-12-22)
 ====================
 

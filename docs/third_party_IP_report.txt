@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2022-12-22 01:48:27.146238
+                                         2022-12-22 12:05:55.650778
 
 # Summary:
     Licence compliance: Not compliant
@@ -424,7 +424,7 @@
 - towncrier:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/hawkowl/towncrier
+    URL: https://github.com/twisted/towncrier
     Licence: MIT
     Licence compliance: Licence is compliant.
 
