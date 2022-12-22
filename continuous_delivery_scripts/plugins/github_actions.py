@@ -22,7 +22,7 @@ def _generate_github_cli_release_command_list(
     changelog: Path, version: str, tag: str, is_latest: bool, is_prerelease: bool
 ) -> List[str]:
     cmd = [
-        "ght",
+        "gh",
         "release",
         "--latest",
         "--notes-file",
