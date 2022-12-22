@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.0.1" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- :bug: fixed `github_actions` plugins` (#20221222005632)
+
+
 "3.0.0" (2022-12-22)
 ====================
 
