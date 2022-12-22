@@ -56,8 +56,8 @@ def _generate_github_cli_release_command_list(
 ) -&gt; List[str]:
     cmd = [
         &#34;gh&#34;,
-        &#34;create&#34;,
         &#34;release&#34;,
+        &#34;create&#34;,
         f&#34;{tag}&#34;,
         &#34;--notes-file&#34;,
         f&#34;{str(changelog)}&#34;,
