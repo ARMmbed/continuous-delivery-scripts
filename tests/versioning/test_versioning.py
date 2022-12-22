@@ -81,13 +81,17 @@ class TestVersioning(unittest.TestCase):
             {}, determine_version_shortcuts(CommitType.RELEASE, False, True, {definitions.SemVerSigFig.minor: "1"})
         )
         self.assertDictEqual(
-            {"1": True, "1.1": True, config.PRERELEASE_TOKEN: False},
+            {
+                config.PRERELEASE_TOKEN: False,
+                f"1-{config.PRERELEASE_TOKEN}": True,
+                f"1.1-{config.PRERELEASE_TOKEN}": True,
+            },
             determine_version_shortcuts(
                 CommitType.BETA, True, True, {definitions.SemVerSigFig.major: "1", definitions.SemVerSigFig.minor: "1"}
             ),
         )
         self.assertTrue(
-            "1.1"
+            f"1.1-{config.BUILD_TOKEN}"
             in determine_version_shortcuts(
                 CommitType.DEVELOPMENT,
                 True,
@@ -96,7 +100,7 @@ class TestVersioning(unittest.TestCase):
             ).keys()
         )
         self.assertTrue(
-            "1"
+            f"1-{config.BUILD_TOKEN}"
             in determine_version_shortcuts(
                 CommitType.DEVELOPMENT,
                 True,

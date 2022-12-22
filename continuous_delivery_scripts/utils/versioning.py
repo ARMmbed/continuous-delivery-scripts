@@ -108,15 +108,24 @@ def determine_version_shortcuts(
     if not tag_shortcut:
         return shortcuts
     major_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.major, None)
-    if major_version or major_version == 0:
-        shortcuts[f"{major_version}"] = True
     minor_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.minor, None)
-    if (minor_version or minor_version == 0) and (major_version or major_version == 0):
-        shortcuts[f"{major_version}.{minor_version}"] = True
-    if commit_type == CommitType.BETA:
+    if commit_type == CommitType.RELEASE:
+        if major_version or major_version == 0:
+            shortcuts[f"{major_version}"] = True
+        if (minor_version or minor_version == 0) and (major_version or major_version == 0):
+            shortcuts[f"{major_version}.{minor_version}"] = True
+    elif commit_type == CommitType.BETA:
         shortcuts[str(auto_version_tool.config.PRERELEASE_TOKEN)] = False
-    if commit_type == CommitType.DEVELOPMENT:
+        if major_version or major_version == 0:
+            shortcuts[f"{major_version}-{auto_version_tool.config.PRERELEASE_TOKEN}"] = True
+        if (minor_version or minor_version == 0) and (major_version or major_version == 0):
+            shortcuts[f"{major_version}.{minor_version}-{auto_version_tool.config.PRERELEASE_TOKEN}"] = True
+    elif commit_type == CommitType.DEVELOPMENT:
         shortcuts[str(auto_version_tool.config.BUILD_TOKEN)] = False
+        if major_version or major_version == 0:
+            shortcuts[f"{major_version}-{auto_version_tool.config.BUILD_TOKEN}"] = True
+        if (minor_version or minor_version == 0) and (major_version or major_version == 0):
+            shortcuts[f"{major_version}.{minor_version}-{auto_version_tool.config.BUILD_TOKEN}"] = True
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
