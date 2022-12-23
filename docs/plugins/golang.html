@@ -161,7 +161,7 @@ class Go(BaseLanguage):
 
     def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().package_software(version)
+        super().package_software(mode, version)
         _call_goreleaser_check(version)
 
     def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
@@ -256,7 +256,7 @@ class Go(BaseLanguage):
 
     def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-        super().package_software(version)
+        super().package_software(mode, version)
         _call_goreleaser_check(version)
 
     def release_package_to_repository(self, mode: CommitType, version: str) -&gt; None:
@@ -409,7 +409,7 @@ class Go(BaseLanguage):
 </summary>
 <pre><code class="python">def package_software(self, mode: CommitType, version: str) -&gt; None:
     &#34;&#34;&#34;No operation.&#34;&#34;&#34;
-    super().package_software(version)
+    super().package_software(mode, version)
     _call_goreleaser_check(version)</code></pre>
 </details>
 </dd>
