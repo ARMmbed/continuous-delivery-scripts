@@ -128,7 +128,7 @@ class Go(BaseLanguage):
 
     def package_software(self, mode: CommitType, version: str) -> None:
         """No operation."""
-        super().package_software(version)
+        super().package_software(mode, version)
         _call_goreleaser_check(version)
 
     def release_package_to_repository(self, mode: CommitType, version: str) -> None:
