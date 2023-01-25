@@ -63,7 +63,7 @@ setup(
         "boto3",
         "packaging",
         "licenseheaders<0.8.9",
-        "spdx-tools==0.6.1",
+        "spdx-tools==0.7.0",
         "license-expression",
         "wcmatch",
         "jellyfish",
