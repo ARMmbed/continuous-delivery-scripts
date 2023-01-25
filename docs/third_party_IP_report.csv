@@ -6,12 +6,11 @@ True,botocore,True,https://github.com/boto/botocore,Apache-2.0,Licence is compli
 True,bracex,True,None,Unknown,Package's licence manually checked: MIT
 True,certifi,True,https://github.com/certifi/python-certifi,MPL-2.0,Licence is compliant.
 True,cffi,True,http://cffi.readthedocs.org,MIT,Licence is compliant.
-True,charset-normalizer,True,https://github.com/ousret/charset_normalizer,MIT,Licence is compliant.
+True,charset-normalizer,True,https://github.com/Ousret/charset_normalizer,MIT,Licence is compliant.
 True,click,True,https://palletsprojects.com/p/click/,BSD-3-Clause,Licence is compliant.
 True,click-default-group,True,https://github.com/sublee/click-default-group/,0BSD,Licence is compliant.
-True,commonmark,True,https://github.com/rtfd/commonmark.py,BSD-3-Clause,Licence is compliant.
 True,continuous-delivery-scripts,False,https://github.com/ARMmbed/continuous-delivery-scripts,Apache-2.0,Licence is compliant.
-True,cryptography,True,https://github.com/pyca/cryptography,Apache-2.0 OR BSD-3-Clause,Licence is compliant.
+True,cryptography,True,https://github.com/pyca/cryptography,APSL-2.0 AND (Apache-2.0 OR BSD-3-Clause),Package's licence manually checked: ((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)
 True,docutils,True,https://docutils.sourceforge.io/,Python-2.0,Licence is compliant.
 True,gitdb,True,https://github.com/gitpython-developers/gitdb,0BSD,Licence is compliant.
 True,GitPython,True,https://github.com/gitpython-developers/GitPython,0BSD,Licence is compliant.
@@ -29,7 +28,9 @@ True,license-expression,True,https://github.com/nexB/license-expression,Apache-2
 True,licenseheaders,True,http://github.com/johann-petrak/licenseheaders,MIT,Licence is compliant.
 True,Mako,True,https://www.makotemplates.org/,MIT,Licence is compliant.
 True,Markdown,True,https://Python-Markdown.github.io/,0BSD,Licence is compliant.
+True,markdown-it-py,True,None,Unknown,Package's licence manually checked: MIT
 True,MarkupSafe,True,https://palletsprojects.com/p/markupsafe/,BSD-3-Clause,Licence is compliant.
+True,mdurl,True,None,Unknown,Package's licence manually checked: MIT
 True,more-itertools,True,None,Unknown,Package's licence manually checked: MIT
 True,packaging,True,None,Unknown,Package's licence manually checked: either Apache-2.0 or BSD-2-Clause
 True,pdoc3,True,https://pdoc3.github.io/pdoc/,AGPL-3.0,Package's licence manually checked: Accepted for this project since not distributed
@@ -37,7 +38,7 @@ True,pkginfo,True,https://code.launchpad.net/~tseaver/pkginfo/trunk,MIT,Licence 
 True,ply,True,http://www.dabeaz.com/ply/,0BSD,Licence is compliant.
 True,pyautoversion,True,https://github.com/ARMmbed/autoversion,Apache-2.0,Licence is compliant.
 True,pycparser,True,https://github.com/eliben/pycparser,0BSD,Licence is compliant.
-True,Pygments,True,https://pygments.org/,0BSD,Licence is compliant.
+True,Pygments,True,https://pygments.org/,BSD-2-Clause,Licence is compliant.
 True,pyparsing,True,None,Unknown,Package's licence manually checked: MIT
 True,python-dateutil,True,https://github.com/dateutil/dateutil,Unknown,Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
 True,python-dotenv,True,https://github.com/theskumar/python-dotenv,BSD-3-Clause,Licence is compliant.
@@ -48,7 +49,7 @@ True,regex,True,https://github.com/mrabarnett/mrab-regex,Apache-2.0,Licence is c
 True,requests,True,https://requests.readthedocs.io,Apache-2.0,Licence is compliant.
 True,requests-toolbelt,True,https://toolbelt.readthedocs.io/,Apache-2.0,Licence is compliant.
 True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
-True,rich,True,https://github.com/willmcgugan/rich,MIT,Licence is compliant.
+True,rich,True,https://github.com/Textualize/rich,MIT,Licence is compliant.
 True,s3transfer,True,https://github.com/boto/s3transfer,Apache-2.0,Licence is compliant.
 True,SecretStorage,True,https://github.com/mitya57/secretstorage,BSD-1-Clause,Licence is compliant.
 True,semver,True,https://github.com/python-semver/python-semver,0BSD,Licence is compliant.

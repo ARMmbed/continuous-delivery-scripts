@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
 # Changelog
@@ -16,6 +16,18 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"3.0.7" (2023-01-25)
+====================
+
+Bugfixes
+--------
+
+- Fix `spdx-tools` version as breaking changes were introduced See https://github.com/spdx/tools-python/releases/tag/v0.7.0. (#202301251550)
+- Dependency upgrade: coverage-7.0.1 (#20221226071741)
+- Dependency upgrade: coverage-7.1.0 (#20230125170456)
+- Dependency upgrade: fetch-metadata-1.3.6 (#20230125170612)
+
 
 "3.0.6" (2022-12-23)
 ====================

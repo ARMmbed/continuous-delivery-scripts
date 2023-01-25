@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2022-12-23 15:56:18.053562
+                                         2023-01-25 19:09:05.851526
 
 # Summary:
     Licence compliance: Not compliant
@@ -60,7 +60,7 @@
 - charset-normalizer:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/ousret/charset_normalizer
+    URL: https://github.com/Ousret/charset_normalizer
     Licence: MIT
     Licence compliance: Licence is compliant.
 
@@ -78,13 +78,6 @@
     Licence: 0BSD
     Licence compliance: Licence is compliant.
 
-- commonmark:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/rtfd/commonmark.py
-    Licence: BSD-3-Clause
-    Licence compliance: Licence is compliant.
-
 - continuous-delivery-scripts:
     [X] Compliant?
     [] Dependency?
@@ -96,8 +89,8 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://github.com/pyca/cryptography
-    Licence: Apache-2.0 OR BSD-3-Clause
-    Licence compliance: Licence is compliant.
+    Licence: APSL-2.0 AND (Apache-2.0 OR BSD-3-Clause)
+    Licence compliance: Package's licence manually checked: ((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)
 
 - docutils:
     [X] Compliant?
@@ -218,12 +211,26 @@
     Licence: 0BSD
     Licence compliance: Licence is compliant.
 
+- markdown-it-py:
+    [X] Compliant?
+    [X] Dependency?
+    URL: None
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
+
 - MarkupSafe:
     [X] Compliant?
     [X] Dependency?
     URL: https://palletsprojects.com/p/markupsafe/
     Licence: BSD-3-Clause
     Licence compliance: Licence is compliant.
+
+- mdurl:
+    [X] Compliant?
+    [X] Dependency?
+    URL: None
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
 
 - more-itertools:
     [X] Compliant?
@@ -278,7 +285,7 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://pygments.org/
-    Licence: 0BSD
+    Licence: BSD-2-Clause
     Licence compliance: Licence is compliant.
 
 - pyparsing:
@@ -354,7 +361,7 @@
 - rich:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/willmcgugan/rich
+    URL: https://github.com/Textualize/rich
     Licence: MIT
     Licence compliance: Licence is compliant.
 
