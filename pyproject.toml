@@ -44,6 +44,9 @@ packaging="either Apache-2.0 or BSD-2-Clause"
 importlib-metadata="Apache-2.0 or Python-2.0"
 typing-extensions="PSF-2.0"
 tomli="MIT"
+markdown-it-py="MIT"
+mdurl="MIT"
+cryptography="((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

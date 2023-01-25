@@ -1,0 +1,1 @@
+Fix `spdx-tools` version as breaking changes were introduced See https://github.com/spdx/tools-python/releases/tag/v0.7.0.
