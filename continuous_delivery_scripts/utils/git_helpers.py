@@ -400,7 +400,13 @@ class GitWrapper:
         return self.get_remote_branch(branch_name) is not None
 
     def _get_specific_changes(self, change_type: Optional[str], commit1: Any, commit2: Any) -> List[str]:
-        diff = commit1.diff(commit2)
+        diff = []
+        if not (commit1 or commit2):
+            return []
+        if commit1:
+            diff = commit1.diff(commit2) if commit2 else commit1.diff()
+        else:
+            diff = commit2.diff()
         if change_type:
             change_type = change_type.upper()
             change_type = change_type if change_type in diff.change_type else None
@@ -548,9 +554,11 @@ class GitWrapper:
 
     def list_files_added_to_current_commit(self) -> List[str]:
         """Returns a list of files added in the current commit."""
-        current_branch_commit = self.repo.commit(self.get_current_branch())
-        changes = self.get_changes_list(current_branch_commit, None, change_type="a")
-        return changes
+        current_commit = self.repo.head.commit
+        previous_commit = self.repo.commit("HEAD~1")
+        if not current_commit:
+            current_commit = self.get_current_commit()
+        return self.get_changes_list(previous_commit, current_commit, change_type="a")
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
@@ -570,8 +578,7 @@ class GitWrapper:
                 # The branch point off `beta` is more recent than off `master`.
                 # Hence, the difference between current and `beta` should be considered.
                 branch_point = beta_branch_point
-        changes = self.get_changes_list(branch_point, current_branch_commit, change_type="a")
-        return changes
+        return self.get_changes_list(branch_point, current_branch_commit, change_type="a")
 
     def is_current_branch_feature(self) -> bool:
         """Returns boolean indicating if current branch is considered a feature."""

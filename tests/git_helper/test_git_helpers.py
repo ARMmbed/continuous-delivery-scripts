@@ -81,7 +81,6 @@ class TestGitTempClone(TestCase):
             self.assertEqual(clone.get_current_branch(), branch)
             self.assertTrue(clone.is_current_branch_feature())
             self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
-            self.assertTrue(len(clone.list_files_added_to_current_commit()) == 0)
 
     def test_current_branch(self):
         """Ensures current branch is as expected."""
@@ -106,7 +105,6 @@ class TestGitTempClone(TestCase):
             branch = clone.create_branch(f"test-{uuid4()}")
             clone.checkout(branch)
             self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
-            self.assertTrue(len(clone.list_files_added_to_current_commit()) == 0)
             previous_hash = clone.get_commit_hash()
             previous_count = clone.get_commit_count()
             test_file = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
@@ -128,7 +126,6 @@ class TestGitTempClone(TestCase):
             branch = clone.create_branch(f"test-{uuid4()}")
             clone.checkout(branch)
             self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
-            self.assertTrue(len(clone.list_files_added_to_current_commit()) == 0)
             test_file = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
             test_file.touch()
             uncommitted_changes = clone.uncommitted_changes
@@ -145,7 +142,6 @@ class TestGitTempClone(TestCase):
             branch = clone.create_branch(f"test-{uuid4()}")
             clone.checkout(branch)
             self.assertTrue(len(clone.list_files_added_on_current_branch()) == 0)
-            self.assertTrue(len(clone.list_files_added_to_current_commit()) == 0)
             test_file1 = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
             test_file1.touch()
             test_file2 = Path(clone.root).joinpath(f"branch-test-{uuid4()}.txt")
