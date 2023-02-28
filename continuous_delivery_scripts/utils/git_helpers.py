@@ -7,11 +7,10 @@ import logging
 import os
 import re
 import shutil
-from pathlib import Path
-from typing import Optional, List, Union, Any, Tuple
-
 from git import Repo, Actor, GitCommandError
 from packaging import version
+from pathlib import Path
+from typing import Optional, List, Union, Any, Tuple
 
 from .configuration import configuration, ConfigurationVariable
 from .filesystem_helpers import TemporaryDirectory
@@ -546,6 +545,12 @@ class GitWrapper:
         except (IndexError, ValueError) as e:
             logger.warning(e)
             return None
+
+    def list_files_added_to_current_commit(self) -> List[str]:
+        """Returns a list of files added in the current commit."""
+        current_branch_commit = self.repo.commit(self.get_current_branch())
+        changes = self.get_changes_list(current_branch_commit, None, change_type="a")
+        return changes
 
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""

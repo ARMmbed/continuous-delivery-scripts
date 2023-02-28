@@ -1,0 +1,1 @@
+:zap: Improved the performance of `assert news` for cases where news files are added to the current commit

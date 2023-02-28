@@ -13,6 +13,11 @@ class TestFindNewsFiles(TestCase):
     def test_returns_newly_added_news_files(self):
         """Given added files in git, it returns absolute paths to added news files."""
         fake_git_wrapper = mock.Mock(spec_set=GitWrapper)
+        fake_git_wrapper.list_files_added_to_current_commit.return_value = [
+            "foo/bar.py",
+            "news/1234.txt",
+            "news/wat.html",
+        ]
         fake_git_wrapper.list_files_added_on_current_branch.return_value = [
             "foo/bar.py",
             "news/1234.txt",
@@ -23,6 +28,28 @@ class TestFindNewsFiles(TestCase):
 
         subject = find_news_files(git=fake_git_wrapper, root_dir=root_dir, news_dir=news_dir)
 
+        fake_git_wrapper.list_files_added_to_current_commit.assert_called_once()
+        fake_git_wrapper.list_files_added_on_current_branch.assert_not_called()
+        self.assertEqual(
+            subject, [str(pathlib.Path(root_dir, "news/1234.txt")), str(pathlib.Path(root_dir, "news/wat.html"))]
+        )
+
+    def test_returns_previously_added_news_files(self):
+        """Given added files in git, it returns absolute paths to added news files."""
+        fake_git_wrapper = mock.Mock(spec_set=GitWrapper)
+        fake_git_wrapper.list_files_added_to_current_commit.return_value = []
+        fake_git_wrapper.list_files_added_on_current_branch.return_value = [
+            "foo/bar.py",
+            "news/1234.txt",
+            "news/wat.html",
+        ]
+        news_dir = "news/"
+        root_dir = "/root/"
+
+        subject = find_news_files(git=fake_git_wrapper, root_dir=root_dir, news_dir=news_dir)
+
+        fake_git_wrapper.list_files_added_to_current_commit.assert_called_once()
+        fake_git_wrapper.list_files_added_on_current_branch.assert_called_once()
         self.assertEqual(
             subject, [str(pathlib.Path(root_dir, "news/1234.txt")), str(pathlib.Path(root_dir, "news/wat.html"))]
         )

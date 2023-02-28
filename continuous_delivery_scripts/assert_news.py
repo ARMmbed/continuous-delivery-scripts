@@ -5,10 +5,10 @@
 """Checks if valid news files are created for changes in the project."""
 import argparse
 import logging
+import pathlib
 import re
 import sys
 from typing import List, Union
-import pathlib
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
@@ -71,10 +71,15 @@ def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> List[str]:
     Returns:
         list: list of absolute paths to news files
     """
-    files_changed = git.list_files_added_on_current_branch()
+    files_changed = git.list_files_added_to_current_commit()
+    # To speed up the process, we first look at files added to the current commit.
+    # If no news files were added, then we check for addition on the branch.
     # Relies on the fact GitWrapper returns paths that are always relative
     # to the project root.
     added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
+    if len(added_news_files) == 0:
+        files_changed = git.list_files_added_on_current_branch()
+        added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
     return [str(pathlib.Path(root_dir, file_path)) for file_path in added_news_files]
 
 
