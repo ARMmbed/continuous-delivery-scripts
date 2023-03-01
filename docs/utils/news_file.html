@@ -40,7 +40,7 @@ import enum
 import pathlib
 import logging
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -56,21 +56,21 @@ class NewsType(enum.Enum):
     removal = 5
 
 
-def create_news_file(news_dir: str, news_text: str, news_type: Any) -&gt; pathlib.Path:
+def create_news_file(news_dir: str, news_ref: Optional[str], news_text: str, news_type: Any) -&gt; pathlib.Path:
     &#34;&#34;&#34;Facilitates creating a news file, determining its file name based on the type.&#34;&#34;&#34;
     message_type = NewsType.misc
     if isinstance(news_type, str):
         message_type = NewsType[news_type]
     elif isinstance(news_type, NewsType):
         message_type = news_type
-    file_path = determine_news_file_path(news_dir, message_type)
+    file_path = determine_news_file_path(news_dir, news_ref, message_type)
     _write_file(file_path, news_text)
     return file_path
 
 
-def determine_news_file_path(news_dir: str, news_type: NewsType) -&gt; pathlib.Path:
+def determine_news_file_path(news_dir: str, news_ref: Optional[str], news_type: NewsType) -&gt; pathlib.Path:
     &#34;&#34;&#34;Returns an available file path for given news type.&#34;&#34;&#34;
-    news_file_name = determine_basic_new_news_file_name()
+    news_file_name = news_ref if news_ref else determine_basic_new_news_file_name()
     news_file_path = pathlib.Path(news_dir, f&#34;{news_file_name}.{news_type.name}&#34;)
     inc = 0
     while news_file_path.exists():
@@ -100,7 +100,7 @@ def determine_basic_new_news_file_name() -&gt; str:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.utils.news_file.create_news_file"><code class="name flex">
-<span>def <span class="ident">create_news_file</span></span>(<span>news_dir: str, news_text: str, news_type: Any) ‑> pathlib.Path</span>
+<span>def <span class="ident">create_news_file</span></span>(<span>news_dir: str, news_ref: Optional[str], news_text: str, news_type: Any) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Facilitates creating a news file, determining its file name based on the type.</p></div>
@@ -108,14 +108,14 @@ def determine_basic_new_news_file_name() -&gt; str:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_news_file(news_dir: str, news_text: str, news_type: Any) -&gt; pathlib.Path:
+<pre><code class="python">def create_news_file(news_dir: str, news_ref: Optional[str], news_text: str, news_type: Any) -&gt; pathlib.Path:
     &#34;&#34;&#34;Facilitates creating a news file, determining its file name based on the type.&#34;&#34;&#34;
     message_type = NewsType.misc
     if isinstance(news_type, str):
         message_type = NewsType[news_type]
     elif isinstance(news_type, NewsType):
         message_type = news_type
-    file_path = determine_news_file_path(news_dir, message_type)
+    file_path = determine_news_file_path(news_dir, news_ref, message_type)
     _write_file(file_path, news_text)
     return file_path</code></pre>
 </details>
@@ -135,7 +135,7 @@ def determine_basic_new_news_file_name() -&gt; str:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.news_file.determine_news_file_path"><code class="name flex">
-<span>def <span class="ident">determine_news_file_path</span></span>(<span>news_dir: str, news_type: <a title="continuous_delivery_scripts.utils.news_file.NewsType" href="#continuous_delivery_scripts.utils.news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
+<span>def <span class="ident">determine_news_file_path</span></span>(<span>news_dir: str, news_ref: Optional[str], news_type: <a title="continuous_delivery_scripts.utils.news_file.NewsType" href="#continuous_delivery_scripts.utils.news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns an available file path for given news type.</p></div>
@@ -143,9 +143,9 @@ def determine_basic_new_news_file_name() -&gt; str:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_news_file_path(news_dir: str, news_type: NewsType) -&gt; pathlib.Path:
+<pre><code class="python">def determine_news_file_path(news_dir: str, news_ref: Optional[str], news_type: NewsType) -&gt; pathlib.Path:
     &#34;&#34;&#34;Returns an available file path for given news type.&#34;&#34;&#34;
-    news_file_name = determine_basic_new_news_file_name()
+    news_file_name = news_ref if news_ref else determine_basic_new_news_file_name()
     news_file_path = pathlib.Path(news_dir, f&#34;{news_file_name}.{news_type.name}&#34;)
     inc = 0
     while news_file_path.exists():

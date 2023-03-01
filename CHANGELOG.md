@@ -17,6 +17,30 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+
+Features
+--------
+
+- :sparkles: Extended `create-news` so that the reference number can be specified (#20230301133846)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: mypy-1.0.0 (#20230207072240)
+- Dependency upgrade: mypy-1.0.1 (#20230220081601)
+- Dependency upgrade: coverage-7.2.0 (#20230223072638)
+- Dependency upgrade: setup-python-4 (#20230227080926)
+- :zap: Improved the performance of `assert news` for cases where news files are added to the current commit (#20230228103345)
+- Dependency upgrade: coverage-7.2.1 (#20230301081045)
+
+
+Misc
+----
+
+- #20230228130522
+
+
 "3.0.7" (2023-01-25)
 ====================
 

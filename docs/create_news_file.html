@@ -64,9 +64,10 @@ def main() -&gt; int:
     parser.add_argument(
         &#34;-t&#34;, &#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;
     )
+    parser.add_argument(&#34;-n&#34;, &#34;--ref-number&#34;, help=&#34;Reference number of the news file to use&#34;, required=False)
 
     args = parser.parse_args()
-    created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
+    created_file = create_news_file(str(NEWS_DIR), args.ref_number, args.news_text, NewsType[args.type])
 
     try:
         validate_news_file(created_file)
@@ -105,9 +106,10 @@ if __name__ == &#34;__main__&#34;:
     parser.add_argument(
         &#34;-t&#34;, &#34;--type&#34;, help=&#34;News type to create.&#34;, choices=[t.name for t in NewsType], default=&#34;feature&#34;
     )
+    parser.add_argument(&#34;-n&#34;, &#34;--ref-number&#34;, help=&#34;Reference number of the news file to use&#34;, required=False)
 
     args = parser.parse_args()
-    created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
+    created_file = create_news_file(str(NEWS_DIR), args.ref_number, args.news_text, NewsType[args.type])
 
     try:
         validate_news_file(created_file)
