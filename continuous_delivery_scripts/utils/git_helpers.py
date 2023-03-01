@@ -400,13 +400,13 @@ class GitWrapper:
         return self.get_remote_branch(branch_name) is not None
 
     def _get_specific_changes(self, change_type: Optional[str], commit1: Any, commit2: Any) -> List[str]:
-        diff = []
-        if not (commit1 or commit2):
-            return []
+        diff = None
         if commit1:
             diff = commit1.diff(commit2) if commit2 else commit1.diff()
-        else:
+        elif commit2:
             diff = commit2.diff()
+        if not diff:
+            return []
         if change_type:
             change_type = change_type.upper()
             change_type = change_type if change_type in diff.change_type else None
