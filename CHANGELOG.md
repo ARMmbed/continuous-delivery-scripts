@@ -17,6 +17,20 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.2.0" (2023-03-01)
+====================
+
+Features
+--------
+
+- :bug: Fixed news file automatic creation for dependency updates (#20230301144720)
+
+
+Misc
+----
+
+- #202303011436
+
 
 Features
 --------
