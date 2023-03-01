@@ -120,6 +120,7 @@ def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -> pathlib.Path:
     logger.info(f"Generating a news file with content: {message}...")
     return create_news_file(
         str(news_dir),
+        None,
         message,
         configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
     )
