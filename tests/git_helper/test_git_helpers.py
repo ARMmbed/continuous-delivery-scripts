@@ -115,8 +115,10 @@ class TestGitTempClone(TestCase):
             clone.commit("Test commit")
             self.assertNotEqual(previous_hash, clone.get_commit_hash())
             self.assertEqual(previous_count + 1, clone.get_commit_count())
-            added_files = [Path(clone.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
-            self.assertTrue(test_file in added_files)
+            added_files_to_commit = [Path(clone.root).joinpath(f) for f in clone.list_files_added_to_current_commit()]
+            self.assertTrue(test_file in added_files_to_commit)
+            added_files_to_branch = [Path(clone.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
+            self.assertTrue(test_file in added_files_to_branch)
 
     def test_repo_clean(self):
         """Test basic git clean on the clone."""
@@ -166,5 +168,7 @@ class TestGitTempClone(TestCase):
             self.assertTrue(clone.get_corresponding_path(test_file) in uncommitted_changes)
             clone.add(test_file)
             clone.commit("Test commit")
+            added_files_to_commit = [Path(git.root).joinpath(f) for f in clone.list_files_added_to_current_commit()]
             added_files = [Path(git.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
         self.assertTrue(test_file in added_files)
+        self.assertTrue(test_file in added_files_to_commit)
