@@ -26,10 +26,10 @@ class TestCreateNewsFile(TestCase):
         news_text = "Cool feature"
         news_type = NewsType.feature
 
-        file_path = create_news_file(NEWS_DIR, news_text, news_type)
+        file_path = create_news_file(NEWS_DIR, None, news_text, news_type)
 
         self.assertEqual(file_path, news_file_path)
-        determine_news_file_path.assert_called_once_with(NEWS_DIR, news_type)
+        determine_news_file_path.assert_called_once_with(NEWS_DIR, None, news_type)
         _write_file.assert_called_once_with(file_path, news_text)
 
     @mock.patch("continuous_delivery_scripts.utils.news_file.determine_news_file_path")
@@ -40,10 +40,36 @@ class TestCreateNewsFile(TestCase):
         news_text = "Cool feature"
         news_type = NewsType.feature
 
-        file_path = create_news_file(NEWS_DIR, news_text, news_type.name)
+        file_path = create_news_file(NEWS_DIR, None, news_text, news_type.name)
 
         self.assertEqual(file_path, news_file_path)
-        determine_news_file_path.assert_called_once_with(NEWS_DIR, news_type)
+        determine_news_file_path.assert_called_once_with(NEWS_DIR, None, news_type)
+        _write_file.assert_called_once_with(file_path, news_text)
+
+    @mock.patch("continuous_delivery_scripts.utils.news_file.determine_basic_new_news_file_name")
+    @mock.patch("continuous_delivery_scripts.utils.news_file._write_file")
+    def test_creates_a_file_with_news_reference(self, _write_file, determine_basic_new_news_file_name):
+        determine_basic_new_news_file_name.return_value = "1234501.feature"
+        news_text = "Cool feature"
+        news_type = NewsType.feature
+        ref = "123456"
+        expected_file_path = pathlib.Path(NEWS_DIR, f"{ref}.feature")
+        file_path = create_news_file(NEWS_DIR, ref, news_text, news_type.name)
+
+        self.assertEqual(file_path, expected_file_path)
+        _write_file.assert_called_once_with(file_path, news_text)
+
+    @mock.patch("continuous_delivery_scripts.utils.news_file.determine_basic_new_news_file_name")
+    @mock.patch("continuous_delivery_scripts.utils.news_file._write_file")
+    def test_creates_a_file_without_news_reference(self, _write_file, determine_basic_new_news_file_name):
+        expected_file_name = "1234501"
+        determine_basic_new_news_file_name.return_value = expected_file_name
+        news_text = "Cool feature"
+        news_type = NewsType.feature
+
+        file_path = create_news_file(NEWS_DIR, None, news_text, news_type.name)
+
+        self.assertEqual(file_path, pathlib.Path(NEWS_DIR, f"{expected_file_name}.feature"))
         _write_file.assert_called_once_with(file_path, news_text)
 
 
@@ -59,7 +85,7 @@ class TestDetermineNewsFilePath(TestCase):
                     pathlib.Path(tmp_dir, f"{news_file_path_today}.{news_type.name}").touch()
                     pathlib.Path(tmp_dir, f"{news_file_path_today}01.{news_type.name}").touch()
 
-                    file_path = determine_news_file_path(NEWS_DIR, news_type)
+                    file_path = determine_news_file_path(NEWS_DIR, None, news_type)
 
                     self.assertEqual(file_path, pathlib.Path(news_dir, f"{news_file_name_today}02.{news_type.name}"))
 

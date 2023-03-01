@@ -29,9 +29,10 @@ def main() -> int:
     parser.add_argument(
         "-t", "--type", help="News type to create.", choices=[t.name for t in NewsType], default="feature"
     )
+    parser.add_argument("-n", "--ref-number", help="Reference number of the news file to use", required=False)
 
     args = parser.parse_args()
-    created_file = create_news_file(str(NEWS_DIR), args.news_text, NewsType[args.type])
+    created_file = create_news_file(str(NEWS_DIR), args.ref_number, args.news_text, NewsType[args.type])
 
     try:
         validate_news_file(created_file)
