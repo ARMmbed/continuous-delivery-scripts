@@ -8,7 +8,7 @@ import logging
 import pathlib
 import re
 import sys
-from typing import Union, Optional, Iterable, Any
+from typing import Union, Optional, Iterable, Any, List
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
@@ -60,7 +60,7 @@ def validate_news_file(absolute_path: Union[pathlib.Path, str]) -> None:
     NewsFileValidator(absolute_path).validate()
 
 
-def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> list[str]:
+def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> List[str]:
     """Determines a list of all the news files which were added as part of the PR.
 
     Args:
@@ -98,7 +98,7 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         validate_news_file(absolute_file_path)
 
 
-def _convert_to_string_iter(list: Optional[list[Any]]) -> Iterable[str]:
+def _convert_to_string_iter(list: Optional[List[Any]]) -> Iterable[str]:
     if list is None:
         return []
     return [str(item) for item in list]
