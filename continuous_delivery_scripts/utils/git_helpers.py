@@ -132,7 +132,7 @@ class GitWrapper:
         logger.info(f"Adding {unix_relative_path} to repository.")
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -> None:
+    def add(self, path: Union[list, set, Path]) -> None:
         """Adds a file or a list of files.
 
         Args:
@@ -488,7 +488,7 @@ class GitWrapper:
 
         Repository is considered dirty when git status returns elements which are not committed.
         """
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -> None:
         """Cleans the repository.
