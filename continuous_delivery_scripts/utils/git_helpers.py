@@ -114,7 +114,7 @@ class GitWrapper:
         """
         self.repo.git.checkout(branch)
 
-    def _add_one_file_or_one_dir(self, path: str) -> None:
+    def _add_one_file_or_one_dir(self, path: Path) -> None:
         if not path:
             raise ValueError("Unspecified path.")
         self._add_one_path(Path(path))
@@ -132,7 +132,7 @@ class GitWrapper:
         logger.info(f"Adding {unix_relative_path} to repository.")
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -> None:
+    def add(self, path: Union[list, set, Path]) -> None:
         """Adds a file or a list of files.
 
         Args:
@@ -488,7 +488,7 @@ class GitWrapper:
 
         Repository is considered dirty when git status returns elements which are not committed.
         """
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -> None:
         """Cleans the repository.
@@ -588,17 +588,19 @@ class GitWrapper:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -> (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -> Tuple[bool, Optional[List[Any]]]:
         """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any."""
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -> (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -> Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:
             return False, None
         match = re.search(pattern, str(branch_name))
-        return True if match else False, match.groups() if match else None
+        return True if match else False, list(match.groups()) if match else None
 
     @property
     def uncommitted_changes(self) -> List[Path]:
@@ -643,7 +645,7 @@ class GitWrapper:
         """Applies the uncommitted changes found in current repository to another.
 
         Args:
-            other_repo: repository to apply changes to
+             other_repo: repository to apply changes to
         """
         dest_root = other_repo.root
         for f in self.uncommitted_changes:
@@ -738,7 +740,7 @@ class GitClone(GitWrapper):
             path_in_initial_repo: path to a file/directory in initial repository.
 
         Returns:
-             corresponding path.
+            corresponding path.
         """
         if not path_in_initial_repo.is_absolute():
             return Path(self.root).joinpath(path_in_initial_repo)

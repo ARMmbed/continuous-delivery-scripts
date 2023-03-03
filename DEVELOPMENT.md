@@ -51,7 +51,6 @@ Setup Pipenv to use Python 3 (Python 2 is not supported) and install package dev
 
 ```bash
 cd continuous-delivery-scripts/
-pipenv --three
 pipenv install --dev
 ```
 

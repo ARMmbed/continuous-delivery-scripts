@@ -1,0 +1,26 @@
+name: "Run type checker"
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+
+jobs:
+  type-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install pipenv
+        shell: bash
+        run: |
+          python -m pip install --upgrade pipenv
+          pipenv install --dev
+      - name: Type check with mypy
+        run: |
+          pipenv run mypy ./continuous_delivery_scripts

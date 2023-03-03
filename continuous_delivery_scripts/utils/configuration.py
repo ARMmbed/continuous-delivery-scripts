@@ -240,7 +240,7 @@ class FileConfig(GenericConfig):
     PATH_TOKEN = {"DIR", "ROOT", "PATH"}
     CONFIG_FILE_NAME = "pyproject.toml"
 
-    def __init__(self, file_path: str = None) -> None:
+    def __init__(self, file_path: Optional[str] = None) -> None:
         """Constructor.
 
         Args:

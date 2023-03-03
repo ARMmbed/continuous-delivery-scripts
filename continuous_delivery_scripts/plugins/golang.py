@@ -94,7 +94,7 @@ def _call_goreleaser_check(version: str) -> None:
     check_call(_generate_goreleaser_check_command_list(), cwd=ROOT_DIR, env=env)
 
 
-def _determine_go_module_tag(version) -> Optional[str]:
+def _determine_go_module_tag(version: str) -> Optional[str]:
     """Determines go module for tagging.
 
     See https://golang.org/ref/mod#vcs-version.
@@ -121,7 +121,7 @@ class Go(BaseLanguage):
         """Gets the related language."""
         return get_language_from_file_name(__file__)
 
-    def get_version_tag(self, version: str):
+    def get_version_tag(self, version: str) -> str:
         """Gets tag based on version."""
         cleansed_version = version.strip().lstrip("v")
         return f"v{cleansed_version}"

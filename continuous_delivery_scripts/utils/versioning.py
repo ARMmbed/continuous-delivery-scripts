@@ -73,11 +73,11 @@ def determine_version_string(
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         return "%s-%s.%s+%s" % (
             new_version,
             auto_version_tool.config.BUILD_TOKEN,
@@ -129,11 +129,11 @@ def determine_version_shortcuts(
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         shortcuts[f"{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}"] = False
 
     return shortcuts

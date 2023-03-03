@@ -33,7 +33,7 @@ from continuous_delivery_scripts.utils.third_party_licences import simplify_lice
 logger = logging.getLogger(__name__)
 
 # Copyright similar to the regex defined in flake8-copyright
-COPYRIGHT_PATTERN = r"((?i)Copyright(?i).*$)"
+COPYRIGHT_PATTERN = r"(?i)Copyright.*$"
 COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, re.MULTILINE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
@@ -73,7 +73,7 @@ def determine_file_copyright_text(path: Path) -> Optional[str]:
     match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
     if not match:
         return None
-    return str(match.group(1).strip())
+    return str(match.group(0).strip())
 
 
 def determine_spdx_value(value: Optional[str]) -> Union[str, UnKnown, SPDXNone]:

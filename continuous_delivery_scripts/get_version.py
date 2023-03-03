@@ -5,6 +5,7 @@
 """Determine the project new version."""
 import sys
 
+from typing import Optional
 import argparse
 import logging
 from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
@@ -15,7 +16,7 @@ from continuous_delivery_scripts.utils.logging import log_exception, set_log_lev
 logger = logging.getLogger(__name__)
 
 
-def get_project_version_string(commit_type: CommitType) -> str:
+def get_project_version_string(commit_type: CommitType) -> Optional[str]:
     """Determine the project version string.
 
     Args:

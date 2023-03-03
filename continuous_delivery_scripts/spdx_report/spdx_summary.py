@@ -27,7 +27,7 @@ except ModuleNotFoundError as e:
 
 
 def generate_file_based_on_template(
-    output_dir: Path, template_name: str, template_args: dict, suffix: str = None
+    output_dir: Path, template_name: str, template_args: dict, suffix: Optional[str] = None
 ) -> None:
     """Write file based on template and arguments."""
     logger.info("Loading template '%s'.", template_name)

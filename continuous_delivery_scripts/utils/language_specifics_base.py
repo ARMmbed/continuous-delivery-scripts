@@ -79,8 +79,8 @@ class BaseLanguage(ABC):
         """Tags release commit."""
         logger.info(f"Tagging commit as release {version}")
         git.create_tag(self.get_version_tag(version), message=f"release {version}")
-        for shortcut, version in shortcuts.items():
-            if version:
+        for shortcut, versions in shortcuts.items():
+            if versions:
                 git.create_tag(self.get_version_tag(shortcut), message=f"{shortcut} release")
             else:
                 git.create_tag(shortcut, message=shortcut)
