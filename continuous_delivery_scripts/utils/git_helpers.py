@@ -10,7 +10,7 @@ import shutil
 from git import Repo, Actor, GitCommandError
 from packaging import version
 from pathlib import Path
-from typing import Optional, List, Union, Any, Tuple, Iterable
+from typing import Optional, List, Union, Any, Tuple
 
 from .configuration import configuration, ConfigurationVariable
 from .filesystem_helpers import TemporaryDirectory
