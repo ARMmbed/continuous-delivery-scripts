@@ -588,11 +588,13 @@ class GitWrapper:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -> (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -> Tuple[bool, Optional[List[Any]]]:
         """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any."""
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -> (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -> Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:

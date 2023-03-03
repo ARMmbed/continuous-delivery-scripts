@@ -31,7 +31,7 @@ class SpdxDocument:
         package_metadata: PackageMetadata,
         other_document_refs: List[DependencySpdxDocumentRef] = list(),
         is_dependency: bool = False,
-        document_namespace: str = None,
+        document_namespace: Optional[str] = None,
     ):
         """Constructor."""
         self._project_root = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))

@@ -30,7 +30,7 @@ class CI(BaseLanguage):
         """Gets the related language."""
         return get_language_from_file_name(__file__)
 
-    def get_version_tag(self, version: str):
+    def get_version_tag(self, version: str) -> str:
         """Gets tag based on version."""
         cleansed_version = version.strip().lstrip("v")
         return f"v{cleansed_version}"

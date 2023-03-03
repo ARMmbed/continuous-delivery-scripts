@@ -23,3 +23,5 @@ allow_prereleases = false
 
 [packages]
 continuous-delivery-scripts = {editable = true, path = "."}
+types-toml = "*"
+types-setuptools = "*"
