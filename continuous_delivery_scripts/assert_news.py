@@ -8,7 +8,7 @@ import logging
 import pathlib
 import re
 import sys
-from typing import List, Union
+from typing import Union, Optional, Iterable, Any
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
@@ -60,7 +60,7 @@ def validate_news_file(absolute_path: Union[pathlib.Path, str]) -> None:
     NewsFileValidator(absolute_path).validate()
 
 
-def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> List[str]:
+def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> list[str]:
     """Determines a list of all the news files which were added as part of the PR.
 
     Args:
@@ -98,6 +98,12 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         validate_news_file(absolute_file_path)
 
 
+def convert_to_string_iter(list: Optional[list[Any]]) -> Iterable[str]:
+    if list is None:
+        return []
+    return [str(item) for item in list]
+
+
 def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -> pathlib.Path:
     """Adds a news file if the branch corresponds to an dependency update.
 
@@ -114,8 +120,9 @@ def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -> pathlib.Path:
     if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
         raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
 
+    list_groups = convert_to_string_iter(groups)
     message = str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
-        message=", ".join(groups)
+        message=", ".join(list_groups)
     )
     logger.info(f"Generating a news file with content: {message}...")
     return create_news_file(
@@ -130,7 +137,7 @@ def _commit_news_file(git: GitWrapper, news_file: pathlib.Path, local: bool) -> 
     logger.info(f"Committing news file {str(news_file)}...")
     if not local:
         git.configure_for_github()
-    git.add(str(news_file))
+    git.add(news_file)
     git.commit("📰 Automatic changes ⚙ Adding news file")
     if not local:
         git.push()

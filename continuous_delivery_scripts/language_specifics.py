@@ -16,8 +16,8 @@ from continuous_delivery_scripts.plugins import *  # noqa
 logger = logging.getLogger(__name__)
 
 
-def _retrieve_all_subclasses(subclass: Type[BaseLanguage]) -> Set[Type[BaseLanguage]]:
-    subclasses = set()
+def _retrieve_all_subclasses(subclass: Type) -> Set[Type]:
+    subclasses: set = set()
     if not subclass:
         return subclasses
     if subclass != BaseLanguage:
@@ -31,10 +31,10 @@ def all_language_plugins() -> Dict[str, BaseLanguage]:
     """Fetches all language plugins which inherit from BaseLanguage.
 
     Returns:
-         A list of classes containing language plugins
+        A list of classes containing language plugins
     """
     all_plugins = _retrieve_all_subclasses(BaseLanguage)
-    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}  # type: ignore
+    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}
 
 
 def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language: str) -> BaseLanguage:
@@ -45,7 +45,7 @@ def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language
         language: the language to select
 
     Returns:
-         A language plugin corresponding to the language requested
+        A language plugin corresponding to the language requested
     """
     return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))
 
