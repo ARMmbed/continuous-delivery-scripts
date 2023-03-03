@@ -180,7 +180,7 @@ jobs:
         include:
           - os: macOS-latest
             multi-platform: false
-            python-version: 3.9
+            python-version: 3.11
 #          - os: windows-latest
 #            multi-platform: false
 #            python-version: 3.9
@@ -258,3 +258,10 @@ jobs:
           pytest
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
+
+  type-checking:
+    name: run type-checker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: mypy
+        with: ${{ matrix.python-version }}
