@@ -1,10 +1,11 @@
 name: "Run type checker"
 on:
-  workflow_call:
-    inputs:
-      python-version:
-        required: true
-        type: string
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+
 jobs:
   type-check:
     runs-on: ubuntu-latest
@@ -14,7 +15,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version ${{inputs.python-version}}
+          python-version: "3.11"
       - name: Install pipenv
         shell: bash
         run: |
