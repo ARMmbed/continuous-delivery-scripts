@@ -23,4 +23,4 @@ jobs:
           pipenv install --dev
       - name: Type check with mypy
         run: |
-          mypy .
+          pipenv run mypy ./continuous_delivery_scripts
