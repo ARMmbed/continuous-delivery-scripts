@@ -10,7 +10,7 @@ env:
   python_cache_macOS_path: ~/Library/Caches/pip
   python_cache_windows_path: ~\AppData\Local\pip\Cache
   python_cache_ubuntu_path: ~/.cache/pip
-  pipenv_version: 2022.11.25
+  pipenv_version: 2024.4.0
   python_version: '3.11'
 
 jobs:
@@ -166,7 +166,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest ] # FIXME add other platforms when much quicker macOS-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
         multi-platform:
           - ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
         #        include:
