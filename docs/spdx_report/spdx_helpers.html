@@ -42,7 +42,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Facilities regarding SPDX.
@@ -76,8 +76,8 @@ from continuous_delivery_scripts.utils.third_party_licences import simplify_lice
 logger = logging.getLogger(__name__)
 
 # Copyright similar to the regex defined in flake8-copyright
-COPYRIGHT_PATTERN = r&#34;((?i)Copyright(?i).*$)&#34;
-COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, re.MULTILINE)
+COPYRIGHT_PATTERN = r&#34;Copyright.*$&#34;
+COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, flags=re.MULTILINE | re.IGNORECASE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
 SPDX_LICENCE_IDENTIFIER_PATTERN = r&#34;SPDX-License-Identifier: ([\.\w+\-\(\)\s]+)[\*]?$&#34;
@@ -116,7 +116,7 @@ def determine_file_copyright_text(path: Path) -&gt; Optional[str]:
     match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
     if not match:
         return None
-    return str(match.group(1).strip())
+    return str(match.group(0).strip())
 
 
 def determine_spdx_value(value: Optional[str]) -&gt; Union[str, UnKnown, SPDXNone]:
@@ -235,7 +235,7 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
     if not match:
         return None
-    return str(match.group(1).strip())</code></pre>
+    return str(match.group(0).strip())</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.determine_file_licence"><code class="name flex">

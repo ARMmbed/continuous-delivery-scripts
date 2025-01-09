@@ -1,50 +1,52 @@
 Compliance, Name,Is a dependency?,URL,Licence,Details
-True,bleach,True,https://github.com/mozilla/bleach,Apache-2.0,Licence is compliant.
+False,backports.tarfile,True,None,Unknown,Licence is not compliant according to project's configuration.
 True,boolean.py,True,https://github.com/bastikr/boolean.py,BSD-2-Clause,Licence is compliant.
 True,boto3,True,https://github.com/boto/boto3,Apache-2.0,Licence is compliant.
 True,botocore,True,https://github.com/boto/botocore,Apache-2.0,Licence is compliant.
 True,bracex,True,None,Unknown,Package's licence manually checked: MIT
 True,certifi,True,https://github.com/certifi/python-certifi,MPL-2.0,Licence is compliant.
 True,cffi,True,http://cffi.readthedocs.org,MIT,Licence is compliant.
-True,charset-normalizer,True,https://github.com/Ousret/charset_normalizer,MIT,Licence is compliant.
-True,click,True,https://palletsprojects.com/p/click/,BSD-3-Clause,Licence is compliant.
-True,click-default-group,True,https://github.com/sublee/click-default-group/,0BSD,Licence is compliant.
+True,charset-normalizer,True,None,MIT,Licence is compliant.
+True,click,True,None,Unknown,Package's licence manually checked: BSD-3-Clause
+True,click-default-group,True,None,Unknown,Package's licence manually checked: BSD-3-Clause
 True,continuous-delivery-scripts,False,https://github.com/ARMmbed/continuous-delivery-scripts,Apache-2.0,Licence is compliant.
-True,cryptography,True,https://github.com/pyca/cryptography,APSL-2.0 AND (Apache-2.0 OR BSD-3-Clause),Package's licence manually checked: ((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)
-True,docutils,True,https://docutils.sourceforge.io/,Python-2.0,Licence is compliant.
+True,cryptography,True,None,Apache-2.0 OR BSD-3-Clause,Licence is compliant.
+True,docutils,True,None,Unknown,Package's licence manually checked: BSD-3-Clause
 True,gitdb,True,https://github.com/gitpython-developers/gitdb,0BSD,Licence is compliant.
-True,GitPython,True,https://github.com/gitpython-developers/GitPython,0BSD,Licence is compliant.
+True,GitPython,True,https://github.com/gitpython-developers/GitPython,BSD-3-Clause,Licence is compliant.
 True,idna,True,None,Unknown,Package's licence manually checked: BSD-3-Clause
-True,importlib-metadata,True,https://github.com/python/importlib_metadata,Unknown,Package's licence manually checked: Apache-2.0 or Python-2.0
-True,incremental,True,https://github.com/twisted/incremental,MIT,Licence is compliant.
-True,isodate,True,https://github.com/gweis/isodate/,0BSD,Licence is compliant.
+True,importlib_metadata,True,None,Unknown,Package's licence manually checked: Apache-2.0
+True,incremental,True,None,Unknown,Package's licence manually checked: MIT
 False,jaraco.classes,True,https://github.com/jaraco/jaraco.classes,Unknown,Licence is not compliant according to project's configuration.
+False,jaraco.context,True,None,Unknown,Licence is not compliant according to project's configuration.
+False,jaraco.functools,True,None,Unknown,Licence is not compliant according to project's configuration.
 True,jeepney,True,https://gitlab.com/takluyver/jeepney,Unknown,Package's licence manually checked: MIT
-True,jellyfish,True,http://github.com/jamesturk/jellyfish,Unknown,Package's licence manually checked: BSD-2-Clause
+True,jellyfish,True,None,MIT,Licence is compliant.
 True,Jinja2,True,https://palletsprojects.com/p/jinja/,BSD-3-Clause,Licence is compliant.
 True,jmespath,True,https://github.com/jmespath/jmespath.py,MIT,Licence is compliant.
-True,keyring,True,https://github.com/jaraco/keyring,Unknown,Package's licence manually checked: MIT
-True,license-expression,True,https://github.com/nexB/license-expression,Apache-2.0,Licence is compliant.
+True,keyring,True,None,Unknown,Package's licence manually checked: MIT
+True,license-expression,True,https://github.com/aboutcode-org/license-expression,Apache-2.0,Licence is compliant.
 True,licenseheaders,True,http://github.com/johann-petrak/licenseheaders,MIT,Licence is compliant.
 True,Mako,True,https://www.makotemplates.org/,MIT,Licence is compliant.
-True,Markdown,True,https://Python-Markdown.github.io/,0BSD,Licence is compliant.
+True,Markdown,True,None,BSD-1-Clause,Licence is compliant.
 True,markdown-it-py,True,None,Unknown,Package's licence manually checked: MIT
 True,MarkupSafe,True,https://palletsprojects.com/p/markupsafe/,BSD-3-Clause,Licence is compliant.
 True,mdurl,True,None,Unknown,Package's licence manually checked: MIT
 True,more-itertools,True,None,Unknown,Package's licence manually checked: MIT
+True,nh3,True,None,MIT,Licence is compliant.
 True,packaging,True,None,Unknown,Package's licence manually checked: either Apache-2.0 or BSD-2-Clause
 True,pdoc3,True,https://pdoc3.github.io/pdoc/,AGPL-3.0,Package's licence manually checked: Accepted for this project since not distributed
 True,pkginfo,True,https://code.launchpad.net/~tseaver/pkginfo/trunk,MIT,Licence is compliant.
 True,ply,True,http://www.dabeaz.com/ply/,0BSD,Licence is compliant.
 True,pyautoversion,True,https://github.com/ARMmbed/autoversion,Apache-2.0,Licence is compliant.
-True,pycparser,True,https://github.com/eliben/pycparser,0BSD,Licence is compliant.
-True,Pygments,True,https://pygments.org/,BSD-2-Clause,Licence is compliant.
+True,pycparser,True,https://github.com/eliben/pycparser,BSD-3-Clause,Licence is compliant.
+True,Pygments,True,None,BSD-2-Clause,Licence is compliant.
 True,pyparsing,True,None,Unknown,Package's licence manually checked: MIT
 True,python-dateutil,True,https://github.com/dateutil/dateutil,Unknown,Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
 True,python-dotenv,True,https://github.com/theskumar/python-dotenv,BSD-3-Clause,Licence is compliant.
 True,PyYAML,True,https://pyyaml.org/,MIT,Licence is compliant.
 True,rdflib,True,https://github.com/RDFLib/rdflib,BSD-3-Clause,Licence is compliant.
-True,readme-renderer,True,https://github.com/pypa/readme_renderer,Apache-2.0,Licence is compliant.
+True,readme_renderer,True,None,Apache-2.0,Licence is compliant.
 True,regex,True,https://github.com/mrabarnett/mrab-regex,Apache-2.0,Licence is compliant.
 True,requests,True,https://requests.readthedocs.io,Apache-2.0,Licence is compliant.
 True,requests-toolbelt,True,https://toolbelt.readthedocs.io/,Apache-2.0,Licence is compliant.
@@ -53,16 +55,14 @@ True,rich,True,https://github.com/Textualize/rich,MIT,Licence is compliant.
 True,s3transfer,True,https://github.com/boto/s3transfer,Apache-2.0,Licence is compliant.
 True,SecretStorage,True,https://github.com/mitya57/secretstorage,BSD-1-Clause,Licence is compliant.
 True,semver,True,https://github.com/python-semver/python-semver,0BSD,Licence is compliant.
-True,setuptools,True,https://github.com/pypa/setuptools,Unknown,Package's licence manually checked: MIT
+True,setuptools,True,None,Unknown,Package's licence manually checked: MIT
 True,six,True,https://github.com/benjaminp/six,MIT,Licence is compliant.
-True,smmap,True,https://github.com/gitpython-developers/smmap,0BSD,Licence is compliant.
+True,smmap,True,https://github.com/gitpython-developers/smmap,BSD-3-Clause,Licence is compliant.
 True,spdx-tools,True,https://github.com/spdx/tools-python,Apache-2.0,Licence is compliant.
 True,toml,True,https://github.com/uiri/toml,MIT,Licence is compliant.
-True,tomli,True,None,Unknown,Package's licence manually checked: MIT
 True,towncrier,True,https://github.com/twisted/towncrier,MIT,Licence is compliant.
-True,twine,True,https://twine.readthedocs.io/,Unknown,Package's licence manually checked: Apache-2.0
-True,urllib3,True,https://urllib3.readthedocs.io/,MIT,Licence is compliant.
+True,twine,True,None,Unknown,Package's licence manually checked: Apache-2.0
+True,urllib3,True,None,Unknown,Package's licence manually checked: MIT
 True,wcmatch,True,None,Unknown,Package's licence manually checked: MIT
-True,webencodings,True,https://github.com/SimonSapin/python-webencodings,0BSD,Licence is compliant.
 True,xmltodict,True,https://github.com/martinblech/xmltodict,MIT,Licence is compliant.
-True,zipp,True,https://github.com/jaraco/zipp,Unknown,Package's licence manually checked: MIT
+True,zipp,True,None,Unknown,Package's licence manually checked: MIT

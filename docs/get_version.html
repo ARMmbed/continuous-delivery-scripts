@@ -32,12 +32,13 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Determine the project new version.&#34;&#34;&#34;
 import sys
 
+from typing import Optional
 import argparse
 import logging
 from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
@@ -48,7 +49,7 @@ from continuous_delivery_scripts.utils.logging import log_exception, set_log_lev
 logger = logging.getLogger(__name__)
 
 
-def get_project_version_string(commit_type: CommitType) -&gt; str:
+def get_project_version_string(commit_type: CommitType) -&gt; Optional[str]:
     &#34;&#34;&#34;Determine the project version string.
 
     Args:
@@ -95,7 +96,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.get_version.get_project_version_string"><code class="name flex">
-<span>def <span class="ident">get_project_version_string</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>) ‑> str</span>
+<span>def <span class="ident">get_project_version_string</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>) ‑> Optional[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Determine the project version string.</p>
@@ -110,7 +111,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_project_version_string(commit_type: CommitType) -&gt; str:
+<pre><code class="python">def get_project_version_string(commit_type: CommitType) -&gt; Optional[str]:
     &#34;&#34;&#34;Determine the project version string.
 
     Args:

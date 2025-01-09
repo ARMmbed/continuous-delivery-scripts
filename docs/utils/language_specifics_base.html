@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Base class for all Language plugins.&#34;&#34;&#34;
@@ -112,8 +112,8 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
         git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
-        for shortcut, version in shortcuts.items():
-            if version:
+        for shortcut, versions in shortcuts.items():
+            if versions:
                 git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)
             else:
                 git.create_tag(shortcut, message=shortcut)
@@ -231,8 +231,8 @@ class BaseLanguage(ABC):
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
         git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
-        for shortcut, version in shortcuts.items():
-            if version:
+        for shortcut, versions in shortcuts.items():
+            if versions:
                 git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)
             else:
                 git.create_tag(shortcut, message=shortcut)
@@ -480,8 +480,8 @@ def release_package_to_repository(self, mode: CommitType, version: str) -&gt; No
     &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
     logger.info(f&#34;Tagging commit as release {version}&#34;)
     git.create_tag(self.get_version_tag(version), message=f&#34;release {version}&#34;)
-    for shortcut, version in shortcuts.items():
-        if version:
+    for shortcut, versions in shortcuts.items():
+        if versions:
             git.create_tag(self.get_version_tag(shortcut), message=f&#34;{shortcut} release&#34;)
         else:
             git.create_tag(shortcut, message=shortcut)</code></pre>

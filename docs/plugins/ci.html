@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Plugin for CI projects.&#34;&#34;&#34;
@@ -63,7 +63,7 @@ class CI(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def get_version_tag(self, version: str):
+    def get_version_tag(self, version: str) -&gt; str:
         &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
         cleansed_version = version.strip().lstrip(&#34;v&#34;)
         return f&#34;v{cleansed_version}&#34;
@@ -128,7 +128,7 @@ class CI(BaseLanguage):
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
         return get_language_from_file_name(__file__)
 
-    def get_version_tag(self, version: str):
+    def get_version_tag(self, version: str) -&gt; str:
         &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
         cleansed_version = version.strip().lstrip(&#34;v&#34;)
         return f&#34;v{cleansed_version}&#34;
@@ -229,7 +229,7 @@ class CI(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.ci.CI.get_version_tag"><code class="name flex">
-<span>def <span class="ident">get_version_tag</span></span>(<span>self, version: str)</span>
+<span>def <span class="ident">get_version_tag</span></span>(<span>self, version: str) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets tag based on version.</p></div>
@@ -237,7 +237,7 @@ class CI(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_version_tag(self, version: str):
+<pre><code class="python">def get_version_tag(self, version: str) -&gt; str:
     &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
     cleansed_version = version.strip().lstrip(&#34;v&#34;)
     return f&#34;v{cleansed_version}&#34;</code></pre>

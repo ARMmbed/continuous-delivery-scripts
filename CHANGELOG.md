@@ -17,6 +17,26 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.2.1" (2025-01-09)
+====================
+
+Bugfixes
+--------
+
+- Support python 3.11 (#20230303162821)
+- Dependency upgrade: mypy-1.1.1 (#20230307082327)
+- Dependency upgrade: coverage-7.2.2 (#20230317082258)
+- :bug: Fix the python error appearing from python > 3.11 (#20250109163919)
+- Dependency upgrade: fetch-metadata-2.2.0 (#20250109185536)
+- Dependency upgrade: scorecard-action-2.4.0 (#20250109185845)
+
+
+Misc
+----
+
+- #20250109170328
+
+
 "3.2.0" (2023-03-01)
 ====================
 

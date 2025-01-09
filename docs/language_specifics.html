@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Language plugins Loader.&#34;&#34;&#34;
@@ -49,8 +49,8 @@ from continuous_delivery_scripts.plugins import *  # noqa
 logger = logging.getLogger(__name__)
 
 
-def _retrieve_all_subclasses(subclass: Type[BaseLanguage]) -&gt; Set[Type[BaseLanguage]]:
-    subclasses = set()
+def _retrieve_all_subclasses(subclass: Type) -&gt; Set[Type]:
+    subclasses: set = set()
     if not subclass:
         return subclasses
     if subclass != BaseLanguage:
@@ -64,10 +64,10 @@ def all_language_plugins() -&gt; Dict[str, BaseLanguage]:
     &#34;&#34;&#34;Fetches all language plugins which inherit from BaseLanguage.
 
     Returns:
-         A list of classes containing language plugins
+        A list of classes containing language plugins
     &#34;&#34;&#34;
     all_plugins = _retrieve_all_subclasses(BaseLanguage)
-    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}  # type: ignore
+    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}
 
 
 def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language: str) -&gt; BaseLanguage:
@@ -78,7 +78,7 @@ def fetch_project_language_plugin(all_plugins: Dict[str, BaseLanguage], language
         language: the language to select
 
     Returns:
-         A language plugin corresponding to the language requested
+        A language plugin corresponding to the language requested
     &#34;&#34;&#34;
     return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))
 
@@ -136,10 +136,10 @@ def get_language_specifics() -&gt; BaseLanguage:
     &#34;&#34;&#34;Fetches all language plugins which inherit from BaseLanguage.
 
     Returns:
-         A list of classes containing language plugins
+        A list of classes containing language plugins
     &#34;&#34;&#34;
     all_plugins = _retrieve_all_subclasses(BaseLanguage)
-    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}  # type: ignore</code></pre>
+    return {la.get_related_language().lower().strip(): la for la in [lang() for lang in all_plugins]}</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.language_specifics.fetch_project_language_plugin"><code class="name flex">
@@ -164,7 +164,7 @@ language: the language to select</p>
         language: the language to select
 
     Returns:
-         A language plugin corresponding to the language requested
+        A language plugin corresponding to the language requested
     &#34;&#34;&#34;
     return cast(BaseLanguage, all_plugins.get(_sanitise_program_language(language)))</code></pre>
 </details>

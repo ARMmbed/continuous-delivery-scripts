@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utilities in charge of fetching configuration values for the ci scripts.&#34;&#34;&#34;
@@ -273,7 +273,7 @@ class FileConfig(GenericConfig):
     PATH_TOKEN = {&#34;DIR&#34;, &#34;ROOT&#34;, &#34;PATH&#34;}
     CONFIG_FILE_NAME = &#34;pyproject.toml&#34;
 
-    def __init__(self, file_path: str = None) -&gt; None:
+    def __init__(self, file_path: Optional[str] = None) -&gt; None:
         &#34;&#34;&#34;Constructor.
 
         Args:
@@ -380,7 +380,7 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dl>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable"><code class="flex name class">
 <span>class <span class="ident">ConfigurationVariable</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Project's configuration variables.</p></div>
@@ -733,7 +733,7 @@ def parse(type_str: str) -&gt; &#34;ConfigurationVariable&#34;:
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.FileConfig"><code class="flex name class">
 <span>class <span class="ident">FileConfig</span></span>
-<span>(</span><span>file_path: str = None)</span>
+<span>(</span><span>file_path: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Configuration set in toml file.</p>
@@ -768,7 +768,7 @@ to current directory (i.e. os.getcwd()).</p>
     PATH_TOKEN = {&#34;DIR&#34;, &#34;ROOT&#34;, &#34;PATH&#34;}
     CONFIG_FILE_NAME = &#34;pyproject.toml&#34;
 
-    def __init__(self, file_path: str = None) -&gt; None:
+    def __init__(self, file_path: Optional[str] = None) -&gt; None:
         &#34;&#34;&#34;Constructor.
 
         Args:

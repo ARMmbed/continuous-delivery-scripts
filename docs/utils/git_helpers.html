@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utility script to abstract git operations for our CI scripts.&#34;&#34;&#34;
@@ -147,7 +147,7 @@ class GitWrapper:
         &#34;&#34;&#34;
         self.repo.git.checkout(branch)
 
-    def _add_one_file_or_one_dir(self, path: str) -&gt; None:
+    def _add_one_file_or_one_dir(self, path: Path) -&gt; None:
         if not path:
             raise ValueError(&#34;Unspecified path.&#34;)
         self._add_one_path(Path(path))
@@ -165,7 +165,7 @@ class GitWrapper:
         logger.info(f&#34;Adding {unix_relative_path} to repository.&#34;)
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -&gt; None:
+    def add(self, path: Union[list, set, Path]) -&gt; None:
         &#34;&#34;&#34;Adds a file or a list of files.
 
         Args:
@@ -521,7 +521,7 @@ class GitWrapper:
 
         Repository is considered dirty when git status returns elements which are not committed.
         &#34;&#34;&#34;
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -&gt; None:
         &#34;&#34;&#34;Cleans the repository.
@@ -621,17 +621,19 @@ class GitWrapper:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -&gt; Tuple[bool, Optional[List[Any]]]:
         &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -&gt; (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -&gt; Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:
             return False, None
         match = re.search(pattern, str(branch_name))
-        return True if match else False, match.groups() if match else None
+        return True if match else False, list(match.groups()) if match else None
 
     @property
     def uncommitted_changes(self) -&gt; List[Path]:
@@ -676,7 +678,7 @@ class GitWrapper:
         &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
         Args:
-            other_repo: repository to apply changes to
+             other_repo: repository to apply changes to
         &#34;&#34;&#34;
         dest_root = other_repo.root
         for f in self.uncommitted_changes:
@@ -771,7 +773,7 @@ class GitClone(GitWrapper):
             path_in_initial_repo: path to a file/directory in initial repository.
 
         Returns:
-             corresponding path.
+            corresponding path.
         &#34;&#34;&#34;
         if not path_in_initial_repo.is_absolute():
             return Path(self.root).joinpath(path_in_initial_repo)
@@ -899,7 +901,7 @@ is in a completely different location.</p>
             path_in_initial_repo: path to a file/directory in initial repository.
 
         Returns:
-             corresponding path.
+            corresponding path.
         &#34;&#34;&#34;
         if not path_in_initial_repo.is_absolute():
             return Path(self.root).joinpath(path_in_initial_repo)
@@ -972,7 +974,7 @@ def initial_location(self) -&gt; Path:
         path_in_initial_repo: path to a file/directory in initial repository.
 
     Returns:
-         corresponding path.
+        corresponding path.
     &#34;&#34;&#34;
     if not path_in_initial_repo.is_absolute():
         return Path(self.root).joinpath(path_in_initial_repo)
@@ -1211,7 +1213,7 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;
         self.repo.git.checkout(branch)
 
-    def _add_one_file_or_one_dir(self, path: str) -&gt; None:
+    def _add_one_file_or_one_dir(self, path: Path) -&gt; None:
         if not path:
             raise ValueError(&#34;Unspecified path.&#34;)
         self._add_one_path(Path(path))
@@ -1229,7 +1231,7 @@ def initial_location(self) -&gt; Path:
         logger.info(f&#34;Adding {unix_relative_path} to repository.&#34;)
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -&gt; None:
+    def add(self, path: Union[list, set, Path]) -&gt; None:
         &#34;&#34;&#34;Adds a file or a list of files.
 
         Args:
@@ -1585,7 +1587,7 @@ def initial_location(self) -&gt; Path:
 
         Repository is considered dirty when git status returns elements which are not committed.
         &#34;&#34;&#34;
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -&gt; None:
         &#34;&#34;&#34;Cleans the repository.
@@ -1685,17 +1687,19 @@ def initial_location(self) -&gt; Path:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -&gt; Tuple[bool, Optional[List[Any]]]:
         &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -&gt; (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -&gt; Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:
             return False, None
         match = re.search(pattern, str(branch_name))
-        return True if match else False, match.groups() if match else None
+        return True if match else False, list(match.groups()) if match else None
 
     @property
     def uncommitted_changes(self) -&gt; List[Path]:
@@ -1740,7 +1744,7 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
         Args:
-            other_repo: repository to apply changes to
+             other_repo: repository to apply changes to
         &#34;&#34;&#34;
         dest_root = other_repo.root
         for f in self.uncommitted_changes:
@@ -1845,7 +1849,7 @@ def uncommitted_staged_changes(self) -&gt; List[Path]:
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.add"><code class="name flex">
-<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) ‑> None</span>
+<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, pathlib.Path]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a file or a list of files.</p>
@@ -1858,7 +1862,7 @@ def uncommitted_staged_changes(self) -&gt; List[Path]:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add(self, path: Union[list, set, str]) -&gt; None:
+<pre><code class="python">def add(self, path: Union[list, set, Path]) -&gt; None:
     &#34;&#34;&#34;Adds a file or a list of files.
 
     Args:
@@ -1889,7 +1893,7 @@ def uncommitted_staged_changes(self) -&gt; List[Path]:
     &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
     Args:
-        other_repo: repository to apply changes to
+         other_repo: repository to apply changes to
     &#34;&#34;&#34;
     dest_root = other_repo.root
     for f in self.uncommitted_changes:
@@ -2677,7 +2681,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type"><code class="name flex">
-<span>def <span class="ident">is_current_branch_of_type</span></span>(<span>self, pattern: str) ‑> (<class 'bool'>, typing.Optional[typing.List[typing.Any]])</span>
+<span>def <span class="ident">is_current_branch_of_type</span></span>(<span>self, pattern: str) ‑> Tuple[bool, Optional[List[Any]]]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.</p></div>
@@ -2685,7 +2689,7 @@ before the current commit.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+<pre><code class="python">def is_current_branch_of_type(self, pattern: str) -&gt; Tuple[bool, Optional[List[Any]]]:
     &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
     return self._is_branch_of_type(self.get_current_branch(), pattern)</code></pre>
 </details>
@@ -2705,7 +2709,7 @@ before the current commit.</p>
 
     Repository is considered dirty when git status returns elements which are not committed.
     &#34;&#34;&#34;
-    return self.repo.is_dirty(untracked_files=True)</code></pre>
+    return bool(self.repo.is_dirty(untracked_files=True))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch"><code class="name flex">

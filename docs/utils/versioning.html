@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Helpers with regards to versioning.&#34;&#34;&#34;
@@ -106,11 +106,11 @@ def determine_version_string(
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         return &#34;%s-%s.%s+%s&#34; % (
             new_version,
             auto_version_tool.config.BUILD_TOKEN,
@@ -162,11 +162,11 @@ def determine_version_shortcuts(
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         shortcuts[f&#34;{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}&#34;] = False
 
     return shortcuts
@@ -323,11 +323,11 @@ A semver-style version for the latest release</p></div>
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         shortcuts[f&#34;{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}&#34;] = False
 
     return shortcuts</code></pre>
@@ -365,11 +365,11 @@ A semver-style version for the latest release</p></div>
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         return &#34;%s-%s.%s+%s&#34; % (
             new_version,
             auto_version_tool.config.BUILD_TOKEN,

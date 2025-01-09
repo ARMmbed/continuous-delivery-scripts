@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Definition of an SPDX Document.&#34;&#34;&#34;
@@ -64,7 +64,7 @@ class SpdxDocument:
         package_metadata: PackageMetadata,
         other_document_refs: List[DependencySpdxDocumentRef] = list(),
         is_dependency: bool = False,
-        document_namespace: str = None,
+        document_namespace: Optional[str] = None,
     ):
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._project_root = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
@@ -292,7 +292,7 @@ class SpdxDocument:
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_document.SpdxDocument"><code class="flex name class">
 <span>class <span class="ident">SpdxDocument</span></span>
-<span>(</span><span>package_metadata: <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>, other_document_refs: List[<a title="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef" href="spdx_dependency.html#continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef">DependencySpdxDocumentRef</a>] = [], is_dependency: bool = False, document_namespace: str = None)</span>
+<span>(</span><span>package_metadata: <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>, other_document_refs: List[<a title="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef" href="spdx_dependency.html#continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef">DependencySpdxDocumentRef</a>] = [], is_dependency: bool = False, document_namespace: Optional[str] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>SPDX document.</p>
@@ -313,7 +313,7 @@ class SpdxDocument:
         package_metadata: PackageMetadata,
         other_document_refs: List[DependencySpdxDocumentRef] = list(),
         is_dependency: bool = False,
-        document_namespace: str = None,
+        document_namespace: Optional[str] = None,
     ):
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._project_root = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))

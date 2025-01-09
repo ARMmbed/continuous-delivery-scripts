@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Checks if valid news files are created for changes in the project.&#34;&#34;&#34;
@@ -41,7 +41,7 @@ import logging
 import pathlib
 import re
 import sys
-from typing import List, Union
+from typing import Union, Optional, Iterable, Any, List
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
@@ -131,6 +131,12 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -&gt; Non
         validate_news_file(absolute_file_path)
 
 
+def _convert_to_string_iter(list: Optional[List[Any]]) -&gt; Iterable[str]:
+    if list is None:
+        return []
+    return [str(item) for item in list]
+
+
 def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -&gt; pathlib.Path:
     &#34;&#34;&#34;Adds a news file if the branch corresponds to an dependency update.
 
@@ -147,8 +153,9 @@ def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -&gt; pathlib.Pa
     if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
         raise EnvironmentError(f&#34;Branch {current_branch} must contain a news file.&#34;)
 
+    list_groups = _convert_to_string_iter(groups)
     message = str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
-        message=&#34;, &#34;.join(groups)
+        message=&#34;, &#34;.join(list_groups)
     )
     logger.info(f&#34;Generating a news file with content: {message}...&#34;)
     return create_news_file(
@@ -163,7 +170,7 @@ def _commit_news_file(git: GitWrapper, news_file: pathlib.Path, local: bool) -&g
     logger.info(f&#34;Committing news file {str(news_file)}...&#34;)
     if not local:
         git.configure_for_github()
-    git.add(str(news_file))
+    git.add(news_file)
     git.commit(&#34;📰 Automatic changes ⚙ Adding news file&#34;)
     if not local:
         git.push()
@@ -289,8 +296,9 @@ if __name__ == &#34;__main__&#34;:
     if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
         raise EnvironmentError(f&#34;Branch {current_branch} must contain a news file.&#34;)
 
+    list_groups = _convert_to_string_iter(groups)
     message = str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
-        message=&#34;, &#34;.join(groups)
+        message=&#34;, &#34;.join(list_groups)
     )
     logger.info(f&#34;Generating a news file with content: {message}...&#34;)
     return create_news_file(

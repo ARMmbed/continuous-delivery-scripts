@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2023 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Summary generators.&#34;&#34;&#34;
@@ -60,7 +60,7 @@ except ModuleNotFoundError as e:
 
 
 def generate_file_based_on_template(
-    output_dir: Path, template_name: str, template_args: dict, suffix: str = None
+    output_dir: Path, template_name: str, template_args: dict, suffix: Optional[str] = None
 ) -&gt; None:
     &#34;&#34;&#34;Write file based on template and arguments.&#34;&#34;&#34;
     logger.info(&#34;Loading template &#39;%s&#39;.&#34;, template_name)
@@ -96,11 +96,13 @@ class SummaryGenerator:
             &#34;name&#34;: self.project.name,
             &#34;compliance&#34;: global_compliance,
             &#34;compliance_details&#34;: (
-                f&#34;Project [{self.project.name}]&#39;s licence is compliant: {self.project.licence}.&#34;
-                &#34;All its dependencies are also compliant licence-wise.&#34;
-            )
-            if global_compliance
-            else f&#34;Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence&#34;,
+                (
+                    f&#34;Project [{self.project.name}]&#39;s licence is compliant: {self.project.licence}.&#34;
+                    &#34;All its dependencies are also compliant licence-wise.&#34;
+                )
+                if global_compliance
+                else f&#34;Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence&#34;
+            ),
         }
         arguments[&#34;packages&#34;] = description_list
         arguments[&#34;render_time&#34;] = datetime.datetime.now()
@@ -138,12 +140,14 @@ class SummaryGenerator:
             &#34;licence&#34;: p.licence,
             &#34;is_compliant&#34;: is_compliant,
             &#34;mark_as_problematic&#34;: not is_licence_compliant,
-            &#34;licence_compliance_details&#34;: &#34;Licence is compliant.&#34;
-            if is_licence_compliant
-            else (
-                f&#34;Package&#39;s licence manually checked: {manual_check_details}&#34;
-                if package_manually_checked
-                else &#34;Licence is not compliant according to project&#39;s configuration.&#34;
+            &#34;licence_compliance_details&#34;: (
+                &#34;Licence is compliant.&#34;
+                if is_licence_compliant
+                else (
+                    f&#34;Package&#39;s licence manually checked: {manual_check_details}&#34;
+                    if package_manually_checked
+                    else &#34;Licence is not compliant according to project&#39;s configuration.&#34;
+                )
             ),
         }
 
@@ -172,7 +176,7 @@ class SummaryGenerator:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_summary.generate_file_based_on_template"><code class="name flex">
-<span>def <span class="ident">generate_file_based_on_template</span></span>(<span>output_dir: pathlib.Path, template_name: str, template_args: dict, suffix: str = None) ‑> None</span>
+<span>def <span class="ident">generate_file_based_on_template</span></span>(<span>output_dir: pathlib.Path, template_name: str, template_args: dict, suffix: Optional[str] = None) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Write file based on template and arguments.</p></div>
@@ -181,7 +185,7 @@ class SummaryGenerator:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def generate_file_based_on_template(
-    output_dir: Path, template_name: str, template_args: dict, suffix: str = None
+    output_dir: Path, template_name: str, template_args: dict, suffix: Optional[str] = None
 ) -&gt; None:
     &#34;&#34;&#34;Write file based on template and arguments.&#34;&#34;&#34;
     logger.info(&#34;Loading template &#39;%s&#39;.&#34;, template_name)
@@ -233,11 +237,13 @@ class SummaryGenerator:
             &#34;name&#34;: self.project.name,
             &#34;compliance&#34;: global_compliance,
             &#34;compliance_details&#34;: (
-                f&#34;Project [{self.project.name}]&#39;s licence is compliant: {self.project.licence}.&#34;
-                &#34;All its dependencies are also compliant licence-wise.&#34;
-            )
-            if global_compliance
-            else f&#34;Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence&#34;,
+                (
+                    f&#34;Project [{self.project.name}]&#39;s licence is compliant: {self.project.licence}.&#34;
+                    &#34;All its dependencies are also compliant licence-wise.&#34;
+                )
+                if global_compliance
+                else f&#34;Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence&#34;
+            ),
         }
         arguments[&#34;packages&#34;] = description_list
         arguments[&#34;render_time&#34;] = datetime.datetime.now()
@@ -275,12 +281,14 @@ class SummaryGenerator:
             &#34;licence&#34;: p.licence,
             &#34;is_compliant&#34;: is_compliant,
             &#34;mark_as_problematic&#34;: not is_licence_compliant,
-            &#34;licence_compliance_details&#34;: &#34;Licence is compliant.&#34;
-            if is_licence_compliant
-            else (
-                f&#34;Package&#39;s licence manually checked: {manual_check_details}&#34;
-                if package_manually_checked
-                else &#34;Licence is not compliant according to project&#39;s configuration.&#34;
+            &#34;licence_compliance_details&#34;: (
+                &#34;Licence is compliant.&#34;
+                if is_licence_compliant
+                else (
+                    f&#34;Package&#39;s licence manually checked: {manual_check_details}&#34;
+                    if package_manually_checked
+                    else &#34;Licence is not compliant according to project&#39;s configuration.&#34;
+                )
             ),
         }
 
