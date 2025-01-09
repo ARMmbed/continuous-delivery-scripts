@@ -63,11 +63,13 @@ class SummaryGenerator:
             "name": self.project.name,
             "compliance": global_compliance,
             "compliance_details": (
-                f"Project [{self.project.name}]'s licence is compliant: {self.project.licence}."
-                "All its dependencies are also compliant licence-wise."
-            )
-            if global_compliance
-            else f"Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence",
+                (
+                    f"Project [{self.project.name}]'s licence is compliant: {self.project.licence}."
+                    "All its dependencies are also compliant licence-wise."
+                )
+                if global_compliance
+                else f"Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence"
+            ),
         }
         arguments["packages"] = description_list
         arguments["render_time"] = datetime.datetime.now()
@@ -105,12 +107,14 @@ class SummaryGenerator:
             "licence": p.licence,
             "is_compliant": is_compliant,
             "mark_as_problematic": not is_licence_compliant,
-            "licence_compliance_details": "Licence is compliant."
-            if is_licence_compliant
-            else (
-                f"Package's licence manually checked: {manual_check_details}"
-                if package_manually_checked
-                else "Licence is not compliant according to project's configuration."
+            "licence_compliance_details": (
+                "Licence is compliant."
+                if is_licence_compliant
+                else (
+                    f"Package's licence manually checked: {manual_check_details}"
+                    if package_manually_checked
+                    else "Licence is not compliant according to project's configuration."
+                )
             ),
         }
 
