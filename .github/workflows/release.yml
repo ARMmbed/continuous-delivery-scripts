@@ -1,7 +1,7 @@
 name: GitHub Release
 
 env:
-  pipenv_version: 2022.11.25
+  pipenv_version: 2024.4.0
   python_version: '3.11'
 
 on:
