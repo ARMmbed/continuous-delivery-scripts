@@ -64,4 +64,4 @@ jobs:
           GIT_TOKEN: ${{ secrets.GIT_SECRET }}
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-          IGNORE_PYPI_TEST_UPLOAD: true
+          IGNORE_REPOSITORY_TEST_UPLOAD: true
