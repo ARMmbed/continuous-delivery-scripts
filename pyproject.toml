@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 [ProjectConfig]
@@ -47,6 +47,17 @@ tomli="MIT"
 markdown-it-py="MIT"
 mdurl="MIT"
 cryptography="((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)"
+click="BSD-3-Clause"
+click-default-group="BSD-3-Clause"
+urllib3="MIT"
+incremental="MIT"
+jaraco-functools="MIT"
+jaraco-context="MIT"
+importlib_metadata="Apache-2.0"
+docutils="BSD-3-Clause"
+backports-tarfile="MIT"
+
+
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

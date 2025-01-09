@@ -22,6 +22,6 @@ continuous-delivery-scripts = {editable = true, path = "."}
 allow_prereleases = false
 
 [packages]
-continuous-delivery-scripts = {editable = true, path = "."}
 types-toml = "*"
 types-setuptools = "*"
+continuous-delivery-scripts = {file = ".", editable = true}

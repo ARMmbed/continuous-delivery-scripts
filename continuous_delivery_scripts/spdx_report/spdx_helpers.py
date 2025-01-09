@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Facilities regarding SPDX.
@@ -33,8 +33,8 @@ from continuous_delivery_scripts.utils.third_party_licences import simplify_lice
 logger = logging.getLogger(__name__)
 
 # Copyright similar to the regex defined in flake8-copyright
-COPYRIGHT_PATTERN = r"(?i)Copyright.*$"
-COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, re.MULTILINE)
+COPYRIGHT_PATTERN = r"Copyright.*$"
+COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, flags=re.MULTILINE | re.IGNORECASE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
 SPDX_LICENCE_IDENTIFIER_PATTERN = r"SPDX-License-Identifier: ([\.\w+\-\(\)\s]+)[\*]?$"
