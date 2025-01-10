@@ -41,7 +41,7 @@ def _generate_goreleaser_release_command_list(changelog: Path) -> List[str]:
     return [
         "goreleaser",
         "release",
-        "--rm-dist",
+        "--clean",
         "--release-notes",
         f"{str(changelog)}",
     ]
@@ -60,6 +60,10 @@ def _install_golds_command_list() -> List[str]:
         "install",
         "go101.org/golds@main",
     ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
+
+
+def _install_syft_command_list() -> List[str]:
+    return ["go", "install", "github.com/anchore/syft/cmd/syft@latest"]
 
 
 def _install_goreleaser_command_list() -> List[str]:
@@ -87,6 +91,7 @@ def _call_goreleaser_check(version: str) -> None:
     logger.info("Installing GoReleaser if missing.")
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+    check_call(_install_syft_command_list(), env=env)
     check_call(_install_goreleaser_command_list(), env=env)
     logger.info("Checking GoReleaser configuration.")
     env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
@@ -175,6 +180,7 @@ class Go(BaseLanguage):
         logger.info("Installing GoReleaser if missing.")
         env = os.environ
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+        check_call(_install_syft_command_list(), env=env)
         check_call(_install_goreleaser_command_list(), env=env)
         tag = self.get_version_tag(version)
         # The tag of the release must be retrieved
