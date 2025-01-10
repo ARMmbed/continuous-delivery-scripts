@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.2.3" (2025-01-10)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: checkout-4 (#20250110072434)
+
+
 "3.2.2" (2025-01-10)
 ====================
 
