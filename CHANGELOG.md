@@ -17,6 +17,16 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.2.4" (2025-01-10)
+====================
+
+Bugfixes
+--------
+
+- :gear: `[Golang]` Install [`syft`](https://github.com/anchore/syft) since it is a dependency to `goreleaser` (#20250110123102)
+- :bug: `[Golang]` fix `goreleaser` [command deprecation](https://goreleaser.com/deprecations/#-rm-dist) (#20250110123255)
+
+
 "3.2.3" (2025-01-10)
 ====================
 
