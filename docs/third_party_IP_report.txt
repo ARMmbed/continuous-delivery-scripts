@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2025-01-10 12:46:58.739812
+                                         2025-01-13 09:19:14.473151
 
 # Summary:
     Licence compliance: Not compliant
@@ -333,7 +333,7 @@
 - rdflib:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/RDFLib/rdflib
+    URL: None
     Licence: BSD-3-Clause
     Licence compliance: Licence is compliant.
 

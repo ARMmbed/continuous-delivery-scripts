@@ -17,6 +17,16 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.2.5" (2025-01-13)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: upload-artifact-4.6.0 (#20250113071119)
+- Dependency upgrade: codeql-action-3.28.1 (#20250113071131)
+
+
 "3.2.4" (2025-01-10)
 ====================
 
