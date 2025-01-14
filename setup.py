@@ -71,7 +71,7 @@ setup(
         "jinja2==2.11.3",
         "dataclasses; python_version<'3.7'",
         # FIXME fixing markupsafe to solve https://github.com/pallets/markupsafe/issues/284 until jinja is upgraded
-        "markupsafe==2.0.1",
+        "markupsafe==3.0.2",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
