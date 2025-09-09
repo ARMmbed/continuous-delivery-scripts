@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 def _create_wheel() -> None:
+    logger.info("Creating wheel")
     root = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
     with cd(root):
         check_call(
@@ -167,7 +168,8 @@ class Python(BaseLanguage):
 
     def should_include_spdx_in_package(self) -> bool:
         """States whether the SPDX documents should be included in the package."""
-        return True
+        # FIXME Comment out SPDX package as no longer working
+        return False
 
     def get_current_spdx_project(self) -> Optional[SpdxProject]:
         """Gets the current SPDX description."""
