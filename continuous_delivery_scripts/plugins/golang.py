@@ -67,7 +67,7 @@ def _install_syft_command_list() -> List[str]:
 
 
 def _install_goreleaser_command_list() -> List[str]:
-    return ["go", "install", "github.com/goreleaser/goreleaser@latest"]
+    return ["go", "install", "github.com/goreleaser/goreleaser/v2@latest"]
 
 
 def _call_golds(output_directory: Path, module: str) -> None:
