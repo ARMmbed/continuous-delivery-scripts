@@ -60,6 +60,7 @@ Markdown="BSD-3-Clause"
 id="Apache-2.0"
 regex="Apache-2.0"
 cffi="MIT"
+SecretStorage="BSD-3-Clause"
 
 
 [AutoVersionConfig]
