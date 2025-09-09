@@ -16,8 +16,6 @@ Description: # Mbed Tools CI Scripts
         [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ARMmbed/mbed-tools-ci-scripts/blob/master/LICENSE)
         
         [![Build Status](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_apis/build/status/Build%20and%20Release?branchName=master)](https://dev.azure.com/mbed-tools/mbed-tools-ci/_build/latest?definitionId=3&branchName=master)
-        [![Test Coverage](https://codecov.io/gh/ARMmbed/mbed-tools-ci-scripts/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/mbed-tools-ci-scripts)
-        [![Maintainability](https://api.codeclimate.com/v1/badges/41301e959f22986b7b2b/maintainability)](https://codeclimate.com/github/ARMmbed/mbed-tools-ci-scripts/maintainability)
         
         ## Overview
         

@@ -133,18 +133,6 @@ Type hints should be used in the code wherever possible. Since the
 documentation shows the function signatures with the type hints 
 there is no need to include additional type information in the docstrings.
 
-
-## Code Climate
-
-Code Climate is integrated with our GitHub flow. Failing the configured rules will yield a pull request not mergeable.
-
-If you prefer to view the Code Climate report on your machine, prior to sending a pull request, you can use the [cli provided by Code Climate](https://docs.codeclimate.com/docs/command-line-interface).
-
-Plugins for various tools are also available:
-  - [Atom](https://docs.codeclimate.com/docs/code-climate-atom-package)
-  - [PyCharm](https://plugins.jetbrains.com/plugin/13306-code-cleaner-with-code-climate-cli)
-  - [Vim](https://docs.codeclimate.com/docs/vim-plugin)
-
 # Dependency upgrades
 
 For dependency upgrades, dependabot is relied upon and news files are auto-generated in order to document such change. Nonetheless, due to a change in [GitHub actions](https://github.blog/changelog/2021-02-19-github-actions-workflows-triggered-by-dependabot-prs-will-run-with-read-only-permissions), secrets are not available in the build triggered by the pull request unless they are [re-run manually](https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/automating-dependabot-with-github-actions#manually-re-running-a-workflow). So please re-run every dependabot PR CI jobs.
