@@ -164,7 +164,9 @@ class Python(BaseLanguage):
 
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
-        return True
+        # FIXME Comment out retrieving project metadata as deprecated
+        # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
+        return False
 
     def should_include_spdx_in_package(self) -> bool:
         """States whether the SPDX documents should be included in the package."""
