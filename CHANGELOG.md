@@ -17,6 +17,32 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.2.6" (2025-09-15)
+====================
+
+Bugfixes
+--------
+
+- :gear: `[go]` install `goreleaser` v2 (#202509091458)
+- Dependency upgrade: fetch-metadata-2.3.0 (#20250127075643)
+- Dependency upgrade: upload-artifact-4.6.1 (#20250224073133)
+- Dependency upgrade: codeql-action-3.28.2 (#20250627180406)
+- Dependency upgrade: scorecard-action-2.4.1 (#20250627181753)
+- Dependency upgrade: setup-python-6 (#20250904114652)
+- Dependency upgrade: checkout-5 (#20250909143714)
+- Dependency upgrade: upload-artifact-4.6.2 (#20250909144005)
+- Dependency upgrade: fetch-metadata-2.4.0 (#20250909144051)
+- Dependency upgrade: codeql-action-3.30.2 (#20250910060644)
+- Dependency upgrade: codeql-action-3.30.3 (#20250915062447)
+- :gear: `[Python]` try to handle deprecation in Python for retrieving licensing information (#20250915112924)
+
+
+Misc
+----
+
+- #20250627104347
+
+
 "3.2.5" (2025-01-13)
 ====================
 
