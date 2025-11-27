@@ -56,7 +56,7 @@ setup(
         "towncrier==22.12.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
-        "pdoc3==0.10.0",
+        "pdoc3==0.11.5",
         "toml",
         "semver~=2.13.0",
         "python-dotenv",
