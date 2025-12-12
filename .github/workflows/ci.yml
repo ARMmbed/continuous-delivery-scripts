@@ -28,7 +28,7 @@ jobs:
           python-version: ${{ env.python_version}}
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.python_cache_ubuntu_path }}
           key:  linux-pip-3-continuous-delivery-scripts
@@ -70,7 +70,7 @@ jobs:
   #         python -m pipenv requirements > dev-requirements.txt
   #     - uses: FranzDiebold/github-env-vars-action@v2
   #     - name: Load Python Dependencies from cache
-  #       uses: actions/cache@v4
+  #       uses: actions/cache@v5
   #       with:
   #         path: ${{ env.python_cache_ubuntu_path }}
   #         key:  linux-pip-3-continuous-delivery-scripts
@@ -112,7 +112,7 @@ jobs:
           python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.python_cache_ubuntu_path }}
           key:  linux-pip-3-continuous-delivery-scripts
@@ -232,7 +232,7 @@ jobs:
           echo "Path to dependency cache: [${{ env.CACHE_PATH }}]"
       - name: Load Python Dependencies from cache
         if: ${{ ! startsWith(matrix.os, 'windows') }}
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.CACHE_PATH }}
           key:  ${{ matrix.os  }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/dev-requirements.txt') }}
