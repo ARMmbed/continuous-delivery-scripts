@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Definition of an SPDX Document."""
+
 from pathlib import Path
 from spdx.creationinfo import Person, Organization, Tool
 from spdx.document import Document, License

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for Python projects."""
+
 import logging
 import shutil
 import sys

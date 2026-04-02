@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Helpers for logging errors according to severity of the exception."""
+
 import logging
 from .configuration import configuration, ConfigurationVariable
 from typing import Any, Optional

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Orchestrates release process."""
+
 import argparse
 import datetime
 import logging

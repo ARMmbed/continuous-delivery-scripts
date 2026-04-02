@@ -6,6 +6,7 @@
 
 Based on the Python SDK called BOTO https://aws.amazon.com/sdk-for-python/.
 """
+
 import boto3
 import logging
 import os

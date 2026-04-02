@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Helpers for calculating hashes or UUID."""
+
 import hashlib
 import uuid
 from pathlib import Path

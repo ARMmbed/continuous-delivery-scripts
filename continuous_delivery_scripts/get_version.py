@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Determine the project new version."""
+
 import sys
 
 from typing import Optional

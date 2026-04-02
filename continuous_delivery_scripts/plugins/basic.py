@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Basic plugin."""
+
 import logging
 from pathlib import Path
 from typing import Optional

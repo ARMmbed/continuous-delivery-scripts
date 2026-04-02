@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Generates documentation."""
+
 import argparse
 import logging
 import os

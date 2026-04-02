@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """No Operation plugin."""
+
 import logging
 from pathlib import Path
 from typing import Optional, Dict

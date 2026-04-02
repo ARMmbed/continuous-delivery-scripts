@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for CI projects."""
+
 import logging
 from pathlib import Path
 from typing import Optional

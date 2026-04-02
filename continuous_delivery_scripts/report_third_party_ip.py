@@ -11,6 +11,7 @@ Therefore, some changes will have to be carried out when the later version is
 supported so that third-party IP gets documented as described by the
 specification (i.e. with relationships).
 """
+
 import argparse
 import logging
 import sys

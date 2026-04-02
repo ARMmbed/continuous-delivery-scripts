@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utilities in charge of fetching configuration values for the ci scripts."""
+
 import enum
 import logging
 import os

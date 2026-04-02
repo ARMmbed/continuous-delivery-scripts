@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Summary generators."""
+
 import datetime
 import jinja2
 import logging
