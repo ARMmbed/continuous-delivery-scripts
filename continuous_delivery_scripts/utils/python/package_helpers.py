@@ -9,7 +9,7 @@ import logging
 import re
 import subprocess
 import sys
-from typing import Iterable, List, Any, cast
+from typing import Iterable, List, Set, Any, cast
 
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
@@ -88,7 +88,7 @@ def _get_distribution(package_name: str) -> importlib_metadata.Distribution:
 
 
 def _iter_dependency_distributions(
-    distribution: importlib_metadata.Distribution, seen_packages: set[str]
+    distribution: importlib_metadata.Distribution, seen_packages: Set[str]
 ) -> Iterable[importlib_metadata.Distribution]:
     for requirement_text in distribution.requires or []:
         requirement = Requirement(requirement_text)
