@@ -80,8 +80,9 @@ def _get_distribution(package_name: str) -> importlib_metadata.Distribution:
     except importlib_metadata.PackageNotFoundError:
         normalised_package_name = package_name.replace("-", "_")
         for distribution in importlib_metadata.distributions():
-            distribution_name = distribution.metadata.get("Name")
-            if distribution_name and canonicalize_name(distribution_name) == canonicalize_name(normalised_package_name):
+            if canonicalize_name(distribution.name) == canonicalize_name(
+                normalised_package_name
+            ):
                 return distribution
         raise
 
@@ -106,14 +107,15 @@ def _iter_dependency_distributions(
 
         seen_packages.add(normalised_name)
         yield dependency_distribution
-        yield from _iter_dependency_distributions(dependency_distribution, seen_packages)
+        yield from _iter_dependency_distributions(
+            dependency_distribution, seen_packages
+        )
 
 
 def get_all_packages_metadata_lines(package_name: str) -> List[list]:
     """Determines the metadata lines for the present package as well as for all its dependencies."""
     distribution = _get_distribution(package_name)
-    distribution_name = distribution.metadata.get("Name", package_name)
-    seen_packages = {canonicalize_name(distribution_name)}
+    seen_packages = {canonicalize_name(distribution.name)}
     all_distributions = [
         distribution,
         *_iter_dependency_distributions(distribution, seen_packages),
@@ -134,4 +136,6 @@ def parse_package_metadata_lines(metadata: list) -> PackageMetadata:
 def generate_package_info() -> None:
     """Generates package information (egg)."""
     command = [sys.executable, "setup.py", "develop", "-v"]
-    subprocess.check_call(command, cwd=configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+    subprocess.check_call(
+        command, cwd=configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
+    )
