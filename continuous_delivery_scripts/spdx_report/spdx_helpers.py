@@ -13,6 +13,7 @@ Examples:
     - https://spdx.org/spdx-tagvalue-example
     - https://github.com/spdx/tools/blob/master/Examples/SPDXTagExample-v2.1.spdx
 """
+
 import re
 
 import logging

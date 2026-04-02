@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Package definition for PyPI."""
+
 import os
 
 from setuptools import setup
@@ -53,6 +54,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "gitpython",
+        # spdx-tools imports pkg_resources from setuptools at runtime.
+        "setuptools",
         "towncrier==22.12.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed

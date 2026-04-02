@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Place to store generic project concepts for the ci scripts."""
+
 import enum
 from typing import List
 

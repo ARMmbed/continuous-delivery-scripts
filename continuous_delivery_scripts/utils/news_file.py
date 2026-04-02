@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Helpers with regards to news files."""
+
 import enum
 import pathlib
 import logging

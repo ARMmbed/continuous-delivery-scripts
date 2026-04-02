@@ -7,6 +7,7 @@
 This is to comply with OpenChain certification;
 https://github.com/OpenChain-Project/Curriculum/blob/master/guides/reusing_software.md#2-include-a-copyright-notice-and-license-in-each-file
 """
+
 import argparse
 import logging
 import subprocess

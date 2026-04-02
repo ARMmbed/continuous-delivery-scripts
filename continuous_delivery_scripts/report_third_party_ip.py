@@ -11,20 +11,23 @@ Therefore, some changes will have to be carried out when the later version is
 supported so that third-party IP gets documented as described by the
 specification (i.e. with relationships).
 """
+
 import argparse
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from continuous_delivery_scripts.language_specifics import get_language_specifics
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
 
-def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) -> SpdxProject:
+def generate_spdx_project_reports(project: "SpdxProject", output_directory: Path) -> "SpdxProject":
     """Generates all the SPDX reports for a given project."""
     logger.info("Generating SPDX report.")
     project.generate_tag_value_files(output_directory)
@@ -33,7 +36,7 @@ def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) 
     return project
 
 
-def generate_spdx_reports(output_directory: Path) -> Optional[SpdxProject]:
+def generate_spdx_reports(output_directory: Path) -> Optional["SpdxProject"]:
     """Generates all the SPDX reports for the current project."""
     project = get_language_specifics().get_current_spdx_project()
     if not project:
@@ -50,10 +53,20 @@ def main() -> int:
         return Path(arg)
 
     parser.add_argument(
-        "-o", "--output-dir", help="Output directory where the files are generated", required=True, type=convert_to_path
+        "-o",
+        "--output-dir",
+        help="Output directory where the files are generated",
+        required=True,
+        type=convert_to_path,
     )
 
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.")
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Verbosity, by default errors are reported.",
+    )
     args = parser.parse_args()
     set_log_level(args.verbose)
 

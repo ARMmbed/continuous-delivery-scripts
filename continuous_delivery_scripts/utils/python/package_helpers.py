@@ -4,16 +4,25 @@
 #
 """Utilities for retrieving Python's package information."""
 
+import importlib.metadata as importlib_metadata
 import logging
 import re
 import subprocess
 import sys
-from typing import List, Any, cast
+from typing import Iterable, List, Any, cast
 
-import pkg_resources
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
-from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataFetcher, PackageMetadata, ProjectMetadata
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
+from continuous_delivery_scripts.utils.package_helpers import (
+    ProjectMetadataFetcher,
+    PackageMetadata,
+    ProjectMetadata,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -55,20 +64,61 @@ def get_package_metadata_lines(package: Any) -> list:
     the underlying `get_metadata_lines` function used raises an exception if the file does not exist.
     We hence need to try to catch all exceptions
     """
-    try:
-        return cast(list, package.get_metadata_lines("METADATA"))
-    except Exception as e:
-        logger.warning(e)
-    try:
-        return cast(list, package.get_metadata_lines("PKG-INFO"))
-    except Exception as e:
-        logger.warning(e)
+    for filename in ["METADATA", "PKG-INFO"]:
+        try:
+            metadata = package.read_text(filename)
+            if metadata:
+                return cast(list, metadata.splitlines())
+        except Exception as e:
+            logger.warning(e)
     return list()
+
+
+def _get_distribution(package_name: str) -> importlib_metadata.Distribution:
+    try:
+        return importlib_metadata.distribution(package_name)
+    except importlib_metadata.PackageNotFoundError:
+        normalised_package_name = package_name.replace("-", "_")
+        for distribution in importlib_metadata.distributions():
+            distribution_name = distribution.metadata.get("Name")
+            if distribution_name and canonicalize_name(distribution_name) == canonicalize_name(normalised_package_name):
+                return distribution
+        raise
+
+
+def _iter_dependency_distributions(
+    distribution: importlib_metadata.Distribution, seen_packages: set[str]
+) -> Iterable[importlib_metadata.Distribution]:
+    for requirement_text in distribution.requires or []:
+        requirement = Requirement(requirement_text)
+        if requirement.marker and not requirement.marker.evaluate():
+            continue
+
+        normalised_name = canonicalize_name(requirement.name)
+        if normalised_name in seen_packages:
+            continue
+
+        try:
+            dependency_distribution = _get_distribution(requirement.name)
+        except importlib_metadata.PackageNotFoundError as e:
+            logger.warning(e)
+            continue
+
+        seen_packages.add(normalised_name)
+        yield dependency_distribution
+        yield from _iter_dependency_distributions(dependency_distribution, seen_packages)
 
 
 def get_all_packages_metadata_lines(package_name: str) -> List[list]:
     """Determines the metadata lines for the present package as well as for all its dependencies."""
-    return [get_package_metadata_lines(package) for package in pkg_resources.require(package_name)]
+    distribution = _get_distribution(package_name)
+    distribution_name = distribution.metadata.get("Name", package_name)
+    seen_packages = {canonicalize_name(distribution_name)}
+    all_distributions = [
+        distribution,
+        *_iter_dependency_distributions(distribution, seen_packages),
+    ]
+    return [get_package_metadata_lines(package) for package in all_distributions]
 
 
 def parse_package_metadata_lines(metadata: list) -> PackageMetadata:

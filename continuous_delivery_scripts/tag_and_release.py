@@ -3,23 +3,36 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Orchestrates release process."""
+
 import argparse
 import datetime
 import logging
 import sys
 from pathlib import Path
-from typing import Optional, Tuple, Dict
+from typing import TYPE_CHECKING, Optional, Tuple, Dict
 
 from continuous_delivery_scripts.generate_docs import generate_documentation
 from continuous_delivery_scripts.generate_news import version_project
 from continuous_delivery_scripts.language_specifics import get_language_specifics
 from continuous_delivery_scripts.license_files import insert_licence_header
-from continuous_delivery_scripts.report_third_party_ip import generate_spdx_project_reports, SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.report_third_party_ip import (
+    generate_spdx_project_reports,
+)
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
+from continuous_delivery_scripts.utils.git_helpers import (
+    ProjectTempClone,
+    LocalProjectRepository,
+    GitWrapper,
+)
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 from continuous_delivery_scripts.utils.versioning import determine_version_shortcuts
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 SPDX_REPORTS_DIRECTORY = "licensing"
 
@@ -72,7 +85,7 @@ def _update_documentation() -> None:
     generate_documentation(docs_dir, module_to_document)
 
 
-def _update_licensing_summary() -> Optional[SpdxProject]:
+def _update_licensing_summary() -> Optional["SpdxProject"]:
     if not get_language_specifics().can_get_project_metadata():
         return None
 
@@ -123,7 +136,7 @@ def _clean_repository() -> None:
         git.clean()
 
 
-def _generate_spdx_reports(project: SpdxProject) -> None:
+def _generate_spdx_reports(project: "SpdxProject") -> None:
     report_directory = Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)).joinpath(
         SPDX_REPORTS_DIRECTORY
     )
@@ -158,10 +171,21 @@ def main() -> None:
     """
     parser = argparse.ArgumentParser(description="Releases the project.")
     parser.add_argument(
-        "-t", "--release-type", help="type of release to perform", required=True, type=str, choices=CommitType.choices()
+        "-t",
+        "--release-type",
+        help="type of release to perform",
+        required=True,
+        type=str,
+        choices=CommitType.choices(),
     )
     parser.add_argument("-b", "--current-branch", help="Name of the current branch", nargs="?")
-    parser.add_argument("-v", "--verbose", action="count", default=0, help="Verbosity, by default errors are reported.")
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Verbosity, by default errors are reported.",
+    )
     args = parser.parse_args()
     set_log_level(args.verbose)
     try:

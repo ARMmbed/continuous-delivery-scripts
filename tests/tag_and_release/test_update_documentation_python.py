@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Tests for  documentation update functions."""
+
 import os
 from unittest import mock, TestCase
 

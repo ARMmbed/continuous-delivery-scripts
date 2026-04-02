@@ -3,16 +3,23 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Third party licences."""
+
 import re
 
 import json
 from dataclasses import dataclass
+from importlib.util import find_spec
+from pathlib import Path
 from license_expression import Licensing, LicenseExpression, OR
-from spdx.config import _licenses
 from typing import Iterable, cast, Optional, Iterator, List, Pattern, Any
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
-from continuous_delivery_scripts.utils.string_helpers import determine_similar_string_from_list
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
+from continuous_delivery_scripts.utils.string_helpers import (
+    determine_similar_string_from_list,
+)
 
 
 @dataclass(order=True, frozen=True)
@@ -45,6 +52,13 @@ UNKNOWN_LICENCE = Licence(
 LICENCE_LIKELIHOOD_THRESHOLD = 0.5
 
 LICENCE_NON_ACCEPTED_CHARACTERS = r"[^\w\s\.\:\-()]"
+
+
+def _get_spdx_licenses_path() -> Path:
+    spec = find_spec("spdx")
+    if not spec or not spec.origin:
+        raise ModuleNotFoundError("No module named 'spdx'")
+    return Path(spec.origin).resolve().parent.joinpath("licenses.json")
 
 
 def _parse_licence_expression(licensing: Licensing, licence_expression: str) -> LicenseExpression:
@@ -114,7 +128,7 @@ class OpenSourceLicences:
             return
         self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
         self._licence_list = [UNKNOWN_LICENCE.identifier]
-        with open(_licenses, "r", encoding="utf8") as f:
+        with open(_get_spdx_licenses_path(), "r", encoding="utf8") as f:
             for licence in iter_licenses(json.load(f)):
                 self._licence_store[licence.identifier] = licence
                 self._licence_list.append(licence.identifier)
@@ -173,7 +187,9 @@ def _iter_matching_licences_from_pattern(desc: str) -> Iterable[Licence]:
         yield from licences
 
 
-def _retrieve_licences_from_identifier_list(identifiers: Iterable[str]) -> Iterable[Licence]:
+def _retrieve_licences_from_identifier_list(
+    identifiers: Iterable[str],
+) -> Iterable[Licence]:
     for desc in identifiers:
         if "*" in desc:
             yield from _iter_matching_licences_from_pattern(desc)
@@ -181,7 +197,9 @@ def _retrieve_licences_from_identifier_list(identifiers: Iterable[str]) -> Itera
             yield from _iter_matching_licences(desc)
 
 
-def determine_allowed_opensource_licences_from_string(allowed_licences: Any) -> Iterable[Licence]:
+def determine_allowed_opensource_licences_from_string(
+    allowed_licences: Any,
+) -> Iterable[Licence]:
     """Determines all the third party licences allowed as set in the input parameter."""
     if isinstance(allowed_licences, str):
         allowed_licences = allowed_licences.split(", ")

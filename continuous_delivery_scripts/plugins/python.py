@@ -3,24 +3,33 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for Python projects."""
+
 import logging
 import shutil
 import sys
 from pathlib import Path
 from subprocess import check_call
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
 from continuous_delivery_scripts.utils.logging import log_exception
 from continuous_delivery_scripts.utils.python.package_helpers import (
     CurrentPythonProjectMetadataFetcher,
     generate_package_info,
 )
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 ENVVAR_TWINE_USERNAME = "TWINE_USERNAME"
 ENVVAR_TWINE_PASSWORD = "TWINE_PASSWORD"
@@ -117,7 +126,7 @@ def _generate_pdoc_in_correct_structure(module_to_document: str, output_director
                 shutil.move(str(element), str(output_directory))
 
 
-def _get_current_spdx_project() -> SpdxProject:
+def _get_current_spdx_project() -> "SpdxProject":
     """Gets information about the current project/package."""
     logger.info("Generating package information.")
     try:
@@ -125,6 +134,8 @@ def _get_current_spdx_project() -> SpdxProject:
         generate_package_info()
     except Exception as e:
         log_exception(logger, e)
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+
     return SpdxProject(CurrentPythonProjectMetadataFetcher())
 
 
@@ -173,6 +184,6 @@ class Python(BaseLanguage):
         # FIXME Comment out SPDX package as no longer working
         return False
 
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets the current SPDX description."""
         return _get_current_spdx_project()
