@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utilities regarding string handling."""
+
 from functools import total_ordering
 
 import jellyfish

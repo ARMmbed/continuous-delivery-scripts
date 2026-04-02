@@ -7,6 +7,7 @@
 Usage:
     create-news-file "Fixed a bug" --type bugfix
 """
+
 import argparse
 import logging
 

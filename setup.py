@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Package definition for PyPI."""
+
 import os
 
 from setuptools import setup
@@ -52,6 +53,8 @@ setup(
     keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
     include_package_data=True,
     install_requires=[
+        # spdx-tools imports pkg_resources from setuptools at runtime.
+        "setuptools",
         "gitpython",
         "towncrier==22.12.0",
         "pyautoversion~=1.2.0",

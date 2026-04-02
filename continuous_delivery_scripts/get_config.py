@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Retrieves configuration values."""
+
 import argparse
 import sys
 import logging

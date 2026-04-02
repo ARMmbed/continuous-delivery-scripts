@@ -3,19 +3,30 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Definition of an SPDX Document."""
-from pathlib import Path
-from spdx.creationinfo import Person, Organization, Tool
-from spdx.document import Document, License
-from spdx.review import Review
-from spdx.version import Version
-from typing import List, Optional
 
-from continuous_delivery_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
-from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_value, get_project_namespace
-from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage, PackageInfo
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from pathlib import Path
+from typing import TYPE_CHECKING, List, Optional
+
+from continuous_delivery_scripts.spdx_report.spdx_dependency import (
+    DependencySpdxDocumentRef,
+)
+from continuous_delivery_scripts.spdx_report.spdx_helpers import (
+    determine_spdx_value,
+    get_project_namespace,
+)
+from continuous_delivery_scripts.spdx_report.spdx_package import (
+    SpdxPackage,
+    PackageInfo,
+)
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
+
+if TYPE_CHECKING:
+    from spdx.document import Document
 
 TOOL_NAME = "mbed-spdx-generator"
 
@@ -74,7 +85,7 @@ class SpdxDocument:
             url_base = "http://spdx.org/spdxdocs"
             uuid = generate_uuid_based_on_str(self.document_name)
             return f"{url_base}/{self.document_name}-{uuid}"
-        return get_project_namespace(self._project_config, self.document_name)
+        return str(get_project_namespace(self._project_config, self.document_name))
 
     @property
     def name(self) -> str:
@@ -83,7 +94,7 @@ class SpdxDocument:
         Returns:
             corresponding string
         """
-        return f"{self._package_metadata.name}"
+        return str(self._package_metadata.name)
 
     @property
     def version(self) -> str:
@@ -92,7 +103,7 @@ class SpdxDocument:
         Returns:
             package version
         """
-        return self._package_metadata.version
+        return str(self._package_metadata.version)
 
     @property
     def licence(self) -> str:
@@ -101,7 +112,7 @@ class SpdxDocument:
         Returns:
             project's licence
         """
-        return self._package_metadata.licence
+        return str(self._package_metadata.licence)
 
     @property
     def author(self) -> str:
@@ -110,7 +121,7 @@ class SpdxDocument:
         Returns:
             document's author
         """
-        return self._package_metadata.author
+        return str(self._package_metadata.author)
 
     @property
     def author_email(self) -> str:
@@ -119,7 +130,7 @@ class SpdxDocument:
         Returns:
             document author's email
         """
-        return self._package_metadata.author_email
+        return str(self._package_metadata.author_email)
 
     @property
     def organisation(self) -> str:
@@ -198,7 +209,7 @@ class SpdxDocument:
             )
         return self._spdx_package
 
-    def generate_spdx_document(self) -> Document:
+    def generate_spdx_document(self) -> "Document":
         """Generates the SPDX document.
 
         Example of SPDX document section.
@@ -218,6 +229,11 @@ class SpdxDocument:
         Returns:
             the corresponding document
         """
+        from spdx.creationinfo import Person, Organization, Tool
+        from spdx.document import Document, License
+        from spdx.review import Review
+        from spdx.version import Version
+
         doc = Document()
         doc.version = Version(1, 2)
         doc.name = determine_spdx_value(self.document_name)
@@ -233,7 +249,12 @@ class SpdxDocument:
         doc.creation_info.add_creator(Tool(self.tool_name))
         doc.creation_info.set_created_now()
         if not self._is_dependency:
-            review = Review(Person(determine_spdx_value(self.reviewer), determine_spdx_value(self.reviewer_email)))
+            review = Review(
+                Person(
+                    determine_spdx_value(self.reviewer),
+                    determine_spdx_value(self.reviewer_email),
+                )
+            )
             review.set_review_date_now()
             doc.add_review(review)
 

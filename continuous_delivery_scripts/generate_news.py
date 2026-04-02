@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Handles usage of towncrier for automated changelog generation and pyautoversion for versioning."""
+
 import sys
 
 import argparse

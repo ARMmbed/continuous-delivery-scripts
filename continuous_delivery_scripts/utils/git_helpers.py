@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utility script to abstract git operations for our CI scripts."""
+
 import logging
 import os
 import re

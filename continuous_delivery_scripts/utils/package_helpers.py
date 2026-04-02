@@ -6,9 +6,12 @@
 
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 
 logger = logging.getLogger(__name__)
@@ -24,48 +27,48 @@ class PackageMetadata:
 
     def __init__(self, data: dict) -> None:
         """Constructor."""
-        self._data = data
+        self._data: Dict[str, Any] = data
 
     @property
     def name(self) -> str:
         """Gets package's name."""
-        return self._data.get("Name", UNKNOWN)
+        return str(self._data.get("Name", UNKNOWN))
 
     @property
     def version(self) -> str:
         """Gets package's version."""
-        return self._data.get("Version", UNKNOWN)
+        return str(self._data.get("Version", UNKNOWN))
 
     @property
     def author(self) -> str:
         """Gets package's author."""
-        return self._data.get("Author", UNKNOWN)
+        return str(self._data.get("Author", UNKNOWN))
 
     @property
     def author_email(self) -> str:
         """Gets package's author email."""
-        return self._data.get("Author-email", UNKNOWN)
+        return str(self._data.get("Author-email", UNKNOWN))
 
     @property
     def licence(self) -> str:
         """Gets package's licence."""
-        return self._data.get("License", UNKNOWN)
+        return str(self._data.get("License", UNKNOWN))
 
     @property
     def description(self) -> str:
         """Gets package's licence."""
-        return self._data.get("Summary", UNKNOWN)
+        return str(self._data.get("Summary", UNKNOWN))
 
     @property
     def url(self) -> str:
         """Gets package's URL."""
-        home_page = str(self._data.get("Home-page"))
+        home_page = self._data.get("Home-page")
         if home_page:
-            return home_page
-        url = str(self._data.get("Project-URL"))
+            return str(home_page)
+        url = self._data.get("Project-URL")
         if url:
-            return url.split(",")[1].strip()
-        return UNKNOWN
+            return str(url).split(",")[1].strip()
+        return str(UNKNOWN)
 
     def __str__(self) -> str:
         """String representation."""
