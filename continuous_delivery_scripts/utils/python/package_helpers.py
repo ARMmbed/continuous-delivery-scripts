@@ -80,11 +80,25 @@ def _get_distribution(package_name: str) -> importlib_metadata.Distribution:
     except importlib_metadata.PackageNotFoundError:
         normalised_package_name = package_name.replace("-", "_")
         for distribution in importlib_metadata.distributions():
-            if canonicalize_name(distribution.name) == canonicalize_name(
-                normalised_package_name
-            ):
+            if canonicalize_name(
+                _get_distribution_name(distribution)
+            ) == canonicalize_name(normalised_package_name):
                 return distribution
         raise
+
+
+def _get_distribution_name(distribution: importlib_metadata.Distribution) -> str:
+    distribution_name = getattr(distribution, "name", None)
+    if distribution_name:
+        return str(distribution_name)
+
+    metadata = distribution.metadata
+    if "Name" in metadata:
+        return str(metadata["Name"])
+
+    raise importlib_metadata.PackageNotFoundError(
+        "Distribution metadata does not define a package name"
+    )
 
 
 def _iter_dependency_distributions(
@@ -115,7 +129,7 @@ def _iter_dependency_distributions(
 def get_all_packages_metadata_lines(package_name: str) -> List[list]:
     """Determines the metadata lines for the present package as well as for all its dependencies."""
     distribution = _get_distribution(package_name)
-    seen_packages = {canonicalize_name(distribution.name)}
+    seen_packages = {canonicalize_name(_get_distribution_name(distribution))}
     all_distributions = [
         distribution,
         *_iter_dependency_distributions(distribution, seen_packages),
