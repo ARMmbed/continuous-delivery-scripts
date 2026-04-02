@@ -6,9 +6,10 @@
 
 import logging
 import os
+import shutil
 from pathlib import Path
-from subprocess import check_call
-from typing import TYPE_CHECKING, Optional, List, Dict
+from subprocess import check_call, check_output
+from typing import TYPE_CHECKING, Optional, List, Dict, MutableMapping
 
 from continuous_delivery_scripts.utils.configuration import (
     configuration,
@@ -37,14 +38,11 @@ ENVVAR_GO_MOD = "GO111MODULE"
 GO_MOD_ON_VALUE = "on"
 
 
-def _generate_golds_command_list(output_directory: Path, module: str) -> List[str]:
+def _generate_doc2go_command_list(output_directory: Path, module: str) -> List[str]:
     return [
-        "golds",
-        "-gen",
-        "-wdpkgs-listing=solo",
-        "-only-list-exporteds",
-        f"-dir={str(output_directory)}",
-        "-nouses",
+        "doc2go",
+        "-out",
+        str(output_directory),
         f"{module}",
     ]
 
@@ -66,12 +64,12 @@ def _generate_goreleaser_check_command_list() -> List[str]:
     ]
 
 
-def _install_golds_command_list() -> List[str]:
+def _install_doc2go_command_list() -> List[str]:
     return [
         "go",
         "install",
-        "go101.org/golds@main",
-    ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
+        "go.abhg.dev/doc2go@latest",
+    ]
 
 
 def _install_syft_command_list() -> List[str]:
@@ -82,29 +80,63 @@ def _install_goreleaser_command_list() -> List[str]:
     return ["go", "install", "github.com/goreleaser/goreleaser/v2@latest"]
 
 
-def _call_golds(output_directory: Path, module: str) -> None:
-    """Calls Golds for generating the docs."""
-    logger.info("Installing Golds if missing.")
+def _ensure_go_tool_installed(
+    tool_name: str,
+    version_command: List[str],
+    install_command: List[str],
+    env: MutableMapping[str, str],
+) -> None:
+    """Ensure a Go-based tool is available on PATH before use."""
+    tool_path = shutil.which(tool_name)
+    if tool_path:
+        try:
+            check_output(version_command, env=env)
+            logger.info("Using %s from PATH: %s", tool_name, tool_path)
+            return
+        except Exception as exception:
+            logger.warning("Could not use %s from PATH: %s", tool_name, exception)
+
+    logger.info("Installing %s with go install.", tool_name)
+    check_call(install_command, env=env)
+
+
+def _call_doc2go(output_directory: Path, module: str) -> None:
+    """Call doc2go for generating the docs."""
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-    check_call(_install_golds_command_list(), env=env)
-    logger.info("Creating Code documentation.")
-    logger.info(f"Running Golds over [{module}] in [{SRC_DIR}].")
-    # check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
-    # FIXME
-    logger.warning(
-        "Currently not running golds because there is an issue with latest versions: "
-        + "https://github.com/go101/golds/issues/26"
+    _ensure_go_tool_installed(
+        tool_name="doc2go",
+        version_command=["doc2go", "-version"],
+        install_command=_install_doc2go_command_list(),
+        env=env,
     )
+    logger.info("Creating Code documentation.")
+    logger.info("Running doc2go over [%s] in [%s].", module, SRC_DIR)
+    # FIXME enable doc2go when fully tested
+    # check_call(
+    #    _generate_doc2go_command_list(output_directory, module),
+    #    cwd=str(SRC_DIR),
+    #    env=env,
+    # )
+    logger.warning("Currently not running doc2go")
 
 
 def _call_goreleaser_check(version: str) -> None:
     """Calls go releaser check to verify configuration."""
-    logger.info("Installing GoReleaser if missing.")
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-    check_call(_install_syft_command_list(), env=env)
-    check_call(_install_goreleaser_command_list(), env=env)
+    _ensure_go_tool_installed(
+        tool_name="syft",
+        version_command=["syft", "--version"],
+        install_command=_install_syft_command_list(),
+        env=env,
+    )
+    _ensure_go_tool_installed(
+        tool_name="goreleaser",
+        version_command=["goreleaser", "--version"],
+        install_command=_install_goreleaser_command_list(),
+        env=env,
+    )
     logger.info("Checking GoReleaser configuration.")
     env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
     env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
@@ -136,7 +168,7 @@ class Go(BaseLanguage):
 
     def get_related_language(self) -> str:
         """Gets the related language."""
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
     def get_version_tag(self, version: str) -> str:
         """Gets tag based on version."""
@@ -161,7 +193,7 @@ class Go(BaseLanguage):
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""
         super().generate_code_documentation(output_directory, module_to_document)
-        _call_golds(output_directory, "./...")
+        _call_doc2go(output_directory, module_to_document if module_to_document else "./...")
 
     def can_add_licence_headers(self) -> bool:
         """States that licence headers can be added."""
@@ -189,11 +221,20 @@ class Go(BaseLanguage):
 
     def _call_goreleaser_release(self, version: str) -> None:
         """Calls go releaser release to upload packages."""
-        logger.info("Installing GoReleaser if missing.")
         env = os.environ
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-        check_call(_install_syft_command_list(), env=env)
-        check_call(_install_goreleaser_command_list(), env=env)
+        _ensure_go_tool_installed(
+            tool_name="syft",
+            version_command=["syft", "--version"],
+            install_command=_install_syft_command_list(),
+            env=env,
+        )
+        _ensure_go_tool_installed(
+            tool_name="goreleaser",
+            version_command=["goreleaser", "--version"],
+            install_command=_install_goreleaser_command_list(),
+            env=env,
+        )
         tag = self.get_version_tag(version)
         # The tag of the release must be retrieved
         # See https://github.com/goreleaser/goreleaser/discussions/1426
