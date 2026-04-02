@@ -30,7 +30,6 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
@@ -56,7 +55,7 @@ setup(
         # spdx-tools imports pkg_resources from setuptools at runtime.
         "setuptools",
         "gitpython",
-        "towncrier==22.12.0",
+        "towncrier==25.8.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
         "pdoc3==0.10.0",
@@ -81,7 +80,7 @@ setup(
     long_description=long_description,
     name=PROJECT_SLUG,
     packages=[SOURCE_DIR],
-    python_requires=">=3.8,<4",
+    python_requires=">=3.9,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     version=__version__,
 )
