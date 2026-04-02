@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,20 +32,27 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Third party licences.&#34;&#34;&#34;
+
 import re
 
 import json
 from dataclasses import dataclass
+from importlib.util import find_spec
 from license_expression import Licensing, LicenseExpression, OR
-from spdx.config import _licenses
+from pathlib import Path
 from typing import Iterable, cast, Optional, Iterator, List, Pattern, Any
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
-from continuous_delivery_scripts.utils.string_helpers import determine_similar_string_from_list
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
+from continuous_delivery_scripts.utils.string_helpers import (
+    determine_similar_string_from_list,
+)
 
 
 @dataclass(order=True, frozen=True)
@@ -78,6 +85,13 @@ UNKNOWN_LICENCE = Licence(
 LICENCE_LIKELIHOOD_THRESHOLD = 0.5
 
 LICENCE_NON_ACCEPTED_CHARACTERS = r&#34;[^\w\s\.\:\-()]&#34;
+
+
+def _get_spdx_licenses_path() -&gt; Path:
+    spec = find_spec(&#34;spdx&#34;)
+    if not spec or not spec.origin:
+        raise ModuleNotFoundError(&#34;No module named &#39;spdx&#39;&#34;)
+    return Path(spec.origin).resolve().parent.joinpath(&#34;licenses.json&#34;)
 
 
 def _parse_licence_expression(licensing: Licensing, licence_expression: str) -&gt; LicenseExpression:
@@ -147,7 +161,7 @@ class OpenSourceLicences:
             return
         self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
         self._licence_list = [UNKNOWN_LICENCE.identifier]
-        with open(_licenses, &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+        with open(_get_spdx_licenses_path(), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
             for licence in iter_licenses(json.load(f)):
                 self._licence_store[licence.identifier] = licence
                 self._licence_list.append(licence.identifier)
@@ -206,7 +220,9 @@ def _iter_matching_licences_from_pattern(desc: str) -&gt; Iterable[Licence]:
         yield from licences
 
 
-def _retrieve_licences_from_identifier_list(identifiers: Iterable[str]) -&gt; Iterable[Licence]:
+def _retrieve_licences_from_identifier_list(
+    identifiers: Iterable[str],
+) -&gt; Iterable[Licence]:
     for desc in identifiers:
         if &#34;*&#34; in desc:
             yield from _iter_matching_licences_from_pattern(desc)
@@ -214,7 +230,9 @@ def _retrieve_licences_from_identifier_list(identifiers: Iterable[str]) -&gt; It
             yield from _iter_matching_licences(desc)
 
 
-def determine_allowed_opensource_licences_from_string(allowed_licences: Any) -&gt; Iterable[Licence]:
+def determine_allowed_opensource_licences_from_string(
+    allowed_licences: Any,
+) -&gt; Iterable[Licence]:
     &#34;&#34;&#34;Determines all the third party licences allowed as set in the input parameter.&#34;&#34;&#34;
     if isinstance(allowed_licences, str):
         allowed_licences = allowed_licences.split(&#34;, &#34;)
@@ -340,7 +358,9 @@ The idea is to return an equivalent expression but using SPDX identifiers when p
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_allowed_opensource_licences_from_string(allowed_licences: Any) -&gt; Iterable[Licence]:
+<pre><code class="python">def determine_allowed_opensource_licences_from_string(
+    allowed_licences: Any,
+) -&gt; Iterable[Licence]:
     &#34;&#34;&#34;Determines all the third party licences allowed as set in the input parameter.&#34;&#34;&#34;
     if isinstance(allowed_licences, str):
         allowed_licences = allowed_licences.split(&#34;, &#34;)
@@ -578,7 +598,7 @@ class Licence:
             return
         self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
         self._licence_list = [UNKNOWN_LICENCE.identifier]
-        with open(_licenses, &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+        with open(_get_spdx_licenses_path(), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
             for licence in iter_licenses(json.load(f)):
                 self._licence_store[licence.identifier] = licence
                 self._licence_list.append(licence.identifier)
@@ -664,7 +684,7 @@ class Licence:
         return
     self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
     self._licence_list = [UNKNOWN_LICENCE.identifier]
-    with open(_licenses, &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
+    with open(_get_spdx_licenses_path(), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
         for licence in iter_licenses(json.load(f)):
             self._licence_store[licence.identifier] = licence
             self._licence_list.append(licence.identifier)

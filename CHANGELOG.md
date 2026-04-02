@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
 # Changelog
@@ -16,6 +16,39 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"3.3.0" (2026-04-02)
+====================
+
+Features
+--------
+
+- :zap: `[GOLANG]` Check whether tools are already installed before attempting to installing it from scratch using `go install` (#20260402160607)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: codeql-action-3.30.4 (#20250926060617)
+- Dependency upgrade: scorecard-action-2.4.3 (#20251001060855)
+- Dependency upgrade: upload-artifact-5.0.0 (#20251027072552)
+- Dependency upgrade: codeql-action-4.31.5 (#20251127070625)
+- Dependency upgrade: codeql-action-4.31.6 (#20251202070641)
+- Dependency upgrade: cache-5 (#20251212070611)
+- Dependency upgrade: upload-artifact-6.0.0 (#20251215070608)
+- Dependency upgrade: fetch-metadata-2.5.0 (#20260106070809)
+- Dependency upgrade: fetch-metadata-3.0.0 (#20260402140531)
+- Dependency upgrade: upload-artifact-7.0.0 (#20260402140625)
+- Dependency upgrade: codeql-action-4.35.1 (#20260402140903)
+- Dependency upgrade: codecov-action-6 (#20260402140927)
+- Dependency upgrade: checkout-6 (#20260402140953)
+
+
+Misc
+----
+
+- #202604011608
+
 
 "3.2.6" (2025-09-15)
 ====================

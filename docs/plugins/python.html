@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,28 +32,37 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Plugin for Python projects.&#34;&#34;&#34;
+
 import logging
 import shutil
 import sys
 from pathlib import Path
 from subprocess import check_call
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
 from continuous_delivery_scripts.utils.logging import log_exception
 from continuous_delivery_scripts.utils.python.package_helpers import (
     CurrentPythonProjectMetadataFetcher,
     generate_package_info,
 )
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 ENVVAR_TWINE_USERNAME = &#34;TWINE_USERNAME&#34;
 ENVVAR_TWINE_PASSWORD = &#34;TWINE_PASSWORD&#34;
@@ -142,15 +151,25 @@ def _generate_pdoc_in_correct_structure(module_to_document: str, output_director
     Pdoc nests its docs output in a folder with the module&#39;s name.
     This process removes this unwanted folder.
     &#34;&#34;&#34;
-    with TemporaryDirectory() as temp_dir:
-        _call_pdoc(temp_dir, module_to_document)
-        docs_contents_dir = temp_dir.joinpath(module_to_document)
-        if docs_contents_dir.exists() and docs_contents_dir.is_dir():
-            for element in docs_contents_dir.iterdir():
-                shutil.move(str(element), str(output_directory))
+    temp_directory = TemporaryDirectory()
+    if hasattr(temp_directory, &#34;__enter__&#34;) and hasattr(temp_directory, &#34;__exit__&#34;):
+        with temp_directory as temp_dir:
+            _call_pdoc(temp_dir, module_to_document)
+            docs_contents_dir = temp_dir.joinpath(module_to_document)
+            if docs_contents_dir.exists() and docs_contents_dir.is_dir():
+                for element in docs_contents_dir.iterdir():
+                    shutil.move(str(element), str(output_directory))
+        return
+
+    temp_dir = Path(str(temp_directory))
+    _call_pdoc(temp_dir, module_to_document)
+    docs_contents_dir = temp_dir.joinpath(module_to_document)
+    if docs_contents_dir.exists() and docs_contents_dir.is_dir():
+        for element in docs_contents_dir.iterdir():
+            shutil.move(str(element), str(output_directory))
 
 
-def _get_current_spdx_project() -&gt; SpdxProject:
+def _get_current_spdx_project() -&gt; &#34;SpdxProject&#34;:
     &#34;&#34;&#34;Gets information about the current project/package.&#34;&#34;&#34;
     logger.info(&#34;Generating package information.&#34;)
     try:
@@ -158,6 +177,8 @@ def _get_current_spdx_project() -&gt; SpdxProject:
         generate_package_info()
     except Exception as e:
         log_exception(logger, e)
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+
     return SpdxProject(CurrentPythonProjectMetadataFetcher())
 
 
@@ -206,7 +227,7 @@ class Python(BaseLanguage):
         # FIXME Comment out SPDX package as no longer working
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets the current SPDX description.&#34;&#34;&#34;
         return _get_current_spdx_project()</code></pre>
 </details>
@@ -274,7 +295,7 @@ class Python(BaseLanguage):
         # FIXME Comment out SPDX package as no longer working
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets the current SPDX description.&#34;&#34;&#34;
         return _get_current_spdx_project()</code></pre>
 </details>
@@ -333,7 +354,7 @@ class Python(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.python.Python.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[<a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>]</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[SpdxProject]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the current SPDX description.</p></div>
@@ -341,7 +362,7 @@ class Python(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Gets the current SPDX description.&#34;&#34;&#34;
     return _get_current_spdx_project()</code></pre>
 </details>

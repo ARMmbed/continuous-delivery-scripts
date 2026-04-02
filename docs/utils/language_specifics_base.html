@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,7 +32,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Base class for all Language plugins.&#34;&#34;&#34;
@@ -40,12 +40,17 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional, Dict
+from typing import TYPE_CHECKING, Optional, Dict
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import GitWrapper
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -142,7 +147,7 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets current project SPDX.&#34;&#34;&#34;
         pass
 
@@ -261,7 +266,7 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets current project SPDX.&#34;&#34;&#34;
         pass
 
@@ -359,7 +364,7 @@ def generate_code_documentation(self, output_directory: Path, module_to_document
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[<a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>]</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[SpdxProject]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets current project SPDX.</p></div>
@@ -368,7 +373,7 @@ def generate_code_documentation(self, output_directory: Path, module_to_document
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
-def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Gets current project SPDX.&#34;&#34;&#34;
     pass</code></pre>
 </details>

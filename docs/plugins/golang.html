@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,21 +32,34 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Plugin for Golang projects.&#34;&#34;&#34;
+
 import logging
 import os
+import shutil
 from pathlib import Path
-from subprocess import check_call
-from typing import Optional, List, Dict
+from subprocess import check_call, check_output
+from typing import TYPE_CHECKING, Optional, List, Dict, MutableMapping
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository, GitWrapper
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.utils.git_helpers import (
+    LocalProjectRepository,
+    GitWrapper,
+)
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -58,14 +71,11 @@ ENVVAR_GO_MOD = &#34;GO111MODULE&#34;
 GO_MOD_ON_VALUE = &#34;on&#34;
 
 
-def _generate_golds_command_list(output_directory: Path, module: str) -&gt; List[str]:
+def _generate_doc2go_command_list(output_directory: Path, module: str) -&gt; List[str]:
     return [
-        &#34;golds&#34;,
-        &#34;-gen&#34;,
-        &#34;-wdpkgs-listing=solo&#34;,
-        &#34;-only-list-exporteds&#34;,
-        f&#34;-dir={str(output_directory)}&#34;,
-        &#34;-nouses&#34;,
+        &#34;doc2go&#34;,
+        &#34;-out&#34;,
+        str(output_directory),
         f&#34;{module}&#34;,
     ]
 
@@ -87,12 +97,12 @@ def _generate_goreleaser_check_command_list() -&gt; List[str]:
     ]
 
 
-def _install_golds_command_list() -&gt; List[str]:
+def _install_doc2go_command_list() -&gt; List[str]:
     return [
         &#34;go&#34;,
         &#34;install&#34;,
-        &#34;go101.org/golds@main&#34;,
-    ]  # FIXME change version to latest when https://github.com/go101/golds/issues/26 is fixed
+        &#34;go.abhg.dev/doc2go@latest&#34;,
+    ]
 
 
 def _install_syft_command_list() -&gt; List[str]:
@@ -103,29 +113,63 @@ def _install_goreleaser_command_list() -&gt; List[str]:
     return [&#34;go&#34;, &#34;install&#34;, &#34;github.com/goreleaser/goreleaser/v2@latest&#34;]
 
 
-def _call_golds(output_directory: Path, module: str) -&gt; None:
-    &#34;&#34;&#34;Calls Golds for generating the docs.&#34;&#34;&#34;
-    logger.info(&#34;Installing Golds if missing.&#34;)
+def _ensure_go_tool_installed(
+    tool_name: str,
+    version_command: List[str],
+    install_command: List[str],
+    env: MutableMapping[str, str],
+) -&gt; None:
+    &#34;&#34;&#34;Ensure a Go-based tool is available on PATH before use.&#34;&#34;&#34;
+    tool_path = shutil.which(tool_name)
+    if tool_path:
+        try:
+            check_output(version_command, env=env)
+            logger.info(&#34;Using %s from PATH: %s&#34;, tool_name, tool_path)
+            return
+        except Exception as exception:
+            logger.warning(&#34;Could not use %s from PATH: %s&#34;, tool_name, exception)
+
+    logger.info(&#34;Installing %s with go install.&#34;, tool_name)
+    check_call(install_command, env=env)
+
+
+def _call_doc2go(output_directory: Path, module: str) -&gt; None:
+    &#34;&#34;&#34;Call doc2go for generating the docs.&#34;&#34;&#34;
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-    check_call(_install_golds_command_list(), env=env)
-    logger.info(&#34;Creating Code documentation.&#34;)
-    logger.info(f&#34;Running Golds over [{module}] in [{SRC_DIR}].&#34;)
-    # check_call(_generate_golds_command_list(output_directory, module), cwd=str(SRC_DIR), env=env)
-    # FIXME
-    logger.warning(
-        &#34;Currently not running golds because there is an issue with latest versions: &#34;
-        + &#34;https://github.com/go101/golds/issues/26&#34;
+    _ensure_go_tool_installed(
+        tool_name=&#34;doc2go&#34;,
+        version_command=[&#34;doc2go&#34;, &#34;-version&#34;],
+        install_command=_install_doc2go_command_list(),
+        env=env,
     )
+    logger.info(&#34;Creating Code documentation.&#34;)
+    logger.info(&#34;Running doc2go over [%s] in [%s].&#34;, module, SRC_DIR)
+    # FIXME enable doc2go when fully tested
+    # check_call(
+    #    _generate_doc2go_command_list(output_directory, module),
+    #    cwd=str(SRC_DIR),
+    #    env=env,
+    # )
+    logger.warning(&#34;Currently not running doc2go&#34;)
 
 
 def _call_goreleaser_check(version: str) -&gt; None:
     &#34;&#34;&#34;Calls go releaser check to verify configuration.&#34;&#34;&#34;
-    logger.info(&#34;Installing GoReleaser if missing.&#34;)
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-    check_call(_install_syft_command_list(), env=env)
-    check_call(_install_goreleaser_command_list(), env=env)
+    _ensure_go_tool_installed(
+        tool_name=&#34;syft&#34;,
+        version_command=[&#34;syft&#34;, &#34;--version&#34;],
+        install_command=_install_syft_command_list(),
+        env=env,
+    )
+    _ensure_go_tool_installed(
+        tool_name=&#34;goreleaser&#34;,
+        version_command=[&#34;goreleaser&#34;, &#34;--version&#34;],
+        install_command=_install_goreleaser_command_list(),
+        env=env,
+    )
     logger.info(&#34;Checking GoReleaser configuration.&#34;)
     env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = version
     env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
@@ -157,7 +201,7 @@ class Go(BaseLanguage):
 
     def get_related_language(self) -&gt; str:
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
     def get_version_tag(self, version: str) -&gt; str:
         &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
@@ -182,7 +226,7 @@ class Go(BaseLanguage):
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
         super().generate_code_documentation(output_directory, module_to_document)
-        _call_golds(output_directory, &#34;./...&#34;)
+        _call_doc2go(output_directory, module_to_document if module_to_document else &#34;./...&#34;)
 
     def can_add_licence_headers(self) -&gt; bool:
         &#34;&#34;&#34;States that licence headers can be added.&#34;&#34;&#34;
@@ -192,7 +236,7 @@ class Go(BaseLanguage):
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
         # TODO
         return None
@@ -210,11 +254,20 @@ class Go(BaseLanguage):
 
     def _call_goreleaser_release(self, version: str) -&gt; None:
         &#34;&#34;&#34;Calls go releaser release to upload packages.&#34;&#34;&#34;
-        logger.info(&#34;Installing GoReleaser if missing.&#34;)
         env = os.environ
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-        check_call(_install_syft_command_list(), env=env)
-        check_call(_install_goreleaser_command_list(), env=env)
+        _ensure_go_tool_installed(
+            tool_name=&#34;syft&#34;,
+            version_command=[&#34;syft&#34;, &#34;--version&#34;],
+            install_command=_install_syft_command_list(),
+            env=env,
+        )
+        _ensure_go_tool_installed(
+            tool_name=&#34;goreleaser&#34;,
+            version_command=[&#34;goreleaser&#34;, &#34;--version&#34;],
+            install_command=_install_goreleaser_command_list(),
+            env=env,
+        )
         tag = self.get_version_tag(version)
         # The tag of the release must be retrieved
         # See https://github.com/goreleaser/goreleaser/discussions/1426
@@ -227,7 +280,11 @@ class Go(BaseLanguage):
         changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
         env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = tag
         env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-        check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)</code></pre>
+        check_call(
+            _generate_goreleaser_release_command_list(changelogPath),
+            cwd=ROOT_DIR,
+            env=env,
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -253,7 +310,7 @@ class Go(BaseLanguage):
 
     def get_related_language(self) -&gt; str:
         &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
     def get_version_tag(self, version: str) -&gt; str:
         &#34;&#34;&#34;Gets tag based on version.&#34;&#34;&#34;
@@ -278,7 +335,7 @@ class Go(BaseLanguage):
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
         super().generate_code_documentation(output_directory, module_to_document)
-        _call_golds(output_directory, &#34;./...&#34;)
+        _call_doc2go(output_directory, module_to_document if module_to_document else &#34;./...&#34;)
 
     def can_add_licence_headers(self) -&gt; bool:
         &#34;&#34;&#34;States that licence headers can be added.&#34;&#34;&#34;
@@ -288,7 +345,7 @@ class Go(BaseLanguage):
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
         # TODO
         return None
@@ -306,11 +363,20 @@ class Go(BaseLanguage):
 
     def _call_goreleaser_release(self, version: str) -&gt; None:
         &#34;&#34;&#34;Calls go releaser release to upload packages.&#34;&#34;&#34;
-        logger.info(&#34;Installing GoReleaser if missing.&#34;)
         env = os.environ
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-        check_call(_install_syft_command_list(), env=env)
-        check_call(_install_goreleaser_command_list(), env=env)
+        _ensure_go_tool_installed(
+            tool_name=&#34;syft&#34;,
+            version_command=[&#34;syft&#34;, &#34;--version&#34;],
+            install_command=_install_syft_command_list(),
+            env=env,
+        )
+        _ensure_go_tool_installed(
+            tool_name=&#34;goreleaser&#34;,
+            version_command=[&#34;goreleaser&#34;, &#34;--version&#34;],
+            install_command=_install_goreleaser_command_list(),
+            env=env,
+        )
         tag = self.get_version_tag(version)
         # The tag of the release must be retrieved
         # See https://github.com/goreleaser/goreleaser/discussions/1426
@@ -323,7 +389,11 @@ class Go(BaseLanguage):
         changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
         env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = tag
         env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-        check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)</code></pre>
+        check_call(
+            _generate_goreleaser_release_command_list(changelogPath),
+            cwd=ROOT_DIR,
+            env=env,
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -362,7 +432,7 @@ class Go(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[<a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>]</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[SpdxProject]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets current SPDX description.</p></div>
@@ -370,7 +440,7 @@ class Go(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
     # TODO
     return None</code></pre>
@@ -387,7 +457,7 @@ class Go(BaseLanguage):
 </summary>
 <pre><code class="python">def get_related_language(self) -&gt; str:
     &#34;&#34;&#34;Gets the related language.&#34;&#34;&#34;
-    return get_language_from_file_name(__file__)</code></pre>
+    return str(get_language_from_file_name(__file__))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.get_version_tag"><code class="name flex">

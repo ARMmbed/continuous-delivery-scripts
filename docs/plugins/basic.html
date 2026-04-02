@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -32,17 +32,23 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Basic plugin.&#34;&#34;&#34;
+
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +84,7 @@ class Basic(BaseLanguage):
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Basic.&#34;&#34;&#34;
         return None</code></pre>
 </details>
@@ -132,7 +138,7 @@ class Basic(BaseLanguage):
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Basic.&#34;&#34;&#34;
         return None</code></pre>
 </details>
@@ -186,7 +192,7 @@ class Basic(BaseLanguage):
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.basic.Basic.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[<a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>]</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> Optional[SpdxProject]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Basic.</p></div>
@@ -194,7 +200,7 @@ class Basic(BaseLanguage):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Basic.&#34;&#34;&#34;
     return None</code></pre>
 </details>
