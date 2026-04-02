@@ -6,15 +6,13 @@
 
 from dataclasses import dataclass
 from pathlib import Path
-from spdx.checksum import Algorithm
-from spdx.creationinfo import Person
-from spdx.document import License
-from spdx.package import Package
-from spdx.utils import NoAssert
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
-from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_value, list_project_files_for_licensing
+from continuous_delivery_scripts.spdx_report.spdx_helpers import (
+    determine_spdx_value,
+    list_project_files_for_licensing,
+)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
@@ -23,6 +21,9 @@ from continuous_delivery_scripts.utils.third_party_licences import (
     is_licence_accepted,
     determine_licence_compound,
 )
+
+if TYPE_CHECKING:
+    from spdx.package import Package
 
 
 @dataclass(frozen=True, order=True)
@@ -42,7 +43,7 @@ class PackageInfo:
     uuid: str
 
 
-def _set_package_copyright(file: SpdxFile, package: Package) -> None:
+def _set_package_copyright(file: SpdxFile, package: "Package") -> None:
     """Sets the copyright field of a package based on file copyright."""
     if file.copyright:
         package.cr_text = determine_spdx_value(file.copyright)
@@ -98,7 +99,7 @@ class SpdxPackage:
         Returns:
             corresponding string
         """
-        return self._package_info.metadata.name
+        return str(self._package_info.metadata.name)
 
     @property
     def version(self) -> str:
@@ -107,7 +108,7 @@ class SpdxPackage:
         Returns:
             package version
         """
-        return self._package_info.metadata.version
+        return str(self._package_info.metadata.version)
 
     @property
     def main_licence(self) -> str:
@@ -126,7 +127,7 @@ class SpdxPackage:
     @property
     def is_main_licence_accepted(self) -> bool:
         """States whether the main licence of the package is part of the accepted licence list."""
-        return is_licence_accepted(self.main_licence)
+        return bool(is_licence_accepted(self.main_licence))
 
     @property
     def licence(self) -> str:
@@ -147,7 +148,7 @@ class SpdxPackage:
     @property
     def is_licence_accepted(self) -> bool:
         """States whether the actual package's licence of the package is part of the accepted licence list."""
-        return is_licence_accepted(self.licence)
+        return bool(is_licence_accepted(self.licence))
 
     @property
     def author(self) -> str:
@@ -156,7 +157,7 @@ class SpdxPackage:
         Returns:
             document's author
         """
-        return self._package_info.metadata.author
+        return str(self._package_info.metadata.author)
 
     @property
     def author_email(self) -> str:
@@ -165,7 +166,7 @@ class SpdxPackage:
         Returns:
             document author's email
         """
-        return self._package_info.metadata.author_email
+        return str(self._package_info.metadata.author_email)
 
     @property
     def url(self) -> str:
@@ -174,7 +175,7 @@ class SpdxPackage:
         Returns:
             the package homepage
         """
-        return self._package_info.metadata.url
+        return str(self._package_info.metadata.url)
 
     @property
     def description(self) -> str:
@@ -183,7 +184,7 @@ class SpdxPackage:
         Returns:
             some description
         """
-        return self._package_info.metadata.description
+        return str(self._package_info.metadata.description)
 
     def get_spdx_files(self) -> Optional[List[SpdxFile]]:
         """Gets package's files SPDX description.
@@ -195,7 +196,7 @@ class SpdxPackage:
             return None
         return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]
 
-    def generate_spdx_package(self) -> Package:
+    def generate_spdx_package(self) -> "Package":
         """Generates the SPDX package.
 
         Example of a SPDX package:
@@ -220,6 +221,12 @@ class SpdxPackage:
         Returns:
             the corresponding package
         """
+        from spdx.checksum import Algorithm
+        from spdx.creationinfo import Person
+        from spdx.document import License
+        from spdx.package import Package
+        from spdx.utils import NoAssert
+
         package = Package(
             name=determine_spdx_value(self.name),
             spdx_id=f"SPDXRef-{self.id}",
@@ -227,7 +234,10 @@ class SpdxPackage:
             version=determine_spdx_value(self.version),
             file_name=determine_spdx_value(self.name),
             supplier=None,
-            originator=Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email)),
+            originator=Person(
+                determine_spdx_value(self.author),
+                determine_spdx_value(self.author_email),
+            ),
         )
         package.check_sum = Algorithm("SHA1", str(NoAssert()))
         package.cr_text = NoAssert()

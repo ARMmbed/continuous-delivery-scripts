@@ -8,13 +8,24 @@ import logging
 import os
 from pathlib import Path
 from subprocess import check_call
-from typing import Optional, List, Dict
+from typing import TYPE_CHECKING, Optional, List, Dict
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.git_helpers import LocalProjectRepository, GitWrapper
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
+from continuous_delivery_scripts.utils.git_helpers import (
+    LocalProjectRepository,
+    GitWrapper,
+)
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -160,7 +171,7 @@ class Go(BaseLanguage):
         """States whether project metadata can be retrieved."""
         return False
 
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets current SPDX description."""
         # TODO
         return None
@@ -195,4 +206,8 @@ class Go(BaseLanguage):
         changelogPath = configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)
         env[ENVVAR_GORELEASER_CUSTOMISED_TAG] = tag
         env[ENVVAR_GORELEASER_GIT_TOKEN] = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-        check_call(_generate_goreleaser_release_command_list(changelogPath), cwd=ROOT_DIR, env=env)
+        check_call(
+            _generate_goreleaser_release_command_list(changelogPath),
+            cwd=ROOT_DIR,
+            env=env,
+        )

@@ -19,19 +19,48 @@ import re
 import logging
 import toml
 from pathlib import Path
-from spdx.utils import SPDXNone, UnKnown
 from typing import Union, Optional, Iterator, Any, Tuple
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 from continuous_delivery_scripts.utils.filesystem_helpers import (
     scan_file_for_pattern,
     should_exclude_path,
     list_all_files,
 )
-from continuous_delivery_scripts.utils.third_party_licences import simplify_licence_expression
+from continuous_delivery_scripts.utils.third_party_licences import (
+    simplify_licence_expression,
+)
 
 logger = logging.getLogger(__name__)
+
+
+class UnKnown(object):
+    """Represent SPDX UNKNOWN value without importing spdx-tools."""
+
+    def to_value(self) -> str:
+        """Return the SPDX serialised value."""
+        return "UNKNOWN"
+
+    def __str__(self) -> str:
+        """Return the SPDX serialised value as text."""
+        return self.to_value()
+
+
+class SPDXNone(object):
+    """Represent SPDX NONE value without importing spdx-tools."""
+
+    def to_value(self) -> str:
+        """Return the SPDX serialised value."""
+        return "NONE"
+
+    def __str__(self) -> str:
+        """Return the SPDX serialised value as text."""
+        return self.to_value()
+
 
 # Copyright similar to the regex defined in flake8-copyright
 COPYRIGHT_PATTERN = r"Copyright.*$"
@@ -63,7 +92,7 @@ def determine_file_licence(path: Path) -> Optional[str]:
         if not match:
             return None
         licence = match.group(1).strip()
-        return simplify_licence_expression(licence)
+        return str(simplify_licence_expression(licence))
     except Exception as e:
         logger.error(f"Could not determine the licence of file [{path}] from identifier '{licence}'. Reason: {e}.")
         return None
@@ -98,8 +127,8 @@ def get_project_namespace(project_config_path: Path, document_name: str) -> str:
     with open(str(project_config_path), "r", encoding="utf8") as f:
         config = toml.load(f).get(THIRD_PARTY_CONFIG_NAMESPACE, dict())
     protocol = "http://"
-    path_part = f'{config.get("CreatorWebsite")}/{config.get("PathToSpdx")}'
-    name_part = f'{document_name}-{config.get("UUID")}'
+    path_part = f"{config.get('CreatorWebsite')}/{config.get('PathToSpdx')}"
+    name_part = f"{document_name}-{config.get('UUID')}"
     return f"{protocol}{path_part}/{name_part}"
 
 
@@ -109,7 +138,8 @@ def list_project_files_for_licensing(project_root: Path) -> Iterator[Path]:
     def ignore_path(p: Path) -> bool:
         return True if p.name.startswith(".") else should_exclude_path(p, PATHS_TO_EXCLUDE)
 
-    return list_all_files(project_root, ignore_path)
+    for path in list_all_files(project_root, ignore_path):
+        yield path
 
 
 def _convert_list_into_dict(checked_packages: Any) -> dict:

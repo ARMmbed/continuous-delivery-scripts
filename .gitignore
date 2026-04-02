@@ -2,7 +2,7 @@
 Pipfile.lock
 
 # PyCharm
-.idea/
+.idea
 
 # macOS
 .DS_Store
