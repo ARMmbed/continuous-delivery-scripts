@@ -35,7 +35,7 @@ jobs:
       - name: Install CI/CD tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install setuptools continuous-delivery-scripts
+          python -m pip install "setuptools<81" continuous-delivery-scripts
           python -m pip list
       - name: Assert news
         run: cd-assert-news -b ${CI_ACTION_REF_NAME}
@@ -105,7 +105,7 @@ jobs:
         # for the process to go through properly.
         # FIXME upgrade when https://github.com/pypa/pipenv/issues/4430 is actually fixed
         run: |
-          python -m pip install --upgrade pip wheel setuptools
+          python -m pip install --upgrade pip wheel "setuptools<81"
           python -m pip install pipenv==${{ env.pipenv_version }}
           echo "Locking dependencies"
           python -m pipenv lock
@@ -123,7 +123,7 @@ jobs:
         # location for development dependencies.
         run: |
           python -m pip install -r dev-requirements.txt
-          python -m pip install setuptools
+          python -m pip install "setuptools<81"
           python -m pip list
       - name: Generate SPDX documents
         run: |
@@ -147,7 +147,7 @@ jobs:
       - name: Install tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install setuptools detect-secrets[gibberish]==1.5.0
+          python -m pip install "setuptools<81" detect-secrets[gibberish]==1.5.0
           python -m pip list
       - uses: actions/checkout@v6
         with:
@@ -203,7 +203,7 @@ jobs:
         # This code forces the system to install latest tools as the ones present on the CI system may be too old
         # for the process to go through properly.
         run: |
-          python -m pip install --upgrade pip wheel setuptools
+          python -m pip install --upgrade pip wheel "setuptools<81"
       - if: ${{ startsWith(matrix.os, 'windows') }}
         run: |
           python -m pip install --upgrade pipenv
@@ -247,7 +247,7 @@ jobs:
         # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
         # location for development dependencies.
         run: |
-          pip install --upgrade flake8 setuptools
+          pip install --upgrade flake8 "setuptools<81"
           pip install -r dev-requirements.txt
           pip list
       - if: ${{ startsWith(matrix.python-version, '3.10') }}
