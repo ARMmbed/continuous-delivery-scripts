@@ -1,1 +1,0 @@
-:sparkles: add `cd-record-secrets` to record acceptable findings in the repository secret registry using [detect-secrets](https://github.com/Yelp/detect-secrets) so known safe values are not flagged repeatedly

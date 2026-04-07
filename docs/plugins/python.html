@@ -187,7 +187,7 @@ class Python(BaseLanguage):
 
     def get_related_language(self) -&gt; str:
         &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
     def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
@@ -221,6 +221,19 @@ class Python(BaseLanguage):
         # FIXME Comment out retrieving project metadata as deprecated
         # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
         return False
+
+    def get_secret_registry_exclude_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for Python projects.&#34;&#34;&#34;
+        return [
+            r&#34;.*Pipfile\.lock$&#34;,
+            r&#34;.*poetry\.lock$&#34;,
+            r&#34;.*uv\.lock$&#34;,
+            r&#34;.*pdm\.lock$&#34;,
+            r&#34;.*version\.py$&#34;,
+            r&#34;^\.circleci[\\/].*&#34;,
+            r&#34;^workflows/.*&#34;,
+            r&#34;^\.github[\\/]workflows[\\/].*&#34;,
+        ]
 
     def should_include_spdx_in_package(self) -&gt; bool:
         &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
@@ -255,7 +268,7 @@ class Python(BaseLanguage):
 
     def get_related_language(self) -&gt; str:
         &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
     def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;Packages the software into a wheel.&#34;&#34;&#34;
@@ -289,6 +302,19 @@ class Python(BaseLanguage):
         # FIXME Comment out retrieving project metadata as deprecated
         # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
         return False
+
+    def get_secret_registry_exclude_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for Python projects.&#34;&#34;&#34;
+        return [
+            r&#34;.*Pipfile\.lock$&#34;,
+            r&#34;.*poetry\.lock$&#34;,
+            r&#34;.*uv\.lock$&#34;,
+            r&#34;.*pdm\.lock$&#34;,
+            r&#34;.*version\.py$&#34;,
+            r&#34;^\.circleci[\\/].*&#34;,
+            r&#34;^workflows/.*&#34;,
+            r&#34;^\.github[\\/]workflows[\\/].*&#34;,
+        ]
 
     def should_include_spdx_in_package(self) -&gt; bool:
         &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
@@ -378,7 +404,30 @@ class Python(BaseLanguage):
 </summary>
 <pre><code class="python">def get_related_language(self) -&gt; str:
     &#34;&#34;&#34;Gets related language.&#34;&#34;&#34;
-    return get_language_from_file_name(__file__)</code></pre>
+    return str(get_language_from_file_name(__file__))</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.plugins.python.Python.get_secret_registry_exclude_files"><code class="name flex">
+<span>def <span class="ident">get_secret_registry_exclude_files</span></span>(<span>self) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets additional detect-secrets exclude patterns for Python projects.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_secret_registry_exclude_files(self) -&gt; List[str]:
+    &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for Python projects.&#34;&#34;&#34;
+    return [
+        r&#34;.*Pipfile\.lock$&#34;,
+        r&#34;.*poetry\.lock$&#34;,
+        r&#34;.*uv\.lock$&#34;,
+        r&#34;.*pdm\.lock$&#34;,
+        r&#34;.*version\.py$&#34;,
+        r&#34;^\.circleci[\\/].*&#34;,
+        r&#34;^workflows/.*&#34;,
+        r&#34;^\.github[\\/]workflows[\\/].*&#34;,
+    ]</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.python.Python.package_software"><code class="name flex">
@@ -450,6 +499,7 @@ class Python(BaseLanguage):
 <li><code><a title="continuous_delivery_scripts.plugins.python.Python.generate_code_documentation" href="#continuous_delivery_scripts.plugins.python.Python.generate_code_documentation">generate_code_documentation</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.python.Python.get_current_spdx_project" href="#continuous_delivery_scripts.plugins.python.Python.get_current_spdx_project">get_current_spdx_project</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.python.Python.get_related_language" href="#continuous_delivery_scripts.plugins.python.Python.get_related_language">get_related_language</a></code></li>
+<li><code><a title="continuous_delivery_scripts.plugins.python.Python.get_secret_registry_exclude_files" href="#continuous_delivery_scripts.plugins.python.Python.get_secret_registry_exclude_files">get_secret_registry_exclude_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.python.Python.package_software" href="#continuous_delivery_scripts.plugins.python.Python.package_software">package_software</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.python.Python.release_package_to_repository" href="#continuous_delivery_scripts.plugins.python.Python.release_package_to_repository">release_package_to_repository</a></code></li>
 </ul>

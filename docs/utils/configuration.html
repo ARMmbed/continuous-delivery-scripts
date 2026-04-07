@@ -124,6 +124,8 @@ class ConfigurationVariable(enum.Enum):
     &#34;&#34;&#34;States whether the release should be tagged with `latest`&#34;&#34;&#34;
     TAG_VERSION_SHORTCUTS = 36
     &#34;&#34;&#34;States whether the release should be tagged with shortcuts i.e. major, major+minor&#34;&#34;&#34;
+    SECRETS_BASELINE_FILENAME = 37
+    &#34;&#34;&#34;Filename for the detect-secrets baseline.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -229,10 +231,20 @@ class StaticConfig(GenericConfig):
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
+    SECRETS_BASELINE_FILENAME = &#34;.secrets.baseline&#34;
     DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
-    ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
+    ACCEPTED_THIRD_PARTY_LICENCES = [
+        &#34;Apache-2.0&#34;,
+        &#34;BSD*&#34;,
+        &#34;CC-BY-*&#34;,
+        &#34;JSON&#34;,
+        &#34;MIT&#34;,
+        &#34;Python-2.0&#34;,
+        &#34;PSF-2.0&#34;,
+        &#34;MPL-2.0&#34;,
+    ]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
     def _fetch_value(self, key: str) -&gt; Any:
@@ -310,7 +322,7 @@ class FileConfig(GenericConfig):
     @staticmethod
     def _look_for_config_file_walking_up_tree() -&gt; Optional[str]:
         try:
-            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True)
+            return str(find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True))
         except FileNotFoundError as e:
             logger.warning(e)
         return None
@@ -320,7 +332,7 @@ class FileConfig(GenericConfig):
         if file_path and os.path.exists(file_path):
             return file_path
         try:
-            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME)
+            return str(find_file_in_tree(FileConfig.CONFIG_FILE_NAME))
         except FileNotFoundError:
             return FileConfig._look_for_config_file_walking_up_tree()
 
@@ -461,6 +473,8 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
     &#34;&#34;&#34;States whether the release should be tagged with `latest`&#34;&#34;&#34;
     TAG_VERSION_SHORTCUTS = 36
     &#34;&#34;&#34;States whether the release should be tagged with shortcuts i.e. major, major+minor&#34;&#34;&#34;
+    SECRETS_BASELINE_FILENAME = 37
+    &#34;&#34;&#34;Filename for the detect-secrets baseline.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -615,6 +629,10 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
 <div class="desc"><p>Git's remote alias.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME"><code class="name">var <span class="ident">SECRETS_BASELINE_FILENAME</span></code></dt>
+<dd>
+<div class="desc"><p>Filename for the detect-secrets baseline.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
 <dd>
@@ -805,7 +823,7 @@ to current directory (i.e. os.getcwd()).</p>
     @staticmethod
     def _look_for_config_file_walking_up_tree() -&gt; Optional[str]:
         try:
-            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True)
+            return str(find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True))
         except FileNotFoundError as e:
             logger.warning(e)
         return None
@@ -815,7 +833,7 @@ to current directory (i.e. os.getcwd()).</p>
         if file_path and os.path.exists(file_path):
             return file_path
         try:
-            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME)
+            return str(find_file_in_tree(FileConfig.CONFIG_FILE_NAME))
         except FileNotFoundError:
             return FileConfig._look_for_config_file_walking_up_tree()
 
@@ -1126,10 +1144,20 @@ defined in toml.</p></div>
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
+    SECRETS_BASELINE_FILENAME = &#34;.secrets.baseline&#34;
     DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
-    ACCEPTED_THIRD_PARTY_LICENCES = [&#34;Apache-2.0&#34;, &#34;BSD*&#34;, &#34;JSON&#34;, &#34;MIT&#34;, &#34;Python-2.0&#34;, &#34;PSF-2.0&#34;, &#34;MPL-2.0&#34;]
+    ACCEPTED_THIRD_PARTY_LICENCES = [
+        &#34;Apache-2.0&#34;,
+        &#34;BSD*&#34;,
+        &#34;CC-BY-*&#34;,
+        &#34;JSON&#34;,
+        &#34;MIT&#34;,
+        &#34;Python-2.0&#34;,
+        &#34;PSF-2.0&#34;,
+        &#34;MPL-2.0&#34;,
+    ]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
     def _fetch_value(self, key: str) -&gt; Any:
@@ -1218,6 +1246,10 @@ defined in toml.</p></div>
 <div class="desc"></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.SECRETS_BASELINE_FILENAME"><code class="name">var <span class="ident">SECRETS_BASELINE_FILENAME</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -1311,6 +1343,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID">PROJECT_UUID</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME">SECRETS_BASELINE_FILENAME</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST">TAG_LATEST</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_VERSION_SHORTCUTS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_VERSION_SHORTCUTS">TAG_VERSION_SHORTCUTS</a></code></li>
@@ -1363,6 +1396,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.PROGRAMMING_LANGUAGE">PROGRAMMING_LANGUAGE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.SECRETS_BASELINE_FILENAME" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.SECRETS_BASELINE_FILENAME">SECRETS_BASELINE_FILENAME</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST">TAG_LATEST</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_VERSION_SHORTCUTS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_VERSION_SHORTCUTS">TAG_VERSION_SHORTCUTS</a></code></li>
 </ul>

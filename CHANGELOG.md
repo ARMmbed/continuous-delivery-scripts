@@ -17,6 +17,22 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.4.0" (2026-04-07)
+====================
+
+Features
+--------
+
+- :sparkles: add `cd-detect-secrets` to check tracked files against the recorded [detect-secrets](https://github.com/Yelp/detect-secrets) registry so new secrets are not introduced into the repository (#20260407160538)
+- :sparkles: add `cd-record-secrets` to record acceptable findings in the repository secret registry using [detect-secrets](https://github.com/Yelp/detect-secrets) so known safe values are not flagged repeatedly (#20260407160539)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: checkout-6.0.2 (#20260403063309)
+
+
 "3.3.0" (2026-04-02)
 ====================
 

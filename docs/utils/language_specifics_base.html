@@ -40,7 +40,7 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Dict
+from typing import TYPE_CHECKING, Optional, Dict, List
 
 from continuous_delivery_scripts.utils.configuration import (
     configuration,
@@ -104,6 +104,10 @@ class BaseLanguage(ABC):
     def can_get_project_metadata(self) -&gt; bool:
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
+
+    def get_secret_registry_exclude_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for this plugin.&#34;&#34;&#34;
+        return list()
 
     def should_include_spdx_in_package(self) -&gt; bool:
         &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
@@ -223,6 +227,10 @@ class BaseLanguage(ABC):
     def can_get_project_metadata(self) -&gt; bool:
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
+
+    def get_secret_registry_exclude_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for this plugin.&#34;&#34;&#34;
+        return list()
 
     def should_include_spdx_in_package(self) -&gt; bool:
         &#34;&#34;&#34;States whether the SPDX documents should be included in the package.&#34;&#34;&#34;
@@ -393,6 +401,20 @@ def get_related_language(self) -&gt; str:
     pass</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_secret_registry_exclude_files"><code class="name flex">
+<span>def <span class="ident">get_secret_registry_exclude_files</span></span>(<span>self) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets additional detect-secrets exclude patterns for this plugin.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_secret_registry_exclude_files(self) -&gt; List[str]:
+    &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for this plugin.&#34;&#34;&#34;
+    return list()</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag"><code class="name flex">
 <span>def <span class="ident">get_version_tag</span></span>(<span>self, version: str) ‑> str</span>
 </code></dt>
@@ -525,6 +547,7 @@ def release_package_to_repository(self, mode: CommitType, version: str) -&gt; No
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.generate_source_licence_header_template">generate_source_licence_header_template</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_current_spdx_project" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_current_spdx_project">get_current_spdx_project</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_related_language" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_related_language">get_related_language</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_secret_registry_exclude_files" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_secret_registry_exclude_files">get_secret_registry_exclude_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software">package_software</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository">release_package_to_repository</a></code></li>

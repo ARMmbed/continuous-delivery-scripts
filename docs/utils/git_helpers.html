@@ -94,7 +94,9 @@ class GitWrapper:
         &#34;&#34;&#34;
         try:
             git_clone = self.repo.clone_from(
-                url=self.get_remote_url(), to_path=str(path), multi_options=[&#34;--recurse-submodules&#34;]
+                url=self.get_remote_url(),
+                to_path=str(path),
+                multi_options=[&#34;--recurse-submodules&#34;],
             )
         except GitCommandError as e:
             logger.info(&#34;failed cloning repository: %s&#34; % e)
@@ -268,6 +270,12 @@ class GitWrapper:
             current_branch = self._get_branch_from_abbreviation(&#34;HEAD&#34;)
         return current_branch
 
+    def list_tracked_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;List git-tracked files relative to the repository root.&#34;&#34;&#34;
+        tracked_files = self.repo.git.ls_files(&#34;-z&#34;)
+        tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode(&#34;utf-8&#34;)
+        return [path for path in tracked_files.split(&#34;\0&#34;) if path]
+
     def _get_branch_from_advanced_feature(self) -&gt; Any:
         if version.parse(self.git_version()) &gt;= version.parse(&#34;2.22&#34;):
             current_branch = self.repo.git.branch(show_current=True)
@@ -331,7 +339,10 @@ class GitWrapper:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f&#34;Merge from {str(branch)}&#34;, parent_commits=(branch.commit, current_branch.commit))
+        self.commit(
+            f&#34;Merge from {str(branch)}&#34;,
+            parent_commits=(branch.commit, current_branch.commit),
+        )
 
     def get_remote_url(self) -&gt; str:
         &#34;&#34;&#34;Gets the URL of the remote repository.
@@ -449,7 +460,11 @@ class GitWrapper:
         return changes
 
     def get_changes_list(
-        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+        self,
+        commit1: Any,
+        commit2: Any,
+        change_type: Optional[str] = None,
+        dir: Optional[str] = None,
     ) -&gt; List[str]:
         &#34;&#34;&#34;Gets change list.
 
@@ -492,7 +507,12 @@ class GitWrapper:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         &#34;&#34;&#34;
-        self.repo.git.push(&#34;--follow-tags&#34;, &#34;--set-upstream&#34;, self._get_remote(), self.get_current_branch())
+        self.repo.git.push(
+            &#34;--follow-tags&#34;,
+            &#34;--set-upstream&#34;,
+            self._get_remote(),
+            self.get_current_branch(),
+        )
 
     def push_tag(self) -&gt; None:
         &#34;&#34;&#34;Pushes commits and tags.
@@ -830,7 +850,10 @@ class ProjectTempClone(GitTempClone):
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         &#34;&#34;&#34;
-        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())</code></pre>
+        super().__init__(
+            desired_branch_name=desired_branch_name,
+            repository_to_clone=ProjectGitWrapper(),
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -1028,6 +1051,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit">list_files_added_to_current_commit</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files">list_tracked_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
@@ -1160,7 +1184,9 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;
         try:
             git_clone = self.repo.clone_from(
-                url=self.get_remote_url(), to_path=str(path), multi_options=[&#34;--recurse-submodules&#34;]
+                url=self.get_remote_url(),
+                to_path=str(path),
+                multi_options=[&#34;--recurse-submodules&#34;],
             )
         except GitCommandError as e:
             logger.info(&#34;failed cloning repository: %s&#34; % e)
@@ -1334,6 +1360,12 @@ def initial_location(self) -&gt; Path:
             current_branch = self._get_branch_from_abbreviation(&#34;HEAD&#34;)
         return current_branch
 
+    def list_tracked_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;List git-tracked files relative to the repository root.&#34;&#34;&#34;
+        tracked_files = self.repo.git.ls_files(&#34;-z&#34;)
+        tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode(&#34;utf-8&#34;)
+        return [path for path in tracked_files.split(&#34;\0&#34;) if path]
+
     def _get_branch_from_advanced_feature(self) -&gt; Any:
         if version.parse(self.git_version()) &gt;= version.parse(&#34;2.22&#34;):
             current_branch = self.repo.git.branch(show_current=True)
@@ -1397,7 +1429,10 @@ def initial_location(self) -&gt; Path:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f&#34;Merge from {str(branch)}&#34;, parent_commits=(branch.commit, current_branch.commit))
+        self.commit(
+            f&#34;Merge from {str(branch)}&#34;,
+            parent_commits=(branch.commit, current_branch.commit),
+        )
 
     def get_remote_url(self) -&gt; str:
         &#34;&#34;&#34;Gets the URL of the remote repository.
@@ -1515,7 +1550,11 @@ def initial_location(self) -&gt; Path:
         return changes
 
     def get_changes_list(
-        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+        self,
+        commit1: Any,
+        commit2: Any,
+        change_type: Optional[str] = None,
+        dir: Optional[str] = None,
     ) -&gt; List[str]:
         &#34;&#34;&#34;Gets change list.
 
@@ -1558,7 +1597,12 @@ def initial_location(self) -&gt; Path:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         &#34;&#34;&#34;
-        self.repo.git.push(&#34;--follow-tags&#34;, &#34;--set-upstream&#34;, self._get_remote(), self.get_current_branch())
+        self.repo.git.push(
+            &#34;--follow-tags&#34;,
+            &#34;--set-upstream&#34;,
+            self._get_remote(),
+            self.get_current_branch(),
+        )
 
     def push_tag(self) -&gt; None:
         &#34;&#34;&#34;Pushes commits and tags.
@@ -2060,7 +2104,9 @@ def uncommitted_staged_changes(self) -&gt; List[Path]:
     &#34;&#34;&#34;
     try:
         git_clone = self.repo.clone_from(
-            url=self.get_remote_url(), to_path=str(path), multi_options=[&#34;--recurse-submodules&#34;]
+            url=self.get_remote_url(),
+            to_path=str(path),
+            multi_options=[&#34;--recurse-submodules&#34;],
         )
     except GitCommandError as e:
         logger.info(&#34;failed cloning repository: %s&#34; % e)
@@ -2404,7 +2450,11 @@ list of the paths of the files which changed</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_changes_list(
-    self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+    self,
+    commit1: Any,
+    commit2: Any,
+    change_type: Optional[str] = None,
+    dir: Optional[str] = None,
 ) -&gt; List[str]:
     &#34;&#34;&#34;Gets change list.
 
@@ -2812,6 +2862,22 @@ before the current commit.</p>
     return self.get_changes_list(previous_commit, current_commit, change_type=&#34;a&#34;)</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files"><code class="name flex">
+<span>def <span class="ident">list_tracked_files</span></span>(<span>self) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List git-tracked files relative to the repository root.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_tracked_files(self) -&gt; List[str]:
+    &#34;&#34;&#34;List git-tracked files relative to the repository root.&#34;&#34;&#34;
+    tracked_files = self.repo.git.ls_files(&#34;-z&#34;)
+    tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode(&#34;utf-8&#34;)
+    return [path for path in tracked_files.split(&#34;\0&#34;) if path]</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge"><code class="name flex">
 <span>def <span class="ident">merge</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
@@ -2835,7 +2901,10 @@ before the current commit.</p>
     current_branch = self.get_current_branch()
     merge_base = self.repo.merge_base(branch, current_branch)
     self.repo.index.merge_tree(current_branch, base=merge_base)
-    self.commit(f&#34;Merge from {str(branch)}&#34;, parent_commits=(branch.commit, current_branch.commit))</code></pre>
+    self.commit(
+        f&#34;Merge from {str(branch)}&#34;,
+        parent_commits=(branch.commit, current_branch.commit),
+    )</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull"><code class="name flex">
@@ -2884,7 +2953,12 @@ Pushes also relevant annotated tags when pushing branches out.</p></div>
     Pushes changes to the remote repository.
     Pushes also relevant annotated tags when pushing branches out.
     &#34;&#34;&#34;
-    self.repo.git.push(&#34;--follow-tags&#34;, &#34;--set-upstream&#34;, self._get_remote(), self.get_current_branch())</code></pre>
+    self.repo.git.push(
+        &#34;--follow-tags&#34;,
+        &#34;--set-upstream&#34;,
+        self._get_remote(),
+        self.get_current_branch(),
+    )</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.push_tag"><code class="name flex">
@@ -3098,6 +3172,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit">list_files_added_to_current_commit</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files">list_tracked_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
@@ -3143,7 +3218,10 @@ will work in most cases but probably not on CI.</p></div>
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         &#34;&#34;&#34;
-        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())</code></pre>
+        super().__init__(
+            desired_branch_name=desired_branch_name,
+            repository_to_clone=ProjectGitWrapper(),
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3218,6 +3296,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit">list_files_added_to_current_commit</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files">list_tracked_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
