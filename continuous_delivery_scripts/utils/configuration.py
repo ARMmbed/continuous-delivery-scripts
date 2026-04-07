@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utilities in charge of fetching configuration values for the ci scripts."""
@@ -205,6 +205,7 @@ class StaticConfig(GenericConfig):
     ACCEPTED_THIRD_PARTY_LICENCES = [
         "Apache-2.0",
         "BSD*",
+        "CC-BY-*",
         "JSON",
         "MIT",
         "Python-2.0",
