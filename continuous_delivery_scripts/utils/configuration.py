@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utilities in charge of fetching configuration values for the ci scripts."""
@@ -91,6 +91,8 @@ class ConfigurationVariable(enum.Enum):
     """States whether the release should be tagged with `latest`"""
     TAG_VERSION_SHORTCUTS = 36
     """States whether the release should be tagged with shortcuts i.e. major, major+minor"""
+    SECRETS_BASELINE_FILENAME = 37
+    """Filename for the detect-secrets baseline."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -196,10 +198,20 @@ class StaticConfig(GenericConfig):
     AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = True
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
+    SECRETS_BASELINE_FILENAME = ".secrets.baseline"
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
-    ACCEPTED_THIRD_PARTY_LICENCES = ["Apache-2.0", "BSD*", "JSON", "MIT", "Python-2.0", "PSF-2.0", "MPL-2.0"]
+    ACCEPTED_THIRD_PARTY_LICENCES = [
+        "Apache-2.0",
+        "BSD*",
+        "CC-BY-*",
+        "JSON",
+        "MIT",
+        "Python-2.0",
+        "PSF-2.0",
+        "MPL-2.0",
+    ]
     PACKAGES_WITH_CHECKED_LICENCE: List[str] = []
 
     def _fetch_value(self, key: str) -> Any:
@@ -277,7 +289,7 @@ class FileConfig(GenericConfig):
     @staticmethod
     def _look_for_config_file_walking_up_tree() -> Optional[str]:
         try:
-            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True)
+            return str(find_file_in_tree(FileConfig.CONFIG_FILE_NAME, top=True))
         except FileNotFoundError as e:
             logger.warning(e)
         return None
@@ -287,7 +299,7 @@ class FileConfig(GenericConfig):
         if file_path and os.path.exists(file_path):
             return file_path
         try:
-            return find_file_in_tree(FileConfig.CONFIG_FILE_NAME)
+            return str(find_file_in_tree(FileConfig.CONFIG_FILE_NAME))
         except FileNotFoundError:
             return FileConfig._look_for_config_file_walking_up_tree()
 

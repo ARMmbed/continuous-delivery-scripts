@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for Golang projects."""
@@ -202,6 +202,15 @@ class Go(BaseLanguage):
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
         return False
+
+    def get_secret_registry_exclude_files(self) -> List[str]:
+        """Gets additional detect-secrets exclude patterns for Go projects."""
+        return [
+            r".*go\.sum$",
+            r"^\.circleci[\\/].*",
+            r"^workflows/.*",
+            r"^\.github[\\/]workflows[\\/].*",
+        ]
 
     def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets current SPDX description."""

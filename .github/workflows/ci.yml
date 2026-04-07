@@ -152,15 +152,56 @@ jobs:
       - uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
-      # FIXME gitleaks requires now a licence
-      # - name: Check for secrets using gitleaks
-      #  uses: zricethezav/gitleaks-action@master
-      #  with:
-      #    config-path: .gitleaks.toml
-      - name: Check for secrets using detect-secrets
+      - name: detect-secrets
         run: |
           git ls-files -z | xargs -0 detect-secrets-hook --baseline .secrets.baseline --exclude-files 'Pipfile\.lock$' --exclude-files '.*\.html$' --exclude-files '.*\.properties$' --exclude-files 'ci.yml' --exclude-files '\.git' --exclude-files '.*_version.py'
-        working-directory: .
+
+  detect-secrets-dogfooding:
+    name: Check secrets command dogfooding
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.python_version}}
+      - uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Determine dependencies
+        # Note
+        # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
+        # normal dependencies from setup.py).
+        # This code also forces the system to install latest tools as the ones present on the CI system may be too old
+        # for the process to go through properly.
+        # FIXME upgrade when https://github.com/pypa/pipenv/issues/4430 is actually fixed
+        run: |
+          python -m pip install --upgrade pip wheel "setuptools<81"
+          python -m pip install pipenv==${{ env.pipenv_version }}
+          echo "Locking dependencies"
+          python -m pipenv lock
+          python -m pipenv requirements > dev-requirements.txt
+      - uses: FranzDiebold/github-env-vars-action@v2
+      - name: Load Python Dependencies from cache
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.python_cache_ubuntu_path }}
+          key:  linux-pip-3-continuous-delivery-scripts
+      - name: Install dependencies
+        # Note
+        # As a virtual machine is already being used, pipenv
+        # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
+        # location for development dependencies.
+        run: |
+          python -m pip install -r dev-requirements.txt
+          python -m pip install "setuptools<81"
+          python -m pip list
+      - name: detect-secrets-dogfooding
+        # Note
+        # This step uses the internal command and therefore dogsfoods the repository implementation.
+        # It remains separate from `detect-secrets`, which intentionally still uses the direct
+        # `detect-secrets-hook` invocation so a bug in the wrapper command cannot reduce protection
+        # against accidentally leaking secrets.
+        run: |
+          cd-detect-secrets
 
   build-and-test:
     strategy:

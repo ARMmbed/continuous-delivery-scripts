@@ -1,11 +1,19 @@
 #
-# Copyright (C) 2020-2025 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 from unittest import TestCase
 
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitTempClone, GitWrapper, ProjectGitWrapper
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
+from continuous_delivery_scripts.utils.git_helpers import (
+    ProjectTempClone,
+    GitTempClone,
+    GitWrapper,
+    ProjectGitWrapper,
+)
 from uuid import uuid4
 from pathlib import Path
 
@@ -22,6 +30,13 @@ class TestGitWrapper(TestCase):
         self.assertIsNotNone(git.uncommitted_changes)
         self.assertIsNotNone(git.get_remote_url())
 
+    def test_list_tracked_files(self):
+        """Checks tracked files can be listed from git."""
+        git = ProjectGitWrapper()
+        tracked_files = git.list_tracked_files()
+        self.assertTrue(len(tracked_files) > 0)
+        self.assertIn("setup.py", tracked_files)
+
 
 class TestGitTempClone(TestCase):
     def test_git_clone(self):
@@ -29,7 +44,10 @@ class TestGitTempClone(TestCase):
         with ProjectTempClone(desired_branch_name="main") as clone:
             self.assertTrue(isinstance(clone, GitWrapper))
             self.assertEqual("main", str(clone.get_current_branch()))
-            self.assertNotEqual(configuration.get_value(ConfigurationVariable.PROJECT_ROOT), str(clone.root))
+            self.assertNotEqual(
+                configuration.get_value(ConfigurationVariable.PROJECT_ROOT),
+                str(clone.root),
+            )
 
     def test_git_clone_independent(self):
         """Ensures the clone is independent from repository it is based on."""
