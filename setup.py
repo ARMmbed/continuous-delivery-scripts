@@ -48,6 +48,8 @@ setup(
             f"cd-get-config={SOURCE_DIR}.get_config:main",
             f"cd-license-files={SOURCE_DIR}.license_files:main",
             f"cd-generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
+            f"cd-detect-secrets={SOURCE_DIR}.detect_secrets:main",
+            f"cd-record-secrets={SOURCE_DIR}.update_secrets_registry:main",
         ]
     },
     keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
@@ -65,6 +67,7 @@ setup(
         "python-dotenv",
         "twine",
         "boto3",
+        "detect-secrets[gibberish]==1.5.0",
         "packaging",
         "licenseheaders<0.8.9",
         "spdx-tools==0.6.1",

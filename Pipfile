@@ -22,6 +22,7 @@ continuous-delivery-scripts = {editable = true, path = "."}
 allow_prereleases = false
 
 [packages]
+detect-secrets = {extras = ["gibberish"], version = "==1.5.0"}
 types-toml = "*"
 types-setuptools = "*"
 continuous-delivery-scripts = {file = ".", editable = true}

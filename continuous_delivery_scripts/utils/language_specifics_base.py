@@ -7,7 +7,7 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Dict
+from typing import TYPE_CHECKING, Optional, Dict, List
 
 from continuous_delivery_scripts.utils.configuration import (
     configuration,
@@ -71,6 +71,10 @@ class BaseLanguage(ABC):
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
         return False
+
+    def get_secret_registry_exclude_files(self) -> List[str]:
+        """Gets additional detect-secrets exclude patterns for this plugin."""
+        return list()
 
     def should_include_spdx_in_package(self) -> bool:
         """States whether the SPDX documents should be included in the package."""

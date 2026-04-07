@@ -203,6 +203,15 @@ class Go(BaseLanguage):
         """States whether project metadata can be retrieved."""
         return False
 
+    def get_secret_registry_exclude_files(self) -> List[str]:
+        """Gets additional detect-secrets exclude patterns for Go projects."""
+        return [
+            r".*go\.sum$",
+            r"^\.circleci[\\/].*",
+            r"^workflows/.*",
+            r"^\.github[\\/]workflows[\\/].*",
+        ]
+
     def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets current SPDX description."""
         # TODO

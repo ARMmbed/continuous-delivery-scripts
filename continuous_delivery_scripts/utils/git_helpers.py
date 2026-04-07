@@ -61,7 +61,9 @@ class GitWrapper:
         """
         try:
             git_clone = self.repo.clone_from(
-                url=self.get_remote_url(), to_path=str(path), multi_options=["--recurse-submodules"]
+                url=self.get_remote_url(),
+                to_path=str(path),
+                multi_options=["--recurse-submodules"],
             )
         except GitCommandError as e:
             logger.info("failed cloning repository: %s" % e)
@@ -235,6 +237,12 @@ class GitWrapper:
             current_branch = self._get_branch_from_abbreviation("HEAD")
         return current_branch
 
+    def list_tracked_files(self) -> List[str]:
+        """List git-tracked files relative to the repository root."""
+        tracked_files = self.repo.git.ls_files("-z")
+        tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode("utf-8")
+        return [path for path in tracked_files.split("\0") if path]
+
     def _get_branch_from_advanced_feature(self) -> Any:
         if version.parse(self.git_version()) >= version.parse("2.22"):
             current_branch = self.repo.git.branch(show_current=True)
@@ -298,7 +306,10 @@ class GitWrapper:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f"Merge from {str(branch)}", parent_commits=(branch.commit, current_branch.commit))
+        self.commit(
+            f"Merge from {str(branch)}",
+            parent_commits=(branch.commit, current_branch.commit),
+        )
 
     def get_remote_url(self) -> str:
         """Gets the URL of the remote repository.
@@ -416,7 +427,11 @@ class GitWrapper:
         return changes
 
     def get_changes_list(
-        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+        self,
+        commit1: Any,
+        commit2: Any,
+        change_type: Optional[str] = None,
+        dir: Optional[str] = None,
     ) -> List[str]:
         """Gets change list.
 
@@ -459,7 +474,12 @@ class GitWrapper:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         """
-        self.repo.git.push("--follow-tags", "--set-upstream", self._get_remote(), self.get_current_branch())
+        self.repo.git.push(
+            "--follow-tags",
+            "--set-upstream",
+            self._get_remote(),
+            self.get_current_branch(),
+        )
 
     def push_tag(self) -> None:
         """Pushes commits and tags.
@@ -797,4 +817,7 @@ class ProjectTempClone(GitTempClone):
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         """
-        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())
+        super().__init__(
+            desired_branch_name=desired_branch_name,
+            repository_to_clone=ProjectGitWrapper(),
+        )

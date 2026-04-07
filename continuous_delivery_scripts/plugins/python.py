@@ -154,7 +154,7 @@ class Python(BaseLanguage):
 
     def get_related_language(self) -> str:
         """Gets related language."""
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
     def package_software(self, mode: CommitType, version: str) -> None:
         """Packages the software into a wheel."""
@@ -188,6 +188,19 @@ class Python(BaseLanguage):
         # FIXME Comment out retrieving project metadata as deprecated
         # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
         return False
+
+    def get_secret_registry_exclude_files(self) -> List[str]:
+        """Gets additional detect-secrets exclude patterns for Python projects."""
+        return [
+            r".*Pipfile\.lock$",
+            r".*poetry\.lock$",
+            r".*uv\.lock$",
+            r".*pdm\.lock$",
+            r".*version\.py$",
+            r"^\.circleci[\\/].*",
+            r"^workflows/.*",
+            r"^\.github[\\/]workflows[\\/].*",
+        ]
 
     def should_include_spdx_in_package(self) -> bool:
         """States whether the SPDX documents should be included in the package."""
