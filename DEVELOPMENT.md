@@ -1,3 +1,7 @@
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 # Development and Testing
 
 For development and testing purposes, it is essential to use a virtual environment. It is recommended that `pipenv` is used.
@@ -47,7 +51,6 @@ Setup Pipenv to use Python 3 (Python 2 is not supported) and install package dev
 
 ```bash
 cd continuous-delivery-scripts/
-pipenv --three
 pipenv install --dev
 ```
 
@@ -129,18 +132,6 @@ Don't modify any of the files in this directory by hand.
 Type hints should be used in the code wherever possible. Since the 
 documentation shows the function signatures with the type hints 
 there is no need to include additional type information in the docstrings.
-
-
-## Code Climate
-
-Code Climate is integrated with our GitHub flow. Failing the configured rules will yield a pull request not mergeable.
-
-If you prefer to view the Code Climate report on your machine, prior to sending a pull request, you can use the [cli provided by Code Climate](https://docs.codeclimate.com/docs/command-line-interface).
-
-Plugins for various tools are also available:
-  - [Atom](https://docs.codeclimate.com/docs/code-climate-atom-package)
-  - [PyCharm](https://plugins.jetbrains.com/plugin/13306-code-cleaner-with-code-climate-cli)
-  - [Vim](https://docs.codeclimate.com/docs/vim-plugin)
 
 # Dependency upgrades
 

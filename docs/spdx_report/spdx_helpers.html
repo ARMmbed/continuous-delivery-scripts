@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.spdx_report.spdx_helpers API documentation</title>
 <meta name="description" content="Facilities regarding SPDX …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -42,7 +42,7 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Facilities regarding SPDX.
@@ -56,28 +56,58 @@ Examples:
     - https://spdx.org/spdx-tagvalue-example
     - https://github.com/spdx/tools/blob/master/Examples/SPDXTagExample-v2.1.spdx
 &#34;&#34;&#34;
+
 import re
 
 import logging
 import toml
 from pathlib import Path
-from spdx.utils import SPDXNone, UnKnown
 from typing import Union, Optional, Iterator, Any, Tuple
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 from continuous_delivery_scripts.utils.filesystem_helpers import (
     scan_file_for_pattern,
     should_exclude_path,
     list_all_files,
 )
-from continuous_delivery_scripts.utils.third_party_licences import simplify_licence_expression
+from continuous_delivery_scripts.utils.third_party_licences import (
+    simplify_licence_expression,
+)
 
 logger = logging.getLogger(__name__)
 
+
+class UnKnown(object):
+    &#34;&#34;&#34;Represent SPDX UNKNOWN value without importing spdx-tools.&#34;&#34;&#34;
+
+    def to_value(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value.&#34;&#34;&#34;
+        return &#34;UNKNOWN&#34;
+
+    def __str__(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value as text.&#34;&#34;&#34;
+        return self.to_value()
+
+
+class SPDXNone(object):
+    &#34;&#34;&#34;Represent SPDX NONE value without importing spdx-tools.&#34;&#34;&#34;
+
+    def to_value(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value.&#34;&#34;&#34;
+        return &#34;NONE&#34;
+
+    def __str__(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value as text.&#34;&#34;&#34;
+        return self.to_value()
+
+
 # Copyright similar to the regex defined in flake8-copyright
-COPYRIGHT_PATTERN = r&#34;((?i)Copyright(?i).*$)&#34;
-COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, re.MULTILINE)
+COPYRIGHT_PATTERN = r&#34;Copyright.*$&#34;
+COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, flags=re.MULTILINE | re.IGNORECASE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
 SPDX_LICENCE_IDENTIFIER_PATTERN = r&#34;SPDX-License-Identifier: ([\.\w+\-\(\)\s]+)[\*]?$&#34;
@@ -105,7 +135,7 @@ def determine_file_licence(path: Path) -&gt; Optional[str]:
         if not match:
             return None
         licence = match.group(1).strip()
-        return simplify_licence_expression(licence)
+        return str(simplify_licence_expression(licence))
     except Exception as e:
         logger.error(f&#34;Could not determine the licence of file [{path}] from identifier &#39;{licence}&#39;. Reason: {e}.&#34;)
         return None
@@ -116,7 +146,7 @@ def determine_file_copyright_text(path: Path) -&gt; Optional[str]:
     match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
     if not match:
         return None
-    return str(match.group(1).strip())
+    return str(match.group(0).strip())
 
 
 def determine_spdx_value(value: Optional[str]) -&gt; Union[str, UnKnown, SPDXNone]:
@@ -140,8 +170,8 @@ def get_project_namespace(project_config_path: Path, document_name: str) -&gt; s
     with open(str(project_config_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
         config = toml.load(f).get(THIRD_PARTY_CONFIG_NAMESPACE, dict())
     protocol = &#34;http://&#34;
-    path_part = f&#39;{config.get(&#34;CreatorWebsite&#34;)}/{config.get(&#34;PathToSpdx&#34;)}&#39;
-    name_part = f&#39;{document_name}-{config.get(&#34;UUID&#34;)}&#39;
+    path_part = f&#34;{config.get(&#39;CreatorWebsite&#39;)}/{config.get(&#39;PathToSpdx&#39;)}&#34;
+    name_part = f&#34;{document_name}-{config.get(&#39;UUID&#39;)}&#34;
     return f&#34;{protocol}{path_part}/{name_part}&#34;
 
 
@@ -151,7 +181,8 @@ def list_project_files_for_licensing(project_root: Path) -&gt; Iterator[Path]:
     def ignore_path(p: Path) -&gt; bool:
         return True if p.name.startswith(&#34;.&#34;) else should_exclude_path(p, PATHS_TO_EXCLUDE)
 
-    return list_all_files(project_root, ignore_path)
+    for path in list_all_files(project_root, ignore_path):
+        yield path
 
 
 def _convert_list_into_dict(checked_packages: Any) -&gt; dict:
@@ -189,6 +220,8 @@ def get_package_manual_check(package_name: str) -&gt; Tuple[bool, Optional[str]]
 def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     &#34;&#34;&#34;States whether the licence of a package has been manually checked and hence, that its licence is compliant.&#34;&#34;&#34;
     checked, _ = get_package_manual_check(package_name)
+    if not checked:
+        checked, _ = get_package_manual_check(package_name.replace(&#34;.&#34;, &#34;-&#34;))
     return checked</code></pre>
 </details>
 </section>
@@ -233,7 +266,7 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     match = scan_file_for_pattern(path, COPYRIGHT_REGEX_PATTERN)
     if not match:
         return None
-    return str(match.group(1).strip())</code></pre>
+    return str(match.group(0).strip())</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.determine_file_licence"><code class="name flex">
@@ -253,14 +286,14 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
         if not match:
             return None
         licence = match.group(1).strip()
-        return simplify_licence_expression(licence)
+        return str(simplify_licence_expression(licence))
     except Exception as e:
         logger.error(f&#34;Could not determine the licence of file [{path}] from identifier &#39;{licence}&#39;. Reason: {e}.&#34;)
         return None</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.determine_spdx_value"><code class="name flex">
-<span>def <span class="ident">determine_spdx_value</span></span>(<span>value: Optional[str]) ‑> Union[str, spdx.utils.UnKnown, spdx.utils.SPDXNone]</span>
+<span>def <span class="ident">determine_spdx_value</span></span>(<span>value: Optional[str]) ‑> Union[str, <a title="continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown">UnKnown</a>, <a title="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone">SPDXNone</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Determines the correct SPDX value.</p>
@@ -336,8 +369,8 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     with open(str(project_config_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
         config = toml.load(f).get(THIRD_PARTY_CONFIG_NAMESPACE, dict())
     protocol = &#34;http://&#34;
-    path_part = f&#39;{config.get(&#34;CreatorWebsite&#34;)}/{config.get(&#34;PathToSpdx&#34;)}&#39;
-    name_part = f&#39;{document_name}-{config.get(&#34;UUID&#34;)}&#39;
+    path_part = f&#34;{config.get(&#39;CreatorWebsite&#39;)}/{config.get(&#39;PathToSpdx&#39;)}&#34;
+    name_part = f&#34;{document_name}-{config.get(&#39;UUID&#39;)}&#34;
     return f&#34;{protocol}{path_part}/{name_part}&#34;</code></pre>
 </details>
 </dd>
@@ -353,6 +386,8 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
 <pre><code class="python">def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     &#34;&#34;&#34;States whether the licence of a package has been manually checked and hence, that its licence is compliant.&#34;&#34;&#34;
     checked, _ = get_package_manual_check(package_name)
+    if not checked:
+        checked, _ = get_package_manual_check(package_name.replace(&#34;.&#34;, &#34;-&#34;))
     return checked</code></pre>
 </details>
 </dd>
@@ -371,12 +406,92 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
     def ignore_path(p: Path) -&gt; bool:
         return True if p.name.startswith(&#34;.&#34;) else should_exclude_path(p, PATHS_TO_EXCLUDE)
 
-    return list_all_files(project_root, ignore_path)</code></pre>
+    for path in list_all_files(project_root, ignore_path):
+        yield path</code></pre>
 </details>
 </dd>
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone"><code class="flex name class">
+<span>class <span class="ident">SPDXNone</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent SPDX NONE value without importing spdx-tools.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SPDXNone(object):
+    &#34;&#34;&#34;Represent SPDX NONE value without importing spdx-tools.&#34;&#34;&#34;
+
+    def to_value(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value.&#34;&#34;&#34;
+        return &#34;NONE&#34;
+
+    def __str__(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value as text.&#34;&#34;&#34;
+        return self.to_value()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone.to_value"><code class="name flex">
+<span>def <span class="ident">to_value</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the SPDX serialised value.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_value(self) -&gt; str:
+    &#34;&#34;&#34;Return the SPDX serialised value.&#34;&#34;&#34;
+    return &#34;NONE&#34;</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown"><code class="flex name class">
+<span>class <span class="ident">UnKnown</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent SPDX UNKNOWN value without importing spdx-tools.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UnKnown(object):
+    &#34;&#34;&#34;Represent SPDX UNKNOWN value without importing spdx-tools.&#34;&#34;&#34;
+
+    def to_value(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value.&#34;&#34;&#34;
+        return &#34;UNKNOWN&#34;
+
+    def __str__(self) -&gt; str:
+        &#34;&#34;&#34;Return the SPDX serialised value as text.&#34;&#34;&#34;
+        return self.to_value()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown.to_value"><code class="name flex">
+<span>def <span class="ident">to_value</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the SPDX serialised value.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def to_value(self) -&gt; str:
+    &#34;&#34;&#34;Return the SPDX serialised value.&#34;&#34;&#34;
+    return &#34;UNKNOWN&#34;</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -403,11 +518,27 @@ def is_package_licence_manually_checked(package_name: str) -&gt; bool:
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing">list_project_files_for_licensing</a></code></li>
 </ul>
 </li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone">SPDXNone</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone.to_value" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone.to_value">to_value</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown">UnKnown</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown.to_value" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.UnKnown.to_value">to_value</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

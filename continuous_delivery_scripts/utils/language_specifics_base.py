@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Base class for all Language plugins."""
@@ -7,11 +7,17 @@
 import logging
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional, Dict, List
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import GitWrapper
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +29,7 @@ def get_language_from_file_name(filename: str) -> str:
 
 GENERIC_LICENCE_HEADER_TEMPLATE = """Copyright (C) {date} {author} or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: {licence_identifier}
-"""
+"""  # noqa: E501
 
 
 def _generate_generic_licence_header_template() -> str:
@@ -66,6 +72,10 @@ class BaseLanguage(ABC):
         """States whether project metadata can be retrieved."""
         return False
 
+    def get_secret_registry_exclude_files(self) -> List[str]:
+        """Gets additional detect-secrets exclude patterns for this plugin."""
+        return list()
+
     def should_include_spdx_in_package(self) -> bool:
         """States whether the SPDX documents should be included in the package."""
         return False
@@ -74,10 +84,15 @@ class BaseLanguage(ABC):
         """States whether the repository must be cleaned before packaging happens."""
         return False
 
-    def tag_release(self, git: GitWrapper, version: str) -> None:
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
         """Tags release commit."""
         logger.info(f"Tagging commit as release {version}")
         git.create_tag(self.get_version_tag(version), message=f"release {version}")
+        for shortcut, versions in shortcuts.items():
+            if versions:
+                git.create_tag(self.get_version_tag(shortcut), message=f"{shortcut} release")
+            else:
+                git.create_tag(shortcut, message=shortcut)
 
     @abstractmethod
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
@@ -86,19 +101,24 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """Package the software so that it can get released."""
-        logger.info(f"Generating a release package [{version}]")
+        if mode == CommitType.RELEASE:
+            logger.info(f"Generating a release package [{version}]")
+        elif mode == CommitType.BETA:
+            logger.info(f"Generating a pre-release package [{version}]")
+        else:
+            logger.info(f"Generating a development package [{version}]")
         pass
 
     @abstractmethod
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """Release the package to the official software repository."""
         logger.info(f"Uploading the package [{version}]")
         pass
 
     @abstractmethod
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets current project SPDX."""
         pass
 

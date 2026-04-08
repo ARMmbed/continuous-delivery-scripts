@@ -1,14 +1,22 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """No Operation plugin."""
+
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING, Optional, Dict
 
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
-from typing import Optional
+from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.git_helpers import GitWrapper
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -20,21 +28,21 @@ class NoOp(BaseLanguage):
         """Gets the related language."""
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """No Op."""
-        super().package_software(version)
+        pass
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """No Op."""
-        super().release_package_to_repository(version)
+        pass
 
     def check_credentials(self) -> None:
         """No Op."""
-        super().check_credentials()
+        pass
 
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """No Op."""
-        super().generate_code_documentation(output_directory, module_to_document)
+        pass
 
     def can_add_licence_headers(self) -> bool:
         """No Op."""
@@ -45,6 +53,10 @@ class NoOp(BaseLanguage):
         """States whether project metadata can be retrieved."""
         return False
 
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """No Op."""
         return None
+
+    def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
+        """Tags release commit."""
+        pass

@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.spdx_report.spdx_file API documentation</title>
 <meta name="description" content="Definition of an SPDX File." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,16 +32,13 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Definition of an SPDX File.&#34;&#34;&#34;
 
 from pathlib import Path
-from spdx.checksum import Algorithm
-from spdx.document import License
-from spdx.file import File, FileType
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     determine_spdx_value,
@@ -49,8 +46,16 @@ from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     determine_file_copyright_text,
 )
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
-from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str, determine_sha1_hash_of_file
-from continuous_delivery_scripts.utils.third_party_licences import cleanse_licence_expression
+from continuous_delivery_scripts.utils.hash_helpers import (
+    generate_uuid_based_on_str,
+    determine_sha1_hash_of_file,
+)
+from continuous_delivery_scripts.utils.third_party_licences import (
+    cleanse_licence_expression,
+)
+
+if TYPE_CHECKING:
+    from spdx.file import File
 
 
 class SpdxFile:
@@ -82,7 +87,7 @@ class SpdxFile:
             the file path
         &#34;&#34;&#34;
         if str(self.path) == UNKNOWN:
-            return UNKNOWN
+            return str(UNKNOWN)
         unix_path = str(self.path.relative_to(self._project_root)).replace(&#34;\\&#34;, &#34;/&#34;)
         return f&#34;./{unix_path}&#34;
 
@@ -103,7 +108,7 @@ class SpdxFile:
             a UUID
         &#34;&#34;&#34;
         # Generates a unique Id based on the name of the file
-        return generate_uuid_based_on_str(self.unix_relative_path)
+        return str(generate_uuid_based_on_str(self.unix_relative_path))
 
     @property
     def sha1_check_sum(self) -&gt; str:
@@ -112,7 +117,7 @@ class SpdxFile:
         Returns:
             corresponding hash
         &#34;&#34;&#34;
-        return determine_sha1_hash_of_file(self._path)
+        return str(determine_sha1_hash_of_file(self._path))
 
     @property
     def licence(self) -&gt; str:
@@ -122,7 +127,7 @@ class SpdxFile:
             file&#39;s licence
         &#34;&#34;&#34;
         file_licence = determine_file_licence(self.path)
-        return cleanse_licence_expression(file_licence) if file_licence else self._package_licence
+        return str(cleanse_licence_expression(file_licence)) if file_licence else str(self._package_licence)
 
     @property
     def copyright(self) -&gt; Optional[str]:
@@ -131,9 +136,10 @@ class SpdxFile:
         Returns:
             file&#39;s copyright text
         &#34;&#34;&#34;
-        return determine_file_copyright_text(self.path)
+        copyright_text = determine_file_copyright_text(self.path)
+        return str(copyright_text) if copyright_text is not None else None
 
-    def generate_spdx_file(self) -&gt; File:
+    def generate_spdx_file(self) -&gt; &#34;File&#34;:
         &#34;&#34;&#34;Generates the SPDX file.
 
         SPDX File example:
@@ -146,6 +152,10 @@ class SpdxFile:
         Returns:
             the corresponding file
         &#34;&#34;&#34;
+        from spdx.checksum import Algorithm
+        from spdx.document import License
+        from spdx.file import File, FileType
+
         source_file = File(determine_spdx_value(self.unix_relative_path))
         source_file.type = FileType.SOURCE
         source_file.comment = determine_spdx_value(None)
@@ -207,7 +217,7 @@ class SpdxFile:
             the file path
         &#34;&#34;&#34;
         if str(self.path) == UNKNOWN:
-            return UNKNOWN
+            return str(UNKNOWN)
         unix_path = str(self.path.relative_to(self._project_root)).replace(&#34;\\&#34;, &#34;/&#34;)
         return f&#34;./{unix_path}&#34;
 
@@ -228,7 +238,7 @@ class SpdxFile:
             a UUID
         &#34;&#34;&#34;
         # Generates a unique Id based on the name of the file
-        return generate_uuid_based_on_str(self.unix_relative_path)
+        return str(generate_uuid_based_on_str(self.unix_relative_path))
 
     @property
     def sha1_check_sum(self) -&gt; str:
@@ -237,7 +247,7 @@ class SpdxFile:
         Returns:
             corresponding hash
         &#34;&#34;&#34;
-        return determine_sha1_hash_of_file(self._path)
+        return str(determine_sha1_hash_of_file(self._path))
 
     @property
     def licence(self) -&gt; str:
@@ -247,7 +257,7 @@ class SpdxFile:
             file&#39;s licence
         &#34;&#34;&#34;
         file_licence = determine_file_licence(self.path)
-        return cleanse_licence_expression(file_licence) if file_licence else self._package_licence
+        return str(cleanse_licence_expression(file_licence)) if file_licence else str(self._package_licence)
 
     @property
     def copyright(self) -&gt; Optional[str]:
@@ -256,9 +266,10 @@ class SpdxFile:
         Returns:
             file&#39;s copyright text
         &#34;&#34;&#34;
-        return determine_file_copyright_text(self.path)
+        copyright_text = determine_file_copyright_text(self.path)
+        return str(copyright_text) if copyright_text is not None else None
 
-    def generate_spdx_file(self) -&gt; File:
+    def generate_spdx_file(self) -&gt; &#34;File&#34;:
         &#34;&#34;&#34;Generates the SPDX file.
 
         SPDX File example:
@@ -271,6 +282,10 @@ class SpdxFile:
         Returns:
             the corresponding file
         &#34;&#34;&#34;
+        from spdx.checksum import Algorithm
+        from spdx.document import License
+        from spdx.file import File, FileType
+
         source_file = File(determine_spdx_value(self.unix_relative_path))
         source_file.type = FileType.SOURCE
         source_file.comment = determine_spdx_value(None)
@@ -299,7 +314,8 @@ def copyright(self) -&gt; Optional[str]:
     Returns:
         file&#39;s copyright text
     &#34;&#34;&#34;
-    return determine_file_copyright_text(self.path)</code></pre>
+    copyright_text = determine_file_copyright_text(self.path)
+    return str(copyright_text) if copyright_text is not None else None</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_file.SpdxFile.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
@@ -319,7 +335,7 @@ def id(self) -&gt; str:
         a UUID
     &#34;&#34;&#34;
     # Generates a unique Id based on the name of the file
-    return generate_uuid_based_on_str(self.unix_relative_path)</code></pre>
+    return str(generate_uuid_based_on_str(self.unix_relative_path))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_file.SpdxFile.licence"><code class="name">var <span class="ident">licence</span> : str</code></dt>
@@ -339,7 +355,7 @@ def licence(self) -&gt; str:
         file&#39;s licence
     &#34;&#34;&#34;
     file_licence = determine_file_licence(self.path)
-    return cleanse_licence_expression(file_licence) if file_licence else self._package_licence</code></pre>
+    return str(cleanse_licence_expression(file_licence)) if file_licence else str(self._package_licence)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_file.SpdxFile.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
@@ -396,7 +412,7 @@ def sha1_check_sum(self) -&gt; str:
     Returns:
         corresponding hash
     &#34;&#34;&#34;
-    return determine_sha1_hash_of_file(self._path)</code></pre>
+    return str(determine_sha1_hash_of_file(self._path))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_file.SpdxFile.unix_relative_path"><code class="name">var <span class="ident">unix_relative_path</span> : str</code></dt>
@@ -416,7 +432,7 @@ def unix_relative_path(self) -&gt; str:
         the file path
     &#34;&#34;&#34;
     if str(self.path) == UNKNOWN:
-        return UNKNOWN
+        return str(UNKNOWN)
     unix_path = str(self.path.relative_to(self._project_root)).replace(&#34;\\&#34;, &#34;/&#34;)
     return f&#34;./{unix_path}&#34;</code></pre>
 </details>
@@ -425,7 +441,7 @@ def unix_relative_path(self) -&gt; str:
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_file.SpdxFile.generate_spdx_file"><code class="name flex">
-<span>def <span class="ident">generate_spdx_file</span></span>(<span>self) ‑> spdx.file.File</span>
+<span>def <span class="ident">generate_spdx_file</span></span>(<span>self) ‑> File</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates the SPDX file.</p>
@@ -441,7 +457,7 @@ FileCopyrightText: NONE</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_spdx_file(self) -&gt; File:
+<pre><code class="python">def generate_spdx_file(self) -&gt; &#34;File&#34;:
     &#34;&#34;&#34;Generates the SPDX file.
 
     SPDX File example:
@@ -454,6 +470,10 @@ FileCopyrightText: NONE</p>
     Returns:
         the corresponding file
     &#34;&#34;&#34;
+    from spdx.checksum import Algorithm
+    from spdx.document import License
+    from spdx.file import File, FileType
+
     source_file = File(determine_spdx_value(self.unix_relative_path))
     source_file.type = FileType.SOURCE
     source_file.comment = determine_spdx_value(None)
@@ -502,7 +522,7 @@ FileCopyrightText: NONE</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

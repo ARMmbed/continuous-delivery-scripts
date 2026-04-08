@@ -1,17 +1,17 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utility script to abstract git operations for our CI scripts."""
+
 import logging
 import os
 import re
 import shutil
-from pathlib import Path
-from typing import Optional, List, Union, Any, Tuple
-
 from git import Repo, Actor, GitCommandError
 from packaging import version
+from pathlib import Path
+from typing import Optional, List, Union, Any, Tuple
 
 from .configuration import configuration, ConfigurationVariable
 from .filesystem_helpers import TemporaryDirectory
@@ -61,7 +61,9 @@ class GitWrapper:
         """
         try:
             git_clone = self.repo.clone_from(
-                url=self.get_remote_url(), to_path=str(path), multi_options=["--recurse-submodules"]
+                url=self.get_remote_url(),
+                to_path=str(path),
+                multi_options=["--recurse-submodules"],
             )
         except GitCommandError as e:
             logger.info("failed cloning repository: %s" % e)
@@ -115,7 +117,7 @@ class GitWrapper:
         """
         self.repo.git.checkout(branch)
 
-    def _add_one_file_or_one_dir(self, path: str) -> None:
+    def _add_one_file_or_one_dir(self, path: Path) -> None:
         if not path:
             raise ValueError("Unspecified path.")
         self._add_one_path(Path(path))
@@ -133,7 +135,7 @@ class GitWrapper:
         logger.info(f"Adding {unix_relative_path} to repository.")
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -> None:
+    def add(self, path: Union[list, set, Path]) -> None:
         """Adds a file or a list of files.
 
         Args:
@@ -235,6 +237,12 @@ class GitWrapper:
             current_branch = self._get_branch_from_abbreviation("HEAD")
         return current_branch
 
+    def list_tracked_files(self) -> List[str]:
+        """List git-tracked files relative to the repository root."""
+        tracked_files = self.repo.git.ls_files("-z")
+        tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode("utf-8")
+        return [path for path in tracked_files.split("\0") if path]
+
     def _get_branch_from_advanced_feature(self) -> Any:
         if version.parse(self.git_version()) >= version.parse("2.22"):
             current_branch = self.repo.git.branch(show_current=True)
@@ -298,7 +306,10 @@ class GitWrapper:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f"Merge from {str(branch)}", parent_commits=(branch.commit, current_branch.commit))
+        self.commit(
+            f"Merge from {str(branch)}",
+            parent_commits=(branch.commit, current_branch.commit),
+        )
 
     def get_remote_url(self) -> str:
         """Gets the URL of the remote repository.
@@ -401,7 +412,13 @@ class GitWrapper:
         return self.get_remote_branch(branch_name) is not None
 
     def _get_specific_changes(self, change_type: Optional[str], commit1: Any, commit2: Any) -> List[str]:
-        diff = commit1.diff(commit2)
+        diff = None
+        if commit1:
+            diff = commit1.diff(commit2) if commit2 else commit1.diff()
+        elif commit2:
+            diff = commit2.diff()
+        if not diff:
+            return []
         if change_type:
             change_type = change_type.upper()
             change_type = change_type if change_type in diff.change_type else None
@@ -410,7 +427,11 @@ class GitWrapper:
         return changes
 
     def get_changes_list(
-        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+        self,
+        commit1: Any,
+        commit2: Any,
+        change_type: Optional[str] = None,
+        dir: Optional[str] = None,
     ) -> List[str]:
         """Gets change list.
 
@@ -453,7 +474,12 @@ class GitWrapper:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         """
-        self.repo.git.push("--follow-tags", "--set-upstream", self._get_remote(), self.get_current_branch())
+        self.repo.git.push(
+            "--follow-tags",
+            "--set-upstream",
+            self._get_remote(),
+            self.get_current_branch(),
+        )
 
     def push_tag(self) -> None:
         """Pushes commits and tags.
@@ -483,7 +509,7 @@ class GitWrapper:
 
         Repository is considered dirty when git status returns elements which are not committed.
         """
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -> None:
         """Cleans the repository.
@@ -547,6 +573,14 @@ class GitWrapper:
             logger.warning(e)
             return None
 
+    def list_files_added_to_current_commit(self) -> List[str]:
+        """Returns a list of files added in the current commit."""
+        current_commit = self.repo.head.commit
+        previous_commit = self.repo.commit("HEAD~1")
+        if not current_commit:
+            current_commit = self.get_current_commit()
+        return self.get_changes_list(previous_commit, current_commit, change_type="a")
+
     def list_files_added_on_current_branch(self) -> List[str]:
         """Returns a list of files changed against master branch."""
         master_branch = self.get_master_branch()
@@ -565,8 +599,7 @@ class GitWrapper:
                 # The branch point off `beta` is more recent than off `master`.
                 # Hence, the difference between current and `beta` should be considered.
                 branch_point = beta_branch_point
-        changes = self.get_changes_list(branch_point, current_branch_commit, change_type="a")
-        return changes
+        return self.get_changes_list(branch_point, current_branch_commit, change_type="a")
 
     def is_current_branch_feature(self) -> bool:
         """Returns boolean indicating if current branch is considered a feature."""
@@ -576,17 +609,19 @@ class GitWrapper:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -> (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -> Tuple[bool, Optional[List[Any]]]:
         """Returns boolean indicating whether the current branch follows the pattern and the list of groups if any."""
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -> (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -> Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:
             return False, None
         match = re.search(pattern, str(branch_name))
-        return True if match else False, match.groups() if match else None
+        return True if match else False, list(match.groups()) if match else None
 
     @property
     def uncommitted_changes(self) -> List[Path]:
@@ -600,6 +635,19 @@ class GitWrapper:
             return []
 
         return [Path(self.root).joinpath(line.strip().split(" ")[-1]) for line in status.splitlines()]
+
+    @property
+    def uncommitted_staged_changes(self) -> List[Path]:
+        """Gets list of uncommitted staged changes.
+
+        Returns:
+             list of uncommitted staged changes
+        """
+        staged = self.repo.git.diff(staged=True, name_only=True)
+        if not staged:
+            return []
+
+        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
 
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -> None:
@@ -618,7 +666,7 @@ class GitWrapper:
         """Applies the uncommitted changes found in current repository to another.
 
         Args:
-            other_repo: repository to apply changes to
+             other_repo: repository to apply changes to
         """
         dest_root = other_repo.root
         for f in self.uncommitted_changes:
@@ -627,6 +675,8 @@ class GitWrapper:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+        for f in self.uncommitted_staged_changes:
+            other_repo.add(f.relative_to(self.root))
 
     def get_corresponding_path(self, path_in_initial_repo: Path) -> Path:
         """Gets the path in current repository corresponding to path in initial repository.
@@ -711,7 +761,7 @@ class GitClone(GitWrapper):
             path_in_initial_repo: path to a file/directory in initial repository.
 
         Returns:
-             corresponding path.
+            corresponding path.
         """
         if not path_in_initial_repo.is_absolute():
             return Path(self.root).joinpath(path_in_initial_repo)
@@ -767,4 +817,7 @@ class ProjectTempClone(GitTempClone):
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         """
-        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())
+        super().__init__(
+            desired_branch_name=desired_branch_name,
+            repository_to_clone=ProjectGitWrapper(),
+        )

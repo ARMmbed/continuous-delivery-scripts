@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.package_helpers API documentation</title>
 <meta name="description" content="Utilities for retrieving Python&#39;s package information." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,16 +32,19 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utilities for retrieving Python&#39;s package information.&#34;&#34;&#34;
 
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 
 logger = logging.getLogger(__name__)
@@ -57,48 +60,48 @@ class PackageMetadata:
 
     def __init__(self, data: dict) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._data = data
+        self._data: Dict[str, Any] = data
 
     @property
     def name(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s name.&#34;&#34;&#34;
-        return self._data.get(&#34;Name&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Name&#34;, UNKNOWN))
 
     @property
     def version(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s version.&#34;&#34;&#34;
-        return self._data.get(&#34;Version&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Version&#34;, UNKNOWN))
 
     @property
     def author(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s author.&#34;&#34;&#34;
-        return self._data.get(&#34;Author&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Author&#34;, UNKNOWN))
 
     @property
     def author_email(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s author email.&#34;&#34;&#34;
-        return self._data.get(&#34;Author-email&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Author-email&#34;, UNKNOWN))
 
     @property
     def licence(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return self._data.get(&#34;License&#34;, UNKNOWN)
+        return str(self._data.get(&#34;License&#34;, UNKNOWN))
 
     @property
     def description(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return self._data.get(&#34;Summary&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Summary&#34;, UNKNOWN))
 
     @property
     def url(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s URL.&#34;&#34;&#34;
-        home_page = str(self._data.get(&#34;Home-page&#34;))
+        home_page = self._data.get(&#34;Home-page&#34;)
         if home_page:
-            return home_page
-        url = str(self._data.get(&#34;Project-URL&#34;))
+            return str(home_page)
+        url = self._data.get(&#34;Project-URL&#34;)
         if url:
-            return url.split(&#34;,&#34;)[1].strip()
-        return UNKNOWN
+            return str(url).split(&#34;,&#34;)[1].strip()
+        return str(UNKNOWN)
 
     def __str__(self) -&gt; str:
         &#34;&#34;&#34;String representation.&#34;&#34;&#34;
@@ -248,48 +251,48 @@ It is based on <a href="https://www.python.org/dev/peps/pep-0314/">https://www.p
 
     def __init__(self, data: dict) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._data = data
+        self._data: Dict[str, Any] = data
 
     @property
     def name(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s name.&#34;&#34;&#34;
-        return self._data.get(&#34;Name&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Name&#34;, UNKNOWN))
 
     @property
     def version(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s version.&#34;&#34;&#34;
-        return self._data.get(&#34;Version&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Version&#34;, UNKNOWN))
 
     @property
     def author(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s author.&#34;&#34;&#34;
-        return self._data.get(&#34;Author&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Author&#34;, UNKNOWN))
 
     @property
     def author_email(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s author email.&#34;&#34;&#34;
-        return self._data.get(&#34;Author-email&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Author-email&#34;, UNKNOWN))
 
     @property
     def licence(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return self._data.get(&#34;License&#34;, UNKNOWN)
+        return str(self._data.get(&#34;License&#34;, UNKNOWN))
 
     @property
     def description(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return self._data.get(&#34;Summary&#34;, UNKNOWN)
+        return str(self._data.get(&#34;Summary&#34;, UNKNOWN))
 
     @property
     def url(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s URL.&#34;&#34;&#34;
-        home_page = str(self._data.get(&#34;Home-page&#34;))
+        home_page = self._data.get(&#34;Home-page&#34;)
         if home_page:
-            return home_page
-        url = str(self._data.get(&#34;Project-URL&#34;))
+            return str(home_page)
+        url = self._data.get(&#34;Project-URL&#34;)
         if url:
-            return url.split(&#34;,&#34;)[1].strip()
-        return UNKNOWN
+            return str(url).split(&#34;,&#34;)[1].strip()
+        return str(UNKNOWN)
 
     def __str__(self) -&gt; str:
         &#34;&#34;&#34;String representation.&#34;&#34;&#34;
@@ -310,7 +313,7 @@ It is based on <a href="https://www.python.org/dev/peps/pep-0314/">https://www.p
 <pre><code class="python">@property
 def author(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s author.&#34;&#34;&#34;
-    return self._data.get(&#34;Author&#34;, UNKNOWN)</code></pre>
+    return str(self._data.get(&#34;Author&#34;, UNKNOWN))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email"><code class="name">var <span class="ident">author_email</span> : str</code></dt>
@@ -323,7 +326,7 @@ def author(self) -&gt; str:
 <pre><code class="python">@property
 def author_email(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s author email.&#34;&#34;&#34;
-    return self._data.get(&#34;Author-email&#34;, UNKNOWN)</code></pre>
+    return str(self._data.get(&#34;Author-email&#34;, UNKNOWN))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
@@ -336,7 +339,7 @@ def author_email(self) -&gt; str:
 <pre><code class="python">@property
 def description(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-    return self._data.get(&#34;Summary&#34;, UNKNOWN)</code></pre>
+    return str(self._data.get(&#34;Summary&#34;, UNKNOWN))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence"><code class="name">var <span class="ident">licence</span> : str</code></dt>
@@ -349,7 +352,7 @@ def description(self) -&gt; str:
 <pre><code class="python">@property
 def licence(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-    return self._data.get(&#34;License&#34;, UNKNOWN)</code></pre>
+    return str(self._data.get(&#34;License&#34;, UNKNOWN))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
@@ -362,7 +365,7 @@ def licence(self) -&gt; str:
 <pre><code class="python">@property
 def name(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s name.&#34;&#34;&#34;
-    return self._data.get(&#34;Name&#34;, UNKNOWN)</code></pre>
+    return str(self._data.get(&#34;Name&#34;, UNKNOWN))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
@@ -375,13 +378,13 @@ def name(self) -&gt; str:
 <pre><code class="python">@property
 def url(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s URL.&#34;&#34;&#34;
-    home_page = str(self._data.get(&#34;Home-page&#34;))
+    home_page = self._data.get(&#34;Home-page&#34;)
     if home_page:
-        return home_page
-    url = str(self._data.get(&#34;Project-URL&#34;))
+        return str(home_page)
+    url = self._data.get(&#34;Project-URL&#34;)
     if url:
-        return url.split(&#34;,&#34;)[1].strip()
-    return UNKNOWN</code></pre>
+        return str(url).split(&#34;,&#34;)[1].strip()
+    return str(UNKNOWN)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version"><code class="name">var <span class="ident">version</span> : str</code></dt>
@@ -394,7 +397,7 @@ def url(self) -&gt; str:
 <pre><code class="python">@property
 def version(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s version.&#34;&#34;&#34;
-    return self._data.get(&#34;Version&#34;, UNKNOWN)</code></pre>
+    return str(self._data.get(&#34;Version&#34;, UNKNOWN))</code></pre>
 </details>
 </dd>
 </dl>
@@ -500,7 +503,7 @@ def project_metadata(self) -&gt; PackageMetadata:
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.add_dependency_metadata"><code class="name flex">
-<span>def <span class="ident">add_dependency_metadata</span></span>(<span>self, dependency_metadata: <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>) ‑> NoneType</span>
+<span>def <span class="ident">add_dependency_metadata</span></span>(<span>self, dependency_metadata: <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds metadata about a dependency.</p></div>
@@ -646,7 +649,7 @@ def fetch_project_metadata(self) -&gt; ProjectMetadata:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

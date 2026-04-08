@@ -1,8 +1,9 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Package definition for PyPI."""
+
 import os
 
 from setuptools import setup
@@ -29,11 +30,10 @@ setup(
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Topic :: Software Development :: Build Tools",
     ],
     description="Continuous Delivery scripts to increase automation",
@@ -48,23 +48,29 @@ setup(
             f"cd-get-config={SOURCE_DIR}.get_config:main",
             f"cd-license-files={SOURCE_DIR}.license_files:main",
             f"cd-generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
+            f"cd-detect-secrets={SOURCE_DIR}.detect_secrets:main",
+            f"cd-record-secrets={SOURCE_DIR}.update_secrets_registry:main",
         ]
     },
     keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
     include_package_data=True,
     install_requires=[
+        # spdx-tools imports pkg_resources from setuptools at runtime.
+        "setuptools",
         "gitpython",
-        "towncrier==21.3.0",
+        "towncrier==22.12.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
-        "pdoc3==0.9.1",
+        "pdoc3==0.10.0",
         "toml",
+        "semver~=2.13.0",
         "python-dotenv",
         "twine",
         "boto3",
+        "detect-secrets[gibberish]==1.5.0",
         "packaging",
         "licenseheaders<0.8.9",
-        "spdx-tools",
+        "spdx-tools==0.6.1",
         "license-expression",
         "wcmatch",
         "jellyfish",
@@ -78,7 +84,7 @@ setup(
     long_description=long_description,
     name=PROJECT_SLUG,
     packages=[SOURCE_DIR],
-    python_requires=">=3.6,<4",
+    python_requires=">=3.8,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     version=__version__,
 )

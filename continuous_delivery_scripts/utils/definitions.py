@@ -1,8 +1,9 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Place to store generic project concepts for the ci scripts."""
+
 import enum
 from typing import List
 

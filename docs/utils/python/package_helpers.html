@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.python.package_helpers API documentation</title>
 <meta name="description" content="Utilities for retrieving Python&#39;s package information." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,21 +32,30 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utilities for retrieving Python&#39;s package information.&#34;&#34;&#34;
 
+import importlib.metadata as importlib_metadata
 import logging
 import re
 import subprocess
 import sys
-from typing import List, Any, cast
+from typing import Iterable, List, Set, Any, cast
 
-import pkg_resources
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
-from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataFetcher, PackageMetadata, ProjectMetadata
+from continuous_delivery_scripts.utils.configuration import (
+    ConfigurationVariable,
+    configuration,
+)
+from continuous_delivery_scripts.utils.package_helpers import (
+    ProjectMetadataFetcher,
+    PackageMetadata,
+    ProjectMetadata,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -88,20 +97,71 @@ def get_package_metadata_lines(package: Any) -&gt; list:
     the underlying `get_metadata_lines` function used raises an exception if the file does not exist.
     We hence need to try to catch all exceptions
     &#34;&#34;&#34;
-    try:
-        return cast(list, package.get_metadata_lines(&#34;METADATA&#34;))
-    except Exception as e:
-        logger.warning(e)
-    try:
-        return cast(list, package.get_metadata_lines(&#34;PKG-INFO&#34;))
-    except Exception as e:
-        logger.warning(e)
+    for filename in [&#34;METADATA&#34;, &#34;PKG-INFO&#34;]:
+        try:
+            metadata = package.read_text(filename)
+            if metadata:
+                return cast(list, metadata.splitlines())
+        except Exception as e:
+            logger.warning(e)
     return list()
+
+
+def _get_distribution_name(distribution: importlib_metadata.Distribution) -&gt; str:
+    distribution_name = getattr(distribution, &#34;name&#34;, None)
+    if distribution_name:
+        return str(distribution_name)
+
+    metadata = distribution.metadata
+    if &#34;Name&#34; in metadata:
+        return str(metadata[&#34;Name&#34;])
+
+    raise importlib_metadata.PackageNotFoundError(&#34;Distribution metadata does not define a package name&#34;)
+
+
+def _get_distribution(package_name: str) -&gt; importlib_metadata.Distribution:
+    try:
+        return importlib_metadata.distribution(package_name)
+    except importlib_metadata.PackageNotFoundError:
+        normalised_package_name = package_name.replace(&#34;-&#34;, &#34;_&#34;)
+        for distribution in importlib_metadata.distributions():
+            if canonicalize_name(_get_distribution_name(distribution)) == canonicalize_name(normalised_package_name):
+                return distribution
+        raise
+
+
+def _iter_dependency_distributions(
+    distribution: importlib_metadata.Distribution, seen_packages: Set[str]
+) -&gt; Iterable[importlib_metadata.Distribution]:
+    for requirement_text in distribution.requires or []:
+        requirement = Requirement(requirement_text)
+        if requirement.marker and not requirement.marker.evaluate():
+            continue
+
+        normalised_name = canonicalize_name(requirement.name)
+        if normalised_name in seen_packages:
+            continue
+
+        try:
+            dependency_distribution = _get_distribution(requirement.name)
+        except importlib_metadata.PackageNotFoundError as e:
+            logger.warning(e)
+            continue
+
+        seen_packages.add(normalised_name)
+        yield dependency_distribution
+        yield from _iter_dependency_distributions(dependency_distribution, seen_packages)
 
 
 def get_all_packages_metadata_lines(package_name: str) -&gt; List[list]:
     &#34;&#34;&#34;Determines the metadata lines for the present package as well as for all its dependencies.&#34;&#34;&#34;
-    return [get_package_metadata_lines(package) for package in pkg_resources.require(package_name)]
+    distribution = _get_distribution(package_name)
+    seen_packages = {canonicalize_name(_get_distribution_name(distribution))}
+    all_distributions = [
+        distribution,
+        *_iter_dependency_distributions(distribution, seen_packages),
+    ]
+    return [get_package_metadata_lines(package) for package in all_distributions]
 
 
 def parse_package_metadata_lines(metadata: list) -&gt; PackageMetadata:
@@ -128,7 +188,7 @@ def generate_package_info() -&gt; None:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.utils.python.package_helpers.generate_package_info"><code class="name flex">
-<span>def <span class="ident">generate_package_info</span></span>(<span>) ‑> NoneType</span>
+<span>def <span class="ident">generate_package_info</span></span>(<span>) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates package information (egg).</p></div>
@@ -153,7 +213,13 @@ def generate_package_info() -&gt; None:
 </summary>
 <pre><code class="python">def get_all_packages_metadata_lines(package_name: str) -&gt; List[list]:
     &#34;&#34;&#34;Determines the metadata lines for the present package as well as for all its dependencies.&#34;&#34;&#34;
-    return [get_package_metadata_lines(package) for package in pkg_resources.require(package_name)]</code></pre>
+    distribution = _get_distribution(package_name)
+    seen_packages = {canonicalize_name(_get_distribution_name(distribution))}
+    all_distributions = [
+        distribution,
+        *_iter_dependency_distributions(distribution, seen_packages),
+    ]
+    return [get_package_metadata_lines(package) for package in all_distributions]</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.python.package_helpers.get_package_metadata_lines"><code class="name flex">
@@ -177,14 +243,13 @@ We hence need to try to catch all exceptions</p></div>
     the underlying `get_metadata_lines` function used raises an exception if the file does not exist.
     We hence need to try to catch all exceptions
     &#34;&#34;&#34;
-    try:
-        return cast(list, package.get_metadata_lines(&#34;METADATA&#34;))
-    except Exception as e:
-        logger.warning(e)
-    try:
-        return cast(list, package.get_metadata_lines(&#34;PKG-INFO&#34;))
-    except Exception as e:
-        logger.warning(e)
+    for filename in [&#34;METADATA&#34;, &#34;PKG-INFO&#34;]:
+        try:
+            metadata = package.read_text(filename)
+            if metadata:
+                return cast(list, metadata.splitlines())
+        except Exception as e:
+            logger.warning(e)
     return list()</code></pre>
 </details>
 </dd>
@@ -365,7 +430,7 @@ We hence need to try to catch all exceptions</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

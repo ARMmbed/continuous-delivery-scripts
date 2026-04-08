@@ -1,10 +1,12 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Determine the project new version."""
+
 import sys
 
+from typing import Optional
 import argparse
 import logging
 from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
@@ -15,7 +17,7 @@ from continuous_delivery_scripts.utils.logging import log_exception, set_log_lev
 logger = logging.getLogger(__name__)
 
 
-def get_project_version_string(commit_type: CommitType) -> str:
+def get_project_version_string(commit_type: CommitType) -> Optional[str]:
     """Determine the project version string.
 
     Args:
@@ -33,7 +35,7 @@ def get_project_version_string(commit_type: CommitType) -> str:
 
 def main() -> None:
     """Handle command line arguments to determine version string."""
-    parser = argparse.ArgumentParser(description="Determine project's version.")
+    parser = argparse.ArgumentParser(description="Determine project's new version.")
     parser.add_argument(
         "-t", "--release-type", help="type of release to perform", required=True, type=str, choices=CommitType.choices()
     )

@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.spdx_report.spdx_package API documentation</title>
 <meta name="description" content="Definition of an SPDX Package." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,22 +32,20 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Definition of an SPDX Package.&#34;&#34;&#34;
 
 from dataclasses import dataclass
 from pathlib import Path
-from spdx.checksum import Algorithm
-from spdx.creationinfo import Person
-from spdx.document import License
-from spdx.package import Package
-from spdx.utils import NoAssert
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
-from continuous_delivery_scripts.spdx_report.spdx_helpers import determine_spdx_value, list_project_files_for_licensing
+from continuous_delivery_scripts.spdx_report.spdx_helpers import (
+    determine_spdx_value,
+    list_project_files_for_licensing,
+)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
@@ -56,6 +54,9 @@ from continuous_delivery_scripts.utils.third_party_licences import (
     is_licence_accepted,
     determine_licence_compound,
 )
+
+if TYPE_CHECKING:
+    from spdx.package import Package
 
 
 @dataclass(frozen=True, order=True)
@@ -75,7 +76,7 @@ class PackageInfo:
     uuid: str
 
 
-def _set_package_copyright(file: SpdxFile, package: Package) -&gt; None:
+def _set_package_copyright(file: SpdxFile, package: &#34;Package&#34;) -&gt; None:
     &#34;&#34;&#34;Sets the copyright field of a package based on file copyright.&#34;&#34;&#34;
     if file.copyright:
         package.cr_text = determine_spdx_value(file.copyright)
@@ -131,7 +132,7 @@ class SpdxPackage:
         Returns:
             corresponding string
         &#34;&#34;&#34;
-        return self._package_info.metadata.name
+        return str(self._package_info.metadata.name)
 
     @property
     def version(self) -&gt; str:
@@ -140,7 +141,7 @@ class SpdxPackage:
         Returns:
             package version
         &#34;&#34;&#34;
-        return self._package_info.metadata.version
+        return str(self._package_info.metadata.version)
 
     @property
     def main_licence(self) -&gt; str:
@@ -159,7 +160,7 @@ class SpdxPackage:
     @property
     def is_main_licence_accepted(self) -&gt; bool:
         &#34;&#34;&#34;States whether the main licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-        return is_licence_accepted(self.main_licence)
+        return bool(is_licence_accepted(self.main_licence))
 
     @property
     def licence(self) -&gt; str:
@@ -180,7 +181,7 @@ class SpdxPackage:
     @property
     def is_licence_accepted(self) -&gt; bool:
         &#34;&#34;&#34;States whether the actual package&#39;s licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-        return is_licence_accepted(self.licence)
+        return bool(is_licence_accepted(self.licence))
 
     @property
     def author(self) -&gt; str:
@@ -189,7 +190,7 @@ class SpdxPackage:
         Returns:
             document&#39;s author
         &#34;&#34;&#34;
-        return self._package_info.metadata.author
+        return str(self._package_info.metadata.author)
 
     @property
     def author_email(self) -&gt; str:
@@ -198,7 +199,7 @@ class SpdxPackage:
         Returns:
             document author&#39;s email
         &#34;&#34;&#34;
-        return self._package_info.metadata.author_email
+        return str(self._package_info.metadata.author_email)
 
     @property
     def url(self) -&gt; str:
@@ -207,7 +208,7 @@ class SpdxPackage:
         Returns:
             the package homepage
         &#34;&#34;&#34;
-        return self._package_info.metadata.url
+        return str(self._package_info.metadata.url)
 
     @property
     def description(self) -&gt; str:
@@ -216,7 +217,7 @@ class SpdxPackage:
         Returns:
             some description
         &#34;&#34;&#34;
-        return self._package_info.metadata.description
+        return str(self._package_info.metadata.description)
 
     def get_spdx_files(self) -&gt; Optional[List[SpdxFile]]:
         &#34;&#34;&#34;Gets package&#39;s files SPDX description.
@@ -228,7 +229,7 @@ class SpdxPackage:
             return None
         return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]
 
-    def generate_spdx_package(self) -&gt; Package:
+    def generate_spdx_package(self) -&gt; &#34;Package&#34;:
         &#34;&#34;&#34;Generates the SPDX package.
 
         Example of a SPDX package:
@@ -253,6 +254,12 @@ class SpdxPackage:
         Returns:
             the corresponding package
         &#34;&#34;&#34;
+        from spdx.checksum import Algorithm
+        from spdx.creationinfo import Person
+        from spdx.document import License
+        from spdx.package import Package
+        from spdx.utils import NoAssert
+
         package = Package(
             name=determine_spdx_value(self.name),
             spdx_id=f&#34;SPDXRef-{self.id}&#34;,
@@ -260,7 +267,10 @@ class SpdxPackage:
             version=determine_spdx_value(self.version),
             file_name=determine_spdx_value(self.name),
             supplier=None,
-            originator=Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email)),
+            originator=Person(
+                determine_spdx_value(self.author),
+                determine_spdx_value(self.author_email),
+            ),
         )
         package.check_sum = Algorithm(&#34;SHA1&#34;, str(NoAssert()))
         package.cr_text = NoAssert()
@@ -415,7 +425,7 @@ class PackageInfo:
         Returns:
             corresponding string
         &#34;&#34;&#34;
-        return self._package_info.metadata.name
+        return str(self._package_info.metadata.name)
 
     @property
     def version(self) -&gt; str:
@@ -424,7 +434,7 @@ class PackageInfo:
         Returns:
             package version
         &#34;&#34;&#34;
-        return self._package_info.metadata.version
+        return str(self._package_info.metadata.version)
 
     @property
     def main_licence(self) -&gt; str:
@@ -443,7 +453,7 @@ class PackageInfo:
     @property
     def is_main_licence_accepted(self) -&gt; bool:
         &#34;&#34;&#34;States whether the main licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-        return is_licence_accepted(self.main_licence)
+        return bool(is_licence_accepted(self.main_licence))
 
     @property
     def licence(self) -&gt; str:
@@ -464,7 +474,7 @@ class PackageInfo:
     @property
     def is_licence_accepted(self) -&gt; bool:
         &#34;&#34;&#34;States whether the actual package&#39;s licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-        return is_licence_accepted(self.licence)
+        return bool(is_licence_accepted(self.licence))
 
     @property
     def author(self) -&gt; str:
@@ -473,7 +483,7 @@ class PackageInfo:
         Returns:
             document&#39;s author
         &#34;&#34;&#34;
-        return self._package_info.metadata.author
+        return str(self._package_info.metadata.author)
 
     @property
     def author_email(self) -&gt; str:
@@ -482,7 +492,7 @@ class PackageInfo:
         Returns:
             document author&#39;s email
         &#34;&#34;&#34;
-        return self._package_info.metadata.author_email
+        return str(self._package_info.metadata.author_email)
 
     @property
     def url(self) -&gt; str:
@@ -491,7 +501,7 @@ class PackageInfo:
         Returns:
             the package homepage
         &#34;&#34;&#34;
-        return self._package_info.metadata.url
+        return str(self._package_info.metadata.url)
 
     @property
     def description(self) -&gt; str:
@@ -500,7 +510,7 @@ class PackageInfo:
         Returns:
             some description
         &#34;&#34;&#34;
-        return self._package_info.metadata.description
+        return str(self._package_info.metadata.description)
 
     def get_spdx_files(self) -&gt; Optional[List[SpdxFile]]:
         &#34;&#34;&#34;Gets package&#39;s files SPDX description.
@@ -512,7 +522,7 @@ class PackageInfo:
             return None
         return [SpdxFile(p, self._package_info.root_dir, self.main_licence) for p in self.files]
 
-    def generate_spdx_package(self) -&gt; Package:
+    def generate_spdx_package(self) -&gt; &#34;Package&#34;:
         &#34;&#34;&#34;Generates the SPDX package.
 
         Example of a SPDX package:
@@ -537,6 +547,12 @@ class PackageInfo:
         Returns:
             the corresponding package
         &#34;&#34;&#34;
+        from spdx.checksum import Algorithm
+        from spdx.creationinfo import Person
+        from spdx.document import License
+        from spdx.package import Package
+        from spdx.utils import NoAssert
+
         package = Package(
             name=determine_spdx_value(self.name),
             spdx_id=f&#34;SPDXRef-{self.id}&#34;,
@@ -544,7 +560,10 @@ class PackageInfo:
             version=determine_spdx_value(self.version),
             file_name=determine_spdx_value(self.name),
             supplier=None,
-            originator=Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email)),
+            originator=Person(
+                determine_spdx_value(self.author),
+                determine_spdx_value(self.author_email),
+            ),
         )
         package.check_sum = Algorithm(&#34;SHA1&#34;, str(NoAssert()))
         package.cr_text = NoAssert()
@@ -588,7 +607,7 @@ def author(self) -&gt; str:
     Returns:
         document&#39;s author
     &#34;&#34;&#34;
-    return self._package_info.metadata.author</code></pre>
+    return str(self._package_info.metadata.author)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.author_email"><code class="name">var <span class="ident">author_email</span> : str</code></dt>
@@ -607,7 +626,7 @@ def author_email(self) -&gt; str:
     Returns:
         document author&#39;s email
     &#34;&#34;&#34;
-    return self._package_info.metadata.author_email</code></pre>
+    return str(self._package_info.metadata.author_email)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
@@ -626,7 +645,7 @@ def description(self) -&gt; str:
     Returns:
         some description
     &#34;&#34;&#34;
-    return self._package_info.metadata.description</code></pre>
+    return str(self._package_info.metadata.description)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.files"><code class="name">var <span class="ident">files</span> : Optional[List[pathlib.Path]]</code></dt>
@@ -694,7 +713,7 @@ def is_dependency(self) -&gt; bool:
 <pre><code class="python">@property
 def is_licence_accepted(self) -&gt; bool:
     &#34;&#34;&#34;States whether the actual package&#39;s licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-    return is_licence_accepted(self.licence)</code></pre>
+    return bool(is_licence_accepted(self.licence))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.is_main_licence_accepted"><code class="name">var <span class="ident">is_main_licence_accepted</span> : bool</code></dt>
@@ -707,7 +726,7 @@ def is_licence_accepted(self) -&gt; bool:
 <pre><code class="python">@property
 def is_main_licence_accepted(self) -&gt; bool:
     &#34;&#34;&#34;States whether the main licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-    return is_licence_accepted(self.main_licence)</code></pre>
+    return bool(is_licence_accepted(self.main_licence))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.licence"><code class="name">var <span class="ident">licence</span> : str</code></dt>
@@ -779,7 +798,7 @@ def name(self) -&gt; str:
     Returns:
         corresponding string
     &#34;&#34;&#34;
-    return self._package_info.metadata.name</code></pre>
+    return str(self._package_info.metadata.name)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
@@ -798,7 +817,7 @@ def url(self) -&gt; str:
     Returns:
         the package homepage
     &#34;&#34;&#34;
-    return self._package_info.metadata.url</code></pre>
+    return str(self._package_info.metadata.url)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.version"><code class="name">var <span class="ident">version</span> : str</code></dt>
@@ -817,14 +836,14 @@ def version(self) -&gt; str:
     Returns:
         package version
     &#34;&#34;&#34;
-    return self._package_info.metadata.version</code></pre>
+    return str(self._package_info.metadata.version)</code></pre>
 </details>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.generate_spdx_package"><code class="name flex">
-<span>def <span class="ident">generate_spdx_package</span></span>(<span>self) ‑> spdx.package.Package</span>
+<span>def <span class="ident">generate_spdx_package</span></span>(<span>self) ‑> Package</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates the SPDX package.</p>
@@ -852,7 +871,7 @@ Creator: Person: Jane Doe</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_spdx_package(self) -&gt; Package:
+<pre><code class="python">def generate_spdx_package(self) -&gt; &#34;Package&#34;:
     &#34;&#34;&#34;Generates the SPDX package.
 
     Example of a SPDX package:
@@ -877,6 +896,12 @@ Creator: Person: Jane Doe</p>
     Returns:
         the corresponding package
     &#34;&#34;&#34;
+    from spdx.checksum import Algorithm
+    from spdx.creationinfo import Person
+    from spdx.document import License
+    from spdx.package import Package
+    from spdx.utils import NoAssert
+
     package = Package(
         name=determine_spdx_value(self.name),
         spdx_id=f&#34;SPDXRef-{self.id}&#34;,
@@ -884,7 +909,10 @@ Creator: Person: Jane Doe</p>
         version=determine_spdx_value(self.version),
         file_name=determine_spdx_value(self.name),
         supplier=None,
-        originator=Person(determine_spdx_value(self.author), determine_spdx_value(self.author_email)),
+        originator=Person(
+            determine_spdx_value(self.author),
+            determine_spdx_value(self.author_email),
+        ),
     )
     package.check_sum = Algorithm(&#34;SHA1&#34;, str(NoAssert()))
     package.cr_text = NoAssert()
@@ -986,7 +1014,7 @@ Creator: Person: Jane Doe</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

@@ -1,11 +1,13 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Definition of dependency SPDX Document."""
 
-from spdx.checksum import Algorithm
-from spdx.document import ExternalDocumentRef
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from spdx.document import ExternalDocumentRef
 
 
 class DependencySpdxDocumentRef:
@@ -24,7 +26,7 @@ class DependencySpdxDocumentRef:
         self._document_namespace = namespace
         self._document_checksum = checksum
 
-    def generate_external_reference(self) -> ExternalDocumentRef:
+    def generate_external_reference(self) -> "ExternalDocumentRef":
         """Generates the external SPDX reference.
 
         e.g.
@@ -34,6 +36,9 @@ class DependencySpdxDocumentRef:
         Returns:
             corresponding reference
         """
+        from spdx.checksum import Algorithm
+        from spdx.document import ExternalDocumentRef
+
         return ExternalDocumentRef(
             external_document_id=self._document_name,
             spdx_document_uri=self._document_namespace,

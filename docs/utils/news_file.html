@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.news_file API documentation</title>
 <meta name="description" content="Helpers with regards to news files." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,15 +32,16 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Helpers with regards to news files.&#34;&#34;&#34;
+
 import enum
 import pathlib
 import logging
 from datetime import datetime
-from typing import Any
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -56,21 +57,21 @@ class NewsType(enum.Enum):
     removal = 5
 
 
-def create_news_file(news_dir: str, news_text: str, news_type: Any) -&gt; pathlib.Path:
-    &#34;&#34;&#34;Facilitates creating a news file, determining it&#39;s file name based on the type.&#34;&#34;&#34;
+def create_news_file(news_dir: str, news_ref: Optional[str], news_text: str, news_type: Any) -&gt; pathlib.Path:
+    &#34;&#34;&#34;Facilitates creating a news file, determining its file name based on the type.&#34;&#34;&#34;
     message_type = NewsType.misc
     if isinstance(news_type, str):
         message_type = NewsType[news_type]
     elif isinstance(news_type, NewsType):
         message_type = news_type
-    file_path = determine_news_file_path(news_dir, message_type)
+    file_path = determine_news_file_path(news_dir, news_ref, message_type)
     _write_file(file_path, news_text)
     return file_path
 
 
-def determine_news_file_path(news_dir: str, news_type: NewsType) -&gt; pathlib.Path:
+def determine_news_file_path(news_dir: str, news_ref: Optional[str], news_type: NewsType) -&gt; pathlib.Path:
     &#34;&#34;&#34;Returns an available file path for given news type.&#34;&#34;&#34;
-    news_file_name = _determine_todays_news_file_name()
+    news_file_name = news_ref if news_ref else determine_basic_new_news_file_name()
     news_file_path = pathlib.Path(news_dir, f&#34;{news_file_name}.{news_type.name}&#34;)
     inc = 0
     while news_file_path.exists():
@@ -87,8 +88,9 @@ def _write_file(file_path: pathlib.Path, text: str) -&gt; None:
     file_path.write_text(text)
 
 
-def _determine_todays_news_file_name() -&gt; str:
-    return datetime.now().strftime(&#34;%Y%m%d%H%M&#34;)</code></pre>
+def determine_basic_new_news_file_name() -&gt; str:
+    &#34;&#34;&#34;Returns a new news file name.&#34;&#34;&#34;
+    return datetime.now().strftime(&#34;%Y%m%d%H%M%S&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -99,28 +101,42 @@ def _determine_todays_news_file_name() -&gt; str:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.utils.news_file.create_news_file"><code class="name flex">
-<span>def <span class="ident">create_news_file</span></span>(<span>news_dir: str, news_text: str, news_type: Any) ‑> pathlib.Path</span>
+<span>def <span class="ident">create_news_file</span></span>(<span>news_dir: str, news_ref: Optional[str], news_text: str, news_type: Any) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Facilitates creating a news file, determining it's file name based on the type.</p></div>
+<div class="desc"><p>Facilitates creating a news file, determining its file name based on the type.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_news_file(news_dir: str, news_text: str, news_type: Any) -&gt; pathlib.Path:
-    &#34;&#34;&#34;Facilitates creating a news file, determining it&#39;s file name based on the type.&#34;&#34;&#34;
+<pre><code class="python">def create_news_file(news_dir: str, news_ref: Optional[str], news_text: str, news_type: Any) -&gt; pathlib.Path:
+    &#34;&#34;&#34;Facilitates creating a news file, determining its file name based on the type.&#34;&#34;&#34;
     message_type = NewsType.misc
     if isinstance(news_type, str):
         message_type = NewsType[news_type]
     elif isinstance(news_type, NewsType):
         message_type = news_type
-    file_path = determine_news_file_path(news_dir, message_type)
+    file_path = determine_news_file_path(news_dir, news_ref, message_type)
     _write_file(file_path, news_text)
     return file_path</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.news_file.determine_basic_new_news_file_name"><code class="name flex">
+<span>def <span class="ident">determine_basic_new_news_file_name</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a new news file name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def determine_basic_new_news_file_name() -&gt; str:
+    &#34;&#34;&#34;Returns a new news file name.&#34;&#34;&#34;
+    return datetime.now().strftime(&#34;%Y%m%d%H%M%S&#34;)</code></pre>
+</details>
+</dd>
 <dt id="continuous_delivery_scripts.utils.news_file.determine_news_file_path"><code class="name flex">
-<span>def <span class="ident">determine_news_file_path</span></span>(<span>news_dir: str, news_type: <a title="continuous_delivery_scripts.utils.news_file.NewsType" href="#continuous_delivery_scripts.utils.news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
+<span>def <span class="ident">determine_news_file_path</span></span>(<span>news_dir: str, news_ref: Optional[str], news_type: <a title="continuous_delivery_scripts.utils.news_file.NewsType" href="#continuous_delivery_scripts.utils.news_file.NewsType">NewsType</a>) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns an available file path for given news type.</p></div>
@@ -128,9 +144,9 @@ def _determine_todays_news_file_name() -&gt; str:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def determine_news_file_path(news_dir: str, news_type: NewsType) -&gt; pathlib.Path:
+<pre><code class="python">def determine_news_file_path(news_dir: str, news_ref: Optional[str], news_type: NewsType) -&gt; pathlib.Path:
     &#34;&#34;&#34;Returns an available file path for given news type.&#34;&#34;&#34;
-    news_file_name = _determine_todays_news_file_name()
+    news_file_name = news_ref if news_ref else determine_basic_new_news_file_name()
     news_file_path = pathlib.Path(news_dir, f&#34;{news_file_name}.{news_type.name}&#34;)
     inc = 0
     while news_file_path.exists():
@@ -146,7 +162,7 @@ def _determine_todays_news_file_name() -&gt; str:
 <dl>
 <dt id="continuous_delivery_scripts.utils.news_file.NewsType"><code class="flex name class">
 <span>class <span class="ident">NewsType</span></span>
-<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+<span>(</span><span>*args, **kwds)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Describes the type of news we're writing.</p></div>
@@ -213,6 +229,7 @@ def _determine_todays_news_file_name() -&gt; str:
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="continuous_delivery_scripts.utils.news_file.create_news_file" href="#continuous_delivery_scripts.utils.news_file.create_news_file">create_news_file</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.news_file.determine_basic_new_news_file_name" href="#continuous_delivery_scripts.utils.news_file.determine_basic_new_news_file_name">determine_basic_new_news_file_name</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.news_file.determine_news_file_path" href="#continuous_delivery_scripts.utils.news_file.determine_news_file_path">determine_news_file_path</a></code></li>
 </ul>
 </li>
@@ -235,7 +252,7 @@ def _determine_todays_news_file_name() -&gt; str:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

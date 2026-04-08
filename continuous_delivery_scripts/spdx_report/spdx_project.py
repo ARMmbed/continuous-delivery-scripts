@@ -1,19 +1,24 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Definition of an SPDX report for a Python project."""
 
 from pathlib import Path
 import os
-from spdx.writers.tagvalue import write_document
 from typing import Optional, List, cast, Tuple, Dict
 
-from continuous_delivery_scripts.spdx_report.spdx_dependency import DependencySpdxDocumentRef
+from continuous_delivery_scripts.spdx_report.spdx_dependency import (
+    DependencySpdxDocumentRef,
+)
 from continuous_delivery_scripts.spdx_report.spdx_document import SpdxDocument
 from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file
-from continuous_delivery_scripts.utils.python.package_helpers import ProjectMetadataFetcher
-from continuous_delivery_scripts.spdx_report.spdx_helpers import is_package_licence_manually_checked
+from continuous_delivery_scripts.utils.python.package_helpers import (
+    ProjectMetadataFetcher,
+)
+from continuous_delivery_scripts.spdx_report.spdx_helpers import (
+    is_package_licence_manually_checked,
+)
 from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
 
 
@@ -72,9 +77,11 @@ class SpdxProject:
             raise NotADirectoryError(str(dir))
 
         path = dir.joinpath(filename)
+        from spdx.writers.tagvalue import write_document
+
         with open(str(path), mode="w", encoding="utf-8") as out:
             write_document(spdx_doc.generate_spdx_document(), out)
-        return determine_sha1_hash_of_file(path)
+        return str(determine_sha1_hash_of_file(path))
 
     def generate_licensing_summary(self, dir: Path) -> None:
         """Generates licensing summary into the specified directory.
@@ -83,7 +90,8 @@ class SpdxProject:
             dir: output directory
         """
         SummaryGenerator(
-            self.main_document.generate_spdx_package(), [d.generate_spdx_package() for d in self.dependency_documents]
+            self.main_document.generate_spdx_package(),
+            [d.generate_spdx_package() for d in self.dependency_documents],
         ).generate_summary(dir)
 
     def generate_tag_value_files(self, dir: Path) -> None:
@@ -107,7 +115,9 @@ class SpdxProject:
             checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
             externalRefs.append(
                 DependencySpdxDocumentRef(
-                    name=spdx_dependency.document_name, namespace=spdx_dependency.document_namespace, checksum=checksum
+                    name=spdx_dependency.document_name,
+                    namespace=spdx_dependency.document_namespace,
+                    checksum=checksum,
                 )
             )
         self.main_document.external_refs = externalRefs
@@ -147,7 +157,9 @@ class SpdxProject:
         self._report_issues(issues)
 
 
-def _check_package_licence(package_document: SpdxDocument) -> Tuple[bool, bool, str, str, str]:
+def _check_package_licence(
+    package_document: SpdxDocument,
+) -> Tuple[bool, bool, str, str, str]:
     package = package_document.generate_spdx_package()
     return (
         package.is_main_licence_accepted,

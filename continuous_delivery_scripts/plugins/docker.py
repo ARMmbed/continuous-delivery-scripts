@@ -1,13 +1,21 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for Docker projects."""
+
 import logging
 from pathlib import Path
-from typing import Optional
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from typing import TYPE_CHECKING, Optional
+
+from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +27,13 @@ class Docker(BaseLanguage):
         """Gets the related language."""
         return get_language_from_file_name(__file__)
 
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """Todo build docker image."""
-        super().package_software(version)
+        super().package_software(mode, version)
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """Todo push image to repository e.g. ecr, artifactory."""
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
 
     def check_credentials(self) -> None:
         """Checks any credentials."""
@@ -45,7 +53,7 @@ class Docker(BaseLanguage):
         """States whether project metadata can be retrieved."""
         return False
 
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets current SPDX description."""
         # TODO
         return None

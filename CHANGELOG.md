@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
 # Changelog
@@ -16,6 +16,392 @@ beta releases are not included in this history. For a full list of all releases,
 This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://github.com/ARMmbed/mbed-tools-ci-scripts)
 
 [//]: # (begin_release_notes)
+
+"3.4.0" (2026-04-07)
+====================
+
+Features
+--------
+
+- :sparkles: add `cd-detect-secrets` to check tracked files against the recorded [detect-secrets](https://github.com/Yelp/detect-secrets) registry so new secrets are not introduced into the repository (#20260407160538)
+- :sparkles: add `cd-record-secrets` to record acceptable findings in the repository secret registry using [detect-secrets](https://github.com/Yelp/detect-secrets) so known safe values are not flagged repeatedly (#20260407160539)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: checkout-6.0.2 (#20260403063309)
+
+
+"3.3.0" (2026-04-02)
+====================
+
+Features
+--------
+
+- :zap: `[GOLANG]` Check whether tools are already installed before attempting to installing it from scratch using `go install` (#20260402160607)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: codeql-action-3.30.4 (#20250926060617)
+- Dependency upgrade: scorecard-action-2.4.3 (#20251001060855)
+- Dependency upgrade: upload-artifact-5.0.0 (#20251027072552)
+- Dependency upgrade: codeql-action-4.31.5 (#20251127070625)
+- Dependency upgrade: codeql-action-4.31.6 (#20251202070641)
+- Dependency upgrade: cache-5 (#20251212070611)
+- Dependency upgrade: upload-artifact-6.0.0 (#20251215070608)
+- Dependency upgrade: fetch-metadata-2.5.0 (#20260106070809)
+- Dependency upgrade: fetch-metadata-3.0.0 (#20260402140531)
+- Dependency upgrade: upload-artifact-7.0.0 (#20260402140625)
+- Dependency upgrade: codeql-action-4.35.1 (#20260402140903)
+- Dependency upgrade: codecov-action-6 (#20260402140927)
+- Dependency upgrade: checkout-6 (#20260402140953)
+
+
+Misc
+----
+
+- #202604011608
+
+
+"3.2.6" (2025-09-15)
+====================
+
+Bugfixes
+--------
+
+- :gear: `[go]` install `goreleaser` v2 (#202509091458)
+- Dependency upgrade: fetch-metadata-2.3.0 (#20250127075643)
+- Dependency upgrade: upload-artifact-4.6.1 (#20250224073133)
+- Dependency upgrade: codeql-action-3.28.2 (#20250627180406)
+- Dependency upgrade: scorecard-action-2.4.1 (#20250627181753)
+- Dependency upgrade: setup-python-6 (#20250904114652)
+- Dependency upgrade: checkout-5 (#20250909143714)
+- Dependency upgrade: upload-artifact-4.6.2 (#20250909144005)
+- Dependency upgrade: fetch-metadata-2.4.0 (#20250909144051)
+- Dependency upgrade: codeql-action-3.30.2 (#20250910060644)
+- Dependency upgrade: codeql-action-3.30.3 (#20250915062447)
+- :gear: `[Python]` try to handle deprecation in Python for retrieving licensing information (#20250915112924)
+
+
+Misc
+----
+
+- #20250627104347
+
+
+"3.2.5" (2025-01-13)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: upload-artifact-4.6.0 (#20250113071119)
+- Dependency upgrade: codeql-action-3.28.1 (#20250113071131)
+
+
+"3.2.4" (2025-01-10)
+====================
+
+Bugfixes
+--------
+
+- :gear: `[Golang]` Install [`syft`](https://github.com/anchore/syft) since it is a dependency to `goreleaser` (#20250110123102)
+- :bug: `[Golang]` fix `goreleaser` [command deprecation](https://goreleaser.com/deprecations/#-rm-dist) (#20250110123255)
+
+
+"3.2.3" (2025-01-10)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: checkout-4 (#20250110072434)
+
+
+"3.2.2" (2025-01-10)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: dependency-review-action-4 (#20250110071913)
+- Dependency upgrade: setup-python-5 (#20250110071916)
+- Dependency upgrade: codeql-action-3 (#20250110072020)
+- Dependency upgrade: codecov-action-5 (#20250110072146)
+- Dependency upgrade: upload-artifact-4 (#20250110072331)
+- Dependency upgrade: cache-4 (#20250110072723)
+
+
+"3.2.1" (2025-01-09)
+====================
+
+Bugfixes
+--------
+
+- Support python 3.11 (#20230303162821)
+- Dependency upgrade: mypy-1.1.1 (#20230307082327)
+- Dependency upgrade: coverage-7.2.2 (#20230317082258)
+- :bug: Fix the python error appearing from python > 3.11 (#20250109163919)
+- Dependency upgrade: fetch-metadata-2.2.0 (#20250109185536)
+- Dependency upgrade: scorecard-action-2.4.0 (#20250109185845)
+
+
+Misc
+----
+
+- #20250109170328
+
+
+"3.2.0" (2023-03-01)
+====================
+
+Features
+--------
+
+- :bug: Fixed news file automatic creation for dependency updates (#20230301144720)
+
+
+Misc
+----
+
+- #202303011436
+
+
+Features
+--------
+
+- :sparkles: Extended `create-news` so that the reference number can be specified (#20230301133846)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: mypy-1.0.0 (#20230207072240)
+- Dependency upgrade: mypy-1.0.1 (#20230220081601)
+- Dependency upgrade: coverage-7.2.0 (#20230223072638)
+- Dependency upgrade: setup-python-4 (#20230227080926)
+- :zap: Improved the performance of `assert news` for cases where news files are added to the current commit (#20230228103345)
+- Dependency upgrade: coverage-7.2.1 (#20230301081045)
+
+
+Misc
+----
+
+- #20230228130522
+
+
+"3.0.7" (2023-01-25)
+====================
+
+Bugfixes
+--------
+
+- Fix `spdx-tools` version as breaking changes were introduced See https://github.com/spdx/tools-python/releases/tag/v0.7.0. (#202301251550)
+- Dependency upgrade: coverage-7.0.1 (#20221226071741)
+- Dependency upgrade: coverage-7.1.0 (#20230125170456)
+- Dependency upgrade: fetch-metadata-1.3.6 (#20230125170612)
+
+
+"3.0.6" (2022-12-23)
+====================
+
+Bugfixes
+--------
+
+- :bug: fix bug introduced in `golang` plugin (#20221223153606)
+
+
+"3.0.5" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: scorecard-action-2.1.2 (#20221222071359)
+- Dependency upgrade: towncrier-22.12.0 (#20221222071646)
+- :bug: prerelease tag shortcuts (#20221222112207)
+
+
+"3.0.4" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- :bug: fixed github release title format in `github_actions` plugin (#20221222014441)
+
+
+"3.0.3" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- :bug: fixed github release command in `github_actions` plugin (#20221222013026)
+
+
+"3.0.2" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- :bug: fixed github release command in `github_actions` plugin (#20221222011846)
+
+
+"3.0.1" (2022-12-22)
+====================
+
+Bugfixes
+--------
+
+- :bug: fixed `github_actions` plugins` (#20221222005632)
+
+
+"3.0.0" (2022-12-22)
+====================
+
+Major changes
+-------------
+
+- :boom: Refactored the `NoOp` plugin to do no operation (#20221222001818)
+
+
+Features
+--------
+
+- :sparkles: Added a `basic` plugin to replace former `NoOp` plugin (#20221222001622)
+
+
+Bugfixes
+--------
+
+- :bug: Fixed the plugin loader to enable plugin inheritance (#20221222001917)
+
+
+"2.11.0" (2022-12-21)
+=====================
+
+Features
+--------
+
+- :sparkles: Added a `github_actions` plugin to manage actions or workflow projects (#20221221204057)
+
+
+Bugfixes
+--------
+
+- `[git]` :bug: make sure any staged changes are also applied to repository clones (#20221221183120)
+
+
+"2.10.2" (2022-12-21)
+=====================
+
+Bugfixes
+--------
+
+- Fixed shortcut tag rendering when version contains `0` (#20221221151424)
+
+
+"2.10.1" (2022-12-21)
+=====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: scorecard-action-2.1.1 (#20221221071258)
+- Fixed shortcut tag rendering (#20221221110243)
+
+
+"2.10.0" (2022-12-20)
+=====================
+
+Features
+--------
+
+- Added a way to tag releases with version shortcuts such as 1.0 (#20221220194939)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: scorecard-action-2.1.0 (#20221215071255)
+- Dependency upgrade: coverage-7.0.0 (#20221219070757)
+
+
+"2.9.1" (2022-12-06)
+====================
+
+Bugfixes
+--------
+
+- `[CI]` :bug: Fixed release bug (#202212060751)
+
+
+"2.9.0" (2022-12-01)
+====================
+
+Features
+--------
+
+- :sparkles: New plugin for CI projects (#202212011749)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: pdoc3-0.10.0 (#202108110629)
+- Dependency upgrade: mypy-0.921 (#202112220825)
+- Dependency upgrade: towncrier-22.8.0 (#202208310626)
+- fix how manually checked licences are expressed in the project configuration files to accommodate `.` in package names (#202211301646)
+- Dependency upgrade: codeql-action-2 (#202211301827)
+- Dependency upgrade: fetch-metadata-1.3.5 (#202211301829)
+- Dependency upgrade: cache-3 (#202211301830)
+- Dependency upgrade: codecov-action-3 (#202211301832)
+- Dependency upgrade: upload-artifact-3 (#202211301833)
+- Dependency upgrade: checkout-3 (#202211301834)
+- Dependency upgrade: mypy-0.991 (#202211301940)
+- Dependency upgrade: dependency-review-action-3 (#202212010715)
+- :bug: Change the news file name to avoid conflicts (#20221201175408059814)
+
+
+Misc
+----
+
+- #202211301645, #202212011822
+
+
+"2.8.5" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Disabling code documentation generation until [issue](https://github.com/go101/golds/issues/26) with `golds` is fixed (#202203221358)
+
+
+"2.8.4" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- [Golang] Fixing how golds is called (#202203221309)
+
+
+"2.8.3" (2022-03-22)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: towncrier-21.9.0 (#202202241608)
+- [GOLANG] Fix golds version so that it works on go > 1.18 required by latest goreleaser (#202203220937)
+- Change `towncrier` CLI command as no longer backward compatible (#202203221036)
+
 
 "2.8.2" (2022-02-21)"2.8.2" (2022-02-21)
 ====================

@@ -1,11 +1,19 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 from unittest import TestCase
 
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, GitTempClone, GitWrapper, ProjectGitWrapper
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
+from continuous_delivery_scripts.utils.git_helpers import (
+    ProjectTempClone,
+    GitTempClone,
+    GitWrapper,
+    ProjectGitWrapper,
+)
 from uuid import uuid4
 from pathlib import Path
 
@@ -22,6 +30,13 @@ class TestGitWrapper(TestCase):
         self.assertIsNotNone(git.uncommitted_changes)
         self.assertIsNotNone(git.get_remote_url())
 
+    def test_list_tracked_files(self):
+        """Checks tracked files can be listed from git."""
+        git = ProjectGitWrapper()
+        tracked_files = git.list_tracked_files()
+        self.assertTrue(len(tracked_files) > 0)
+        self.assertIn("setup.py", tracked_files)
+
 
 class TestGitTempClone(TestCase):
     def test_git_clone(self):
@@ -29,7 +44,10 @@ class TestGitTempClone(TestCase):
         with ProjectTempClone(desired_branch_name="main") as clone:
             self.assertTrue(isinstance(clone, GitWrapper))
             self.assertEqual("main", str(clone.get_current_branch()))
-            self.assertNotEqual(configuration.get_value(ConfigurationVariable.PROJECT_ROOT), str(clone.root))
+            self.assertNotEqual(
+                configuration.get_value(ConfigurationVariable.PROJECT_ROOT),
+                str(clone.root),
+            )
 
     def test_git_clone_independent(self):
         """Ensures the clone is independent from repository it is based on."""
@@ -37,6 +55,35 @@ class TestGitTempClone(TestCase):
         with GitTempClone(repository_to_clone=git, desired_branch_name="main") as clone:
             self.assertEqual(git.get_remote_url(), clone.get_remote_url())
             self.assertNotEqual(git.root, clone.root)
+
+    def test_git_clone_roll_over_changes(self):
+        """Ensures staged changes in original repository are applied in clone."""
+        with ProjectTempClone(desired_branch_name="main") as origin:
+            test_file = Path(origin.root).joinpath(f"file-test-{uuid4()}.txt")
+            test_file.touch()
+
+            uncommitted_changes = origin.uncommitted_changes
+            staged_changes = origin.uncommitted_staged_changes
+            self.assertTrue(origin.is_dirty())
+            self.assertTrue(test_file in uncommitted_changes)
+            self.assertFalse(test_file in staged_changes)
+            origin.add(test_file)
+            uncommitted_changes = origin.uncommitted_changes
+            staged_changes = origin.uncommitted_staged_changes
+            self.assertTrue(origin.is_dirty())
+            self.assertTrue(test_file in uncommitted_changes)
+            self.assertTrue(test_file in staged_changes)
+
+            with GitTempClone(repository_to_clone=origin, desired_branch_name="main") as clone:
+                self.assertNotEqual(origin.root, clone.root)
+                self.assertTrue(clone.is_dirty())
+                uncommitted_changes = clone.uncommitted_changes
+                staged_changes = clone.uncommitted_staged_changes
+                cloned_test_file = clone.root.joinpath(test_file.relative_to(origin.root))
+                self.assertIsNotNone(uncommitted_changes)
+                self.assertIsNotNone(staged_changes)
+                self.assertTrue(cloned_test_file in uncommitted_changes)
+                self.assertTrue(cloned_test_file in staged_changes)
 
     def test_git_branch_actions(self):
         """Test basic git branch actions on the clone."""
@@ -86,8 +133,10 @@ class TestGitTempClone(TestCase):
             clone.commit("Test commit")
             self.assertNotEqual(previous_hash, clone.get_commit_hash())
             self.assertEqual(previous_count + 1, clone.get_commit_count())
-            added_files = [Path(clone.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
-            self.assertTrue(test_file in added_files)
+            added_files_to_commit = [Path(clone.root).joinpath(f) for f in clone.list_files_added_to_current_commit()]
+            self.assertTrue(test_file in added_files_to_commit)
+            added_files_to_branch = [Path(clone.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
+            self.assertTrue(test_file in added_files_to_branch)
 
     def test_repo_clean(self):
         """Test basic git clean on the clone."""
@@ -137,5 +186,7 @@ class TestGitTempClone(TestCase):
             self.assertTrue(clone.get_corresponding_path(test_file) in uncommitted_changes)
             clone.add(test_file)
             clone.commit("Test commit")
+            added_files_to_commit = [Path(git.root).joinpath(f) for f in clone.list_files_added_to_current_commit()]
             added_files = [Path(git.root).joinpath(f) for f in clone.list_files_added_on_current_branch()]
         self.assertTrue(test_file in added_files)
+        self.assertTrue(test_file in added_files_to_commit)

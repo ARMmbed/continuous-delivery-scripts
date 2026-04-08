@@ -1,11 +1,12 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Helpers for interacting with AWS services such as S3.
 
 Based on the Python SDK called BOTO https://aws.amazon.com/sdk-for-python/.
 """
+
 import boto3
 import logging
 import os

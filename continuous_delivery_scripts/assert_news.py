@@ -1,14 +1,15 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Checks if valid news files are created for changes in the project."""
+
 import argparse
 import logging
+import pathlib
 import re
 import sys
-from typing import List, Union
-import pathlib
+from typing import Union, Optional, Iterable, Any, List
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
@@ -71,10 +72,15 @@ def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> List[str]:
     Returns:
         list: list of absolute paths to news files
     """
-    files_changed = git.list_files_added_on_current_branch()
+    files_changed = git.list_files_added_to_current_commit()
+    # To speed up the process, we first look at files added to the current commit.
+    # If no news files were added, then we check for addition on the branch.
     # Relies on the fact GitWrapper returns paths that are always relative
     # to the project root.
     added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
+    if len(added_news_files) == 0:
+        files_changed = git.list_files_added_on_current_branch()
+        added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
     return [str(pathlib.Path(root_dir, file_path)) for file_path in added_news_files]
 
 
@@ -93,6 +99,12 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
         validate_news_file(absolute_file_path)
 
 
+def _convert_to_string_iter(list: Optional[List[Any]]) -> Iterable[str]:
+    if list is None:
+        return []
+    return [str(item) for item in list]
+
+
 def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -> pathlib.Path:
     """Adds a news file if the branch corresponds to an dependency update.
 
@@ -109,12 +121,14 @@ def generate_news_file(git: GitWrapper, news_dir: pathlib.Path) -> pathlib.Path:
     if not configuration.get_value(ConfigurationVariable.AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE):
         raise EnvironmentError(f"Branch {current_branch} must contain a news file.")
 
+    list_groups = _convert_to_string_iter(groups)
     message = str(configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE)).format(
-        message=", ".join(groups)
+        message=", ".join(list_groups)
     )
     logger.info(f"Generating a news file with content: {message}...")
     return create_news_file(
         str(news_dir),
+        None,
         message,
         configuration.get_value(ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE),
     )
@@ -124,7 +138,7 @@ def _commit_news_file(git: GitWrapper, news_file: pathlib.Path, local: bool) -> 
     logger.info(f"Committing news file {str(news_file)}...")
     if not local:
         git.configure_for_github()
-    git.add(str(news_file))
+    git.add(news_file)
     git.commit("📰 Automatic changes ⚙ Adding news file")
     if not local:
         git.push()

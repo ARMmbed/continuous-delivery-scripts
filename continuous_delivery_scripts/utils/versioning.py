@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Helpers with regards to versioning."""
@@ -73,11 +73,11 @@ def determine_version_string(
         commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
         if not commit_count:
             with LocalProjectRepository() as git:
-                commit_count = git.get_commit_count()
+                commit_count = str(git.get_commit_count())
         commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
         if not commit_hash:
             with LocalProjectRepository() as git:
-                commit_hash = git.get_commit_hash()
+                commit_hash = str(git.get_commit_hash())
         return "%s-%s.%s+%s" % (
             new_version,
             auto_version_tool.config.BUILD_TOKEN,
@@ -85,6 +85,58 @@ def determine_version_string(
             commit_hash,
         )
     return new_version
+
+
+def determine_version_shortcuts(
+    commit_type: CommitType, tag_latest: bool, tag_shortcut: bool, version_elements: Dict[str, str]
+) -> Dict[str, bool]:
+    """Determine the different version shortcuts i.e. major, major.minor, pre depending on the release type.
+
+    Args:
+        commit_type: commit type
+        tag_latest: whether to tag release with `Latest`
+        tag_shortcut: whether to set additional shortcuts
+        version_elements: version elements
+
+    Returns:
+        dict: A dictionary of shortcuts and a flag specifying
+        whether it is a version string or bespoke shortcut such as latest
+    """
+    shortcuts = {}
+    if commit_type == CommitType.RELEASE and tag_latest:
+        shortcuts["latest"] = False
+    if not tag_shortcut:
+        return shortcuts
+    major_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.major, None)
+    minor_version = version_elements.get(auto_version_tool.definitions.SemVerSigFig.minor, None)
+    if commit_type == CommitType.RELEASE:
+        if major_version or major_version == 0:
+            shortcuts[f"{major_version}"] = True
+        if (minor_version or minor_version == 0) and (major_version or major_version == 0):
+            shortcuts[f"{major_version}.{minor_version}"] = True
+    elif commit_type == CommitType.BETA:
+        shortcuts[str(auto_version_tool.config.PRERELEASE_TOKEN)] = False
+        if major_version or major_version == 0:
+            shortcuts[f"{major_version}-{auto_version_tool.config.PRERELEASE_TOKEN}"] = True
+        if (minor_version or minor_version == 0) and (major_version or major_version == 0):
+            shortcuts[f"{major_version}.{minor_version}-{auto_version_tool.config.PRERELEASE_TOKEN}"] = True
+    elif commit_type == CommitType.DEVELOPMENT:
+        shortcuts[str(auto_version_tool.config.BUILD_TOKEN)] = False
+        if major_version or major_version == 0:
+            shortcuts[f"{major_version}-{auto_version_tool.config.BUILD_TOKEN}"] = True
+        if (minor_version or minor_version == 0) and (major_version or major_version == 0):
+            shortcuts[f"{major_version}.{minor_version}-{auto_version_tool.config.BUILD_TOKEN}"] = True
+        commit_count = version_elements.get(auto_version_tool.Constants.COMMIT_COUNT_FIELD, None)
+        if not commit_count:
+            with LocalProjectRepository() as git:
+                commit_count = str(git.get_commit_count())
+        commit_hash = version_elements.get(auto_version_tool.Constants.COMMIT_FIELD, None)
+        if not commit_hash:
+            with LocalProjectRepository() as git:
+                commit_hash = str(git.get_commit_hash())
+        shortcuts[f"{auto_version_tool.config.BUILD_TOKEN}.{commit_count}+{commit_hash}"] = False
+
+    return shortcuts
 
 
 def _get_version_elements(native_version_elements: Dict[str, str]) -> Dict[str, str]:

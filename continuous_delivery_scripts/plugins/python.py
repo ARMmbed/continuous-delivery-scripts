@@ -1,26 +1,35 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Plugin for Python projects."""
+
 import logging
 import shutil
-
 import sys
 from pathlib import Path
-from typing import List, Optional
-
 from subprocess import check_call
-from continuous_delivery_scripts.utils.language_specifics_base import BaseLanguage, get_language_from_file_name
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from typing import TYPE_CHECKING, List, Optional
+
+from continuous_delivery_scripts.utils.configuration import (
+    configuration,
+    ConfigurationVariable,
+)
+from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.filesystem_helpers import cd
+from continuous_delivery_scripts.utils.language_specifics_base import (
+    BaseLanguage,
+    get_language_from_file_name,
+)
 from continuous_delivery_scripts.utils.logging import log_exception
 from continuous_delivery_scripts.utils.python.package_helpers import (
     CurrentPythonProjectMetadataFetcher,
     generate_package_info,
 )
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 ENVVAR_TWINE_USERNAME = "TWINE_USERNAME"
 ENVVAR_TWINE_PASSWORD = "TWINE_PASSWORD"
@@ -30,6 +39,7 @@ logger = logging.getLogger(__name__)
 
 
 def _create_wheel() -> None:
+    logger.info("Creating wheel")
     root = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
     with cd(root):
         check_call(
@@ -108,15 +118,25 @@ def _generate_pdoc_in_correct_structure(module_to_document: str, output_director
     Pdoc nests its docs output in a folder with the module's name.
     This process removes this unwanted folder.
     """
-    with TemporaryDirectory() as temp_dir:
-        _call_pdoc(temp_dir, module_to_document)
-        docs_contents_dir = temp_dir.joinpath(module_to_document)
-        if docs_contents_dir.exists() and docs_contents_dir.is_dir():
-            for element in docs_contents_dir.iterdir():
-                shutil.move(str(element), str(output_directory))
+    temp_directory = TemporaryDirectory()
+    if hasattr(temp_directory, "__enter__") and hasattr(temp_directory, "__exit__"):
+        with temp_directory as temp_dir:
+            _call_pdoc(temp_dir, module_to_document)
+            docs_contents_dir = temp_dir.joinpath(module_to_document)
+            if docs_contents_dir.exists() and docs_contents_dir.is_dir():
+                for element in docs_contents_dir.iterdir():
+                    shutil.move(str(element), str(output_directory))
+        return
+
+    temp_dir = Path(str(temp_directory))
+    _call_pdoc(temp_dir, module_to_document)
+    docs_contents_dir = temp_dir.joinpath(module_to_document)
+    if docs_contents_dir.exists() and docs_contents_dir.is_dir():
+        for element in docs_contents_dir.iterdir():
+            shutil.move(str(element), str(output_directory))
 
 
-def _get_current_spdx_project() -> SpdxProject:
+def _get_current_spdx_project() -> "SpdxProject":
     """Gets information about the current project/package."""
     logger.info("Generating package information.")
     try:
@@ -124,6 +144,8 @@ def _get_current_spdx_project() -> SpdxProject:
         generate_package_info()
     except Exception as e:
         log_exception(logger, e)
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+
     return SpdxProject(CurrentPythonProjectMetadataFetcher())
 
 
@@ -132,16 +154,16 @@ class Python(BaseLanguage):
 
     def get_related_language(self) -> str:
         """Gets related language."""
-        return get_language_from_file_name(__file__)
+        return str(get_language_from_file_name(__file__))
 
-    def package_software(self, version: str) -> None:
+    def package_software(self, mode: CommitType, version: str) -> None:
         """Packages the software into a wheel."""
-        super().package_software(version)
+        super().package_software(mode, version)
         _create_wheel()
 
-    def release_package_to_repository(self, version: str) -> None:
+    def release_package_to_repository(self, mode: CommitType, version: str) -> None:
         """Releases to PyPI."""
-        super().release_package_to_repository(version)
+        super().release_package_to_repository(mode, version)
         _release_to_pypi()
 
     def check_credentials(self) -> None:
@@ -163,12 +185,28 @@ class Python(BaseLanguage):
 
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
-        return True
+        # FIXME Comment out retrieving project metadata as deprecated
+        # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
+        return False
+
+    def get_secret_registry_exclude_files(self) -> List[str]:
+        """Gets additional detect-secrets exclude patterns for Python projects."""
+        return [
+            r".*Pipfile\.lock$",
+            r".*poetry\.lock$",
+            r".*uv\.lock$",
+            r".*pdm\.lock$",
+            r".*version\.py$",
+            r"^\.circleci[\\/].*",
+            r"^workflows/.*",
+            r"^\.github[\\/]workflows[\\/].*",
+        ]
 
     def should_include_spdx_in_package(self) -> bool:
         """States whether the SPDX documents should be included in the package."""
-        return True
+        # FIXME Comment out SPDX package as no longer working
+        return False
 
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
         """Gets the current SPDX description."""
         return _get_current_spdx_project()

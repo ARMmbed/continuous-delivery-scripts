@@ -1,8 +1,9 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Handles usage of towncrier for automated changelog generation and pyautoversion for versioning."""
+
 import sys
 
 import argparse
@@ -49,7 +50,7 @@ def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
         logger.info(":: Generating a new changelog")
         project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
         with cd(os.path.dirname(project_config_path)):
-            subprocess.check_call(["towncrier", "--yes", '--name=""', f'--version="{version}"'])
+            subprocess.check_call(["towncrier", "build", "--yes", '--name=""', f'--version="{version}"'])
 
 
 def main() -> None:

@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.utils.git_helpers API documentation</title>
 <meta name="description" content="Utility script to abstract git operations for our CI scripts." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,19 +32,19 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Utility script to abstract git operations for our CI scripts.&#34;&#34;&#34;
+
 import logging
 import os
 import re
 import shutil
-from pathlib import Path
-from typing import Optional, List, Union, Any, Tuple
-
 from git import Repo, Actor, GitCommandError
 from packaging import version
+from pathlib import Path
+from typing import Optional, List, Union, Any, Tuple
 
 from .configuration import configuration, ConfigurationVariable
 from .filesystem_helpers import TemporaryDirectory
@@ -94,7 +94,9 @@ class GitWrapper:
         &#34;&#34;&#34;
         try:
             git_clone = self.repo.clone_from(
-                url=self.get_remote_url(), to_path=str(path), multi_options=[&#34;--recurse-submodules&#34;]
+                url=self.get_remote_url(),
+                to_path=str(path),
+                multi_options=[&#34;--recurse-submodules&#34;],
             )
         except GitCommandError as e:
             logger.info(&#34;failed cloning repository: %s&#34; % e)
@@ -148,7 +150,7 @@ class GitWrapper:
         &#34;&#34;&#34;
         self.repo.git.checkout(branch)
 
-    def _add_one_file_or_one_dir(self, path: str) -&gt; None:
+    def _add_one_file_or_one_dir(self, path: Path) -&gt; None:
         if not path:
             raise ValueError(&#34;Unspecified path.&#34;)
         self._add_one_path(Path(path))
@@ -166,7 +168,7 @@ class GitWrapper:
         logger.info(f&#34;Adding {unix_relative_path} to repository.&#34;)
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -&gt; None:
+    def add(self, path: Union[list, set, Path]) -&gt; None:
         &#34;&#34;&#34;Adds a file or a list of files.
 
         Args:
@@ -268,6 +270,12 @@ class GitWrapper:
             current_branch = self._get_branch_from_abbreviation(&#34;HEAD&#34;)
         return current_branch
 
+    def list_tracked_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;List git-tracked files relative to the repository root.&#34;&#34;&#34;
+        tracked_files = self.repo.git.ls_files(&#34;-z&#34;)
+        tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode(&#34;utf-8&#34;)
+        return [path for path in tracked_files.split(&#34;\0&#34;) if path]
+
     def _get_branch_from_advanced_feature(self) -&gt; Any:
         if version.parse(self.git_version()) &gt;= version.parse(&#34;2.22&#34;):
             current_branch = self.repo.git.branch(show_current=True)
@@ -331,7 +339,10 @@ class GitWrapper:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f&#34;Merge from {str(branch)}&#34;, parent_commits=(branch.commit, current_branch.commit))
+        self.commit(
+            f&#34;Merge from {str(branch)}&#34;,
+            parent_commits=(branch.commit, current_branch.commit),
+        )
 
     def get_remote_url(self) -&gt; str:
         &#34;&#34;&#34;Gets the URL of the remote repository.
@@ -434,7 +445,13 @@ class GitWrapper:
         return self.get_remote_branch(branch_name) is not None
 
     def _get_specific_changes(self, change_type: Optional[str], commit1: Any, commit2: Any) -&gt; List[str]:
-        diff = commit1.diff(commit2)
+        diff = None
+        if commit1:
+            diff = commit1.diff(commit2) if commit2 else commit1.diff()
+        elif commit2:
+            diff = commit2.diff()
+        if not diff:
+            return []
         if change_type:
             change_type = change_type.upper()
             change_type = change_type if change_type in diff.change_type else None
@@ -443,7 +460,11 @@ class GitWrapper:
         return changes
 
     def get_changes_list(
-        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+        self,
+        commit1: Any,
+        commit2: Any,
+        change_type: Optional[str] = None,
+        dir: Optional[str] = None,
     ) -&gt; List[str]:
         &#34;&#34;&#34;Gets change list.
 
@@ -486,7 +507,12 @@ class GitWrapper:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         &#34;&#34;&#34;
-        self.repo.git.push(&#34;--follow-tags&#34;, &#34;--set-upstream&#34;, self._get_remote(), self.get_current_branch())
+        self.repo.git.push(
+            &#34;--follow-tags&#34;,
+            &#34;--set-upstream&#34;,
+            self._get_remote(),
+            self.get_current_branch(),
+        )
 
     def push_tag(self) -&gt; None:
         &#34;&#34;&#34;Pushes commits and tags.
@@ -516,7 +542,7 @@ class GitWrapper:
 
         Repository is considered dirty when git status returns elements which are not committed.
         &#34;&#34;&#34;
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -&gt; None:
         &#34;&#34;&#34;Cleans the repository.
@@ -580,6 +606,14 @@ class GitWrapper:
             logger.warning(e)
             return None
 
+    def list_files_added_to_current_commit(self) -&gt; List[str]:
+        &#34;&#34;&#34;Returns a list of files added in the current commit.&#34;&#34;&#34;
+        current_commit = self.repo.head.commit
+        previous_commit = self.repo.commit(&#34;HEAD~1&#34;)
+        if not current_commit:
+            current_commit = self.get_current_commit()
+        return self.get_changes_list(previous_commit, current_commit, change_type=&#34;a&#34;)
+
     def list_files_added_on_current_branch(self) -&gt; List[str]:
         &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
         master_branch = self.get_master_branch()
@@ -598,8 +632,7 @@ class GitWrapper:
                 # The branch point off `beta` is more recent than off `master`.
                 # Hence, the difference between current and `beta` should be considered.
                 branch_point = beta_branch_point
-        changes = self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
-        return changes
+        return self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
 
     def is_current_branch_feature(self) -&gt; bool:
         &#34;&#34;&#34;Returns boolean indicating if current branch is considered a feature.&#34;&#34;&#34;
@@ -609,17 +642,19 @@ class GitWrapper:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -&gt; Tuple[bool, Optional[List[Any]]]:
         &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -&gt; (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -&gt; Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:
             return False, None
         match = re.search(pattern, str(branch_name))
-        return True if match else False, match.groups() if match else None
+        return True if match else False, list(match.groups()) if match else None
 
     @property
     def uncommitted_changes(self) -&gt; List[Path]:
@@ -633,6 +668,19 @@ class GitWrapper:
             return []
 
         return [Path(self.root).joinpath(line.strip().split(&#34; &#34;)[-1]) for line in status.splitlines()]
+
+    @property
+    def uncommitted_staged_changes(self) -&gt; List[Path]:
+        &#34;&#34;&#34;Gets list of uncommitted staged changes.
+
+        Returns:
+             list of uncommitted staged changes
+        &#34;&#34;&#34;
+        staged = self.repo.git.diff(staged=True, name_only=True)
+        if not staged:
+            return []
+
+        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
 
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -&gt; None:
@@ -651,7 +699,7 @@ class GitWrapper:
         &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
         Args:
-            other_repo: repository to apply changes to
+             other_repo: repository to apply changes to
         &#34;&#34;&#34;
         dest_root = other_repo.root
         for f in self.uncommitted_changes:
@@ -660,6 +708,8 @@ class GitWrapper:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+        for f in self.uncommitted_staged_changes:
+            other_repo.add(f.relative_to(self.root))
 
     def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
         &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
@@ -744,7 +794,7 @@ class GitClone(GitWrapper):
             path_in_initial_repo: path to a file/directory in initial repository.
 
         Returns:
-             corresponding path.
+            corresponding path.
         &#34;&#34;&#34;
         if not path_in_initial_repo.is_absolute():
             return Path(self.root).joinpath(path_in_initial_repo)
@@ -800,7 +850,10 @@ class ProjectTempClone(GitTempClone):
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         &#34;&#34;&#34;
-        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())</code></pre>
+        super().__init__(
+            desired_branch_name=desired_branch_name,
+            repository_to_clone=ProjectGitWrapper(),
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -872,7 +925,7 @@ is in a completely different location.</p>
             path_in_initial_repo: path to a file/directory in initial repository.
 
         Returns:
-             corresponding path.
+            corresponding path.
         &#34;&#34;&#34;
         if not path_in_initial_repo.is_absolute():
             return Path(self.root).joinpath(path_in_initial_repo)
@@ -945,7 +998,7 @@ def initial_location(self) -&gt; Path:
         path_in_initial_repo: path to a file/directory in initial repository.
 
     Returns:
-         corresponding path.
+        corresponding path.
     &#34;&#34;&#34;
     if not path_in_initial_repo.is_absolute():
         return Path(self.root).joinpath(path_in_initial_repo)
@@ -997,6 +1050,8 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit">list_files_added_to_current_commit</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files">list_tracked_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
@@ -1008,6 +1063,7 @@ def initial_location(self) -&gt; Path:
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes">uncommitted_staged_changes</a></code></li>
 </ul>
 </li>
 </ul>
@@ -1128,7 +1184,9 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;
         try:
             git_clone = self.repo.clone_from(
-                url=self.get_remote_url(), to_path=str(path), multi_options=[&#34;--recurse-submodules&#34;]
+                url=self.get_remote_url(),
+                to_path=str(path),
+                multi_options=[&#34;--recurse-submodules&#34;],
             )
         except GitCommandError as e:
             logger.info(&#34;failed cloning repository: %s&#34; % e)
@@ -1182,7 +1240,7 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;
         self.repo.git.checkout(branch)
 
-    def _add_one_file_or_one_dir(self, path: str) -&gt; None:
+    def _add_one_file_or_one_dir(self, path: Path) -&gt; None:
         if not path:
             raise ValueError(&#34;Unspecified path.&#34;)
         self._add_one_path(Path(path))
@@ -1200,7 +1258,7 @@ def initial_location(self) -&gt; Path:
         logger.info(f&#34;Adding {unix_relative_path} to repository.&#34;)
         self.repo.git.add(unix_relative_path)
 
-    def add(self, path: Union[list, set, str]) -&gt; None:
+    def add(self, path: Union[list, set, Path]) -&gt; None:
         &#34;&#34;&#34;Adds a file or a list of files.
 
         Args:
@@ -1302,6 +1360,12 @@ def initial_location(self) -&gt; Path:
             current_branch = self._get_branch_from_abbreviation(&#34;HEAD&#34;)
         return current_branch
 
+    def list_tracked_files(self) -&gt; List[str]:
+        &#34;&#34;&#34;List git-tracked files relative to the repository root.&#34;&#34;&#34;
+        tracked_files = self.repo.git.ls_files(&#34;-z&#34;)
+        tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode(&#34;utf-8&#34;)
+        return [path for path in tracked_files.split(&#34;\0&#34;) if path]
+
     def _get_branch_from_advanced_feature(self) -&gt; Any:
         if version.parse(self.git_version()) &gt;= version.parse(&#34;2.22&#34;):
             current_branch = self.repo.git.branch(show_current=True)
@@ -1365,7 +1429,10 @@ def initial_location(self) -&gt; Path:
         current_branch = self.get_current_branch()
         merge_base = self.repo.merge_base(branch, current_branch)
         self.repo.index.merge_tree(current_branch, base=merge_base)
-        self.commit(f&#34;Merge from {str(branch)}&#34;, parent_commits=(branch.commit, current_branch.commit))
+        self.commit(
+            f&#34;Merge from {str(branch)}&#34;,
+            parent_commits=(branch.commit, current_branch.commit),
+        )
 
     def get_remote_url(self) -&gt; str:
         &#34;&#34;&#34;Gets the URL of the remote repository.
@@ -1468,7 +1535,13 @@ def initial_location(self) -&gt; Path:
         return self.get_remote_branch(branch_name) is not None
 
     def _get_specific_changes(self, change_type: Optional[str], commit1: Any, commit2: Any) -&gt; List[str]:
-        diff = commit1.diff(commit2)
+        diff = None
+        if commit1:
+            diff = commit1.diff(commit2) if commit2 else commit1.diff()
+        elif commit2:
+            diff = commit2.diff()
+        if not diff:
+            return []
         if change_type:
             change_type = change_type.upper()
             change_type = change_type if change_type in diff.change_type else None
@@ -1477,7 +1550,11 @@ def initial_location(self) -&gt; Path:
         return changes
 
     def get_changes_list(
-        self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+        self,
+        commit1: Any,
+        commit2: Any,
+        change_type: Optional[str] = None,
+        dir: Optional[str] = None,
     ) -&gt; List[str]:
         &#34;&#34;&#34;Gets change list.
 
@@ -1520,7 +1597,12 @@ def initial_location(self) -&gt; Path:
         Pushes changes to the remote repository.
         Pushes also relevant annotated tags when pushing branches out.
         &#34;&#34;&#34;
-        self.repo.git.push(&#34;--follow-tags&#34;, &#34;--set-upstream&#34;, self._get_remote(), self.get_current_branch())
+        self.repo.git.push(
+            &#34;--follow-tags&#34;,
+            &#34;--set-upstream&#34;,
+            self._get_remote(),
+            self.get_current_branch(),
+        )
 
     def push_tag(self) -&gt; None:
         &#34;&#34;&#34;Pushes commits and tags.
@@ -1550,7 +1632,7 @@ def initial_location(self) -&gt; Path:
 
         Repository is considered dirty when git status returns elements which are not committed.
         &#34;&#34;&#34;
-        return self.repo.is_dirty(untracked_files=True)
+        return bool(self.repo.is_dirty(untracked_files=True))
 
     def clean(self) -&gt; None:
         &#34;&#34;&#34;Cleans the repository.
@@ -1614,6 +1696,14 @@ def initial_location(self) -&gt; Path:
             logger.warning(e)
             return None
 
+    def list_files_added_to_current_commit(self) -&gt; List[str]:
+        &#34;&#34;&#34;Returns a list of files added in the current commit.&#34;&#34;&#34;
+        current_commit = self.repo.head.commit
+        previous_commit = self.repo.commit(&#34;HEAD~1&#34;)
+        if not current_commit:
+            current_commit = self.get_current_commit()
+        return self.get_changes_list(previous_commit, current_commit, change_type=&#34;a&#34;)
+
     def list_files_added_on_current_branch(self) -&gt; List[str]:
         &#34;&#34;&#34;Returns a list of files changed against master branch.&#34;&#34;&#34;
         master_branch = self.get_master_branch()
@@ -1632,8 +1722,7 @@ def initial_location(self) -&gt; Path:
                 # The branch point off `beta` is more recent than off `master`.
                 # Hence, the difference between current and `beta` should be considered.
                 branch_point = beta_branch_point
-        changes = self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
-        return changes
+        return self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
 
     def is_current_branch_feature(self) -&gt; bool:
         &#34;&#34;&#34;Returns boolean indicating if current branch is considered a feature.&#34;&#34;&#34;
@@ -1643,17 +1732,19 @@ def initial_location(self) -&gt; Path:
         is_release = self.is_release_branch(current_branch)
         return not (is_master or is_beta or is_release)
 
-    def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+    def is_current_branch_of_type(self, pattern: str) -&gt; Tuple[bool, Optional[List[Any]]]:
         &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
         return self._is_branch_of_type(self.get_current_branch(), pattern)
 
-    def _is_branch_of_type(self, branch_name: Optional[str], pattern: Optional[str]) -&gt; (bool, Optional[List[Any]]):
+    def _is_branch_of_type(
+        self, branch_name: Optional[str], pattern: Optional[str]
+    ) -&gt; Tuple[bool, Optional[List[Any]]]:
         if not pattern:
             return False, None
         if not branch_name:
             return False, None
         match = re.search(pattern, str(branch_name))
-        return True if match else False, match.groups() if match else None
+        return True if match else False, list(match.groups()) if match else None
 
     @property
     def uncommitted_changes(self) -&gt; List[Path]:
@@ -1667,6 +1758,19 @@ def initial_location(self) -&gt; Path:
             return []
 
         return [Path(self.root).joinpath(line.strip().split(&#34; &#34;)[-1]) for line in status.splitlines()]
+
+    @property
+    def uncommitted_staged_changes(self) -&gt; List[Path]:
+        &#34;&#34;&#34;Gets list of uncommitted staged changes.
+
+        Returns:
+             list of uncommitted staged changes
+        &#34;&#34;&#34;
+        staged = self.repo.git.diff(staged=True, name_only=True)
+        if not staged:
+            return []
+
+        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
 
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -&gt; None:
@@ -1685,7 +1789,7 @@ def initial_location(self) -&gt; Path:
         &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
         Args:
-            other_repo: repository to apply changes to
+             other_repo: repository to apply changes to
         &#34;&#34;&#34;
         dest_root = other_repo.root
         for f in self.uncommitted_changes:
@@ -1694,6 +1798,8 @@ def initial_location(self) -&gt; Path:
                 GitWrapper._apply_modifications(destination, f)
             else:
                 GitWrapper._apply_deletions(destination)
+        for f in self.uncommitted_staged_changes:
+            other_repo.add(f.relative_to(self.root))
 
     def get_corresponding_path(self, path_in_initial_repo: Path) -&gt; Path:
         &#34;&#34;&#34;Gets the path in current repository corresponding to path in initial repository.
@@ -1761,11 +1867,34 @@ def uncommitted_changes(self) -&gt; List[Path]:
     return [Path(self.root).joinpath(line.strip().split(&#34; &#34;)[-1]) for line in status.splitlines()]</code></pre>
 </details>
 </dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes"><code class="name">var <span class="ident">uncommitted_staged_changes</span> : List[pathlib.Path]</code></dt>
+<dd>
+<div class="desc"><p>Gets list of uncommitted staged changes.</p>
+<h2 id="returns">Returns</h2>
+<p>list of uncommitted staged changes</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def uncommitted_staged_changes(self) -&gt; List[Path]:
+    &#34;&#34;&#34;Gets list of uncommitted staged changes.
+
+    Returns:
+         list of uncommitted staged changes
+    &#34;&#34;&#34;
+    staged = self.repo.git.diff(staged=True, name_only=True)
+    if not staged:
+        return []
+
+    return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]</code></pre>
+</details>
+</dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.add"><code class="name flex">
-<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, str]) ‑> NoneType</span>
+<span>def <span class="ident">add</span></span>(<span>self, path: Union[list, set, pathlib.Path]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds a file or a list of files.</p>
@@ -1778,7 +1907,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add(self, path: Union[list, set, str]) -&gt; None:
+<pre><code class="python">def add(self, path: Union[list, set, Path]) -&gt; None:
     &#34;&#34;&#34;Adds a file or a list of files.
 
     Args:
@@ -1792,7 +1921,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.apply_uncommitted_changes"><code class="name flex">
-<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>) ‑> NoneType</span>
+<span>def <span class="ident">apply_uncommitted_changes</span></span>(<span>self, other_repo: <a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper">GitWrapper</a>) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies the uncommitted changes found in current repository to another.</p>
@@ -1809,7 +1938,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
     &#34;&#34;&#34;Applies the uncommitted changes found in current repository to another.
 
     Args:
-        other_repo: repository to apply changes to
+         other_repo: repository to apply changes to
     &#34;&#34;&#34;
     dest_root = other_repo.root
     for f in self.uncommitted_changes:
@@ -1817,7 +1946,9 @@ def uncommitted_changes(self) -&gt; List[Path]:
         if f.exists():
             GitWrapper._apply_modifications(destination, f)
         else:
-            GitWrapper._apply_deletions(destination)</code></pre>
+            GitWrapper._apply_deletions(destination)
+    for f in self.uncommitted_staged_changes:
+        other_repo.add(f.relative_to(self.root))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.branch_exists"><code class="name flex">
@@ -1849,7 +1980,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.checkout"><code class="name flex">
-<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) ‑> NoneType</span>
+<span>def <span class="ident">checkout</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Checks out a branch.</p>
@@ -1905,7 +2036,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.cherry_pick"><code class="name flex">
-<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) ‑> NoneType</span>
+<span>def <span class="ident">cherry_pick</span></span>(<span>self, commit: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cherry picks a specific commit.</p>
@@ -1928,7 +2059,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.clean"><code class="name flex">
-<span>def <span class="ident">clean</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">clean</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Cleans the repository.</p>
@@ -1973,7 +2104,9 @@ def uncommitted_changes(self) -&gt; List[Path]:
     &#34;&#34;&#34;
     try:
         git_clone = self.repo.clone_from(
-            url=self.get_remote_url(), to_path=str(path), multi_options=[&#34;--recurse-submodules&#34;]
+            url=self.get_remote_url(),
+            to_path=str(path),
+            multi_options=[&#34;--recurse-submodules&#34;],
         )
     except GitCommandError as e:
         logger.info(&#34;failed cloning repository: %s&#34; % e)
@@ -1991,7 +2124,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.commit"><code class="name flex">
-<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Optional[Tuple[str, Any]]) ‑> NoneType</span>
+<span>def <span class="ident">commit</span></span>(<span>self, message: str, **kwargs: Optional[Tuple[str, Any]]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Commits changes to the repository.</p>
@@ -2018,7 +2151,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_author"><code class="name flex">
-<span>def <span class="ident">configure_author</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">configure_author</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the author.</p></div>
@@ -2033,7 +2166,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.configure_for_github"><code class="name flex">
-<span>def <span class="ident">configure_for_github</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">configure_for_github</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Reconfigures the repository.</p>
@@ -2112,7 +2245,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.delete_branch"><code class="name flex">
-<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) ‑> NoneType</span>
+<span>def <span class="ident">delete_branch</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Deletes a branch.</p>
@@ -2135,7 +2268,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.fetch"><code class="name flex">
-<span>def <span class="ident">fetch</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">fetch</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetches latest changes.</p></div>
@@ -2149,7 +2282,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_pull"><code class="name flex">
-<span>def <span class="ident">force_pull</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">force_pull</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Force pulls changes from the remote repository.</p></div>
@@ -2163,7 +2296,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_push"><code class="name flex">
-<span>def <span class="ident">force_push</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">force_push</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits with force.</p>
@@ -2181,7 +2314,7 @@ def uncommitted_changes(self) -&gt; List[Path]:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_push_tag"><code class="name flex">
-<span>def <span class="ident">force_push_tag</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">force_push_tag</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits and tags with force.</p>
@@ -2317,7 +2450,11 @@ list of the paths of the files which changed</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_changes_list(
-    self, commit1: Any, commit2: Any, change_type: Optional[str] = None, dir: Optional[str] = None
+    self,
+    commit1: Any,
+    commit2: Any,
+    change_type: Optional[str] = None,
+    dir: Optional[str] = None,
 ) -&gt; List[str]:
     &#34;&#34;&#34;Gets change list.
 
@@ -2595,7 +2732,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_current_branch_of_type"><code class="name flex">
-<span>def <span class="ident">is_current_branch_of_type</span></span>(<span>self, pattern: str) ‑> (<class 'bool'>, typing.Optional[typing.List[typing.Any]])</span>
+<span>def <span class="ident">is_current_branch_of_type</span></span>(<span>self, pattern: str) ‑> Tuple[bool, Optional[List[Any]]]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.</p></div>
@@ -2603,7 +2740,7 @@ before the current commit.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def is_current_branch_of_type(self, pattern: str) -&gt; (bool, Optional[List[Any]]):
+<pre><code class="python">def is_current_branch_of_type(self, pattern: str) -&gt; Tuple[bool, Optional[List[Any]]]:
     &#34;&#34;&#34;Returns boolean indicating whether the current branch follows the pattern and the list of groups if any.&#34;&#34;&#34;
     return self._is_branch_of_type(self.get_current_branch(), pattern)</code></pre>
 </details>
@@ -2623,7 +2760,7 @@ before the current commit.</p>
 
     Repository is considered dirty when git status returns elements which are not committed.
     &#34;&#34;&#34;
-    return self.repo.is_dirty(untracked_files=True)</code></pre>
+    return bool(self.repo.is_dirty(untracked_files=True))</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch"><code class="name flex">
@@ -2704,12 +2841,45 @@ before the current commit.</p>
             # The branch point off `beta` is more recent than off `master`.
             # Hence, the difference between current and `beta` should be considered.
             branch_point = beta_branch_point
-    changes = self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)
-    return changes</code></pre>
+    return self.get_changes_list(branch_point, current_branch_commit, change_type=&#34;a&#34;)</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit"><code class="name flex">
+<span>def <span class="ident">list_files_added_to_current_commit</span></span>(<span>self) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a list of files added in the current commit.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_files_added_to_current_commit(self) -&gt; List[str]:
+    &#34;&#34;&#34;Returns a list of files added in the current commit.&#34;&#34;&#34;
+    current_commit = self.repo.head.commit
+    previous_commit = self.repo.commit(&#34;HEAD~1&#34;)
+    if not current_commit:
+        current_commit = self.get_current_commit()
+    return self.get_changes_list(previous_commit, current_commit, change_type=&#34;a&#34;)</code></pre>
+</details>
+</dd>
+<dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files"><code class="name flex">
+<span>def <span class="ident">list_tracked_files</span></span>(<span>self) ‑> List[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List git-tracked files relative to the repository root.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def list_tracked_files(self) -&gt; List[str]:
+    &#34;&#34;&#34;List git-tracked files relative to the repository root.&#34;&#34;&#34;
+    tracked_files = self.repo.git.ls_files(&#34;-z&#34;)
+    tracked_files = tracked_files if isinstance(tracked_files, str) else tracked_files.decode(&#34;utf-8&#34;)
+    return [path for path in tracked_files.split(&#34;\0&#34;) if path]</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge"><code class="name flex">
-<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) ‑> NoneType</span>
+<span>def <span class="ident">merge</span></span>(<span>self, branch: Any) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Merges <code>branch</code> to current branch.</p>
@@ -2731,11 +2901,14 @@ before the current commit.</p>
     current_branch = self.get_current_branch()
     merge_base = self.repo.merge_base(branch, current_branch)
     self.repo.index.merge_tree(current_branch, base=merge_base)
-    self.commit(f&#34;Merge from {str(branch)}&#34;, parent_commits=(branch.commit, current_branch.commit))</code></pre>
+    self.commit(
+        f&#34;Merge from {str(branch)}&#34;,
+        parent_commits=(branch.commit, current_branch.commit),
+    )</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull"><code class="name flex">
-<span>def <span class="ident">pull</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">pull</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pulls changes on current branch from the remote repository.</p></div>
@@ -2750,7 +2923,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all"><code class="name flex">
-<span>def <span class="ident">pull_all</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">pull_all</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pulls all changes from all remotes.</p></div>
@@ -2764,7 +2937,7 @@ before the current commit.</p>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.push"><code class="name flex">
-<span>def <span class="ident">push</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">push</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits.</p>
@@ -2780,11 +2953,16 @@ Pushes also relevant annotated tags when pushing branches out.</p></div>
     Pushes changes to the remote repository.
     Pushes also relevant annotated tags when pushing branches out.
     &#34;&#34;&#34;
-    self.repo.git.push(&#34;--follow-tags&#34;, &#34;--set-upstream&#34;, self._get_remote(), self.get_current_branch())</code></pre>
+    self.repo.git.push(
+        &#34;--follow-tags&#34;,
+        &#34;--set-upstream&#34;,
+        self._get_remote(),
+        self.get_current_branch(),
+    )</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.push_tag"><code class="name flex">
-<span>def <span class="ident">push_tag</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">push_tag</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Pushes commits and tags.</p>
@@ -2833,7 +3011,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_remote_url"><code class="name flex">
-<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) ‑> NoneType</span>
+<span>def <span class="ident">set_remote_url</span></span>(<span>self, url: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the URL of the remote repository.</p>
@@ -2859,7 +3037,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch"><code class="name flex">
-<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) ‑> NoneType</span>
+<span>def <span class="ident">set_upstream_branch</span></span>(<span>self, branch_name: str) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the upstream branch of the current branch.</p>
@@ -2883,7 +3061,7 @@ Tags are also pushed as part of the process</p></div>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash"><code class="name flex">
-<span>def <span class="ident">stash</span></span>(<span>self) ‑> NoneType</span>
+<span>def <span class="ident">stash</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Stashes the repository.</p>
@@ -2993,6 +3171,8 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit">list_files_added_to_current_commit</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files">list_tracked_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
@@ -3004,6 +3184,7 @@ Tags are also pushed as part of the process</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes">uncommitted_staged_changes</a></code></li>
 </ul>
 </li>
 </ul>
@@ -3037,7 +3218,10 @@ will work in most cases but probably not on CI.</p></div>
             system will try to identify the current branch in the repository which
             will work in most cases but probably not on CI.
         &#34;&#34;&#34;
-        super().__init__(desired_branch_name=desired_branch_name, repository_to_clone=ProjectGitWrapper())</code></pre>
+        super().__init__(
+            desired_branch_name=desired_branch_name,
+            repository_to_clone=ProjectGitWrapper(),
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3111,6 +3295,8 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.is_release_branch">is_release_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_branches">list_branches</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_on_current_branch">list_files_added_on_current_branch</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_files_added_to_current_commit">list_files_added_to_current_commit</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.list_tracked_files">list_tracked_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.merge">merge</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull">pull</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.pull_all">pull_all</a></code></li>
@@ -3122,6 +3308,7 @@ will work in most cases but probably not on CI.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.set_upstream_branch">set_upstream_branch</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.stash">stash</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_changes">uncommitted_changes</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes" href="#continuous_delivery_scripts.utils.git_helpers.GitWrapper.uncommitted_staged_changes">uncommitted_staged_changes</a></code></li>
 </ul>
 </li>
 <li>
@@ -3139,7 +3326,7 @@ will work in most cases but probably not on CI.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

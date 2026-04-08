@@ -1,5 +1,5 @@
 <!--
--- Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>continuous_delivery_scripts.report_third_party_ip API documentation</title>
 <meta name="description" content="Script providing information about licensing and third party IP in order to comply with OpenChain …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -38,7 +38,7 @@ specification (i.e. with relationships).</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">#
-# Copyright (C) 2020-2022 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Script providing information about licensing and third party IP in order to comply with OpenChain.
@@ -50,20 +50,23 @@ Therefore, some changes will have to be carried out when the later version is
 supported so that third-party IP gets documented as described by the
 specification (i.e. with relationships).
 &#34;&#34;&#34;
+
 import argparse
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 from continuous_delivery_scripts.language_specifics import get_language_specifics
-from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
+
+if TYPE_CHECKING:
+    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
 
 
-def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) -&gt; SpdxProject:
+def generate_spdx_project_reports(project: &#34;SpdxProject&#34;, output_directory: Path) -&gt; &#34;SpdxProject&#34;:
     &#34;&#34;&#34;Generates all the SPDX reports for a given project.&#34;&#34;&#34;
     logger.info(&#34;Generating SPDX report.&#34;)
     project.generate_tag_value_files(output_directory)
@@ -72,7 +75,7 @@ def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) 
     return project
 
 
-def generate_spdx_reports(output_directory: Path) -&gt; Optional[SpdxProject]:
+def generate_spdx_reports(output_directory: Path) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
     project = get_language_specifics().get_current_spdx_project()
     if not project:
@@ -89,10 +92,20 @@ def main() -&gt; int:
         return Path(arg)
 
     parser.add_argument(
-        &#34;-o&#34;, &#34;--output-dir&#34;, help=&#34;Output directory where the files are generated&#34;, required=True, type=convert_to_path
+        &#34;-o&#34;,
+        &#34;--output-dir&#34;,
+        help=&#34;Output directory where the files are generated&#34;,
+        required=True,
+        type=convert_to_path,
     )
 
-    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
+    parser.add_argument(
+        &#34;-v&#34;,
+        &#34;--verbose&#34;,
+        action=&#34;count&#34;,
+        default=0,
+        help=&#34;Verbosity, by default errors are reported.&#34;,
+    )
     args = parser.parse_args()
     set_log_level(args.verbose)
 
@@ -119,7 +132,7 @@ if __name__ == &#34;__main__&#34;:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="continuous_delivery_scripts.report_third_party_ip.generate_spdx_project_reports"><code class="name flex">
-<span>def <span class="ident">generate_spdx_project_reports</span></span>(<span>project: <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>, output_directory: pathlib.Path) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a></span>
+<span>def <span class="ident">generate_spdx_project_reports</span></span>(<span>project: SpdxProject, output_directory: pathlib.Path) ‑> SpdxProject</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates all the SPDX reports for a given project.</p></div>
@@ -127,7 +140,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_spdx_project_reports(project: SpdxProject, output_directory: Path) -&gt; SpdxProject:
+<pre><code class="python">def generate_spdx_project_reports(project: &#34;SpdxProject&#34;, output_directory: Path) -&gt; &#34;SpdxProject&#34;:
     &#34;&#34;&#34;Generates all the SPDX reports for a given project.&#34;&#34;&#34;
     logger.info(&#34;Generating SPDX report.&#34;)
     project.generate_tag_value_files(output_directory)
@@ -137,7 +150,7 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports"><code class="name flex">
-<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path) ‑> Optional[<a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a>]</span>
+<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path) ‑> Optional[SpdxProject]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generates all the SPDX reports for the current project.</p></div>
@@ -145,7 +158,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_spdx_reports(output_directory: Path) -&gt; Optional[SpdxProject]:
+<pre><code class="python">def generate_spdx_reports(output_directory: Path) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
     project = get_language_specifics().get_current_spdx_project()
     if not project:
@@ -171,10 +184,20 @@ if __name__ == &#34;__main__&#34;:
         return Path(arg)
 
     parser.add_argument(
-        &#34;-o&#34;, &#34;--output-dir&#34;, help=&#34;Output directory where the files are generated&#34;, required=True, type=convert_to_path
+        &#34;-o&#34;,
+        &#34;--output-dir&#34;,
+        help=&#34;Output directory where the files are generated&#34;,
+        required=True,
+        type=convert_to_path,
     )
 
-    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
+    parser.add_argument(
+        &#34;-v&#34;,
+        &#34;--verbose&#34;,
+        action=&#34;count&#34;,
+        default=0,
+        help=&#34;Verbosity, by default errors are reported.&#34;,
+    )
     args = parser.parse_args()
     set_log_level(args.verbose)
 
@@ -216,7 +239,7 @@ if __name__ == &#34;__main__&#34;:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
 </body>
 </html>

@@ -5,22 +5,24 @@ verify_ssl = true
 
 [dev-packages]
 black = "*"
-coverage = "*"
-flake8 = "*"
+coverage = "7.2.2"
 flake8-docstrings = "*"
 flake8-black = "*"
 flake8-copyright = "*"
 flake8-file-encoding = "*"
-mypy = "0.761"
+mypy = "1.1.1"
 pytest = "*"
 pyfakefs = "*"
 pytest-cov = "*"
 wheel = "*"
-continuous-delivery-scripts = {editable = true, path = "."}
 pre-commit = "*"
+continuous-delivery-scripts = {editable = true, path = "."}
 
 [pipenv]
-allow_prereleases = true
+allow_prereleases = false
 
 [packages]
-continuous-delivery-scripts = {editable = true, path = "."}
+detect-secrets = {extras = ["gibberish"], version = "==1.5.0"}
+types-toml = "*"
+types-setuptools = "*"
+continuous-delivery-scripts = {file = ".", editable = true}

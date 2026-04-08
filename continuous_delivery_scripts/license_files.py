@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020-2021 Arm Limited or its affiliates and Contributors. All rights reserved.
+# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Apply copyright and licensing to all source files present in a project.
@@ -7,6 +7,7 @@
 This is to comply with OpenChain certification;
 https://github.com/OpenChain-Project/Curriculum/blob/master/guides/reusing_software.md#2-include-a-copyright-notice-and-license-in-each-file
 """
+
 import argparse
 import logging
 import subprocess
