@@ -229,7 +229,13 @@ class GitWrapper:
 
     def fetch(self) -&gt; None:
         &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
-        self.repo.git.fetch(all=True, tags=True, force=True)
+        try:
+            self.repo.git.fetch(all=True, tags=True, force=True)
+        except GitCommandError as e:
+            logger.info(&#34;failed fetching repository: %s&#34; % e)
+            logger.info(&#34;Retrying a different way&#34;)
+            self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+            self.repo.git.fetch(all=True, tags=True, force=True)
 
     def get_branch(self, branch_name: str) -&gt; Any:
         &#34;&#34;&#34;Gets a specific local branch.
@@ -1319,7 +1325,13 @@ def initial_location(self) -&gt; Path:
 
     def fetch(self) -&gt; None:
         &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
-        self.repo.git.fetch(all=True, tags=True, force=True)
+        try:
+            self.repo.git.fetch(all=True, tags=True, force=True)
+        except GitCommandError as e:
+            logger.info(&#34;failed fetching repository: %s&#34; % e)
+            logger.info(&#34;Retrying a different way&#34;)
+            self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+            self.repo.git.fetch(all=True, tags=True, force=True)
 
     def get_branch(self, branch_name: str) -&gt; Any:
         &#34;&#34;&#34;Gets a specific local branch.
@@ -2278,7 +2290,13 @@ def uncommitted_staged_changes(self) -&gt; List[Path]:
 </summary>
 <pre><code class="python">def fetch(self) -&gt; None:
     &#34;&#34;&#34;Fetches latest changes.&#34;&#34;&#34;
-    self.repo.git.fetch(all=True, tags=True, force=True)</code></pre>
+    try:
+        self.repo.git.fetch(all=True, tags=True, force=True)
+    except GitCommandError as e:
+        logger.info(&#34;failed fetching repository: %s&#34; % e)
+        logger.info(&#34;Retrying a different way&#34;)
+        self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+        self.repo.git.fetch(all=True, tags=True, force=True)</code></pre>
 </details>
 </dd>
 <dt id="continuous_delivery_scripts.utils.git_helpers.GitWrapper.force_pull"><code class="name flex">

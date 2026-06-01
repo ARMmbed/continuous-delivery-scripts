@@ -17,6 +17,18 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.4.1" (2026-06-01)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: jinja2-3.0.3 (#202202230717)
+- Dependency upgrade: fetch-metadata-3.1.0 (#20260420065012)
+- Dependency upgrade: dependency-review-action-5 (#20260511075632)
+- :bug: Ensure that if a fetch fails it retries with authentication in the same way as clone (#20260601135433)
+
+
 "3.4.0" (2026-04-07)
 ====================
 

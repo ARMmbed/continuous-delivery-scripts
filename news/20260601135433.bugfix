@@ -1,1 +1,0 @@
-:bug: Ensure that if a fetch fails it retries with authentication in the same way as clone
