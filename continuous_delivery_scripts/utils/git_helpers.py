@@ -200,7 +200,7 @@ class GitWrapper:
             self.repo.git.fetch(all=True, tags=True, force=True)
         except GitCommandError as e:
             logger.info("failed fetching repository: %s" % e)
-            logger.info("trying with authentication")
+            logger.info("Retrying a different way")
             self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
             self.repo.git.fetch(all=True, tags=True, force=True)
 
