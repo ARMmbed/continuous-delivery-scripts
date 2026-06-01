@@ -2,7 +2,9 @@
 # Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from unittest import TestCase
+from unittest import TestCase, mock
+
+from git import GitCommandError
 
 from continuous_delivery_scripts.utils.configuration import (
     configuration,
@@ -36,6 +38,30 @@ class TestGitWrapper(TestCase):
         tracked_files = git.list_tracked_files()
         self.assertTrue(len(tracked_files) > 0)
         self.assertIn("setup.py", tracked_files)
+
+    @mock.patch.object(GitWrapper, "set_remote_url")
+    @mock.patch.object(
+        GitWrapper,
+        "_git_url_ssh_to_https",
+        return_value="https://test-token:x-oauth-basic@github.com/example/repository.git",
+    )
+    @mock.patch.object(
+        GitWrapper,
+        "get_remote_url",
+        return_value="https://github.com/example/repository.git",
+    )
+    def test_fetch_retries_with_authentication(self, _get_remote_url, _git_url_ssh_to_https, set_remote_url):
+        """Ensures fetch retries with authentication when needed."""
+        repo = mock.Mock(spec_set=["git"])
+        repo.git = mock.Mock(spec_set=["fetch"])
+        repo.git.fetch.side_effect = [GitCommandError("fetch", 128, stderr="fatal"), None]
+
+        git = GitWrapper(path=Path("."), repo=repo)
+
+        git.fetch()
+
+        self.assertEqual(2, repo.git.fetch.call_count)
+        set_remote_url.assert_called_once_with("https://test-token:x-oauth-basic@github.com/example/repository.git")
 
 
 class TestGitTempClone(TestCase):
