@@ -61,9 +61,7 @@ class TestGitWrapper(TestCase):
         git.fetch()
 
         self.assertEqual(2, repo.git.fetch.call_count)
-        set_remote_url.assert_called_once_with(
-            "https://test-token:x-oauth-basic@github.com/example/repository.git"
-        )
+        set_remote_url.assert_called_once_with("https://test-token:x-oauth-basic@github.com/example/repository.git")
 
 
 class TestGitTempClone(TestCase):
