@@ -196,7 +196,13 @@ class GitWrapper:
 
     def fetch(self) -> None:
         """Fetches latest changes."""
-        self.repo.git.fetch(all=True, tags=True, force=True)
+        try:
+            self.repo.git.fetch(all=True, tags=True, force=True)
+        except GitCommandError as e:
+            logger.info("failed fetching repository: %s" % e)
+            logger.info("Retrying a different way")
+            self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+            self.repo.git.fetch(all=True, tags=True, force=True)
 
     def get_branch(self, branch_name: str) -> Any:
         """Gets a specific local branch.
