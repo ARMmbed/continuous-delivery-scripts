@@ -146,17 +146,17 @@ def _call_goreleaser_check(version: str) -> None:
 
 def _determine_go_module_tag_for_directory(module_directory: Path, version: str) -> Optional[str]:
     try:
-        module = str(module_directory.relative_to(ROOT_DIR))
+        module = module_directory.relative_to(ROOT_DIR)
     except ValueError:
         try:
-            module = str(ROOT_DIR.relative_to(module_directory))
+            module = ROOT_DIR.relative_to(module_directory)
         except ValueError as exception:
             logger.warning(exception)
             return None
-    if module == "." or len(module) == 0:
+    module_as_posix = module.as_posix().rstrip("/")
+    if module_as_posix == "." or len(module_as_posix) == 0:
         return None
-    module = module.as_posix().rstrip("/")
-    return f"{module}/{version}"
+    return f"{module_as_posix}/{version}"
 
 
 def _find_go_work_files() -> List[Path]:

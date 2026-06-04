@@ -808,6 +808,7 @@ class GitTempClone:
         Tempfiles objects on Windows are holding references to open files until
         they are collected by the garbage collector, thus preventing deletion.
         """
+        self._clone.repo.close()
         self._repo.repo.close()
         self._temporary_dir.cleanup()
 
