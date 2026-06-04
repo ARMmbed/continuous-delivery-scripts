@@ -155,7 +155,7 @@ def main() -> None:
     set_log_level(args.verbose)
 
     with (
-        LocalProjectRepository()  # type: ignore
+        LocalProjectRepository()
         if args.local
         else ProjectTempClone(desired_branch_name=args.current_branch)
     ) as git:
