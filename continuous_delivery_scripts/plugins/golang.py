@@ -4,6 +4,7 @@
 #
 """Plugin for Golang projects."""
 
+import json
 import logging
 import os
 import shutil
@@ -143,24 +144,84 @@ def _call_goreleaser_check(version: str) -> None:
     check_call(_generate_goreleaser_check_command_list(), cwd=ROOT_DIR, env=env)
 
 
-def _determine_go_module_tag(version: str) -> Optional[str]:
-    """Determines go module for tagging.
-
-    See https://golang.org/ref/mod#vcs-version.
-    and https://github.com/golang/go/wiki/Modules#should-i-have-multiple-modules-in-a-single-repository.
-    """
-    module = ""
+def _determine_go_module_tag_for_directory(module_directory: Path, version: str) -> Optional[str]:
     try:
-        module = str(SRC_DIR.relative_to(ROOT_DIR))
+        module = str(module_directory.relative_to(ROOT_DIR))
     except ValueError:
         try:
-            module = str(ROOT_DIR.relative_to(SRC_DIR))
+            module = str(ROOT_DIR.relative_to(module_directory))
         except ValueError as exception:
             logger.warning(exception)
+            return None
     if module == "." or len(module) == 0:
         return None
-    module = module.rstrip("/")
+    module = module.replace("\\", "/").rstrip("/")
     return f"{module}/{version}"
+
+
+def _find_go_work_files() -> List[Path]:
+    go_work_files: List[Path] = []
+    for go_work_file in [SRC_DIR.joinpath("go.work"), ROOT_DIR.joinpath("go.work")]:
+        if go_work_file.exists() and go_work_file not in go_work_files:
+            go_work_files.append(go_work_file)
+    return go_work_files
+
+
+def _determine_go_work_module_directories_from_json(go_work_file: Path) -> List[Path]:
+    """Determine module directories from `go work edit -json` output.
+
+    `go.work` lists all workspace modules that should be released together.
+    See https://go.dev/ref/mod#workspaces and https://pkg.go.dev/cmd/go#hdr-Edit_workspace_file.
+    """
+    go_work_root = go_work_file.parent
+    go_work = json.loads(check_output(["go", "work", "edit", "-json"], cwd=go_work_root, encoding="utf8"))
+    module_directories: List[Path] = []
+    for use_definition in go_work.get("Use", []):
+        disk_path = use_definition.get("DiskPath") or use_definition.get("Path")
+        if not disk_path:
+            continue
+        module_directory = Path(str(disk_path))
+        module_directories.append(
+            module_directory if module_directory.is_absolute() else go_work_root.joinpath(module_directory)
+        )
+    return module_directories
+
+
+def _determine_go_work_module_directories() -> List[Path]:
+    """Determine module directories declared in `go.work`.
+
+    `go.work` lists all workspace modules that should be released together.
+    See https://go.dev/ref/mod#workspaces.
+    """
+    module_directories: List[Path] = []
+    for go_work_file in _find_go_work_files():
+        module_directories.extend(_determine_go_work_module_directories_from_json(go_work_file))
+    return list(dict.fromkeys(module_directories))
+
+
+def _determine_go_subproject_directories() -> List[Path]:
+    if not SRC_DIR.exists():
+        return []
+    return [go_mod_file.parent for go_mod_file in SRC_DIR.rglob("go.mod")]
+
+
+def _determine_go_module_tag(version: str) -> List[str]:
+    """Determine all go module tags for release.
+
+    See https://golang.org/ref/mod#vcs-version, https://go.dev/ref/mod#workspaces,
+    and https://github.com/golang/go/wiki/Modules/a549b3e4b7ad6be6e7d11c37ef247bb2279c8146#faqs--multi-module-repositories.
+    """
+    module_directories = [SRC_DIR]
+    go_work_module_directories = _determine_go_work_module_directories()
+    if go_work_module_directories:
+        module_directories.extend(go_work_module_directories)
+    else:
+        module_directories.extend(_determine_go_subproject_directories())
+
+    tags = [
+        _determine_go_module_tag_for_directory(module_directory, version) for module_directory in module_directories
+    ]
+    return list(dict.fromkeys([tag for tag in tags if tag]))
 
 
 class Go(BaseLanguage):
@@ -224,8 +285,7 @@ class Go(BaseLanguage):
     def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
         """Tags release commit."""
         super().tag_release(git, version, shortcuts)
-        go_tag = _determine_go_module_tag(self.get_version_tag(version))
-        if go_tag:
+        for go_tag in _determine_go_module_tag(self.get_version_tag(version)):
             git.create_tag(go_tag, message=f"Golang module release: {go_tag}")
 
     def _call_goreleaser_release(self, version: str) -> None:
