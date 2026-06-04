@@ -208,8 +208,9 @@ def _determine_go_subproject_directories() -> List[Path]:
 def _determine_go_module_tag(version: str) -> List[str]:
     """Determine all go module tags for release.
 
-    See https://golang.org/ref/mod#vcs-version, https://go.dev/ref/mod#workspaces,
-    and https://github.com/golang/go/wiki/Modules/a549b3e4b7ad6be6e7d11c37ef247bb2279c8146#faqs--multi-module-repositories.
+    See https://golang.org/ref/mod#vcs-version,
+    https://go.dev/ref/mod#workspaces, and
+    https://github.com/golang/go/wiki/Modules/a549b3e4b7ad6be6e7d11c37ef247bb2279c8146#faqs--multi-module-repositories.
     """
     module_directories = [SRC_DIR]
     go_work_module_directories = _determine_go_work_module_directories()
@@ -270,7 +271,7 @@ class Go(BaseLanguage):
             r".*go\.sum$",
             r"^\.circleci[\\/].*",
             r"^workflows/.*",
-            r"^\.github[\\/]workflows[\\/].*",
+            (r"^\.github[\\/]workflows[\\/].*"),
         ]
 
     def get_current_spdx_project(self) -> Optional["SpdxProject"]:
