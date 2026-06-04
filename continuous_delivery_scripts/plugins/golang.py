@@ -155,7 +155,7 @@ def _determine_go_module_tag_for_directory(module_directory: Path, version: str)
             return None
     if module == "." or len(module) == 0:
         return None
-    module = module.replace("\\", "/").rstrip("/")
+    module = module.as_posix().rstrip("/")
     return f"{module}/{version}"
 
 
