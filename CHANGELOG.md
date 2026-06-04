@@ -17,6 +17,23 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.5.0" (2026-06-04)
+====================
+
+Features
+--------
+
+- :sparkles: `[GO]` support go workspaces and project with multiple go project defined (#20260604124611)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: upload-artifact-7.0.1 (#20260413063957)
+- Dependency upgrade: codeql-action-4.35.2 (#20260416063450)
+- Dependency upgrade: checkout-6.0.3 (#20260603224444)
+
+
 "3.4.1" (2026-06-01)
 ====================
 

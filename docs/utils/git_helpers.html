@@ -841,6 +841,7 @@ class GitTempClone:
         Tempfiles objects on Windows are holding references to open files until
         they are collected by the garbage collector, thus preventing deletion.
         &#34;&#34;&#34;
+        self._clone.repo.close()
         self._repo.repo.close()
         self._temporary_dir.cleanup()
 
@@ -1122,6 +1123,7 @@ def initial_location(self) -&gt; Path:
         Tempfiles objects on Windows are holding references to open files until
         they are collected by the garbage collector, thus preventing deletion.
         &#34;&#34;&#34;
+        self._clone.repo.close()
         self._repo.repo.close()
         self._temporary_dir.cleanup()</code></pre>
 </details>
