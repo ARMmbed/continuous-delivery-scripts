@@ -32,14 +32,12 @@ class TestGoModuleTags(TestCase):
             source_dir.mkdir()
             root.joinpath("go.work").touch()
 
-            with (
-                mock.patch.object(golang, "ROOT_DIR", root),
-                mock.patch.object(golang, "SRC_DIR", source_dir),
-                mock.patch.object(
-                    golang,
-                    "check_output",
-                    return_value='{"Use": [{"DiskPath": "./app1"}, {"DiskPath": "./nested/app2"}]}',
-                ),
+            with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(
+                golang, "SRC_DIR", source_dir
+            ), mock.patch.object(
+                golang,
+                "check_output",
+                return_value='{"Use": [{"DiskPath": "./app1"}, {"DiskPath": "./nested/app2"}]}',
             ):
                 tags = golang._determine_go_module_tag("v1.2.3")
 
@@ -52,14 +50,12 @@ class TestGoModuleTags(TestCase):
             source_dir.mkdir()
             source_dir.joinpath("go.work").touch()
 
-            with (
-                mock.patch.object(golang, "ROOT_DIR", root),
-                mock.patch.object(golang, "SRC_DIR", source_dir),
-                mock.patch.object(
-                    golang,
-                    "check_output",
-                    return_value='{"Use": [{"DiskPath": "./app1"}, {"DiskPath": "./nested/app2"}]}',
-                ),
+            with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(
+                golang, "SRC_DIR", source_dir
+            ), mock.patch.object(
+                golang,
+                "check_output",
+                return_value='{"Use": [{"DiskPath": "./app1"}, {"DiskPath": "./nested/app2"}]}',
             ):
                 tags = golang._determine_go_module_tag("v1.2.3")
 
@@ -80,11 +76,9 @@ class TestGoModuleTags(TestCase):
                     return '{"Use": [{"DiskPath": "./shared"}, {"DiskPath": "./root-app"}]}'
                 raise AssertionError(f"Unexpected cwd: {cwd}")
 
-            with (
-                mock.patch.object(golang, "ROOT_DIR", root),
-                mock.patch.object(golang, "SRC_DIR", source_dir),
-                mock.patch.object(golang, "check_output", side_effect=check_output_side_effect),
-            ):
+            with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(
+                golang, "SRC_DIR", source_dir
+            ), mock.patch.object(golang, "check_output", side_effect=check_output_side_effect):
                 tags = golang._determine_go_module_tag("v1.2.3")
 
             self.assertEqual(tags, ["src/v1.2.3", "src/app1/v1.2.3", "shared/v1.2.3", "root-app/v1.2.3"])

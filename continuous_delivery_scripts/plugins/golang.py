@@ -202,7 +202,7 @@ def _determine_go_work_module_directories() -> List[Path]:
 def _determine_go_subproject_directories() -> List[Path]:
     if not SRC_DIR.exists():
         return []
-    return [go_mod_file.parent for go_mod_file in SRC_DIR.rglob("go.mod")]
+    return sorted((go_mod_file.parent for go_mod_file in SRC_DIR.rglob("go.mod")), key=lambda path: str(path))
 
 
 def _determine_go_module_tag(version: str) -> List[str]:
