@@ -70,7 +70,7 @@ setup(
         "detect-secrets[gibberish]==1.5.0",
         "packaging",
         "licenseheaders<0.8.9",
-        "spdx-tools==0.6.1",
+        "spdx-tools==0.8.3",
         "license-expression",
         "wcmatch",
         "jellyfish",
