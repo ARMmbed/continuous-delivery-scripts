@@ -43,7 +43,7 @@ class TestGitWrapper(TestCase):
     @mock.patch.object(
         GitWrapper,
         "_git_url_ssh_to_https",
-        return_value="https://test-token:x-oauth-basic@github.com/example/repository.git",
+        return_value="https://x-access-token:test-token@github.com/example/repository.git",
     )
     @mock.patch.object(
         GitWrapper,
@@ -61,7 +61,17 @@ class TestGitWrapper(TestCase):
         git.fetch()
 
         self.assertEqual(2, repo.git.fetch.call_count)
-        set_remote_url.assert_called_once_with("https://test-token:x-oauth-basic@github.com/example/repository.git")
+        set_remote_url.assert_called_once_with("https://x-access-token:test-token@github.com/example/repository.git")
+
+    @mock.patch.object(configuration, "get_value", return_value="test-token")
+    def test_git_url_ssh_to_https_uses_x_access_token(self, _get_value):
+        """Ensures the HTTPS fallback uses GitHub token authentication."""
+        repo = mock.Mock()
+        git = GitWrapper(path=Path("."), repo=repo)
+
+        rewritten_url = git._git_url_ssh_to_https("git@github.com:example/repository.git")
+
+        self.assertEqual("https://x-access-token:test-token@github.com/example/repository.git", rewritten_url)
 
 
 class TestGitTempClone(TestCase):
