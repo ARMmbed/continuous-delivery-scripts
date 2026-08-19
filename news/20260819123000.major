@@ -1,0 +1,1 @@
+:gear: Drop Python 3.8 and 3.9 support, and update CI coverage to Python 3.10 through 3.14.
