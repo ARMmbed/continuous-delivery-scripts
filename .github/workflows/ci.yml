@@ -11,7 +11,7 @@ env:
   python_cache_windows_path: ~\AppData\Local\pip\Cache
   python_cache_ubuntu_path: ~/.cache/pip
   pipenv_version: 2024.4.0
-  python_version: '3.11'
+  python_version: '3.14'
 
 jobs:
   # Check that a news file has been added to this branch when a PR is created
@@ -20,15 +20,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checkout with full history for to allow compare with base branch
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.python_version}}
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.python_cache_ubuntu_path }}
           key:  linux-pip-3-continuous-delivery-scripts
@@ -51,8 +51,8 @@ jobs:
   #   name: Build Documentation
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v6.0.2
-  #     - uses: actions/setup-python@v6
+  #     - uses: actions/checkout@v7.0.1
+  #     - uses: actions/setup-python@v7
   #       with:
   #         python-version: ${{ env.python_version}}
   #     - name: Determine dependencies
@@ -70,7 +70,7 @@ jobs:
   #         python -m pipenv requirements > dev-requirements.txt
   #     - uses: FranzDiebold/github-env-vars-action@v2
   #     - name: Load Python Dependencies from cache
-  #       uses: actions/cache@v5
+  #       uses: actions/cache@v6
   #       with:
   #         path: ${{ env.python_cache_ubuntu_path }}
   #         key:  linux-pip-3-continuous-delivery-scripts
@@ -93,8 +93,8 @@ jobs:
     name: Report licences in use (SPDX)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.python_version}}
       - name: Determine dependencies
@@ -112,7 +112,7 @@ jobs:
           python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.python_cache_ubuntu_path }}
           key:  linux-pip-3-continuous-delivery-scripts
@@ -132,7 +132,7 @@ jobs:
       - name: Add copyright/licence notice.
         run: |
           cd-license-files
-      - uses: actions/upload-artifact@v7.0.0
+      - uses: actions/upload-artifact@v7.0.1
         with:
           name: spdx
           path: ./spdx-tmp
@@ -141,7 +141,7 @@ jobs:
     name: Check for secrets
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.python_version}}
       - name: Install tools
@@ -149,7 +149,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install "setuptools<81" detect-secrets[gibberish]==1.5.0
           python -m pip list
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
       - name: detect-secrets
@@ -160,10 +160,10 @@ jobs:
     name: Check secrets command dogfooding
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.python_version}}
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
       - name: Determine dependencies
@@ -181,7 +181,7 @@ jobs:
           python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.python_cache_ubuntu_path }}
           key:  linux-pip-3-continuous-delivery-scripts
@@ -208,7 +208,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest ] # FIXME add other platforms when much quicker macOS-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"] # FIXME Test on later python versions, "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         multi-platform:
           - ${{ github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' }}
         #        include:
@@ -222,7 +222,7 @@ jobs:
         include:
           - os: macOS-latest
             multi-platform: false
-            python-version: 3.11
+            python-version: 3.14
 #          - os: windows-latest
 #            multi-platform: false
 #            python-version: 3.9
@@ -235,9 +235,9 @@ jobs:
     name: Build and test
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install python tools
@@ -274,7 +274,7 @@ jobs:
           echo "Path to dependency cache: [${{ env.CACHE_PATH }}]"
       - name: Load Python Dependencies from cache
         if: ${{ ! startsWith(matrix.os, 'windows') }}
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ${{ env.CACHE_PATH }}
           key:  ${{ matrix.os  }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/dev-requirements.txt') }}
@@ -299,4 +299,4 @@ jobs:
         run: |
           pytest
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7

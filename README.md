@@ -88,6 +88,16 @@ Therefore, it installs the following tools which can be used anywhere within a p
 * `cd-generate-spdx`: Generates SPDX documents for the project (3rd party IP reporting/ OpenChain)
 * `cd-license-files`: Updates the Licence header and copyright to all the source code files
 
+For GitHub automation that performs authenticated clone or fetch operations, see [GitHub Token Authentication](#github-token-authentication).
+
+## GitHub Token Authentication
+
+When git operations need to retry against GitHub over HTTPS, this project now uses the credential layout `https://x-access-token:<token>@github.com/<owner>/<repo>.git`.
+
+This means the token is sent in the password position with `x-access-token` as the username, which is the format GitHub accepts for workflow-generated and other non-OAuth tokens used by automation.
+
+Older `https://<token>:x-oauth-basic@github.com/...` URLs were tied to OAuth-style credentials and could reject tokens created dynamically during CI/CD flows.
+
 ## Project Structure
 
 The follow described the major aspects of the project structure:

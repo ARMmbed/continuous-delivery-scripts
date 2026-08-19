@@ -228,8 +228,9 @@ def scan_file_for_pattern(file_path: Path, pattern: Pattern) -&gt; Optional[Matc
 </code></dt>
 <dd>
 <div class="desc"><p>Context manager allowing an operation to be performed inside given directory.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>new_dir</code></strong></dt>
 <dd>the directory to move into</dd>
 </dl></div>
@@ -258,8 +259,9 @@ def cd(new_dir: str) -&gt; Generator:
 </code></dt>
 <dd>
 <div class="desc"><p>Finds a file in directory tree.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_name</code></strong></dt>
 <dd>name of the file to look for.</dd>
 <dt><strong><code>starting_point</code></strong></dt>
@@ -267,8 +269,9 @@ def cd(new_dir: str) -&gt; Generator:
 <dt><strong><code>top</code></strong></dt>
 <dd>search up the directory tree to root if True; down the tree otherwise.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>path of the file of interest.</p></div>
+<p>Returns
+-----=
+path of the file of interest.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -368,13 +371,15 @@ def cd(new_dir: str) -&gt; Generator:
 </code></dt>
 <dd>
 <div class="desc"><p>Iterates from path to root.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>starting_point</code></strong></dt>
 <dd>path from where to start.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>Iterator walking up the directory tree up to the root.</p></div>
+<p>Returns
+-----=
+Iterator walking up the directory tree up to the root.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>

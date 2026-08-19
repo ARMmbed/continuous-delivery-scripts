@@ -2,7 +2,7 @@ name: GitHub Release
 
 env:
   pipenv_version: 2024.4.0
-  python_version: '3.11'
+  python_version: '3.14'
 
 on:
   workflow_dispatch:
@@ -16,8 +16,8 @@ jobs:
     name: Carry out a release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6.0.2
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.python_version }}
       - name: Determine dependencies
@@ -35,7 +35,7 @@ jobs:
           python -m pipenv requirements > dev-requirements.txt
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Load Python Dependencies from cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pip
           key:  linux-pip-3-continuous-delivery-scripts

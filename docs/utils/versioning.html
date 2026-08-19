@@ -198,15 +198,17 @@ def _get_version_elements(native_version_elements: Dict[str, str]) -&gt; Dict[st
 <dd>
 <div class="desc"><p>Calculates the version for the release.</p>
 <p>eg. "0.1.2"</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>commit_type</code></strong></dt>
 <dd>release type</dd>
 <dt><strong><code>use_news_files</code></strong></dt>
 <dd>Should the version be dependent on changes recorded in news files</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>Tuple containing
+<p>Returns
+-----=
+Tuple containing
 a flag stating whether it is a new version or not
 A semver-style version for the latest release</p></div>
 <details class="source">
@@ -260,8 +262,9 @@ A semver-style version for the latest release</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Determine the different version shortcuts i.e. major, major.minor, pre depending on the release type.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>commit_type</code></strong></dt>
 <dd>commit type</dd>
 <dt><strong><code>tag_latest</code></strong></dt>
@@ -270,9 +273,8 @@ A semver-style version for the latest release</p></div>
 <dd>whether to set additional shortcuts</dd>
 <dt><strong><code>version_elements</code></strong></dt>
 <dd>version elements</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
+<dt>Returns</dt>
+<dt>-----=</dt>
 <dt><code>dict</code></dt>
 <dd>A dictionary of shortcuts and a flag specifying</dd>
 </dl>
@@ -338,8 +340,9 @@ A semver-style version for the latest release</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Updates the version string depending on the release type.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>commit_type</code></strong></dt>
 <dd>commit type</dd>
 <dt><strong><code>new_version</code></strong></dt>

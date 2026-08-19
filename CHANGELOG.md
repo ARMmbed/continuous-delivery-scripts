@@ -17,6 +17,51 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.5.1" (2026-08-19)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: codecov-action-7 (#20260608063310)
+- Dependency upgrade: cache-6 (#20260624063302)
+- Dependency upgrade: upload-sarif-9cea5827c668a1fe7165dbce6e80c3f9cf3f83ac (#20260626063418)
+- Dependency upgrade: setup-python-7 (#20260720063306)
+- Dependency upgrade: scorecard-action-2.4.4 (#20260724063303)
+- 👷 use `x-access-token` for GitHub HTTPS authentication so workflow-generated tokens can clone and fetch. (#20260819101000)
+- Dependency upgrade: checkout-7.0.0 (#20260819170031)
+- Dependency upgrade: codeql-action-4.36.2 (#20260819170132)
+
+
+"3.5.0" (2026-06-04)
+====================
+
+Features
+--------
+
+- :sparkles: `[GO]` support go workspaces and project with multiple go project defined (#20260604124611)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: upload-artifact-7.0.1 (#20260413063957)
+- Dependency upgrade: codeql-action-4.35.2 (#20260416063450)
+- Dependency upgrade: checkout-6.0.3 (#20260603224444)
+
+
+"3.4.1" (2026-06-01)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: jinja2-3.0.3 (#202202230717)
+- Dependency upgrade: fetch-metadata-3.1.0 (#20260420065012)
+- Dependency upgrade: dependency-review-action-5 (#20260511075632)
+- :bug: Ensure that if a fetch fails it retries with authentication in the same way as clone (#20260601135433)
+
+
 "3.4.0" (2026-04-07)
 ====================
 
