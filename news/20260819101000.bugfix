@@ -1,1 +1,1 @@
-Constructor Builder: use x-access-token for GitHub HTTPS authentication so workflow-generated tokens can clone and fetch.
+👷 use `x-access-token` for GitHub HTTPS authentication so workflow-generated tokens can clone and fetch.
