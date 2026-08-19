@@ -9,9 +9,9 @@ import re
 import json
 from dataclasses import dataclass
 from importlib.util import find_spec
-from license_expression import Licensing, LicenseExpression, OR
+from license_expression import Licensing, LicenseExpression, OR, get_spdx_licensing
 from pathlib import Path
-from typing import Iterable, cast, Optional, Iterator, List, Pattern, Any
+from typing import Dict, Iterable, cast, Optional, Iterator, List, Pattern, Any, Tuple
 
 from continuous_delivery_scripts.utils.configuration import (
     ConfigurationVariable,
@@ -57,8 +57,99 @@ LICENCE_NON_ACCEPTED_CHARACTERS = r"[^\w\s\.\:\-()]"
 def _get_spdx_licenses_path() -> Path:
     spec = find_spec("spdx")
     if not spec or not spec.origin:
-        raise ModuleNotFoundError("No module named 'spdx'")
+        raise FileNotFoundError("Could not find SPDX licenses.json")
     return Path(spec.origin).resolve().parent.joinpath("licenses.json")
+
+
+FALLBACK_LICENCE_DATA = {
+    "0BSD": {
+        "reference_number": "319",
+        "name": "BSD Zero Clause License",
+    },
+    "Apache-2.0": {
+        "reference_number": "26",
+        "name": "Apache License 2.0",
+    },
+    "GPL-3.0-only": {
+        "name": "GNU General Public License v3.0 only",
+    },
+    "MPL-2.0": {
+        "name": "Mozilla Public License 2.0",
+    },
+    "MIT": {
+        "name": "MIT License",
+    },
+    "PSF-2.0": {
+        "name": "Python Software Foundation License 2.0",
+    },
+    "Python-2.0": {
+        "name": "Python License 2.0",
+    },
+}
+
+
+FALLBACK_LICENCE_ALIASES = {
+    "0BSD": ["BSD", "BSD License", "BSD Zero Clause License"],
+    "Apache-2.0": [
+        "Apache",
+        "Apache 2",
+        "Apache 2.0",
+        "Apache License 2",
+        "Apache License 2.0",
+        "Apache License Version 2",
+        "Apache License Version 2.0",
+        "Apache License, Version 2",
+        "Apache License, Version 2.0",
+        "Apache Licence 2",
+        "Apache Licence 2.0",
+        "Apache Licence Version 2",
+        "Apache Licence Version 2.0",
+        "Apache Licence, Version 2",
+        "Apache Licence, Version 2.0",
+        "Apache Software License",
+    ],
+    "GPL-3.0-only": ["GPL 3", "GPL 3.0", "GPL-3.0", "GPL-3", "GNU GPL 3"],
+    "MIT": ["MIT License"],
+    "PSF-2.0": ["Python Software Foundation License 2.0"],
+    "Python-2.0": ["Python Software Foundation License"],
+}
+
+
+def _build_fallback_licence(identifier: str, is_deprecated: bool = False) -> Licence:
+    metadata = FALLBACK_LICENCE_DATA.get(identifier, {})
+    return Licence(
+        reference_number=str(metadata.get("reference_number", "")),
+        identifier=identifier,
+        name=str(metadata.get("name", identifier)),
+        is_deprecated=is_deprecated,
+        is_osi_approved=bool(metadata.get("is_osi_approved", True)),
+        url=f"http://spdx.org/licenses/{identifier}.json",
+        reference=f"./{identifier}.html",
+    )
+
+
+def _iter_fallback_licences() -> Iterable[Tuple[Licence, Iterable[str]]]:
+    spdx_licensing = get_spdx_licensing()
+    seen = set()
+    for symbol in spdx_licensing.known_symbols.values():
+        identifier = getattr(symbol, "key", None)
+        if not identifier or identifier in seen:
+            continue
+        if identifier.startswith("LicenseRef-") or getattr(symbol, "is_exception", False):
+            continue
+        seen.add(identifier)
+        aliases = list(getattr(symbol, "aliases", ())) + FALLBACK_LICENCE_ALIASES.get(identifier, [])
+        yield _build_fallback_licence(identifier, is_deprecated=bool(getattr(symbol, "is_deprecated", False))), aliases
+
+
+def _normalise_licence_text(text: str) -> str:
+    normalised_text = text.strip().lower()
+    normalised_text = re.sub(r"osi\s?approved[:]*", "", normalised_text)
+    normalised_text = re.sub(r"licen[cs]e", " ", normalised_text)
+    normalised_text = re.sub(r"version", " ", normalised_text)
+    normalised_text = re.sub(r"[^\w\s]", " ", normalised_text)
+    normalised_text = re.sub(r"\s+", " ", normalised_text)
+    return normalised_text.strip()
 
 
 def _parse_licence_expression(licensing: Licensing, licence_expression: str) -> LicenseExpression:
@@ -92,11 +183,17 @@ def iter_licenses(licence_info: dict) -> Iterable[Licence]:
 def _handle_special_licence_entries(cleansed_descriptor: str) -> str:
     if cleansed_descriptor in ["Python Software Foundation License"]:
         return "Python"
+    if re.fullmatch(r"Python(?:[\w\s\-\.]*)", cleansed_descriptor, re.IGNORECASE):
+        return "Python-2.0"
     if cleansed_descriptor in ["Apache Software License", "Apache", "apache"]:
         return "Apache-2.0"
     if cleansed_descriptor in ["LGPL", "UNKNOWN", "Dual License"]:
         # It is not possible to find which is the actual licence to consider.
         return UNKNOWN_LICENCE.identifier
+    if re.fullmatch(r"Apache(?:\s+(?:Software\s+)?)?(?:Licen[cs]e)?(?:,?\s+Version)?\s*2(?:\.0)?", cleansed_descriptor):
+        return "Apache-2.0"
+    if re.fullmatch(r"GPL\s*3(?:\.0)?", cleansed_descriptor, re.IGNORECASE):
+        return "GPL-3.0-only"
     return cleansed_descriptor
 
 
@@ -122,18 +219,32 @@ class OpenSourceLicences:
         self._licence_store: Optional[dict] = None
         self._licence_list: Optional[list] = None
 
+    def _store_licence(self, licence: Licence, aliases: Iterable[str] = ()) -> None:
+        if not self._licence_store or self._licence_list is None:
+            return
+        entries = [licence.identifier, licence.name, *aliases]
+        for entry in entries:
+            if not entry:
+                continue
+            self._licence_store[entry] = licence
+            self._licence_list.append(entry)
+
     def load(self) -> None:
         """Loads licence data from internal Json file."""
         if self._licence_list and self._licence_store:
             return
         self._licence_store = {UNKNOWN_LICENCE.identifier: UNKNOWN_LICENCE}
         self._licence_list = [UNKNOWN_LICENCE.identifier]
-        with open(_get_spdx_licenses_path(), "r", encoding="utf8") as f:
-            for licence in iter_licenses(json.load(f)):
-                self._licence_store[licence.identifier] = licence
-                self._licence_list.append(licence.identifier)
-                self._licence_store[licence.name] = licence
-                self._licence_list.append(licence.name)
+        try:
+            with open(_get_spdx_licenses_path(), "r", encoding="utf8") as f:
+                for licence in iter_licenses(json.load(f)):
+                    self._store_licence(licence)
+            return
+        except (FileNotFoundError, ModuleNotFoundError):
+            pass
+
+        for licence, aliases in _iter_fallback_licences():
+            self._store_licence(licence, aliases)
 
     def get_licences_from_pattern(self, licence_descriptor_pattern: Pattern) -> Optional[List[Licence]]:
         """Determines all the licences following a certain pattern."""
@@ -153,8 +264,23 @@ class OpenSourceLicences:
         if not self._licence_store or not self._licence_list or not licence_descriptor:
             return None
         cleansed_descriptor = cleanse_licence_descriptor(licence_descriptor)
-        likelihood, licence = determine_similar_string_from_list(cleansed_descriptor, self._licence_list)
-        return self._licence_store.get(licence) if likelihood > LICENCE_LIKELIHOOD_THRESHOLD else None
+        exact_match = self._licence_store.get(cleansed_descriptor)
+        if exact_match:
+            return cast(Licence, exact_match)
+
+        normalised_map: Dict[str, Licence] = {}
+        for name in self._licence_list:
+            licence = cast(Licence, self._licence_store.get(name))
+            if licence:
+                normalised_map[_normalise_licence_text(name)] = licence
+
+        normalised_descriptor = _normalise_licence_text(cleansed_descriptor)
+        normalised_exact_match = normalised_map.get(normalised_descriptor)
+        if normalised_exact_match:
+            return normalised_exact_match
+
+        likelihood, matched_key = determine_similar_string_from_list(normalised_descriptor, normalised_map.keys())
+        return normalised_map.get(matched_key) if likelihood > LICENCE_LIKELIHOOD_THRESHOLD else None
 
 
 OPENSOURCE_LICENCES = OpenSourceLicences()
