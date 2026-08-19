@@ -658,8 +658,9 @@ configuration: GenericConfig = ProjectConfiguration([FileConfig(), EnvironmentCo
 </code></dt>
 <dd>
 <div class="desc"><p>Gets a list of all possible configuration variables.</p>
-<h2 id="returns">Returns</h2>
-<p>a list of configuration variables</p></div>
+<p>Returns
+-----=
+a list of configuration variables</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -679,13 +680,15 @@ def choices() -&gt; List[str]:
 </code></dt>
 <dd>
 <div class="desc"><p>Determines the configuration variable from a string.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>type_str</code></strong></dt>
 <dd>string to parse.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>corresponding configuration variable.</p></div>
+<p>Returns
+-----=
+corresponding configuration variable.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -763,8 +766,9 @@ rather than relative paths as relative paths in the file are relative to
 the file location whereas relative paths when used by tools are relative .
 to current directory (i.e. os.getcwd()).</p>
 <p>Constructor.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>file_path</code></strong></dt>
 <dd>path to the toml configuration file.</dd>
 </dl></div>
@@ -981,14 +985,16 @@ def config(self) -&gt; dict:
 <dd>
 <div class="desc"><p>Gets a configuration value.</p>
 <p>If the variable was not defined, an exception is raised.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>key</code></strong></dt>
 <dd>variable key. This can be a string or a ConfigurationVariable</dd>
 </dl>
 <p>element.</p>
-<h2 id="returns">Returns</h2>
-<p>configuration value corresponding to the key.</p></div>
+<p>Returns
+-----=
+configuration value corresponding to the key.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1017,16 +1023,18 @@ def config(self) -&gt; dict:
 <dd>
 <div class="desc"><p>Gets a configuration value.</p>
 <p>If the variable was not defined, the default value is returned.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>key</code></strong></dt>
 <dd>variable key. This can be a string or a ConfigurationVariable</dd>
 <dt>element.</dt>
 <dt><strong><code>default_value</code></strong></dt>
 <dd>value to default to if the variable was not defined.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>configuration value corresponding to the key.
+<p>Returns
+-----=
+configuration value corresponding to the key.
 default value if the variable is not defined.</p></div>
 <details class="source">
 <summary>
@@ -1062,8 +1070,9 @@ default value if the variable is not defined.</p></div>
 <dd>
 <div class="desc"><p>Overall project's configuration.</p>
 <p>Constructor.</p>
-<h2 id="args">Args</h2>
 <dl>
+<dt>Args</dt>
+<dt>-----=</dt>
 <dt><strong><code>sources</code></strong></dt>
 <dd>list of configuration sources</dd>
 </dl></div>

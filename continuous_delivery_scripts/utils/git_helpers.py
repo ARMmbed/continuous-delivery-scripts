@@ -39,14 +39,17 @@ class GitWrapper:
     def _git_url_ssh_to_https(self, url: str) -> str:
         """Changes repository URL to use authorisation token.
 
-        Converts the git url to use the GitHub token:
-        See https://github.blog/2012-09-21-easier-builds-and-deployments-using-git-over-https-and-oauth/
+        Converts the git url to use GitHub's token-based HTTPS authentication
+        format so workflow-generated tokens can be used for git operations.
+
+        Reference:
+        https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#githubs-token-formats
 
         Returns:
             new URL
         """
         path = url.split("github.com", 1)[1][1:].strip()
-        new = "https://{GITHUB_TOKEN}:x-oauth-basic@github.com/%s" % path
+        new = "https://x-access-token:{GITHUB_TOKEN}@github.com/%s" % path
         logger.info("rewriting git url to: %s" % new)
         return new.format(GITHUB_TOKEN=configuration.get_value(ConfigurationVariable.GIT_TOKEN))
 
@@ -196,7 +199,13 @@ class GitWrapper:
 
     def fetch(self) -> None:
         """Fetches latest changes."""
-        self.repo.git.fetch(all=True, tags=True, force=True)
+        try:
+            self.repo.git.fetch(all=True, tags=True, force=True)
+        except GitCommandError as e:
+            logger.info("failed fetching repository: %s" % e)
+            logger.info("Retrying a different way")
+            self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+            self.repo.git.fetch(all=True, tags=True, force=True)
 
     def get_branch(self, branch_name: str) -> Any:
         """Gets a specific local branch.
@@ -802,6 +811,7 @@ class GitTempClone:
         Tempfiles objects on Windows are holding references to open files until
         they are collected by the garbage collector, thus preventing deletion.
         """
+        self._clone.repo.close()
         self._repo.repo.close()
         self._temporary_dir.cleanup()
 
