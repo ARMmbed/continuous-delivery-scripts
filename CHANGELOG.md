@@ -17,6 +17,22 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"3.5.1" (2026-08-19)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: codecov-action-7 (#20260608063310)
+- Dependency upgrade: cache-6 (#20260624063302)
+- Dependency upgrade: upload-sarif-9cea5827c668a1fe7165dbce6e80c3f9cf3f83ac (#20260626063418)
+- Dependency upgrade: setup-python-7 (#20260720063306)
+- Dependency upgrade: scorecard-action-2.4.4 (#20260724063303)
+- 👷 use `x-access-token` for GitHub HTTPS authentication so workflow-generated tokens can clone and fetch. (#20260819101000)
+- Dependency upgrade: checkout-7.0.0 (#20260819170031)
+- Dependency upgrade: codeql-action-4.36.2 (#20260819170132)
+
+
 "3.5.0" (2026-06-04)
 ====================
 

@@ -312,8 +312,9 @@ class SpdxPackage:
 </code></dt>
 <dd>
 <div class="desc"><p>Definition of a Python package.</p>
-<h2 id="attributes">Attributes</h2>
 <dl>
+<dt>Attributes</dt>
+<dt>-----=</dt>
 <dt><strong><code>metadata</code></strong></dt>
 <dd>metadata about a package from files generated from setup.py.</dd>
 <dt><strong><code>root_dir</code></strong></dt>
@@ -594,8 +595,9 @@ class PackageInfo:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.author"><code class="name">var <span class="ident">author</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets the document's author.</p>
-<h2 id="returns">Returns</h2>
-<p>document's author</p></div>
+<p>Returns
+-----=
+document's author</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -613,8 +615,9 @@ def author(self) -&gt; str:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.author_email"><code class="name">var <span class="ident">author_email</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets the document author's email.</p>
-<h2 id="returns">Returns</h2>
-<p>document author's email</p></div>
+<p>Returns
+-----=
+document author's email</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -632,8 +635,9 @@ def author_email(self) -&gt; str:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets the package description.</p>
-<h2 id="returns">Returns</h2>
-<p>some description</p></div>
+<p>Returns
+-----=
+some description</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -651,8 +655,9 @@ def description(self) -&gt; str:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.files"><code class="name">var <span class="ident">files</span> : Optional[List[pathlib.Path]]</code></dt>
 <dd>
 <div class="desc"><p>Gets package's files.</p>
-<h2 id="returns">Returns</h2>
-<p>list of file path or None if a dependency.</p></div>
+<p>Returns
+-----=
+list of file path or None if a dependency.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -674,8 +679,9 @@ def files(self) -&gt; Optional[List[Path]]:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets Package's identifier.</p>
-<h2 id="returns">Returns</h2>
-<p>An ID</p></div>
+<p>Returns
+-----=
+An ID</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -732,8 +738,9 @@ def is_main_licence_accepted(self) -&gt; bool:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.licence"><code class="name">var <span class="ident">licence</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets the actual package's licence based on the files it contains.</p>
-<h2 id="returns">Returns</h2>
-<p>project's licence</p></div>
+<p>Returns
+-----=
+project's licence</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -758,8 +765,9 @@ def licence(self) -&gt; str:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.main_licence"><code class="name">var <span class="ident">main_licence</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets the package's official licence.</p>
-<h2 id="returns">Returns</h2>
-<p>project's licence</p></div>
+<p>Returns
+-----=
+project's licence</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -783,8 +791,9 @@ def main_licence(self) -&gt; str:
 <dd>
 <div class="desc"><p>Gets Package's name.</p>
 <p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.2xcytpi">https://spdx.org/spdx-specification-21-web-version#h.2xcytpi</a></p>
-<h2 id="returns">Returns</h2>
-<p>corresponding string</p></div>
+<p>Returns
+-----=
+corresponding string</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -804,8 +813,9 @@ def name(self) -&gt; str:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets the package source URL.</p>
-<h2 id="returns">Returns</h2>
-<p>the package homepage</p></div>
+<p>Returns
+-----=
+the package homepage</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -823,8 +833,9 @@ def url(self) -&gt; str:
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.version"><code class="name">var <span class="ident">version</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Gets package's version.</p>
-<h2 id="returns">Returns</h2>
-<p>package version</p></div>
+<p>Returns
+-----=
+package version</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -865,8 +876,9 @@ PackageDownloadLocation: git://github.com/eduVPN/reponame
 PackageDownloadLocation: git+<a href="https://github.com/eduVPN/reponame.git">https://github.com/eduVPN/reponame.git</a>
 PackageDownloadLocation: git+ssh://github.com/eduVPN/reponame.git
 Creator: Person: Jane Doe</p>
-<h2 id="returns">Returns</h2>
-<p>the corresponding package</p></div>
+<p>Returns
+-----=
+the corresponding package</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -944,8 +956,9 @@ Creator: Person: Jane Doe</p>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets package's files SPDX description.</p>
-<h2 id="returns">Returns</h2>
-<p>list of file descriptions or None if a dependency.</p></div>
+<p>Returns
+-----=
+list of file descriptions or None if a dependency.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
