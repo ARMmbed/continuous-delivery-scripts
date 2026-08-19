@@ -17,12 +17,12 @@ class TestVersioning(unittest.TestCase):
         for release_type in CommitType.choices():
             _, new_version, version_elements = calculate_version(CommitType.RELEASE, False, False)
             self.assertIsNotNone(new_version)
-            self.assertNotEquals(new_version, "")
+            self.assertNotEqual(new_version, "")
             self.assertIsNotNone(version_elements)
             self.assertGreater(len(version_elements), 0)
             _, new_version, version_elements = calculate_version(CommitType.RELEASE, True, False)
             self.assertIsNotNone(new_version)
-            self.assertNotEquals(new_version, "")
+            self.assertNotEqual(new_version, "")
             self.assertIsNotNone(version_elements)
             self.assertGreater(len(version_elements), 0)
 

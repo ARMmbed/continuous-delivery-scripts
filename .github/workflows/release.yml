@@ -2,7 +2,7 @@ name: GitHub Release
 
 env:
   pipenv_version: 2024.4.0
-  python_version: '3.11'
+  python_version: '3.14'
 
 on:
   workflow_dispatch:
