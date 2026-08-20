@@ -64,7 +64,7 @@ setup(
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
         "pdoc3==0.11.5",
         "toml",
-        "semver~=2.13.0",
+        "semver~=3.0.4",
         "python-dotenv",
         "twine",
         "boto3",
