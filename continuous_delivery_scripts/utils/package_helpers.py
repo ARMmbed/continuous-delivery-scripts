@@ -52,7 +52,13 @@ class PackageMetadata:
     @property
     def licence(self) -> str:
         """Gets package's licence."""
-        return str(self._data.get("License", UNKNOWN))
+        expression = self._data.get("License-Expression")
+        if expression:
+            return str(expression)
+        legacy_licence = str(self._data.get("License") or "").strip()
+        if legacy_licence and not legacy_licence.lower().startswith("copyright") and legacy_licence.lower() != "unknown":
+            return legacy_licence
+        return str(self._data.get("License-Classifier") or legacy_licence or UNKNOWN)
 
     @property
     def description(self) -> str:

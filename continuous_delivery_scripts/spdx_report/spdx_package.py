@@ -31,7 +31,7 @@ class PackageInfo:
     """Definition of a Python package.
 
     Attributes:
-        metadata: metadata about a package from files generated from setup.py.
+        metadata: metadata about an installed package.
         root_dir: project root directory.
         source_dir: directory where package's sources are.
         uuid: unique identifier of the package.

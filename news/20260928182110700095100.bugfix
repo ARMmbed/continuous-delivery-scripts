@@ -1,0 +1,1 @@
+:bug: Restore the third-party licence report during Python releases by reading installed package metadata without running the deprecated setuptools develop command.

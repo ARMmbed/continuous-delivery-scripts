@@ -7,17 +7,12 @@
 import importlib.metadata as importlib_metadata
 import logging
 import re
-import subprocess
-import sys
 from typing import Iterable, List, Set, Any, cast
 
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
-from continuous_delivery_scripts.utils.configuration import (
-    ConfigurationVariable,
-    configuration,
-)
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 from continuous_delivery_scripts.utils.package_helpers import (
     ProjectMetadataFetcher,
     PackageMetadata,
@@ -137,11 +132,9 @@ def parse_package_metadata_lines(metadata: list) -> PackageMetadata:
     for line in metadata:
         match = re.search(CurrentPythonProjectMetadataFetcher.ENTRY_PATTERN, line)
         if match:
-            metadata_dict[match.group(1).strip()] = match.group(2).strip()
+            key, value = match.group(1).strip(), match.group(2).strip()
+            if key == "Classifier" and value.startswith("License ::"):
+                metadata_dict.setdefault("License-Classifier", value.split("::")[-1].strip())
+            else:
+                metadata_dict[key] = value
     return PackageMetadata(metadata_dict)
-
-
-def generate_package_info() -> None:
-    """Generates package information (egg)."""
-    command = [sys.executable, "setup.py", "develop", "-v"]
-    subprocess.check_call(command, cwd=configuration.get_value(ConfigurationVariable.PROJECT_ROOT))

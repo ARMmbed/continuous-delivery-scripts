@@ -122,6 +122,7 @@ class SpdxFile:
         from spdx.checksum import Algorithm
         from spdx.document import License
         from spdx.file import File, FileType
+        from spdx.utils import SPDXNone
 
         source_file = File(determine_spdx_value(self.unix_relative_path))
         source_file.type = FileType.SOURCE
@@ -129,6 +130,6 @@ class SpdxFile:
         source_file.chk_sum = Algorithm("SHA1", self.sha1_check_sum)
         source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
         source_file.spdx_id = f"SPDXRef-{self.id}"
-        source_file.copyright = determine_spdx_value(self.copyright)
+        source_file.copyright = self.copyright if self.copyright else SPDXNone()
         source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
         return source_file

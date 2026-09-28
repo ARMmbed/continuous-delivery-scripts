@@ -10,7 +10,6 @@ from continuous_delivery_scripts.utils.configuration import configuration, Confi
 from continuous_delivery_scripts.utils.python.package_helpers import (
     PythonProjectMetadataFetcher,
     parse_package_metadata_lines,
-    generate_package_info,
     get_all_packages_metadata_lines,
 )
 
@@ -30,7 +29,6 @@ class TestPackaging(unittest.TestCase):
         self.assertEqual("Continuous Integration scripts used by Mbed tools Python packages", metadata.description)
 
     def test_project_metadata_generation_and_parsing(self):
-        generate_package_info()
         current_package = configuration.get_value(ConfigurationVariable.PACKAGE_NAME)
         metadata = get_all_packages_metadata_lines(current_package)
         self.assertIsNotNone(metadata)
@@ -40,7 +38,6 @@ class TestPackaging(unittest.TestCase):
         )
 
     def test_package_metadata_parser(self):
-        generate_package_info()
         current_package = configuration.get_value(ConfigurationVariable.PACKAGE_NAME)
         parser = PythonProjectMetadataFetcher(package_name=current_package)
         metadata = parser.project_metadata
@@ -51,3 +48,17 @@ class TestPackaging(unittest.TestCase):
         self.assertEqual(metadata.package_name, current_package)
         self.assertIsNotNone(metadata.dependencies_metadata)
         self.assertGreaterEqual(len(metadata.dependencies_metadata), 1)
+
+    def test_prefer_spdx_licence_expression(self):
+        metadata = parse_package_metadata_lines(
+            ["Name: example", "License: Legacy licence text", "License-Expression: MIT OR Apache-2.0"]
+        )
+
+        self.assertEqual(metadata.licence, "MIT OR Apache-2.0")
+
+    def test_uses_licence_classifier_when_legacy_field_is_copyright_notice(self):
+        metadata = parse_package_metadata_lines(
+            ["Name: example", "License: Copyright (C) the authors", "Classifier: License :: OSI Approved :: MIT License"]
+        )
+
+        self.assertEqual(metadata.licence, "MIT License")
