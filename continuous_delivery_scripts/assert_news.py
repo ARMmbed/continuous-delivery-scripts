@@ -21,6 +21,10 @@ logger = logging.getLogger(__name__)
 NEWS_FILE_NAME_REGEX = r"^[0-9]+.(misc|doc|removal|bugfix|feature|major)$"
 
 
+class MissingNewsFileError(FileNotFoundError):
+    """The branch contains no added news file."""
+
+
 class NewsFileValidator:
     """Verifies individual news files."""
 
@@ -77,10 +81,11 @@ def find_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> List[str]:
     # If no news files were added, then we check for addition on the branch.
     # Relies on the fact GitWrapper returns paths that are always relative
     # to the project root.
-    added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
+    news_prefix = news_dir.replace("\\", "/").rstrip("/") + "/"
+    added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_prefix)]
     if len(added_news_files) == 0:
         files_changed = git.list_files_added_on_current_branch()
-        added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_dir)]
+        added_news_files = [file_path for file_path in files_changed if file_path.startswith(news_prefix)]
     return [str(pathlib.Path(root_dir, file_path)) for file_path in added_news_files]
 
 
@@ -94,7 +99,7 @@ def validate_news_files(git: GitWrapper, root_dir: str, news_dir: str) -> None:
     """
     added_news_files = find_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
     if not added_news_files:
-        raise FileNotFoundError(f"PR must contain a news file in {news_dir}. See README.md.")
+        raise MissingNewsFileError(f"PR must contain a news file in {news_dir}. See README.md.")
     for absolute_file_path in added_news_files:
         validate_news_file(absolute_file_path)
 
@@ -164,14 +169,17 @@ def main() -> None:
             absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
             news_dir = str(pathlib.Path(absolute_news_dir).relative_to(root_dir))
             try:
-                validate_news_files(git=git, news_dir=news_dir, root_dir=root_dir)
-            except Exception as e:
+                validate_news_files(git=git, news_dir=news_dir, root_dir=str(git.root))
+            except MissingNewsFileError as e:
                 log_exception(logger, e)
                 try:
                     news_file = generate_news_file(git, git.get_corresponding_path(pathlib.Path(news_dir)))
                     _commit_news_file(git, news_file, args.local)
                 except Exception as e2:
                     log_exception(logger, e2)
+                sys.exit(1)
+            except Exception as e:
+                log_exception(logger, e)
                 sys.exit(1)
 
 

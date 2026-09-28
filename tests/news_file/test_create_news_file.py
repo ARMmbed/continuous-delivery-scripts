@@ -3,11 +3,11 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import pathlib
+from datetime import datetime
 from tempfile import TemporaryDirectory
 from unittest import TestCase, mock
 
 from continuous_delivery_scripts.create_news_file import NEWS_DIR
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.news_file import (
     NewsType,
     determine_news_file_path,
@@ -75,19 +75,34 @@ class TestCreateNewsFile(TestCase):
 
 class TestDetermineNewsFilePath(TestCase):
     def test_finds_first_available_file_path_in_news_dir(self):
-        news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
         news_file_name_today = determine_basic_new_news_file_name()
-        news_file_path_today = str(pathlib.Path(news_dir, news_file_name_today))
 
         for news_type in NewsType:
             with self.subTest(f"It determines available file path for {news_type}."):
                 with TemporaryDirectory() as tmp_dir:
-                    pathlib.Path(tmp_dir, f"{news_file_path_today}.{news_type.name}").touch()
-                    pathlib.Path(tmp_dir, f"{news_file_path_today}01.{news_type.name}").touch()
+                    pathlib.Path(tmp_dir, f"{news_file_name_today}.{news_type.name}").touch()
+                    pathlib.Path(tmp_dir, f"{news_file_name_today}01.{news_type.name}").touch()
 
-                    file_path = determine_news_file_path(NEWS_DIR, None, news_type)
+                    with mock.patch(
+                        "continuous_delivery_scripts.utils.news_file.determine_basic_new_news_file_name",
+                        return_value=news_file_name_today,
+                    ):
+                        file_path = determine_news_file_path(tmp_dir, None, news_type)
 
-                    self.assertEqual(file_path, pathlib.Path(news_dir, f"{news_file_name_today}02.{news_type.name}"))
+                    self.assertEqual(file_path, pathlib.Path(tmp_dir, f"{news_file_name_today}02.{news_type.name}"))
+
+
+class TestDetermineBasicNewNewsFileName(TestCase):
+    @mock.patch("continuous_delivery_scripts.utils.news_file.time.time_ns")
+    def test_includes_nine_nanosecond_digits(self, time_ns):
+        seconds = 1_700_000_000
+        timestamp = f"{datetime.fromtimestamp(seconds):%Y%m%d%H%M%S}"
+        time_ns.return_value = seconds * 1_000_000_000 + 42
+
+        self.assertEqual(determine_basic_new_news_file_name(), f"{timestamp}000000042")
+
+        time_ns.return_value += 1
+        self.assertEqual(determine_basic_new_news_file_name(), f"{timestamp}000000043")
 
 
 class TestWriteFile(TestCase):

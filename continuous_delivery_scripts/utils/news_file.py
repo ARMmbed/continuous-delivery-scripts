@@ -7,6 +7,7 @@
 import enum
 import pathlib
 import logging
+import time
 from datetime import datetime
 from typing import Any, Optional
 
@@ -57,4 +58,6 @@ def _write_file(file_path: pathlib.Path, text: str) -> None:
 
 def determine_basic_new_news_file_name() -> str:
     """Returns a new news file name."""
-    return datetime.now().strftime("%Y%m%d%H%M%S")
+    now_ns = time.time_ns()
+    seconds, nanoseconds = divmod(now_ns, 1_000_000_000)
+    return f"{datetime.fromtimestamp(seconds):%Y%m%d%H%M%S}{nanoseconds:09d}"
