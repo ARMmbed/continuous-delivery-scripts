@@ -15,6 +15,7 @@ class TestFindNewsFiles(TestCase):
         fake_git_wrapper = mock.Mock(spec_set=GitWrapper)
         fake_git_wrapper.list_files_added_to_current_commit.return_value = [
             "foo/bar.py",
+            "news-other/456.txt",
             "news/1234.txt",
             "news/wat.html",
         ]
