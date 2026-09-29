@@ -23,11 +23,10 @@ with open(os.path.join(repository_dir, "README.md"), encoding="utf8") as fh:
     long_description = fh.read()
 
 setup(
-    author="CMSIS team",
+    author="Arm",
     author_email="adrien.cabarbaye@arm.com",
     classifiers=[
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.10",
@@ -36,8 +35,10 @@ setup(
         "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: 3.14",
         "Topic :: Software Development :: Build Tools",
+        "Topic :: Software Development :: Documentation",
+        "Topic :: Software Development :: Version Control :: Git",
     ],
-    description="Continuous Delivery scripts to increase automation",
+    description="Git-based CI/CD tools for releases, changelogs, SPDX SBOMs and licence reporting",
     entry_points={
         "console_scripts": [
             f"cd-assert-news={SOURCE_DIR}.assert_news:main",
@@ -53,7 +54,21 @@ setup(
             f"cd-record-secrets={SOURCE_DIR}.update_secrets_registry:main",
         ]
     },
-    keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
+    keywords=[
+        "ci-cd",
+        "release-automation",
+        "semantic-versioning",
+        "changelog",
+        "spdx",
+        "sbom",
+        "openchain",
+        "third-party-ip",
+        "tpip",
+        "licence-compliance",
+        "copyright",
+        "python",
+        "git",
+    ],
     include_package_data=True,
     install_requires=[
         "setuptools",
@@ -76,14 +91,21 @@ setup(
         "wcmatch",
         "jellyfish",
         "jinja2>=3,<4",
+        "Markdown>=3.7,<4",
         "dataclasses; python_version<'3.7'",
     ],
-    license="Apache 2.0",
+    license="Apache-2.0",
     long_description_content_type="text/markdown",
     long_description=long_description,
     name=PROJECT_SLUG,
     packages=[SOURCE_DIR],
     python_requires=">=3.10,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
+    project_urls={
+        "Documentation": "https://armmbed.github.io/continuous-delivery-scripts/",
+        "Source": f"https://github.com/ARMmbed/{PROJECT_SLUG}",
+        "Changelog": f"https://github.com/ARMmbed/{PROJECT_SLUG}/blob/main/CHANGELOG.md",
+        "Issues": f"https://github.com/ARMmbed/{PROJECT_SLUG}/issues",
+    },
     version=__version__,
 )

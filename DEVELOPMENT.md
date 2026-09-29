@@ -54,6 +54,64 @@ cd continuous-delivery-scripts/
 pipenv install --dev
 ```
 
+## Project configuration
+
+Each project using these commands defines its shared delivery settings under
+`[ProjectConfig]` in a repository-root `pyproject.toml`. All commands read this
+configuration regardless of the chosen language plugin or CI system. Start
+with [this repository's configuration](./pyproject.toml), replacing paths and
+names with those of your own project. The following values are needed by the
+corresponding workflows; you only need to configure workflows you use.
+
+| Setting | Needed for |
+| --- | --- |
+| `PROJECT_ROOT` | Locating the Git checkout and resolving project paths. Usually `"."` when `pyproject.toml` is at the repository root. |
+| `PROJECT_NAME` | Naming the project in source-licence headers and the documentation landing page. |
+| `PROGRAMMING_LANGUAGE` | Selecting the plugin that provides language-specific build, documentation and release operations (for example, `"Python"` or `"Golang"`). |
+| `MASTER_BRANCH` | Comparing pull-request branches with the main development branch; set this explicitly if your branch is `main` rather than the built-in `master` default. |
+| `NEWS_DIR` | Creating and checking news fragments and triggering changelog updates. |
+| `VERSION_FILE_PATH`, `CHANGELOG_FILE_PATH` | Updating version and release-note files during a release. Also configure `[AutoVersionConfig]` and `[tool.towncrier]` for version and changelog generation. |
+| `SOURCE_DIR` | Locating source files for plugins and SPDX file scanning where supported. |
+| `PACKAGE_NAME` | Identifying the installed distribution for the Python metadata fetcher when SPDX reporting is supported. |
+| `PROJECT_UUID` | Identifying the project's package within generated SPDX documents; also define the separate `[spdx]` namespace settings below. |
+| `MODULE_TO_DOCUMENT`, `DOCUMENTATION_DEFAULT_OUTPUT_PATH`, `DOCUMENTATION_PRODUCTION_OUTPUT_PATH` | Generating a local documentation preview and publishing release documentation. The meaning of the module depends on the plugin. |
+| `DOCUMENTATION_GUIDES_DIR`, `DOCUMENTATION_GUIDES_OUTPUT_FOLDER` | Optional Markdown guide source and its relative output folder; add an `index.md` in the source directory to publish guides with the API documentation. |
+| `ORGANISATION`, `COPYRIGHT_START_DATE`, `FILE_LICENCE_IDENTIFIER` | Creating source copyright and licence headers. Replace the built-in organisation default for your project. |
+| `ACCEPTED_THIRD_PARTY_LICENCES`, `PACKAGES_WITH_CHECKED_LICENCE` | Adjusting the accepted-licence policy and recording reviewed dependency licences where reporting is supported. |
+
+Settings such as `DEPENDENCY_UPDATE_BRANCH_PATTERN` and
+`AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE` can be overridden to control
+automatically generated news fragments; see the
+[news-checking guide](./guides/checking-news-fragments.md). The configuration
+file is shared, but plugins may also read their ecosystem's native manifests
+and use specialised tools, such as GoReleaser for Go. See the
+[plugin guides](./continuous_delivery_scripts/plugins) for their requirements.
+Provide tokens and publication credentials through your CI environment or
+secret store, rather than committing them to `pyproject.toml`.
+
+### SPDX document identity
+
+For a plugin that supports SPDX reporting, define `PROJECT_UUID` under
+`[ProjectConfig]` **and** the `[spdx]` section in the same `pyproject.toml`.
+The former identifies the project package; `[spdx]` supplies the URL components
+and a separate UUID for the document namespace. This repository uses:
+
+```toml
+[ProjectConfig]
+PROJECT_UUID = "f0cfd7a4-30b4-11eb-adc1-0242ac120002"
+
+[spdx]
+CreatorWebsite = "spdx.org"
+PathToSpdx = "spdx/spdxdocs"
+UUID = "d9e2187c-30b4-11eb-adc1-0242ac120002"
+```
+
+Set values appropriate to your project rather than reusing these UUIDs. Keep
+them stable across report generation so your project and SPDX document
+identities remain consistent. `CreatorWebsite` and `PathToSpdx` form the
+namespace URL; the SPDX generator reads `[spdx]` directly rather than through
+the shared `ProjectConfig` lookup.
+
 ## Unit Tests, Code Formatting and Static Analysis
 
 Shell into virtual environment:
@@ -120,6 +178,16 @@ cd-generate-docs
 This will generate the docs and output them to `local_docs`.
 This should only be a preview. Since documentation is automatically generated 
 by the CI you shouldn't commit any docs html files manually.
+
+To add human-readable task guides, place Markdown files in the directory named
+by `DOCUMENTATION_GUIDES_DIR` and link them from its `index.md`. Set
+`DOCUMENTATION_GUIDES_OUTPUT_FOLDER` to the relative folder where the rendered
+HTML pages should appear beneath the documentation output. Both values are
+configured in `[ProjectConfig]` in `pyproject.toml`; this repository uses
+`guides` for both. During documentation generation, an API index produced by a
+plugin moves to `api.html`, the site index becomes a guide landing page, and a root
+`llms.txt`, if present, is copied to the output. The publishing path also
+works with other language plugins that generate an API index.
 
 ### Viewing docs generated by the CI
 

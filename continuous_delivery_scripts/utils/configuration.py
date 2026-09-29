@@ -93,7 +93,11 @@ class ConfigurationVariable(enum.Enum):
     """States whether the release should be tagged with shortcuts i.e. major, major+minor"""
     SECRETS_BASELINE_FILENAME = 37
     """Filename for the detect-secrets baseline."""
-    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 38
+    DOCUMENTATION_GUIDES_DIR = 38
+    """Optional directory of Markdown guides to publish alongside generated API documentation."""
+    DOCUMENTATION_GUIDES_OUTPUT_FOLDER = 39
+    """Relative folder for rendered guides beneath the documentation output."""
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 40
     """Fail the licence audit when dependencies or usable licence declarations are missing."""
 
     @staticmethod

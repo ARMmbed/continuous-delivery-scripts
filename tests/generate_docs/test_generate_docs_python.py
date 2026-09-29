@@ -3,7 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import pathlib
+import re
 from subprocess import CalledProcessError
+from tempfile import TemporaryDirectory as SystemTemporaryDirectory
+from urllib.parse import urlsplit
 from unittest import mock, TestCase
 
 from pyfakefs.fake_filesystem_unittest import Patcher
@@ -11,9 +14,137 @@ from pyfakefs.fake_filesystem_unittest import Patcher
 from continuous_delivery_scripts.plugins.python import _generate_pdoc_command_list, Python
 
 from continuous_delivery_scripts.generate_docs import _clear_previous_docs, generate_documentation, generate_docs
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable
 
 
 class TestGenerateDocs(TestCase):
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
+    def test_guides_work_with_plugin_without_api_index(self, get_value_or_default, _get_language_specifics):
+        with SystemTemporaryDirectory() as temporary_root:
+            project_root = pathlib.Path(temporary_root, "project")
+            source = project_root / "guides"
+            source.mkdir(parents=True)
+            (source / "index.md").write_text("# Task guides\n", encoding="utf8")
+            get_value_or_default.side_effect = lambda key, default: {
+                ConfigurationVariable.PROJECT_ROOT: str(project_root),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_DIR: str(source),
+                ConfigurationVariable.PROJECT_NAME: "Example Project",
+            }.get(key, default)
+
+            output = pathlib.Path(temporary_root, "site")
+            generate_documentation(output, "another_language")
+
+            self.assertTrue((output / "index.html").is_file())
+            self.assertTrue((output / "guides" / "index.html").is_file())
+            self.assertFalse((output / "api.html").exists())
+            landing = (output / "index.html").read_text(encoding="utf8")
+            self.assertIn("<h1>Example Project</h1>", landing)
+            self.assertIn("<title>Example Project documentation</title>", landing)
+            self.assertNotIn("Continuous Delivery Scripts", landing)
+            self.assertNotIn("API reference", landing)
+
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default", return_value=None)
+    def test_projects_without_guides_keep_their_api_index(self, _get_value_or_default, get_language_specifics):
+        with SystemTemporaryDirectory() as temporary_root:
+            output = pathlib.Path(temporary_root, "site")
+
+            def generate_api(output_directory, _module):
+                (output_directory / "index.html").write_text("API reference", encoding="utf8")
+
+            get_language_specifics.return_value.generate_code_documentation.side_effect = generate_api
+            generate_documentation(output, "module")
+
+            self.assertEqual((output / "index.html").read_text(encoding="utf8"), "API reference")
+            self.assertFalse((output / "api.html").exists())
+
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
+    def test_published_project_guides_have_valid_local_links(self, get_value_or_default, get_language_specifics):
+        project_root = pathlib.Path(__file__).resolve().parents[2]
+        get_value_or_default.side_effect = lambda key, default: {
+            ConfigurationVariable.PROJECT_ROOT: str(project_root),
+            ConfigurationVariable.DOCUMENTATION_GUIDES_DIR: str(project_root / "guides"),
+            ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER: "guides",
+        }.get(key, default)
+
+        def generate_api(output_directory, _module):
+            (output_directory / "index.html").write_text("API reference", encoding="utf8")
+
+        get_language_specifics.return_value.generate_code_documentation.side_effect = generate_api
+        with SystemTemporaryDirectory() as temporary_root:
+            output = pathlib.Path(temporary_root, "site")
+            generate_documentation(output, "continuous_delivery_scripts")
+
+            for page in output.rglob("*.html"):
+                html = page.read_text(encoding="utf8")
+                for href in re.findall(r'href="([^"]+)"', html):
+                    target = urlsplit(href)
+                    if not target.scheme and target.path:
+                        with self.subTest(page=page.name, href=href):
+                            self.assertTrue((page.parent / target.path).is_file())
+
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
+    def test_publishes_guides_and_preserves_api_index(self, get_value_or_default, get_language_specifics):
+        with SystemTemporaryDirectory() as temporary_root:
+            project_root = pathlib.Path(temporary_root, "project")
+            guides = project_root / "guides"
+            guides.mkdir(parents=True)
+            (guides / "index.md").write_text("# Guides\n\n[SPDX](generating-an-spdx-sbom.md)\n", encoding="utf8")
+            (guides / "generating-an-spdx-sbom.md").write_text(
+                "# Generate an SPDX SBOM\n\n```bash\ncd-generate-spdx --output-dir spdx-output\n```\n", encoding="utf8"
+            )
+            (project_root / "llms.txt").write_text("# Tool map\n", encoding="utf8")
+            get_value_or_default.side_effect = lambda key, _default: {
+                ConfigurationVariable.PROJECT_ROOT: str(project_root),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_DIR: str(guides),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER: "reference/guides",
+                ConfigurationVariable.PROJECT_NAME: "Another Project",
+            }.get(key)
+            output = pathlib.Path(temporary_root, "site")
+
+            def generate_api(output_directory, _module):
+                (output_directory / "index.html").write_text("API reference", encoding="utf8")
+                (output_directory / "module.html").write_text('<a href="index.html">Package API</a>', encoding="utf8")
+                subpackage = output_directory / "subpackage"
+                subpackage.mkdir()
+                (subpackage / "index.html").write_text("Subpackage API", encoding="utf8")
+                (subpackage / "module.html").write_text(
+                    '<a href="../index.html">Package API</a><a href="index.html">Subpackage API</a>',
+                    encoding="utf8",
+                )
+
+            get_language_specifics.return_value.generate_code_documentation.side_effect = generate_api
+
+            generate_documentation(output, "continuous_delivery_scripts")
+
+            self.assertEqual((output / "api.html").read_text(encoding="utf8"), "API reference")
+            self.assertIn("<h1>Another Project</h1>", (output / "index.html").read_text(encoding="utf8"))
+            self.assertIn(
+                "Generate an SPDX SBOM — Another Project.",
+                (output / "reference" / "guides" / "generating-an-spdx-sbom.html").read_text(encoding="utf8"),
+            )
+            self.assertIn('href="api.html"', (output / "module.html").read_text(encoding="utf8"))
+            self.assertIn('href="../api.html"', (output / "subpackage" / "module.html").read_text(encoding="utf8"))
+            self.assertIn('href="index.html"', (output / "subpackage" / "module.html").read_text(encoding="utf8"))
+            self.assertIn(
+                "reference/guides/generating-an-spdx-sbom.html", (output / "index.html").read_text(encoding="utf8")
+            )
+            self.assertIn(
+                'href="generating-an-spdx-sbom.html"',
+                (output / "reference" / "guides" / "index.html").read_text(encoding="utf8"),
+            )
+            self.assertIn(
+                "cd-generate-spdx --output-dir spdx-output",
+                (output / "reference" / "guides" / "generating-an-spdx-sbom.html").read_text(encoding="utf8"),
+            )
+            self.assertIn(
+                'href="../../index.html"', (output / "reference" / "guides" / "index.html").read_text(encoding="utf8")
+            )
+            self.assertEqual((output / "llms.txt").read_text(encoding="utf8"), "# Tool map\n")
+
     def test_clear_previous_docs(self):
         with Patcher() as patcher:
             fake_output_dir = pathlib.Path("local_docs")

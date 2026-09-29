@@ -1,1 +1,0 @@
-:bug: Recognise news files already added to Dependabot branches and avoid creating duplicates when validating those PRs.

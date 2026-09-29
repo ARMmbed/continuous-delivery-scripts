@@ -1,1 +1,0 @@
-:bug: Add nanoseconds to generated news file names to prevent collisions when multiple PRs are created in the same second.
