@@ -35,9 +35,9 @@ class TestSpdxFile(TestCase):
         with patch.object(
             configuration,
             "get_value",
-            side_effect=lambda key: True
-            if key == ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT
-            else get_value(key),
+            side_effect=lambda key: (
+                True if key == ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT else get_value(key)
+            ),
         ):
             with self.assertRaisesRegex(ValueError, "missing-dependency"):
                 project.check_licence_compliance()
@@ -67,9 +67,9 @@ class TestSpdxFile(TestCase):
         with patch.object(
             configuration,
             "get_value",
-            side_effect=lambda key: True
-            if key == ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT
-            else get_value(key),
+            side_effect=lambda key: (
+                True if key == ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT else get_value(key)
+            ),
         ):
             with self.assertRaisesRegex(ValueError, "undocumented exemptions: \\['test_package'\\]"):
                 project.check_licence_compliance()

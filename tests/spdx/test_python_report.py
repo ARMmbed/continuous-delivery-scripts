@@ -37,9 +37,9 @@ class TestPythonReport(TestCase):
             with mock.patch.object(
                 configuration,
                 "get_value",
-                side_effect=lambda key: docs_dir
-                if key == ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH
-                else get_value(key),
+                side_effect=lambda key: (
+                    docs_dir if key == ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH else get_value(key)
+                ),
             ):
                 project = _update_licensing_summary()
 

@@ -105,9 +105,7 @@ def _iter_dependency_distributions(
 ) -> Iterable[importlib_metadata.Distribution]:
     for requirement_text in distribution.requires or []:
         requirement = Requirement(requirement_text)
-        if requirement.marker and not any(
-            requirement.marker.evaluate({"extra": extra}) for extra in (extras or {""})
-        ):
+        if requirement.marker and not any(requirement.marker.evaluate({"extra": extra}) for extra in (extras or {""})):
             continue
 
         normalised_name = canonicalize_name(requirement.name)

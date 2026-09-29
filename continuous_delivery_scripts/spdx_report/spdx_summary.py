@@ -112,9 +112,8 @@ class SummaryGenerator:
             self.missing_dependencies or arguments["unreviewed_licences"] or arguments["undocumented_exemptions"]
         )
         if not arguments["project"]["complete"]:
-            arguments["project"]["compliance_details"] = (
-                "The audit is incomplete; review the missing dependencies, unknown licences and undocumented exemptions."
-            )
+            details = "Incomplete audit: review missing dependencies, unknown licences and undocumented exemptions."
+            arguments["project"]["compliance_details"] = details
         arguments["render_time"] = datetime.datetime.now()
         return arguments
 
