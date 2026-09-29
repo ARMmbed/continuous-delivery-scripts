@@ -49,21 +49,6 @@ el.replaceWith(d);
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="continuous_delivery_scripts.utils.python.package_helpers.generate_package_info"><code class="name flex">
-<span>def <span class="ident">generate_package_info</span></span>(<span>) ‑> None</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def generate_package_info() -&gt; None:
-    &#34;&#34;&#34;Generates package information (egg).&#34;&#34;&#34;
-    command = [sys.executable, &#34;setup.py&#34;, &#34;develop&#34;, &#34;-v&#34;]
-    subprocess.check_call(command, cwd=configuration.get_value(ConfigurationVariable.PROJECT_ROOT))</code></pre>
-</details>
-<div class="desc"><p>Generates package information (egg).</p></div>
-</dd>
 <dt id="continuous_delivery_scripts.utils.python.package_helpers.get_all_packages_metadata_lines"><code class="name flex">
 <span>def <span class="ident">get_all_packages_metadata_lines</span></span>(<span>package_name: str) ‑> List[list]</span>
 </code></dt>
@@ -74,13 +59,8 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">def get_all_packages_metadata_lines(package_name: str) -&gt; List[list]:
     &#34;&#34;&#34;Determines the metadata lines for the present package as well as for all its dependencies.&#34;&#34;&#34;
-    distribution = _get_distribution(package_name)
-    seen_packages = {canonicalize_name(_get_distribution_name(distribution))}
-    all_distributions = [
-        distribution,
-        *_iter_dependency_distributions(distribution, seen_packages),
-    ]
-    return [get_package_metadata_lines(package) for package in all_distributions]</code></pre>
+    distributions, _ = _get_distributions_and_missing(package_name)
+    return [get_package_metadata_lines(package) for package in distributions]</code></pre>
 </details>
 <div class="desc"><p>Determines the metadata lines for the present package as well as for all its dependencies.</p></div>
 </dd>
@@ -115,6 +95,45 @@ We need to try both to get the metadata lines and
 the underlying <code>get_metadata_lines</code> function used raises an exception if the file does not exist.
 We hence need to try to catch all exceptions</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.python.package_helpers.parse_package_metadata"><code class="name flex">
+<span>def <span class="ident">parse_package_metadata</span></span>(<span>metadata: email.message.Message,<br>distribution: importlib.metadata.Distribution | None = None) ‑> <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="../package_helpers.html#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_package_metadata(
+    metadata: Message, distribution: Optional[importlib_metadata.Distribution] = None
+) -&gt; PackageMetadata:
+    &#34;&#34;&#34;Parses structured distribution metadata and preserves repeated licence classifiers.&#34;&#34;&#34;
+    data: Dict[str, Any] = dict(metadata.items())
+    classifiers = [
+        entry.split(&#34;::&#34;)[-1].strip()
+        for entry in metadata.get_all(&#34;Classifier&#34;) or []
+        if entry.startswith(&#34;License ::&#34;) and entry.split(&#34;::&#34;)[-1].strip() != &#34;OSI Approved&#34;
+    ]
+    if classifiers:
+        data[&#34;License-Classifiers&#34;] = list(dict.fromkeys(classifiers))
+        identifiers = []
+        for classifier in classifiers:
+            try:
+                identifier = cleanse_licence_expression(classifier)
+            except ExpressionError:
+                break
+            if not OPENSOURCE_LICENCES.get_licence(identifier):
+                break
+            identifiers.append(identifier)
+        else:
+            data[&#34;Licence-Candidates&#34;] = list(dict.fromkeys(identifiers))
+            # Multiple classifiers do not establish whether the licences are alternatives or cumulative.
+            if len(data[&#34;Licence-Candidates&#34;]) == 1:
+                data[&#34;License-Classifier&#34;] = data[&#34;Licence-Candidates&#34;][0]
+    evidence = _get_licence_evidence(distribution, metadata) if distribution else []
+    return PackageMetadata(data, evidence)</code></pre>
+</details>
+<div class="desc"><p>Parses structured distribution metadata and preserves repeated licence classifiers.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.python.package_helpers.parse_package_metadata_lines"><code class="name flex">
 <span>def <span class="ident">parse_package_metadata_lines</span></span>(<span>metadata: list) ‑> <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="../package_helpers.html#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></span>
 </code></dt>
@@ -125,12 +144,7 @@ We hence need to try to catch all exceptions</p></div>
 </summary>
 <pre><code class="python">def parse_package_metadata_lines(metadata: list) -&gt; PackageMetadata:
     &#34;&#34;&#34;Parses package metadata lines and retains relevant information.&#34;&#34;&#34;
-    metadata_dict = dict()
-    for line in metadata:
-        match = re.search(CurrentPythonProjectMetadataFetcher.ENTRY_PATTERN, line)
-        if match:
-            metadata_dict[match.group(1).strip()] = match.group(2).strip()
-    return PackageMetadata(metadata_dict)</code></pre>
+    return parse_package_metadata(Parser().parsestr(&#34;\n&#34;.join(str(line).rstrip(&#34;\r\n&#34;) for line in metadata)))</code></pre>
 </details>
 <div class="desc"><p>Parses package metadata lines and retains relevant information.</p></div>
 </dd>
@@ -194,9 +208,10 @@ We hence need to try to catch all exceptions</p></div>
     def fetch_project_metadata(self) -&gt; ProjectMetadata:
         &#34;&#34;&#34;Parses package metadata.&#34;&#34;&#34;
         project_metadata = ProjectMetadata(self._package_name)
-        for metadata in get_all_packages_metadata_lines(self._package_name):
-            info = parse_package_metadata_lines(metadata)
-            if info.name == self._package_name:
+        distributions, project_metadata.missing_dependencies = _get_distributions_and_missing(self._package_name)
+        for distribution in distributions:
+            info = parse_package_metadata(cast(Message, distribution.metadata), distribution)
+            if canonicalize_name(info.name) == canonicalize_name(self._package_name):
                 project_metadata.project_metadata = info
             else:
                 project_metadata.add_dependency_metadata(info)
@@ -233,9 +248,10 @@ We hence need to try to catch all exceptions</p></div>
 <pre><code class="python">def fetch_project_metadata(self) -&gt; ProjectMetadata:
     &#34;&#34;&#34;Parses package metadata.&#34;&#34;&#34;
     project_metadata = ProjectMetadata(self._package_name)
-    for metadata in get_all_packages_metadata_lines(self._package_name):
-        info = parse_package_metadata_lines(metadata)
-        if info.name == self._package_name:
+    distributions, project_metadata.missing_dependencies = _get_distributions_and_missing(self._package_name)
+    for distribution in distributions:
+        info = parse_package_metadata(cast(Message, distribution.metadata), distribution)
+        if canonicalize_name(info.name) == canonicalize_name(self._package_name):
             project_metadata.project_metadata = info
         else:
             project_metadata.add_dependency_metadata(info)
@@ -268,9 +284,9 @@ We hence need to try to catch all exceptions</p></div>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="continuous_delivery_scripts.utils.python.package_helpers.generate_package_info" href="#continuous_delivery_scripts.utils.python.package_helpers.generate_package_info">generate_package_info</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.python.package_helpers.get_all_packages_metadata_lines" href="#continuous_delivery_scripts.utils.python.package_helpers.get_all_packages_metadata_lines">get_all_packages_metadata_lines</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.python.package_helpers.get_package_metadata_lines" href="#continuous_delivery_scripts.utils.python.package_helpers.get_package_metadata_lines">get_package_metadata_lines</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.python.package_helpers.parse_package_metadata" href="#continuous_delivery_scripts.utils.python.package_helpers.parse_package_metadata">parse_package_metadata</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.python.package_helpers.parse_package_metadata_lines" href="#continuous_delivery_scripts.utils.python.package_helpers.parse_package_metadata_lines">parse_package_metadata_lines</a></code></li>
 </ul>
 </li>

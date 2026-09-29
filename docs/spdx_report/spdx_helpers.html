@@ -163,7 +163,10 @@ correct SPDX value a string, UnKnown or SPDXNone</p></div>
 <pre><code class="python">def get_package_manual_check(package_name: str) -&gt; Tuple[bool, Optional[str]]:
     &#34;&#34;&#34;Gets information about package licence manual check.&#34;&#34;&#34;
     checked_packages = get_packages_with_checked_licence()
-    return bool(package_name.strip() in checked_packages), checked_packages.get(package_name.strip())</code></pre>
+    name = package_name.strip()
+    if name not in checked_packages:
+        name = name.replace(&#34;.&#34;, &#34;-&#34;)
+    return bool(name in checked_packages), checked_packages.get(name)</code></pre>
 </details>
 <div class="desc"><p>Gets information about package licence manual check.</p></div>
 </dd>

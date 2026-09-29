@@ -95,9 +95,7 @@ el.replaceWith(d);
 
     def can_get_project_metadata(self) -&gt; bool:
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
-        # FIXME Comment out retrieving project metadata as deprecated
-        # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
-        return False
+        return True
 
     def get_secret_registry_exclude_files(self) -&gt; List[str]:
         &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for Python projects.&#34;&#34;&#34;

@@ -65,7 +65,7 @@ class PackageInfo:
     &#34;&#34;&#34;Definition of a Python package.
 
     Attributes:
-        metadata: metadata about a package from files generated from setup.py.
+        metadata: metadata about an installed package.
         root_dir: project root directory.
         source_dir: directory where package&#39;s sources are.
         uuid: unique identifier of the package.
@@ -81,7 +81,7 @@ class PackageInfo:
 <dt>Attributes</dt>
 <dt>-----=</dt>
 <dt><strong><code>metadata</code></strong></dt>
-<dd>metadata about a package from files generated from setup.py.</dd>
+<dd>metadata about an installed package.</dd>
 <dt><strong><code>root_dir</code></strong></dt>
 <dd>project root directory.</dd>
 <dt><strong><code>source_dir</code></strong></dt>
@@ -131,6 +131,11 @@ class PackageInfo:
         self._file_list: Optional[List[Path]] = None
         self._actual_licence: Optional[str] = None
         self._main_licence: Optional[str] = None
+
+    @property
+    def metadata(self) -&gt; PackageMetadata:
+        &#34;&#34;&#34;Gets the original package metadata and licence evidence.&#34;&#34;&#34;
+        return self._package_info.metadata
 
     @property
     def files(self) -&gt; Optional[List[Path]]:
@@ -188,9 +193,12 @@ class PackageInfo:
         &#34;&#34;&#34;
         if not self._main_licence:
             package_licence = self._package_info.metadata.licence
-            self._main_licence = (
-                cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
-            )
+            try:
+                self._main_licence = (
+                    cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
+                )
+            except ExpressionError:
+                self._main_licence = UNKNOWN_LICENCE.identifier
         return self._main_licence
 
     @property
@@ -522,15 +530,31 @@ def main_licence(self) -&gt; str:
     &#34;&#34;&#34;
     if not self._main_licence:
         package_licence = self._package_info.metadata.licence
-        self._main_licence = (
-            cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
-        )
+        try:
+            self._main_licence = (
+                cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
+            )
+        except ExpressionError:
+            self._main_licence = UNKNOWN_LICENCE.identifier
     return self._main_licence</code></pre>
 </details>
 <div class="desc"><p>Gets the package's official licence.</p>
 <p>Returns
 -----=
 project's licence</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.metadata"><code class="name">prop <span class="ident">metadata</span> : <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def metadata(self) -&gt; PackageMetadata:
+    &#34;&#34;&#34;Gets the original package metadata and licence evidence.&#34;&#34;&#34;
+    return self._package_info.metadata</code></pre>
+</details>
+<div class="desc"><p>Gets the original package metadata and licence evidence.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.name"><code class="name">prop <span class="ident">name</span> : str</code></dt>
 <dd>
@@ -760,6 +784,7 @@ list of file descriptions or None if a dependency.</p></div>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.is_main_licence_accepted" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.is_main_licence_accepted">is_main_licence_accepted</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.licence" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.licence">licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.main_licence" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.main_licence">main_licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.metadata" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.metadata">metadata</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.name" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.name">name</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.url" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.url">url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.version" href="#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage.version">version</a></code></li>

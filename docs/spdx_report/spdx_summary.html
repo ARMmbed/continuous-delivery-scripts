@@ -91,7 +91,7 @@ el.replaceWith(d);
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_summary.SummaryGenerator"><code class="flex name class">
 <span>class <span class="ident">SummaryGenerator</span></span>
-<span>(</span><span>project_package: <a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>,<br>dependencies_documents: List[<a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>])</span>
+<span>(</span><span>project_package: <a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>,<br>dependencies_documents: List[<a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>],<br>missing_dependencies: List[str] | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -101,11 +101,17 @@ el.replaceWith(d);
 <pre><code class="python">class SummaryGenerator:
     &#34;&#34;&#34;Licensing summary generator.&#34;&#34;&#34;
 
-    def __init__(self, project_package: SpdxPackage, dependencies_documents: List[SpdxPackage]) -&gt; None:
+    def __init__(
+        self,
+        project_package: SpdxPackage,
+        dependencies_documents: List[SpdxPackage],
+        missing_dependencies: Optional[List[str]] = None,
+    ) -&gt; None:
         &#34;&#34;&#34;Initialiser.&#34;&#34;&#34;
         self.project = project_package
         self.all_packages = list(dependencies_documents)
         self.all_packages.append(self.project)
+        self.missing_dependencies = sorted(set(missing_dependencies or []))
         self._template_arguments: Optional[dict] = None
 
     def _generate_template_arguments(self) -&gt; Dict[str, Any]:
@@ -125,6 +131,26 @@ el.replaceWith(d);
             ),
         }
         arguments[&#34;packages&#34;] = description_list
+        arguments[&#34;missing_dependencies&#34;] = self.missing_dependencies
+        arguments[&#34;unknown_licences&#34;] = sorted(
+            p.name
+            for p in self.all_packages
+            if p.metadata.licence_source == &#34;unknown&#34; or p.main_licence == UNKNOWN_LICENCE.identifier
+        )
+        arguments[&#34;unreviewed_licences&#34;] = [
+            name for name in arguments[&#34;unknown_licences&#34;] if not get_package_manual_check(name)[1]
+        ]
+        arguments[&#34;undocumented_exemptions&#34;] = sorted(
+            p.name
+            for p in self.all_packages
+            if get_package_manual_check(p.name)[0] and not get_package_manual_check(p.name)[1]
+        )
+        arguments[&#34;project&#34;][&#34;complete&#34;] = not (
+            self.missing_dependencies or arguments[&#34;unreviewed_licences&#34;] or arguments[&#34;undocumented_exemptions&#34;]
+        )
+        if not arguments[&#34;project&#34;][&#34;complete&#34;]:
+            details = &#34;Incomplete audit: review missing dependencies, unknown licences and undocumented exemptions.&#34;
+            arguments[&#34;project&#34;][&#34;compliance_details&#34;] = details
         arguments[&#34;render_time&#34;] = datetime.datetime.now()
         return arguments
 
@@ -162,6 +188,13 @@ el.replaceWith(d);
             &#34;is_dependency&#34;: p.is_dependency,
             &#34;url&#34;: p.url,
             &#34;licence&#34;: p.licence,
+            &#34;version&#34;: p.version,
+            &#34;licence_source&#34;: p.metadata.licence_source,
+            &#34;declared_licence&#34;: p.metadata.declared_licence,
+            &#34;licence_classifiers&#34;: p.metadata.licence_classifiers,
+            &#34;licence_candidates&#34;: p.metadata.licence_candidates,
+            &#34;licence_evidence&#34;: p.metadata.licence_evidence,
+            &#34;manual_check&#34;: {&#34;checked&#34;: package_manually_checked, &#34;reason&#34;: manual_check_details or &#34;&#34;},
             &#34;is_compliant&#34;: is_compliant,
             &#34;mark_as_problematic&#34;: not is_licence_compliant,
             &#34;licence_compliance_details&#34;: (
@@ -189,7 +222,12 @@ el.replaceWith(d);
             dir: output directory
         &#34;&#34;&#34;
         for t in JINJA_TEMPLATES:
-            generate_file_based_on_template(dir, t, self.template_arguments)</code></pre>
+            generate_file_based_on_template(dir, t, self.template_arguments)
+        arguments = dict(self.template_arguments)
+        arguments[&#34;render_time&#34;] = arguments[&#34;render_time&#34;].isoformat()
+        dir.joinpath(&#34;third_party_IP_report.json&#34;).write_text(
+            json.dumps(arguments, indent=2, sort_keys=True) + &#34;\n&#34;, encoding=&#34;utf8&#34;
+        )</code></pre>
 </details>
 <div class="desc"><p>Licensing summary generator.</p>
 <p>Initialiser.</p></div>
@@ -228,7 +266,12 @@ def template_arguments(self) -&gt; dict:
         dir: output directory
     &#34;&#34;&#34;
     for t in JINJA_TEMPLATES:
-        generate_file_based_on_template(dir, t, self.template_arguments)</code></pre>
+        generate_file_based_on_template(dir, t, self.template_arguments)
+    arguments = dict(self.template_arguments)
+    arguments[&#34;render_time&#34;] = arguments[&#34;render_time&#34;].isoformat()
+    dir.joinpath(&#34;third_party_IP_report.json&#34;).write_text(
+        json.dumps(arguments, indent=2, sort_keys=True) + &#34;\n&#34;, encoding=&#34;utf8&#34;
+    )</code></pre>
 </details>
 <div class="desc"><p>Generates a licensing summary into the specified directory.</p>
 <dl>

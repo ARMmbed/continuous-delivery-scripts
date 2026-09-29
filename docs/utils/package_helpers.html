@@ -85,7 +85,7 @@ el.replaceWith(d);
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata"><code class="flex name class">
 <span>class <span class="ident">PackageMetadata</span></span>
-<span>(</span><span>data: dict)</span>
+<span>(</span><span>data: dict, licence_evidence: List[Dict[str, str]] | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -100,9 +100,10 @@ el.replaceWith(d);
     https://packaging.python.org/specifications/core-metadata/
     &#34;&#34;&#34;
 
-    def __init__(self, data: dict) -&gt; None:
+    def __init__(self, data: dict, licence_evidence: Optional[List[Dict[str, str]]] = None) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._data: Dict[str, Any] = data
+        self._licence_evidence = licence_evidence or []
 
     @property
     def name(self) -&gt; str:
@@ -127,7 +128,46 @@ el.replaceWith(d);
     @property
     def licence(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return str(self._data.get(&#34;License&#34;, UNKNOWN))
+        source = self.licence_source
+        if source == &#34;unknown&#34;:
+            return str(UNKNOWN)
+        return str(self._data[source]).strip()
+
+    @property
+    def licence_source(self) -&gt; str:
+        &#34;&#34;&#34;Gets the metadata field used to determine the licence.&#34;&#34;&#34;
+        if self._data.get(&#34;License-Expression&#34;):
+            return &#34;License-Expression&#34;
+        legacy = str(self._data.get(&#34;License&#34;) or &#34;&#34;).strip()
+        if legacy and not legacy.lower().startswith(&#34;copyright&#34;) and legacy.lower() not in (&#34;unknown&#34;, &#34;none&#34;):
+            return &#34;License&#34;
+        if self._data.get(&#34;License-Classifier&#34;):
+            return &#34;License-Classifier&#34;
+        return &#34;unknown&#34;
+
+    @property
+    def declared_licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the licence declaration as provided by the package.&#34;&#34;&#34;
+        return str(
+            self._data.get(&#34;License-Expression&#34;)
+            or self._data.get(&#34;License&#34;)
+            or &#34;; &#34;.join(self._data.get(&#34;License-Classifiers&#34;, []))
+        )
+
+    @property
+    def licence_classifiers(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets all licence classifiers as declared by the package.&#34;&#34;&#34;
+        return list(self._data.get(&#34;License-Classifiers&#34;, []))
+
+    @property
+    def licence_candidates(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets normalised SPDX identifiers found in the licence classifiers.&#34;&#34;&#34;
+        return list(self._data.get(&#34;Licence-Candidates&#34;, []))
+
+    @property
+    def licence_evidence(self) -&gt; List[Dict[str, str]]:
+        &#34;&#34;&#34;Gets the packaged licence and notice file evidence.&#34;&#34;&#34;
+        return self._licence_evidence
 
     @property
     def description(self) -&gt; str:
@@ -185,6 +225,23 @@ def author_email(self) -&gt; str:
 </details>
 <div class="desc"><p>Gets package's author email.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.declared_licence"><code class="name">prop <span class="ident">declared_licence</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def declared_licence(self) -&gt; str:
+    &#34;&#34;&#34;Gets the licence declaration as provided by the package.&#34;&#34;&#34;
+    return str(
+        self._data.get(&#34;License-Expression&#34;)
+        or self._data.get(&#34;License&#34;)
+        or &#34;; &#34;.join(self._data.get(&#34;License-Classifiers&#34;, []))
+    )</code></pre>
+</details>
+<div class="desc"><p>Gets the licence declaration as provided by the package.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description"><code class="name">prop <span class="ident">description</span> : str</code></dt>
 <dd>
 <details class="source">
@@ -207,9 +264,71 @@ def description(self) -&gt; str:
 <pre><code class="python">@property
 def licence(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-    return str(self._data.get(&#34;License&#34;, UNKNOWN))</code></pre>
+    source = self.licence_source
+    if source == &#34;unknown&#34;:
+        return str(UNKNOWN)
+    return str(self._data[source]).strip()</code></pre>
 </details>
 <div class="desc"><p>Gets package's licence.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_candidates"><code class="name">prop <span class="ident">licence_candidates</span> : List[str]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_candidates(self) -&gt; List[str]:
+    &#34;&#34;&#34;Gets normalised SPDX identifiers found in the licence classifiers.&#34;&#34;&#34;
+    return list(self._data.get(&#34;Licence-Candidates&#34;, []))</code></pre>
+</details>
+<div class="desc"><p>Gets normalised SPDX identifiers found in the licence classifiers.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_classifiers"><code class="name">prop <span class="ident">licence_classifiers</span> : List[str]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_classifiers(self) -&gt; List[str]:
+    &#34;&#34;&#34;Gets all licence classifiers as declared by the package.&#34;&#34;&#34;
+    return list(self._data.get(&#34;License-Classifiers&#34;, []))</code></pre>
+</details>
+<div class="desc"><p>Gets all licence classifiers as declared by the package.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_evidence"><code class="name">prop <span class="ident">licence_evidence</span> : List[Dict[str, str]]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_evidence(self) -&gt; List[Dict[str, str]]:
+    &#34;&#34;&#34;Gets the packaged licence and notice file evidence.&#34;&#34;&#34;
+    return self._licence_evidence</code></pre>
+</details>
+<div class="desc"><p>Gets the packaged licence and notice file evidence.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_source"><code class="name">prop <span class="ident">licence_source</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_source(self) -&gt; str:
+    &#34;&#34;&#34;Gets the metadata field used to determine the licence.&#34;&#34;&#34;
+    if self._data.get(&#34;License-Expression&#34;):
+        return &#34;License-Expression&#34;
+    legacy = str(self._data.get(&#34;License&#34;) or &#34;&#34;).strip()
+    if legacy and not legacy.lower().startswith(&#34;copyright&#34;) and legacy.lower() not in (&#34;unknown&#34;, &#34;none&#34;):
+        return &#34;License&#34;
+    if self._data.get(&#34;License-Classifier&#34;):
+        return &#34;License-Classifier&#34;
+    return &#34;unknown&#34;</code></pre>
+</details>
+<div class="desc"><p>Gets the metadata field used to determine the licence.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name"><code class="name">prop <span class="ident">name</span> : str</code></dt>
 <dd>
@@ -275,6 +394,7 @@ def version(self) -&gt; str:
         self._package_metadata: PackageMetadata = PackageMetadata(dict())
         self._dependency_packages_metadata: List[PackageMetadata] = list()
         self._package_name: str = package_name
+        self.missing_dependencies: List[str] = []
 
     @property
     def dependencies_metadata(self) -&gt; List[PackageMetadata]:
@@ -475,8 +595,13 @@ def fetch_project_metadata(self) -&gt; ProjectMetadata:
 <ul class="two-column">
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author">author</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email">author_email</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.declared_licence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.declared_licence">declared_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description">description</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence">licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_candidates" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_candidates">licence_candidates</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_classifiers" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_classifiers">licence_classifiers</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_evidence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_evidence">licence_evidence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_source" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_source">licence_source</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name">name</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url">url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version">version</a></code></li>

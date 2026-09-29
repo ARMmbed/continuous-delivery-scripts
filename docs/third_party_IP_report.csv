@@ -1,0 +1,67 @@
+Compliance, Name,Is a dependency?,URL,Licence,Details
+True,boolean.py,True,https://github.com/bastikr/boolean.py,BSD-2-Clause,Licence is compliant.
+True,boto3,True,https://github.com/boto/boto3,Apache-2.0,Licence is compliant.
+True,botocore,True,https://github.com/boto/botocore,Apache-2.0,Licence is compliant.
+True,bracex,True,https://github.com/facelessuser/bracex,MIT,Licence is compliant.
+True,certifi,True,https://github.com/certifi/python-certifi,MPL-2.0,Licence is compliant.
+True,cffi,True,https://github.com/python-cffi/cffi/issues,MIT-0,Package's licence manually checked: MIT
+True,charset-normalizer,True,https://github.com/jawah/charset_normalizer/issues,MIT,Licence is compliant.
+True,click,True,https://github.com/pallets/click/,BSD-3-Clause,Licence is compliant.
+True,click-default-group,True,https://github.com/click-contrib/click-default-group,Unknown,Package's licence manually checked: BSD-3-Clause
+True,continuous-delivery-scripts,False,https://github.com/ARMmbed/continuous-delivery-scripts,Apache-2.0,Licence is compliant.
+True,cryptography,True,https://github.com/pyca/cryptography/,Apache-2.0 OR BSD-3-Clause,Licence is compliant.
+True,detect-secrets,True,https://github.com/Yelp/detect-secrets,Apache-2.0,Licence is compliant.
+True,docutils,True,https://sourceforge.net/p/docutils/bugs/,Unknown,Package's licence manually checked: BSD-3-Clause
+True,gibberish-detector,True,https://github.com/domanchi/gibberish-detector,MIT,Licence is compliant.
+True,gitdb,True,https://github.com/gitpython-developers/gitdb,0BSD,Licence is compliant.
+True,GitPython,True,https://github.com/gitpython-developers/GitPython,BSD-3-Clause,Licence is compliant.
+True,id,True,https://github.com/di/id,Apache-2.0,Licence is compliant.
+True,idna,True,https://github.com/kjd/idna,BSD-3-Clause,Licence is compliant.
+True,Incremental,True,https://github.com/twisted/incremental/blob/trunk/NEWS.rst,MIT,Licence is compliant.
+True,jaraco.classes,True,https://github.com/jaraco/jaraco.classes,MIT,Licence is compliant.
+True,jaraco.context,True,https://github.com/jaraco/jaraco.context,MIT,Licence is compliant.
+True,jaraco.functools,True,https://github.com/jaraco/jaraco.functools,MIT,Licence is compliant.
+True,jeepney,True,https://gitlab.com/takluyver/jeepney,MIT,Licence is compliant.
+True,jellyfish,True,https://codeberg.org/jpt/jellyfish/,MIT,Licence is compliant.
+True,Jinja2,True,https://github.com/pallets/jinja/,0BSD,Licence is compliant.
+True,jmespath,True,https://github.com/jmespath/jmespath.py,MIT,Licence is compliant.
+True,keyring,True,https://github.com/jaraco/keyring,MIT,Licence is compliant.
+True,license-expression,True,https://github.com/aboutcode-org/license-expression,Apache-2.0,Licence is compliant.
+True,licenseheaders,True,http://github.com/johann-petrak/licenseheaders,MIT,Licence is compliant.
+True,Mako,True,https://github.com/sqlalchemy/mako,MIT,Licence is compliant.
+True,Markdown,True,https://python-markdown.github.io/changelog/,BSD-3-Clause,Licence is compliant.
+True,markdown-it-py,True,https://github.com/executablebooks/markdown-it-py,MIT,Licence is compliant.
+True,MarkupSafe,True,https://discord.gg/pallets,BSD-3-Clause,Licence is compliant.
+True,mdurl,True,https://github.com/executablebooks/mdurl,MIT,Licence is compliant.
+True,more-itertools,True,https://github.com/more-itertools/more-itertools,MIT,Licence is compliant.
+True,nh3,True,https://github.com/messense/nh3,MIT,Licence is compliant.
+True,packaging,True,https://github.com/pypa/packaging,Apache-2.0 OR BSD-2-Clause,Licence is compliant.
+True,pdoc3,True,https://pdoc3.github.io/pdoc/,AGPL-3.0,Package's licence manually checked: Accepted for this project since not distributed
+True,ply,True,http://www.dabeaz.com/ply/,0BSD,Licence is compliant.
+True,pyautoversion,True,https://github.com/ARMmbed/autoversion,Apache-2.0,Licence is compliant.
+True,pycparser,True,https://github.com/eliben/pycparser,BSD-3-Clause,Licence is compliant.
+True,Pygments,True,https://github.com/pygments/pygments/blob/master/CHANGES,BSD-2-Clause,Licence is compliant.
+True,pyparsing,True,https://github.com/pyparsing/pyparsing.git,MIT,Licence is compliant.
+True,python-dateutil,True,https://github.com/dateutil/dateutil,Unknown,Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
+True,python-dotenv,True,https://github.com/theskumar/python-dotenv,BSD-3-Clause,Licence is compliant.
+True,PyYAML,True,https://pyyaml.org/,MIT,Licence is compliant.
+True,rdflib,True,https://github.com/RDFLib/rdflib,BSD-3-Clause,Licence is compliant.
+True,readme_renderer,True,https://github.com/pypa/readme_renderer,Apache-2.0,Licence is compliant.
+True,regex,True,https://github.com/mrabarnett/mrab-regex,Apache-2.0 AND CNRI-Python,Package's licence manually checked: Apache-2.0
+True,requests,True,https://github.com/psf/requests,Apache-2.0,Licence is compliant.
+True,requests-toolbelt,True,https://toolbelt.readthedocs.io/,Apache-2.0,Licence is compliant.
+True,rfc3986,True,http://rfc3986.readthedocs.io,Apache-2.0,Licence is compliant.
+True,rich,True,https://github.com/Textualize/rich,MIT,Licence is compliant.
+True,s3transfer,True,https://github.com/boto/s3transfer,Apache-2.0,Licence is compliant.
+True,SecretStorage,True,https://github.com/mitya57/secretstorage/issues/,BSD-3-Clause,Licence is compliant.
+True,semver,True,https://github.com/python-semver/python-semver,0BSD,Licence is compliant.
+True,setuptools,True,https://setuptools.pypa.io/en/stable/history.html,MIT,Licence is compliant.
+True,six,True,https://github.com/benjaminp/six,MIT,Licence is compliant.
+True,smmap,True,https://github.com/gitpython-developers/smmap,BSD-3-Clause,Licence is compliant.
+True,spdx-tools,True,https://github.com/spdx/tools-python,Apache-2.0,Licence is compliant.
+True,toml,True,https://github.com/uiri/toml,MIT,Licence is compliant.
+True,towncrier,True,https://github.com/twisted/towncrier,MIT,Licence is compliant.
+True,twine,True,https://packaging.python.org/tutorials/packaging-projects/,Apache-2.0,Licence is compliant.
+True,urllib3,True,https://urllib3.readthedocs.io/en/latest/security.html,MIT,Licence is compliant.
+True,wcmatch,True,https://github.com/facelessuser/wcmatch,MIT,Licence is compliant.
+True,xmltodict,True,https://github.com/martinblech/xmltodict,MIT,Licence is compliant.

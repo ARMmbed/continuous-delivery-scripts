@@ -80,7 +80,8 @@ el.replaceWith(d);
     &#34;&#34;&#34;Generates the documentation.&#34;&#34;&#34;
     _clear_previous_docs(output_directory)
     os.makedirs(str(output_directory), exist_ok=True)
-    get_language_specifics().generate_code_documentation(output_directory, module_to_document)</code></pre>
+    get_language_specifics().generate_code_documentation(output_directory, module_to_document)
+    _publish_project_guides(output_directory)</code></pre>
 </details>
 <div class="desc"><p>Generates the documentation.</p></div>
 </dd>
@@ -119,7 +120,7 @@ el.replaceWith(d);
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="continuous_delivery_scripts" href="index.html">continuous_delivery_scripts</a></code></li>
+<li><code><a title="continuous_delivery_scripts" href="api.html">continuous_delivery_scripts</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>

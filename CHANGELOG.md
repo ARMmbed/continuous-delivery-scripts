@@ -17,6 +17,33 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.1.0" (2026-09-29)
+====================
+
+Features
+--------
+
+- :sparkles: Publish configurable task guides alongside API documentation and provide a human-readable documentation landing page. (#20260929114345938624600)
+
+
+Bugfixes
+--------
+
+- :bug: Restore the third-party licence report during Python releases by reading installed package metadata without running the deprecated setuptools develop command. (#20260928182110700095100)
+- :bug: Read structured Python distribution metadata and retain every licence classifier and its source so ambiguous declarations are visible. (#20260928183746094617300)
+- :bug: Show missing dependencies and unknown licences in reports and allow incomplete licence audits to fail CI when configured. (#20260928183746094663200)
+- :bug: Include packaged licence and notice evidence and a machine-readable JSON report alongside the existing third-party licence reports. (#20260928183746094670000)
+- :bug: Restore SPDX report generation in CI by using the last spdx-tools release compatible with the legacy SPDX writer. (#20260929104004109405900)
+
+
+Improved Documentation
+----------------------
+
+- :book: Document every packaged tool, its developer or CI use, and the CI-independent workflow in the README while correcting outdated usage, links and project structure details. (#20260929110224804739200)
+- :book: Explain shared pyproject.toml delivery settings, plugin-specific tools and practical SPDX, TPIP, release, licence-header and secret-leak prevention use cases in the README. (#20260929114345938571600)
+- :book: Add command-focused guides, an llms.txt documentation map and clearer package discovery metadata. (#20260929114345938632900)
+
+
 "4.0.0" (2026-09-29)
 ====================
 

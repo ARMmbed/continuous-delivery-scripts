@@ -159,11 +159,12 @@ el.replaceWith(d);
     args = parser.parse_args()
     set_log_level(args.verbose)
 
-    with (
-        LocalProjectRepository()  # type: ignore
-        if args.local
-        else ProjectTempClone(desired_branch_name=args.current_branch)
-    ) as git:
+    repository: ContextManager[GitWrapper]
+    if args.local:
+        repository = LocalProjectRepository()
+    else:
+        repository = ProjectTempClone(desired_branch_name=args.current_branch)
+    with repository as git:
         if git.is_current_branch_feature():
             root_dir = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
             absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)
@@ -375,7 +376,7 @@ el.replaceWith(d);
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="continuous_delivery_scripts" href="index.html">continuous_delivery_scripts</a></code></li>
+<li><code><a title="continuous_delivery_scripts" href="api.html">continuous_delivery_scripts</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>

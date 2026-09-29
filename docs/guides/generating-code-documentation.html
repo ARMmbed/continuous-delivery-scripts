@@ -1,0 +1,36 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>&lt;!--</title><meta name="description" content="&lt;!-- — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Generate code documentation for a project</h1>
+<h2>Problem and when to use it</h2>
+<p>Use <code>cd-generate-docs</code> to rebuild a project's API documentation through its
+language plugin. Preview locally before committing or publishing a release.</p>
+<h2>Inputs and example</h2>
+<p>Set <code>MODULE_TO_DOCUMENT</code>, <code>PROGRAMMING_LANGUAGE</code> and the documentation paths
+in <code>pyproject.toml</code>. To publish task guides with the API pages, set the
+optional <code>DOCUMENTATION_GUIDES_DIR</code> to a directory containing <code>index.md</code> and
+other Markdown guides. <code>DOCUMENTATION_GUIDES_OUTPUT_FOLDER</code> selects where
+rendered guides appear beneath the documentation output (default: <code>guides</code>).
+The default output is the configured preview directory:</p>
+<pre><code class="language-bash">cd-generate-docs
+</code></pre>
+<p>To choose another output directory, use <code>--output_directory</code> (with an
+underscore). The tool clears the destination before generating documentation;
+do not point it at a directory containing unrelated files.</p>
+<h2>Output</h2>
+<p>Documentation in the format produced by the selected plugin. Where a plugin
+generates an HTML API index, the guide landing page links to it as <code>api.html</code>.
+This repository publishes task-oriented guides alongside its generated Python
+API pages when it regenerates <code>docs/</code>. See the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin guides</a>
+for language-specific documentation tooling.</p>
+<h2>GitHub Actions example</h2>
+<p>After installing the project and its documentation dependencies:</p>
+<pre><code class="language-yaml">- run: cd-generate-docs --output_directory docs
+</code></pre>
+<p>Related configuration: <a href="reading-project-configuration.html"><code>cd-get-config</code></a>.</p></main></body></html>

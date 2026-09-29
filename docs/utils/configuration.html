@@ -134,6 +134,12 @@ el.replaceWith(d);
     &#34;&#34;&#34;States whether the release should be tagged with shortcuts i.e. major, major+minor&#34;&#34;&#34;
     SECRETS_BASELINE_FILENAME = 37
     &#34;&#34;&#34;Filename for the detect-secrets baseline.&#34;&#34;&#34;
+    DOCUMENTATION_GUIDES_DIR = 38
+    &#34;&#34;&#34;Optional directory of Markdown guides to publish alongside generated API documentation.&#34;&#34;&#34;
+    DOCUMENTATION_GUIDES_OUTPUT_FOLDER = 39
+    &#34;&#34;&#34;Relative folder for rendered guides beneath the documentation output.&#34;&#34;&#34;
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 40
+    &#34;&#34;&#34;Fail the licence audit when dependencies or usable licence declarations are missing.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -214,9 +220,21 @@ el.replaceWith(d);
 <dd>
 <div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_GUIDES_DIR"><code class="name">var <span class="ident">DOCUMENTATION_GUIDES_DIR</span></code></dt>
+<dd>
+<div class="desc"><p>Optional directory of Markdown guides to publish alongside generated API documentation.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER"><code class="name">var <span class="ident">DOCUMENTATION_GUIDES_OUTPUT_FOLDER</span></code></dt>
+<dd>
+<div class="desc"><p>Relative folder for rendered guides beneath the documentation output.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH"><code class="name">var <span class="ident">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</span></code></dt>
 <dd>
 <div class="desc"><p>Relative path to the folder where documentation will be generated.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT"><code class="name">var <span class="ident">FAIL_ON_INCOMPLETE_LICENCE_AUDIT</span></code></dt>
+<dd>
+<div class="desc"><p>Fail the licence audit when dependencies or usable licence declarations are missing.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER"><code class="name">var <span class="ident">FILE_LICENCE_IDENTIFIER</span></code></dt>
 <dd>
@@ -809,6 +827,7 @@ default value if the variable is not defined.</p></div>
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
     SECRETS_BASELINE_FILENAME = &#34;.secrets.baseline&#34;
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
@@ -879,6 +898,10 @@ defined in toml.</p></div>
 <div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_TYPE"><code class="name">var <span class="ident">DEPENDENCY_UPDATE_NEWS_TYPE</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.FAIL_ON_INCOMPLETE_LICENCE_AUDIT"><code class="name">var <span class="ident">FAIL_ON_INCOMPLETE_LICENCE_AUDIT</span></code></dt>
 <dd>
 <div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
@@ -992,7 +1015,10 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_MESSAGE">DEPENDENCY_UPDATE_NEWS_MESSAGE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DEPENDENCY_UPDATE_NEWS_TYPE">DEPENDENCY_UPDATE_NEWS_TYPE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_DEFAULT_OUTPUT_PATH">DOCUMENTATION_DEFAULT_OUTPUT_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_GUIDES_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_GUIDES_DIR">DOCUMENTATION_GUIDES_DIR</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER">DOCUMENTATION_GUIDES_OUTPUT_FOLDER</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH">DOCUMENTATION_PRODUCTION_OUTPUT_PATH</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT">FAIL_ON_INCOMPLETE_LICENCE_AUDIT</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD">IGNORE_REPOSITORY_TEST_UPLOAD</a></code></li>
@@ -1055,6 +1081,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_BRANCH_PATTERN">DEPENDENCY_UPDATE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_MESSAGE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_MESSAGE">DEPENDENCY_UPDATE_NEWS_MESSAGE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_TYPE" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.DEPENDENCY_UPDATE_NEWS_TYPE">DEPENDENCY_UPDATE_NEWS_TYPE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.FAIL_ON_INCOMPLETE_LICENCE_AUDIT" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.FAIL_ON_INCOMPLETE_LICENCE_AUDIT">FAIL_ON_INCOMPLETE_LICENCE_AUDIT</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.FILE_LICENCE_IDENTIFIER">FILE_LICENCE_IDENTIFIER</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.MASTER_BRANCH">MASTER_BRANCH</a></code></li>

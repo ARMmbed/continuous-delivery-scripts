@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.6">
-<title>continuous_delivery_scripts.generate_news API documentation</title>
-<meta name="description" content="Handles usage of towncrier for automated changelog generation and pyautoversion for versioning.">
+<title>continuous_delivery_scripts API documentation</title>
+<meta name="description" content="Scripts and utilities used by the CI pipeline.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -37,82 +37,79 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>continuous_delivery_scripts.generate_news</code></h1>
+<h1 class="title">Package <code>continuous_delivery_scripts</code></h1>
 </header>
 <section id="section-intro">
-<p>Handles usage of towncrier for automated changelog generation and pyautoversion for versioning.</p>
+<p>Scripts and utilities used by the CI pipeline.</p>
 </section>
 <section>
-</section>
-<section>
-</section>
-<section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt id="continuous_delivery_scripts.generate_news.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>) ‑> None</span>
-</code></dt>
+<dt><code class="name"><a title="continuous_delivery_scripts.assert_news" href="assert_news.html">continuous_delivery_scripts.assert_news</a></code></dt>
 <dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def main() -&gt; None:
-    &#34;&#34;&#34;Handle command line arguments to generate a version and changelog file.&#34;&#34;&#34;
-    parser = argparse.ArgumentParser(description=&#34;Versions the project.&#34;)
-    parser.add_argument(
-        &#34;-t&#34;, &#34;--release-type&#34;, help=&#34;type of release to perform&#34;, required=True, type=str, choices=CommitType.choices()
-    )
-    parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Verbosity, by default errors are reported.&#34;)
-    args = parser.parse_args()
-    set_log_level(args.verbose)
-
-    try:
-        commit_type = CommitType.parse(args.release_type)
-        is_new_version, new_version, version_elements = version_project(commit_type)
-        version_to_print = determine_version_string(commit_type, new_version, version_elements)
-        print(version_to_print)
-    except Exception as e:
-        log_exception(logger, e)
-        sys.exit(1)</code></pre>
-</details>
-<div class="desc"><p>Handle command line arguments to generate a version and changelog file.</p></div>
+<div class="desc"><p>Checks if valid news files are created for changes in the project.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.generate_news.version_project"><code class="name flex">
-<span>def <span class="ident">version_project</span></span>(<span>commit_type: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>) ‑> Tuple[bool, str | None, Dict[str, str]]</span>
-</code></dt>
+<dt><code class="name"><a title="continuous_delivery_scripts.create_news_file" href="create_news_file.html">continuous_delivery_scripts.create_news_file</a></code></dt>
 <dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def version_project(commit_type: CommitType) -&gt; Tuple[bool, Optional[str], Dict[str, str]]:
-    &#34;&#34;&#34;Versions the project.
-
-    Args:
-        commit_type: states what is the type of the commit
-
-
-    Returns:
-        (is new version, the new version)
-    &#34;&#34;&#34;
-    use_news_files = commit_type in [CommitType.BETA, CommitType.RELEASE]
-    is_new_version, new_version, version_elements = calculate_version(commit_type, use_news_files, True)
-    _generate_changelog(new_version, use_news_files)
-    return is_new_version, new_version, version_elements</code></pre>
-</details>
-<div class="desc"><p>Versions the project.</p>
-<dl>
-<dt>Args</dt>
-<dt>-----=</dt>
-<dt><strong><code>commit_type</code></strong></dt>
-<dd>states what is the type of the commit</dd>
-</dl>
-<p>Returns
------=
-(is new version, the new version)</p></div>
+<div class="desc"><p>Easy news files generation …</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.detect_secrets" href="detect_secrets.html">continuous_delivery_scripts.detect_secrets</a></code></dt>
+<dd>
+<div class="desc"><p>Check tracked files against the project's recorded secret registry.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.generate_docs" href="generate_docs.html">continuous_delivery_scripts.generate_docs</a></code></dt>
+<dd>
+<div class="desc"><p>Generates documentation.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.generate_news" href="generate_news.html">continuous_delivery_scripts.generate_news</a></code></dt>
+<dd>
+<div class="desc"><p>Handles usage of towncrier for automated changelog generation and pyautoversion for versioning.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.get_config" href="get_config.html">continuous_delivery_scripts.get_config</a></code></dt>
+<dd>
+<div class="desc"><p>Retrieves configuration values.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.get_version" href="get_version.html">continuous_delivery_scripts.get_version</a></code></dt>
+<dd>
+<div class="desc"><p>Determine the project new version.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.language_specifics" href="language_specifics.html">continuous_delivery_scripts.language_specifics</a></code></dt>
+<dd>
+<div class="desc"><p>Language plugins Loader.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.license_files" href="license_files.html">continuous_delivery_scripts.license_files</a></code></dt>
+<dd>
+<div class="desc"><p>Apply copyright and licensing to all source files present in a project …</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.plugins" href="plugins/index.html">continuous_delivery_scripts.plugins</a></code></dt>
+<dd>
+<div class="desc"><p>Language specific actions.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.report_third_party_ip" href="report_third_party_ip.html">continuous_delivery_scripts.report_third_party_ip</a></code></dt>
+<dd>
+<div class="desc"><p>Script providing information about licensing and third party IP in order to comply with OpenChain …</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.spdx_report" href="spdx_report/index.html">continuous_delivery_scripts.spdx_report</a></code></dt>
+<dd>
+<div class="desc"><p>Module in charge of handling SPDX documents …</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.tag_and_release" href="tag_and_release.html">continuous_delivery_scripts.tag_and_release</a></code></dt>
+<dd>
+<div class="desc"><p>Orchestrates release process.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.update_secrets_registry" href="update_secrets_registry.html">continuous_delivery_scripts.update_secrets_registry</a></code></dt>
+<dd>
+<div class="desc"><p>Record the project's accepted secret registry using detect-secrets.</p></div>
+</dd>
+<dt><code class="name"><a title="continuous_delivery_scripts.utils" href="utils/index.html">continuous_delivery_scripts.utils</a></code></dt>
+<dd>
+<div class="desc"><p>Utility scripts to abstract and assist with scripts run in the CI.</p></div>
 </dd>
 </dl>
+</section>
+<section>
+</section>
+<section>
 </section>
 <section>
 </section>
@@ -122,15 +119,23 @@ el.replaceWith(d);
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3>Super-module</h3>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="continuous_delivery_scripts" href="api.html">continuous_delivery_scripts</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="continuous_delivery_scripts.generate_news.main" href="#continuous_delivery_scripts.generate_news.main">main</a></code></li>
-<li><code><a title="continuous_delivery_scripts.generate_news.version_project" href="#continuous_delivery_scripts.generate_news.version_project">version_project</a></code></li>
+<li><code><a title="continuous_delivery_scripts.assert_news" href="assert_news.html">continuous_delivery_scripts.assert_news</a></code></li>
+<li><code><a title="continuous_delivery_scripts.create_news_file" href="create_news_file.html">continuous_delivery_scripts.create_news_file</a></code></li>
+<li><code><a title="continuous_delivery_scripts.detect_secrets" href="detect_secrets.html">continuous_delivery_scripts.detect_secrets</a></code></li>
+<li><code><a title="continuous_delivery_scripts.generate_docs" href="generate_docs.html">continuous_delivery_scripts.generate_docs</a></code></li>
+<li><code><a title="continuous_delivery_scripts.generate_news" href="generate_news.html">continuous_delivery_scripts.generate_news</a></code></li>
+<li><code><a title="continuous_delivery_scripts.get_config" href="get_config.html">continuous_delivery_scripts.get_config</a></code></li>
+<li><code><a title="continuous_delivery_scripts.get_version" href="get_version.html">continuous_delivery_scripts.get_version</a></code></li>
+<li><code><a title="continuous_delivery_scripts.language_specifics" href="language_specifics.html">continuous_delivery_scripts.language_specifics</a></code></li>
+<li><code><a title="continuous_delivery_scripts.license_files" href="license_files.html">continuous_delivery_scripts.license_files</a></code></li>
+<li><code><a title="continuous_delivery_scripts.plugins" href="plugins/index.html">continuous_delivery_scripts.plugins</a></code></li>
+<li><code><a title="continuous_delivery_scripts.report_third_party_ip" href="report_third_party_ip.html">continuous_delivery_scripts.report_third_party_ip</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report" href="spdx_report/index.html">continuous_delivery_scripts.spdx_report</a></code></li>
+<li><code><a title="continuous_delivery_scripts.tag_and_release" href="tag_and_release.html">continuous_delivery_scripts.tag_and_release</a></code></li>
+<li><code><a title="continuous_delivery_scripts.update_secrets_registry" href="update_secrets_registry.html">continuous_delivery_scripts.update_secrets_registry</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils" href="utils/index.html">continuous_delivery_scripts.utils</a></code></li>
 </ul>
 </li>
 </ul>
