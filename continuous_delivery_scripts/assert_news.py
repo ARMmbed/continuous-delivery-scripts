@@ -9,7 +9,7 @@ import logging
 import pathlib
 import re
 import sys
-from typing import Union, Optional, Iterable, Any, List
+from typing import Union, Optional, Iterable, Any, List, ContextManager
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.git_helpers import ProjectTempClone, LocalProjectRepository, GitWrapper
@@ -159,11 +159,12 @@ def main() -> None:
     args = parser.parse_args()
     set_log_level(args.verbose)
 
-    with (
-        LocalProjectRepository()  # type: ignore
-        if args.local
-        else ProjectTempClone(desired_branch_name=args.current_branch)
-    ) as git:
+    repository: ContextManager[GitWrapper]
+    if args.local:
+        repository = LocalProjectRepository()
+    else:
+        repository = ProjectTempClone(desired_branch_name=args.current_branch)
+    with repository as git:
         if git.is_current_branch_feature():
             root_dir = configuration.get_value(ConfigurationVariable.PROJECT_ROOT)
             absolute_news_dir = configuration.get_value(ConfigurationVariable.NEWS_DIR)

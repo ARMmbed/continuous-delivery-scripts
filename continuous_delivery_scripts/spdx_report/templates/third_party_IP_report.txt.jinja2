@@ -3,8 +3,11 @@
                                          {{ render_time }}
 
 # Summary:
-    Licence compliance: {% if project.compliance %}Compliant{% else %}Not compliant{% endif %}
+    Licence compliance: {% if not project.complete %}Incomplete audit{% elif project.compliance %}Compliant{% else %}Not compliant{% endif %}
     Details: {% if project.compliance_details %}{{ project.compliance_details }}{% else %}N/A{% endif %}
+    Missing dependencies: {{ missing_dependencies|join(', ') if missing_dependencies else 'None' }}
+    Unknown licences: {{ unknown_licences|join(', ') if unknown_licences else 'None' }}
+    Undocumented exemptions: {{ undocumented_exemptions|join(', ') if undocumented_exemptions else 'None' }}
 
 # More details:
 {% for name,package in packages|dictsort %}
@@ -13,5 +16,9 @@
     [{%- if package.is_dependency == True -%}X{%- endif -%}] Dependency?
     URL: {{ package.url }}
     Licence: {{ package.licence }}
+    Licence source: {{ package.licence_source }}
+    Declared licence: {{ package.declared_licence }}
+    Licence classifiers: {{ package.licence_classifiers|join('; ') if package.licence_classifiers else 'None' }}
+    Evidence: {% for evidence in package.licence_evidence %}{{ evidence.kind }}: {{ evidence.path }}{% if not loop.last %}; {% endif %}{% else %}None{% endfor %}
     Licence compliance: {{ package.licence_compliance_details }}
 {% endfor %}

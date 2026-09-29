@@ -207,6 +207,23 @@ For dependency upgrades, dependabot is relied upon and news files are auto-gener
 
 # Releasing
 
+## Third-party licence reports
+
+The release generates HTML, CSV, text and JSON reports in `docs/`. The Python
+plugin reads installed distribution metadata and packaged licence and notice
+files. Run the audit in an environment containing the dependencies being
+released; missing dependencies and unknown licences appear in the reports.
+
+Set `FAIL_ON_INCOMPLETE_LICENCE_AUDIT = true` in `[ProjectConfig]` to fail
+`cd-generate-spdx` and the release when a required dependency is missing or a
+licence cannot be determined, unless a package has a documented manual licence
+check in `PACKAGES_WITH_CHECKED_LICENCE`. The default is `false` for projects
+that have not yet adopted strict auditing.
+
+Language plugins provide package metadata through `get_current_spdx_project()`;
+the shared report and policy code uses the same metadata and evidence fields
+for any plugin.
+
 ## Release Types
 
 The CI supports three release flows:

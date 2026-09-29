@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional
 
+from license_expression import ExpressionError
+
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     determine_spdx_value,
@@ -31,7 +33,7 @@ class PackageInfo:
     """Definition of a Python package.
 
     Attributes:
-        metadata: metadata about a package from files generated from setup.py.
+        metadata: metadata about an installed package.
         root_dir: project root directory.
         source_dir: directory where package's sources are.
         uuid: unique identifier of the package.
@@ -62,6 +64,11 @@ class SpdxPackage:
         self._file_list: Optional[List[Path]] = None
         self._actual_licence: Optional[str] = None
         self._main_licence: Optional[str] = None
+
+    @property
+    def metadata(self) -> PackageMetadata:
+        """Gets the original package metadata and licence evidence."""
+        return self._package_info.metadata
 
     @property
     def files(self) -> Optional[List[Path]]:
@@ -119,9 +126,12 @@ class SpdxPackage:
         """
         if not self._main_licence:
             package_licence = self._package_info.metadata.licence
-            self._main_licence = (
-                cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
-            )
+            try:
+                self._main_licence = (
+                    cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
+                )
+            except ExpressionError:
+                self._main_licence = UNKNOWN_LICENCE.identifier
         return self._main_licence
 
     @property

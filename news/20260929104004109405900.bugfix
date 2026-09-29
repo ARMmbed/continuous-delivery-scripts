@@ -1,0 +1,1 @@
+:bug: Restore SPDX report generation in CI by using the last spdx-tools release compatible with the legacy SPDX writer.

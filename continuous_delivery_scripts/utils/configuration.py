@@ -97,6 +97,8 @@ class ConfigurationVariable(enum.Enum):
     """Optional directory of Markdown guides to publish alongside generated API documentation."""
     DOCUMENTATION_GUIDES_OUTPUT_FOLDER = 39
     """Relative folder for rendered guides beneath the documentation output."""
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 40
+    """Fail the licence audit when dependencies or usable licence declarations are missing."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -203,6 +205,7 @@ class StaticConfig(GenericConfig):
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
     SECRETS_BASELINE_FILENAME = ".secrets.baseline"
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
