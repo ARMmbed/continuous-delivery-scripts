@@ -25,4 +25,5 @@ allow_prereleases = false
 detect-secrets = {extras = ["gibberish"], version = "==1.5.0"}
 types-toml = "*"
 types-setuptools = "*"
+types-Markdown = "*"
 continuous-delivery-scripts = {file = ".", editable = true}
