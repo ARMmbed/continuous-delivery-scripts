@@ -23,7 +23,7 @@ with open(os.path.join(repository_dir, "README.md"), encoding="utf8") as fh:
     long_description = fh.read()
 
 setup(
-    author="CMSIS team",
+    author="Arm",
     author_email="adrien.cabarbaye@arm.com",
     classifiers=[
         "Intended Audience :: Developers",
