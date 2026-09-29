@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Platform Database Validation Results</title>
+    <title>Third-party licence and IP report</title>
     <style type="text/css">
       html {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
@@ -60,7 +60,7 @@
     </style>
   </head>
   <body>
-    <h1>Project's 3rd party IP report</h1>
+    <h1>Third-party licence and IP report</h1>
     <p><i>{{ render_time }}</i></p>
     <h2>Summary</h2>
     <table>
@@ -72,19 +72,28 @@
       </thead>
       <tbody>
         <tr>
-          <td><span style="color: {% if project.compliance %}#00c246{% else %}red{% endif %};">{% if project.compliance %}Compliant{% else %}Not compliant{% endif %}</span></td>
+          <td><span style="color: {% if project.complete and project.compliance %}#00c246{% else %}red{% endif %};">{% if not project.complete %}Incomplete audit{% elif project.compliance %}Compliant{% else %}Not compliant{% endif %}</span></td>
           <td>{% if project.compliance_details %}{{ project.compliance_details }}{% else %}N/A{% endif %}</td>
         </tr>
       </tbody>
     </table>
+    {% if missing_dependencies or unknown_licences or undocumented_exemptions %}
+    <h2>Audit gaps</h2>
+    <p>Missing dependencies: {{ missing_dependencies|join(', ') if missing_dependencies else 'None' }}</p>
+    <p>Unknown licences (including manually reviewed): {{ unknown_licences|join(', ') if unknown_licences else 'None' }}</p>
+    <p>Undocumented exemptions: {{ undocumented_exemptions|join(', ') if undocumented_exemptions else 'None' }}</p>
+    {% endif %}
     <h2>Package licences</h2>
     <table id="third_party_ip">
       <tr>
       <th>Compliance</th>
       <th>Name</th>
+      <th>Version</th>
       <th>Is a dependency?</th>
       <th>URL</th>
       <th>Licence</th>
+      <th>Licence source</th>
+      <th>Packaged evidence</th>
       <th>Details</th>
       </tr>
 {%- for name,package in packages|dictsort %}
@@ -99,6 +108,7 @@
         <td style="text-align:center">
            {{ package.name }}
         </td>
+        <td>{{ package.version }}</td>
         <td style="text-align:center">
             {%- if package.is_dependency == True -%}
                 Y
@@ -112,6 +122,21 @@
         <td style="text-align:center">
             <span style="color: {% if package.mark_as_problematic %}{% if package.is_compliant %}#ffdf28{% else %}red{% endif %}{% endif %};">{{ package.licence }}</span>
 
+        </td>
+        <td>{{ package.licence_source }}</td>
+        <td>
+          {% if package.licence_classifiers %}
+          <details><summary>Declared classifiers</summary>{{ package.licence_classifiers|join('; ') }}</details>
+          {% endif %}
+          {% if package.licence_candidates %}
+          <details><summary>Licence candidates (review required)</summary>{{ package.licence_candidates|join('; ') }}</details>
+          {% endif %}
+          {% if package.declared_licence %}
+          <details><summary>Original declaration</summary>{{ package.declared_licence }}</details>
+          {% endif %}
+          {% for evidence in package.licence_evidence %}
+          <details><summary>{{ evidence.kind }}: {{ evidence.path }}</summary><pre>{{ evidence.text }}</pre></details>
+          {% else %}N/A{% endfor %}
         </td>
         <td style="text-align:center">
            {{ package.licence_compliance_details }}

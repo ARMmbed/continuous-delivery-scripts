@@ -171,7 +171,10 @@ def get_packages_with_checked_licence() -> dict:
 def get_package_manual_check(package_name: str) -> Tuple[bool, Optional[str]]:
     """Gets information about package licence manual check."""
     checked_packages = get_packages_with_checked_licence()
-    return bool(package_name.strip() in checked_packages), checked_packages.get(package_name.strip())
+    name = package_name.strip()
+    if name not in checked_packages:
+        name = name.replace(".", "-")
+    return bool(name in checked_packages), checked_packages.get(name)
 
 
 def is_package_licence_manually_checked(package_name: str) -> bool:

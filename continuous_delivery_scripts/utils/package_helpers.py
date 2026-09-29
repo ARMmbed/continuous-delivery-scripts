@@ -25,9 +25,10 @@ class PackageMetadata:
     https://packaging.python.org/specifications/core-metadata/
     """
 
-    def __init__(self, data: dict) -> None:
+    def __init__(self, data: dict, licence_evidence: Optional[List[Dict[str, str]]] = None) -> None:
         """Constructor."""
         self._data: Dict[str, Any] = data
+        self._licence_evidence = licence_evidence or []
 
     @property
     def name(self) -> str:
@@ -52,13 +53,46 @@ class PackageMetadata:
     @property
     def licence(self) -> str:
         """Gets package's licence."""
-        expression = self._data.get("License-Expression")
-        if expression:
-            return str(expression)
-        legacy_licence = str(self._data.get("License") or "").strip()
-        if legacy_licence and not legacy_licence.lower().startswith("copyright") and legacy_licence.lower() != "unknown":
-            return legacy_licence
-        return str(self._data.get("License-Classifier") or legacy_licence or UNKNOWN)
+        source = self.licence_source
+        if source == "unknown":
+            return str(UNKNOWN)
+        return str(self._data[source]).strip()
+
+    @property
+    def licence_source(self) -> str:
+        """Gets the metadata field used to determine the licence."""
+        if self._data.get("License-Expression"):
+            return "License-Expression"
+        legacy = str(self._data.get("License") or "").strip()
+        if legacy and not legacy.lower().startswith("copyright") and legacy.lower() not in ("unknown", "none"):
+            return "License"
+        if self._data.get("License-Classifier"):
+            return "License-Classifier"
+        return "unknown"
+
+    @property
+    def declared_licence(self) -> str:
+        """Gets the licence declaration as provided by the package."""
+        return str(
+            self._data.get("License-Expression")
+            or self._data.get("License")
+            or "; ".join(self._data.get("License-Classifiers", []))
+        )
+
+    @property
+    def licence_classifiers(self) -> List[str]:
+        """Gets all licence classifiers as declared by the package."""
+        return list(self._data.get("License-Classifiers", []))
+
+    @property
+    def licence_candidates(self) -> List[str]:
+        """Gets normalised SPDX identifiers found in the licence classifiers."""
+        return list(self._data.get("Licence-Candidates", []))
+
+    @property
+    def licence_evidence(self) -> List[Dict[str, str]]:
+        """Gets the packaged licence and notice file evidence."""
+        return self._licence_evidence
 
     @property
     def description(self) -> str:
@@ -92,6 +126,7 @@ class ProjectMetadata:
         self._package_metadata: PackageMetadata = PackageMetadata(dict())
         self._dependency_packages_metadata: List[PackageMetadata] = list()
         self._package_name: str = package_name
+        self.missing_dependencies: List[str] = []
 
     @property
     def dependencies_metadata(self) -> List[PackageMetadata]:

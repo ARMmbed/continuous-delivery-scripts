@@ -2,6 +2,7 @@
 # Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase, mock
@@ -22,6 +23,12 @@ class TestPythonReport(TestCase):
             html_report = Path(output_dir, "third_party_IP_report.html")
             self.assertTrue(html_report.is_file())
             self.assertIn("continuous-delivery-scripts", html_report.read_text(encoding="utf8"))
+            report = json.loads(Path(output_dir, "third_party_IP_report.json").read_text(encoding="utf8"))
+            self.assertIn("continuous-delivery-scripts", report["packages"])
+            self.assertIn("licence_source", report["packages"]["continuous-delivery-scripts"])
+            self.assertIn("licence_evidence", report["packages"]["continuous-delivery-scripts"])
+            self.assertIn("manual_check", report["packages"]["continuous-delivery-scripts"])
+            self.assertIn("missing_dependencies", report)
 
     @mock.patch("continuous_delivery_scripts.tag_and_release.get_language_specifics", return_value=Python())
     def test_release_regenerates_html_licence_summary(self, _get_language_specifics):

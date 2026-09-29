@@ -94,6 +94,8 @@ def _update_licensing_summary() -> Optional["SpdxProject"]:
         project.generate_licensing_summary(
             Path(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
         )
+        if configuration.get_value(ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT):
+            project.check_licence_compliance()
     return project
 
 

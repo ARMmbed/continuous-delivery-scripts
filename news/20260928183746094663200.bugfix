@@ -1,0 +1,1 @@
+:bug: Show missing dependencies and unknown licences in reports and allow incomplete licence audits to fail CI when configured.

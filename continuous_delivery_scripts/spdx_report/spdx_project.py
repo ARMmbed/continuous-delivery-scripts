@@ -18,8 +18,11 @@ from continuous_delivery_scripts.utils.python.package_helpers import (
 )
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     is_package_licence_manually_checked,
+    get_package_manual_check,
 )
 from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.third_party_licences import UNKNOWN_LICENCE
 
 
 class SpdxProject:
@@ -92,6 +95,7 @@ class SpdxProject:
         SummaryGenerator(
             self.main_document.generate_spdx_package(),
             [d.generate_spdx_package() for d in self.dependency_documents],
+            self._parser.project_metadata.missing_dependencies,
         ).generate_summary(dir)
 
     def generate_tag_value_files(self, dir: Path) -> None:
@@ -154,6 +158,27 @@ class SpdxProject:
         issues: Dict[str, str] = dict()
         self._check_package_licence_compliance(issues)
         self._check_package_dependencies_licence_compliance(issues)
+        if configuration.get_value(ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT):
+            missing = self._parser.project_metadata.missing_dependencies
+            unknown = [
+                package.name
+                for package in [self.main_document, *self.dependency_documents]
+                if (
+                    package.generate_spdx_package().metadata.licence_source == "unknown"
+                    or package.generate_spdx_package().main_licence == UNKNOWN_LICENCE.identifier
+                )
+                and not is_package_licence_manually_checked(package.name)
+            ]
+            undocumented = [
+                package.name
+                for package in [self.main_document, *self.dependency_documents]
+                if get_package_manual_check(package.name)[0] and not get_package_manual_check(package.name)[1]
+            ]
+            if missing or unknown or undocumented:
+                raise ValueError(
+                    f"Incomplete licence audit: missing dependencies: {sorted(set(missing))}; "
+                    f"unknown licences: {unknown}; undocumented exemptions: {undocumented}"
+                )
         self._report_issues(issues)
 
 

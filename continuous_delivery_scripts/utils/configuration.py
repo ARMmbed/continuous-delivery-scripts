@@ -93,6 +93,8 @@ class ConfigurationVariable(enum.Enum):
     """States whether the release should be tagged with shortcuts i.e. major, major+minor"""
     SECRETS_BASELINE_FILENAME = 37
     """Filename for the detect-secrets baseline."""
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 38
+    """Fail the licence audit when dependencies or usable licence declarations are missing."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -199,6 +201,7 @@ class StaticConfig(GenericConfig):
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
     SECRETS_BASELINE_FILENAME = ".secrets.baseline"
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
