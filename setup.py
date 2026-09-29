@@ -56,8 +56,7 @@ setup(
     keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
     include_package_data=True,
     install_requires=[
-        # Legacy spdx-tools imports pkg_resources, which setuptools 81 removed.
-        "setuptools<81",
+        "setuptools",
         "gitpython",
         "towncrier==22.12.0",
         "pyautoversion~=1.2.0",

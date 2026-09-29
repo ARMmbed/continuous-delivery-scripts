@@ -14,12 +14,16 @@ from continuous_delivery_scripts.utils.configuration import ConfigurationVariabl
 
 
 class TestPythonReport(TestCase):
+    @mock.patch("continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_files")
     @mock.patch("continuous_delivery_scripts.report_third_party_ip.get_language_specifics", return_value=Python())
-    def test_generates_html_licence_summary_from_installed_metadata(self, _get_language_specifics):
+    def test_generates_html_licence_summary_from_installed_metadata(
+        self, _get_language_specifics, generate_tag_value_files
+    ):
         with TemporaryDirectory() as output_dir:
             project = generate_spdx_reports(Path(output_dir))
 
             self.assertIsNotNone(project)
+            generate_tag_value_files.assert_called_once_with(Path(output_dir))
             html_report = Path(output_dir, "third_party_IP_report.html")
             self.assertTrue(html_report.is_file())
             self.assertIn("continuous-delivery-scripts", html_report.read_text(encoding="utf8"))
