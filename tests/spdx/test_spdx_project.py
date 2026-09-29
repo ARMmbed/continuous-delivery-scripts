@@ -52,7 +52,7 @@ class TestSpdxFile(TestCase):
         with TemporaryDirectory() as output_dir:
             project.generate_licensing_summary(Path(output_dir))
             html = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
-            self.assertIn("Unknown licences: test_package", html)
+            self.assertIn("Unknown licences (including manually reviewed): test_package", html)
 
     @patch("continuous_delivery_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence")
     def test_strict_audit_requires_a_reason_for_manual_exemptions(self, checked_licences):
