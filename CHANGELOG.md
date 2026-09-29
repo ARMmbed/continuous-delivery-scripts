@@ -17,6 +17,34 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.0.0" (2026-09-29)
+====================
+
+Major changes
+-------------
+
+- :gear: Drop Python 3.8 and 3.9 support, and update CI coverage to Python 3.10 through 3.14. (#20260819123000)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: pdoc3-0.11.5 (#20250110080026)
+- Dependency upgrade: spdx-tools-0.8.3 (#20260408145429)
+- Dependency upgrade: coverage-7.6.10 (#20260408145835)
+- Dependency upgrade: upload-sarif-9ee088e13615f8d1eaef4766f9dde95d3356a8f6 (#20260819213312)
+- Dependency upgrade: coverage-7.15.4 (#20260820063608)
+- Dependency upgrade: pdoc3-0.11.6 (#20260820063844)
+- Dependency upgrade: spdx-tools-0.8.5 (#20260820095812)
+- Dependency upgrade: upload-sarif-486fec2a3ea2626afcd8c7e9208b4f515078dd7e (#20260824063632)
+- Dependency upgrade: codeql-action-4.37.8 (#20260824063829)
+- Dependency upgrade: coverage-7.16.0 (#20260901064005)
+- Dependency upgrade: coverage-7.16.1 (#20260928170440)
+- Dependency upgrade: codeql-action-4.38.2 (#20260928170521)
+- :bug: Add nanoseconds to generated news file names to prevent collisions when multiple PRs are created in the same second. (#20260928175215874316500)
+- :bug: Recognise news files already added to Dependabot branches and avoid creating duplicates when validating those PRs. (#20260928175215874361800)
+
+
 "3.5.1" (2026-08-19)
 ====================
 
