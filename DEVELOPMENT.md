@@ -78,6 +78,7 @@ corresponding workflows; you only need to configure workflows you use.
 | `DOCUMENTATION_GUIDES_DIR`, `DOCUMENTATION_GUIDES_OUTPUT_FOLDER` | Optional Markdown guide source and its relative output folder; add an `index.md` in the source directory to publish guides with the API documentation. |
 | `ORGANISATION`, `COPYRIGHT_START_DATE`, `FILE_LICENCE_IDENTIFIER` | Creating source copyright and licence headers. Replace the built-in organisation default for your project. |
 | `ACCEPTED_THIRD_PARTY_LICENCES`, `PACKAGES_WITH_CHECKED_LICENCE` | Adjusting the accepted-licence policy and recording reviewed dependency licences where reporting is supported. |
+| `GENERATE_LICENSING_SUMMARY_ON_RELEASE` | Opting into third-party licence summaries during release after documentation generation. Defaults to `false`; this repository sets it to `true`. |
 
 Settings such as `DEPENDENCY_UPDATE_BRANCH_PATTERN` and
 `AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE` can be overridden to control
@@ -145,6 +146,40 @@ Perform static type check:
 
 ```bash
 mypy -p continuous_delivery_scripts
+```
+
+### Testing plugins
+
+The build matrix runs the full test suite across supported Python versions.
+Dedicated CI jobs also exercise the Go and Python plugins separately.
+
+#### Testing the Go plugin
+
+The Go module and licence-report integration tests need the Go toolchain and
+`go-licenses` binary. They are skipped locally when those tools are absent;
+unit tests that mock external Go commands still run. The CI job
+**test-go-plugin** sets up Go and installs `go-licenses` specifically to run
+the real integration tests:
+
+```bash
+go install github.com/google/go-licenses/v2@latest
+pytest -o addopts= tests/plugin/test_golang.py tests/plugin/test_go_licensing.py
+```
+
+Make sure Go's binary directory (normally `$(go env GOPATH)/bin`) is on
+`PATH` so the integration test can find `go-licenses`.
+
+#### Testing the Python plugin
+
+The **test-python-plugin** CI job exercises Python-specific documentation,
+packaging and licence-reporting tests. To run the same tests locally after
+installing development dependencies:
+
+```bash
+pytest -o addopts= tests/generate_docs/test_generate_docs_python.py \
+  tests/tag_and_release/test_update_documentation_python.py \
+  tests/python_helpers/test_python_helpers.py \
+  tests/packaging/test_package_helpers.py tests/spdx/test_python_report.py
 ```
 
 ## Documenting code

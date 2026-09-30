@@ -98,7 +98,7 @@ class SummaryGenerator:
         arguments["unknown_licences"] = sorted(
             p.name
             for p in self.all_packages
-            if p.metadata.licence_source == "unknown" or p.main_licence == UNKNOWN_LICENCE.identifier
+            if p.metadata.has_unknown_licence or p.main_licence == UNKNOWN_LICENCE.identifier
         )
         arguments["unreviewed_licences"] = [
             name for name in arguments["unknown_licences"] if not get_package_manual_check(name)[1]

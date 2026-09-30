@@ -4,19 +4,23 @@
 #
 """Plugin for Golang projects."""
 
+import csv
+import io
 import json
 import logging
 import os
 import shutil
 from pathlib import Path
 from subprocess import check_call, check_output
-from typing import TYPE_CHECKING, Optional, List, Dict, MutableMapping
+from tempfile import TemporaryDirectory
+from typing import Optional, List, Dict, MutableMapping
 
+from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import (
     configuration,
     ConfigurationVariable,
 )
-from continuous_delivery_scripts.utils.definitions import CommitType
+from continuous_delivery_scripts.utils.definitions import CommitType, UNKNOWN
 from continuous_delivery_scripts.utils.git_helpers import (
     LocalProjectRepository,
     GitWrapper,
@@ -25,9 +29,12 @@ from continuous_delivery_scripts.utils.language_specifics_base import (
     BaseLanguage,
     get_language_from_file_name,
 )
-
-if TYPE_CHECKING:
-    from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
+from continuous_delivery_scripts.utils.package_helpers import (
+    LicenceSource,
+    PackageMetadata,
+    ProjectMetadata,
+    ProjectMetadataFetcher,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +44,9 @@ ENVVAR_GORELEASER_GIT_TOKEN = "GITHUB_TOKEN"
 ENVVAR_GORELEASER_CUSTOMISED_TAG = "GORELEASER_CURRENT_TAG"
 ENVVAR_GO_MOD = "GO111MODULE"
 GO_MOD_ON_VALUE = "on"
+# go-licenses report --template receives Name, Version, LicenseURL and LicenseName for each library.
+# https://github.com/google/go-licenses/blob/master/README.md#reports-with-custom-templates
+GO_LICENSES_TEMPLATE = "{{range .}}{{.Name}}\t{{.Version}}\t{{.LicenseURL}}\t{{.LicenseName}}\n{{end}}"
 
 
 def _generate_doc2go_command_list(output_directory: Path, module: str) -> List[str]:
@@ -81,24 +91,147 @@ def _install_goreleaser_command_list() -> List[str]:
     return ["go", "install", "github.com/goreleaser/goreleaser/v2@latest"]
 
 
+def _install_go_licenses_command_list() -> List[str]:
+    return ["go", "install", "github.com/google/go-licenses/v2@latest"]
+
+
+def _installed_go_tool_path(tool_name: str, env: MutableMapping[str, str]) -> str:
+    """Find a binary installed using go install, even when Go's bin directory is not on PATH."""
+    go_bin = check_output(["go", "env", "GOBIN"], env=env, encoding="utf8").strip()
+    if not go_bin:
+        go_path = check_output(["go", "env", "GOPATH"], env=env, encoding="utf8").strip()
+        go_bin = str(Path(go_path.split(os.pathsep)[0]) / "bin")
+    executable = Path(go_bin) / (f"{tool_name}.exe" if os.name == "nt" else tool_name)
+    if not executable.is_file():
+        raise FileNotFoundError(f"Could not find installed {tool_name} binary: {executable}")
+    return str(executable)
+
+
+def _candidate_go_module_directories(include_project_root: bool = False) -> List[Path]:
+    """Share module selection between release tags and licence reporting."""
+    candidates = [SRC_DIR]
+    if include_project_root:
+        candidates.append(ROOT_DIR)
+    workspace_modules = _determine_go_work_module_directories()
+    candidates.extend(workspace_modules if workspace_modules else _determine_go_subproject_directories())
+    return list(dict.fromkeys(candidates))
+
+
+def _go_licence_module_directories() -> List[Path]:
+    """Find actual Go modules for dependency reporting."""
+    modules = [
+        path for path in _candidate_go_module_directories(include_project_root=True) if (path / "go.mod").is_file()
+    ]
+    if not modules:
+        raise FileNotFoundError(f"No go.mod found in {SRC_DIR}, {ROOT_DIR} or their Go workspace modules.")
+    return modules
+
+
+def _go_module_name(module_dir: Path, env: MutableMapping[str, str]) -> str:
+    """Read the import path declared by a Go module."""
+    module = json.loads(check_output(["go", "list", "-m", "-json"], cwd=module_dir, env=env, encoding="utf8"))
+    return str(module["Path"])
+
+
+def _parse_go_licences(output: str) -> List[PackageMetadata]:
+    """Translate go-licenses template output into shared package metadata."""
+    packages = []
+    for row in csv.reader(io.StringIO(output), delimiter="\t"):
+        if len(row) != 4 or not row[0].strip():
+            raise ValueError(f"Unexpected go-licenses report row: {row}")
+        name, version, licence_url, licence = (item.strip() for item in row)
+        known_licence = bool(licence and licence.lower() != UNKNOWN)
+        evidence = [{"kind": "licence", "path": licence_url, "text": ""}] if licence_url.startswith("https://") else []
+        packages.append(
+            PackageMetadata.from_fields(
+                name=name,
+                version=version or UNKNOWN,
+                licence=licence if known_licence else UNKNOWN,
+                licence_source=LicenceSource.TOOL if known_licence else LicenceSource.UNKNOWN,
+                declared_licence=licence or UNKNOWN,
+                url=licence_url or UNKNOWN,
+                licence_evidence=evidence,
+            )
+        )
+    return packages
+
+
+class GoProjectMetadataFetcher(ProjectMetadataFetcher):
+    """Retrieve Go dependency licences for the shared SPDX and compliance report."""
+
+    def __init__(self) -> None:
+        """Initialise with the configured project name."""
+        super().__init__(str(configuration.get_value(ConfigurationVariable.PROJECT_NAME)))
+
+    def fetch_project_metadata(self) -> ProjectMetadata:
+        """Collect module dependencies using go-licenses without replacing shared policy checks."""
+        module_directories = _go_licence_module_directories()
+        env = os.environ.copy()
+        env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+        executable = _ensure_go_tool_installed(
+            tool_name="go-licenses",
+            version_command=["go-licenses", "report", "--help"],
+            install_command=_install_go_licenses_command_list(),
+            env=env,
+        )
+        project = ProjectMetadata(self._package_name)
+        project.project_metadata = PackageMetadata.from_fields(
+            name=self._package_name,
+            licence=str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER)),
+            licence_source=LicenceSource.CONFIGURATION,
+        )
+        dependencies: Dict[str, PackageMetadata] = {}
+        modules = [(module_dir, _go_module_name(module_dir, env)) for module_dir in module_directories]
+        with TemporaryDirectory() as temporary_dir:
+            template_path = Path(temporary_dir) / "go-licenses.tpl"
+            template_path.write_text(GO_LICENSES_TEMPLATE, encoding="utf8")
+            for module_dir, _ in modules:
+                output = check_output(
+                    [executable, "report", "./...", "--template", str(template_path)],
+                    cwd=module_dir,
+                    env=env,
+                    encoding="utf8",
+                )
+                for package in _parse_go_licences(output):
+                    if any(package.name == name or package.name.startswith(f"{name}/") for _, name in modules):
+                        continue
+                    existing = dependencies.get(package.name)
+                    if existing and (existing.version, existing.licence) != (package.version, package.licence):
+                        candidates = existing.licence_candidates or [existing.licence]
+                        dependencies[package.name] = PackageMetadata.from_fields(
+                            name=package.name,
+                            version=UNKNOWN if existing.version != package.version else package.version,
+                            licence=UNKNOWN,
+                            licence_source=LicenceSource.UNKNOWN,
+                            licence_candidates=sorted(set(candidates + [package.licence])),
+                            licence_evidence=existing.licence_evidence + package.licence_evidence,
+                        )
+                    elif existing is None:
+                        dependencies[package.name] = package
+        for dependency in dependencies.values():
+            project.add_dependency_metadata(dependency)
+        return project
+
+
 def _ensure_go_tool_installed(
     tool_name: str,
     version_command: List[str],
     install_command: List[str],
     env: MutableMapping[str, str],
-) -> None:
-    """Ensure a Go-based tool is available on PATH before use."""
+) -> str:
+    """Return a usable Go tool on PATH or install it into the Go binary directory."""
     tool_path = shutil.which(tool_name)
     if tool_path:
         try:
             check_output(version_command, env=env)
             logger.info("Using %s from PATH: %s", tool_name, tool_path)
-            return
+            return tool_path
         except Exception as exception:
             logger.warning("Could not use %s from PATH: %s", tool_name, exception)
 
     logger.info("Installing %s with go install.", tool_name)
     check_call(install_command, env=env)
+    return _installed_go_tool_path(tool_name, env)
 
 
 def _call_doc2go(output_directory: Path, module: str) -> None:
@@ -212,15 +345,9 @@ def _determine_go_module_tag(version: str) -> List[str]:
     https://go.dev/ref/mod#workspaces, and
     https://github.com/golang/go/wiki/Modules/a549b3e4b7ad6be6e7d11c37ef247bb2279c8146#faqs--multi-module-repositories.
     """
-    module_directories = [SRC_DIR]
-    go_work_module_directories = _determine_go_work_module_directories()
-    if go_work_module_directories:
-        module_directories.extend(go_work_module_directories)
-    else:
-        module_directories.extend(_determine_go_subproject_directories())
-
     tags = [
-        _determine_go_module_tag_for_directory(module_directory, version) for module_directory in module_directories
+        _determine_go_module_tag_for_directory(module_directory, version)
+        for module_directory in _candidate_go_module_directories()
     ]
     return list(dict.fromkeys([tag for tag in tags if tag]))
 
@@ -263,7 +390,7 @@ class Go(BaseLanguage):
 
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
-        return False
+        return True
 
     def get_secret_registry_exclude_files(self) -> List[str]:
         """Gets additional detect-secrets exclude patterns for Go projects."""
@@ -274,10 +401,9 @@ class Go(BaseLanguage):
             (r"^\.github[\\/]workflows[\\/].*"),
         ]
 
-    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
+    def get_current_spdx_project(self) -> Optional[SpdxProject]:
         """Gets current SPDX description."""
-        # TODO
-        return None
+        return SpdxProject(GoProjectMetadataFetcher())
 
     def should_clean_before_packaging(self) -> bool:
         """States whether the repository must be cleaned before packaging happens."""

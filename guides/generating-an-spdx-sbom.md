@@ -12,7 +12,7 @@ see [TPIP reporting](third-party-ip-reporting.md).
 Install the project and its dependencies in the environment being audited.
 Configure `pyproject.toml` with `PROJECT_ROOT`, `SOURCE_DIR`,
 `PROGRAMMING_LANGUAGE`, your licence policy and any values required by the
-selected language plugin (for example, `PACKAGE_NAME` for Python). Provide
+selected language plugin. Provide
 `PROJECT_UUID` and an `[spdx]` section for the document namespace; see
 [SPDX document identity](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/DEVELOPMENT.md#spdx-document-identity).
 Then provide an **existing** output directory:
@@ -23,9 +23,10 @@ cd-generate-spdx --output-dir spdx-output
 ```
 
 The selected language plugin must return project metadata; if it does not,
-the command returns without a report. Check the installed version's
-`can_get_project_metadata()` implementation; see [the Python reporting work](https://github.com/ARMmbed/continuous-delivery-scripts/pull/166)
-for the status of Python metadata support.
+the command returns without a report. The selected plugin uses language-specific
+tools to obtain dependency and licence information; consult the
+[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+for its prerequisites and metadata support.
 SPDX tag-value generation also requires an SDK compatible with this project's
 writer. Check the output files before treating an audit as complete. Installed
 packages and platform-specific dependency markers determine what is covered;
@@ -51,5 +52,4 @@ After checking out the project and installing its dependencies:
 ```
 
 See [`cd-generate-spdx`'s API](https://armmbed.github.io/continuous-delivery-scripts/report_third_party_ip.html)
-and the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
-for language-specific metadata support and requirements.
+for the common reporting interface.
