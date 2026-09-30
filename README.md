@@ -178,17 +178,18 @@ same commands whichever CI system the team chooses.
 
 | Command | What it does | Key arguments | Typical environment |
 | --- | --- | --- | --- |
-| `cd-assert-news` | Validates a branch's news files; can add a missing file for a configured dependency-update branch. | `--current-branch` (`-b`), `--local` (`-l`) | CI; `--local` for developer checks |
-| `cd-create-news-file` | Creates a one-line news fragment in the configured news directory. | Required news text; `--type` (`-t`), `--ref-number` (`-n`) | Developer |
-| `cd-determine-version` | Calculates and prints the **project's prospective release version** without generating a changelog. | Required `--release-type` (`-t`) | Developer preview or CI |
-| `cd-generate-news` | Updates the project version and, for beta or production releases, builds the changelog from news fragments; prints the resulting version. | Required `--release-type` (`-t`) | CI release flow |
-| `cd-get-config` | Prints a project configuration value. | Either `--key` (`-k`) or `--config-variable` (`-c`) | Developer or CI |
-| `cd-tag-and-release` | Runs the release flow, including documentation, licensing summaries, Git tagging, packaging and publication through the selected [language plugin](./continuous_delivery_scripts/plugins). | Required `--release-type` (`-t`); optional `--current-branch` (`-b`) | CI release flow |
-| `cd-generate-docs` | Generates code documentation in the configured output directory (or one specified on the command line). | `--output_directory` | Developer preview or CI |
-| `cd-generate-spdx` | Generates SPDX documents and third-party licence summaries, then checks licence compliance when project metadata is available. | Required `--output-dir` (`-o`); create the directory first | CI audit; developer review also possible |
-| `cd-license-files` | Adds or updates source-file licence and copyright headers when the language plugin supports them. | `--verbose` (`-v`) | Developer or CI |
-| `cd-record-secrets` | Records accepted findings in the project's [detect-secrets](https://github.com/Yelp/detect-secrets) registry. | `--registry-file` (`-r`); defaults to the configured registry | Developer (registry maintenance) |
-| `cd-detect-secrets` | Checks Git-tracked files against that registry and fails if new secrets are found. | `--registry-file` (`-r`); defaults to the configured registry | CI; developer checks also possible |
+| [`cd-assert-news`](./guides/checking-news-fragments.md) | Validates a branch's news files; can add a missing file for a configured dependency-update branch. | `--current-branch` (`-b`), `--local` (`-l`) | CI; `--local` for developer checks |
+| [`cd-create-news-file`](./guides/creating-news-fragments.md) | Creates a one-line news fragment in the configured news directory. | Required news text; `--type` (`-t`), `--ref-number` (`-n`) | Developer |
+| [`cd-determine-version`](./guides/previewing-versions.md) | Calculates and prints the **project's prospective release version** without generating a changelog. | Required `--release-type` (`-t`) | Developer preview or CI |
+| [`cd-generate-news`](./guides/managing-changelogs.md) | Updates the project version and, for beta or production releases, builds the changelog from news fragments; prints the resulting version. | Required `--release-type` (`-t`) | CI release flow |
+| [`cd-get-config`](./guides/reading-project-configuration.md) | Prints a project configuration value. | Either `--key` (`-k`) or `--config-variable` (`-c`) | Developer or CI |
+| [`cd-tag-and-release`](./guides/automating-releases.md) | Runs the release flow, including documentation, licensing summaries, Git tagging, packaging and publication through the selected [language plugin](./continuous_delivery_scripts/plugins). | Required `--release-type` (`-t`); optional `--current-branch` (`-b`) | CI release flow |
+| [`cd-generate-docs`](./guides/generating-code-documentation.md) | Generates code documentation in the configured output directory (or one specified on the command line). | `--output_directory` | Developer preview or CI |
+| [`cd-generate-spdx`](./guides/generating-an-spdx-sbom.md) | Generates SPDX documents and third-party licence summaries, then checks licence compliance when project metadata is available. | Required `--output-dir` (`-o`); create the directory first | CI audit; developer review also possible |
+| [`cd-check-licence-compliance`](./guides/checking-licence-compliance.md) | Checks project and dependency licences without creating SPDX documents; optionally writes third-party IP summaries. | Optional `--output-dir` (`-o`) for reports | CI gate or developer review |
+| [`cd-license-files`](./guides/licence-header-management.md) | Adds or updates source-file licence and copyright headers when the language plugin supports them. | `--verbose` (`-v`) | Developer or CI |
+| [`cd-record-secrets`](./guides/recording-secrets.md) | Records accepted findings in the project's [detect-secrets](https://github.com/Yelp/detect-secrets) registry. | `--registry-file` (`-r`); defaults to the configured registry | Developer (registry maintenance) |
+| [`cd-detect-secrets`](./guides/checking-for-secrets.md) | Checks Git-tracked files against that registry and fails if new secrets are found. | `--registry-file` (`-r`); defaults to the configured registry | CI; developer checks also possible |
 
 For example, `cd-create-news-file "Fix dependency resolution" --type bugfix`
 adds a news fragment. For release workflow details, see the

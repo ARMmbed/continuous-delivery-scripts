@@ -20,6 +20,7 @@ from continuous_delivery_scripts.spdx_report.spdx_helpers import (
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
 from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
+    LICENSE_REF_PROPRIETARY,
     UNKNOWN_LICENCE,
     cleanse_licence_expression,
     is_licence_accepted,
@@ -141,7 +142,14 @@ class SpdxPackage:
     @property
     def is_main_licence_accepted(self) -> bool:
         """States whether the main licence of the package is part of the accepted licence list."""
-        return bool(is_licence_accepted(self.main_licence))
+        return bool(is_licence_accepted(self.main_licence, self._project_licence_refs))
+
+    @property
+    def _project_licence_refs(self) -> List[str]:
+        """Allow the project's own proprietary licence without permitting it for dependencies."""
+        if not self._is_dependency and LICENSE_REF_PROPRIETARY in self.main_licence:
+            return [LICENSE_REF_PROPRIETARY]
+        return []
 
     @property
     def licence(self) -> str:
@@ -162,7 +170,7 @@ class SpdxPackage:
     @property
     def is_licence_accepted(self) -> bool:
         """States whether the actual package's licence of the package is part of the accepted licence list."""
-        return bool(is_licence_accepted(self.licence))
+        return bool(is_licence_accepted(self.licence, self._project_licence_refs))
 
     @property
     def author(self) -> str:

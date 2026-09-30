@@ -12,6 +12,7 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 
 ## Dependency licences and OpenChain workflows
 
+- [Check licence compliance](checking-licence-compliance.md): Gate a project without generating SPDX files; optionally write reports.
 - [Generate an SPDX SBOM](generating-an-spdx-sbom.md): Produce project and dependency SPDX tag-value documents.
 - [Generate a third-party IP / TPIP report](third-party-ip-reporting.md): Review dependency licences and compliance summaries.
 - [Manage licence headers](licence-header-management.md): Apply copyright and SPDX headers to source files.

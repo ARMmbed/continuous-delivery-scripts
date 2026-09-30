@@ -90,6 +90,20 @@ and use specialised tools, such as GoReleaser for Go. See the
 Provide tokens and publication credentials through your CI environment or
 secret store, rather than committing them to `pyproject.toml`.
 
+### Proprietary licences
+
+For proprietary projects, set `FILE_LICENCE_IDENTIFIER = "Proprietary"` in
+`[ProjectConfig]` and declare `Proprietary` in the project's package metadata.
+Generated headers and SPDX documents use `LicenseRef-Proprietary`. This is a
+**locally defined reference**, not an identifier with standard licence terms on
+the [SPDX License List](https://spdx.org/licenses/). See the SPDX specification
+for [how `LicenseRef-` identifiers work](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/#101-license-identifier-field)
+and [how to link to the actual terms](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/#104-license-cross-reference-field).
+When package licence evidence includes an HTTP(S) licence URL, the SPDX licence
+entry includes it as a `LicenseCrossReference`; otherwise, consult the rights
+holder for the terms, which are not supplied in the SPDX document. Proprietary
+dependencies still need explicit policy approval or manual review.
+
 ### SPDX document identity
 
 For a plugin that supports SPDX reporting, define `PROJECT_UUID` under

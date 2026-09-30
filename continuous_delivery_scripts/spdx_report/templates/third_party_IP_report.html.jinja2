@@ -49,6 +49,9 @@
       .hero .meta { margin: .75rem 0 0; color: #e5f2f5; }
       main { padding-block: 2rem 4rem; }
       .page-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+      .download-links { display: flex; flex-wrap: wrap; gap: .75rem; }
+      .download-link { display: inline-flex; align-items: center; min-height: 2.75rem; padding: .5rem .9rem; border: 1px solid var(--accent); border-radius: .5rem; background: var(--surface); font-weight: 650; text-decoration: none; }
+      .download-link:hover { background: var(--background); text-decoration: underline; }
       section { margin-bottom: 2.75rem; }
       h2 { margin: 0 0 1rem; font-size: 1.5rem; }
       h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
@@ -118,6 +121,15 @@
         <a href="#dependency-summary">Dependency summary</a>
         <a href="#package-licences">Package licences</a>
       </nav>
+      <section class="panel" aria-labelledby="downloads-heading">
+        <h2 id="downloads-heading">Download this report</h2>
+        <p>Choose a format for further analysis or sharing.</p>
+        <div class="download-links">
+          <a class="download-link" href="third_party_IP_report.csv" download="third_party_IP_report.csv">Download CSV</a>
+          <a class="download-link" href="third_party_IP_report.json" download="third_party_IP_report.json">Download JSON</a>
+          <a class="download-link" href="third_party_IP_report.txt" download="third_party_IP_report.txt">Download text</a>
+        </div>
+      </section>
       <section id="summary" aria-labelledby="summary-heading">
         <h2 id="summary-heading">Summary</h2>
         <div class="summary-grid">
