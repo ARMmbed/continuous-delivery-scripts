@@ -19,7 +19,12 @@ import re
 import logging
 import toml
 from pathlib import Path
-from typing import Union, Optional, Iterator, Any, Tuple
+from typing import Union, Optional, Iterator, Any, Tuple, TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from boolean.boolean import Expression
+    from spdx_tools.spdx.model.spdx_no_assertion import SpdxNoAssertion
+    from spdx_tools.spdx.model.spdx_none import SpdxNone as ModelSpdxNone
 
 from continuous_delivery_scripts.utils.configuration import (
     ConfigurationVariable,
@@ -121,6 +126,23 @@ def determine_spdx_value(value: Optional[str]) -> Union[str, UnKnown, SPDXNone]:
         return UnKnown()
 
     return value
+
+
+def parse_spdx_licence(licence: str) -> Union["Expression", "SpdxNoAssertion", "ModelSpdxNone"]:
+    """Convert a project licence expression to the SPDX SDK's model.
+
+    An unknown licence in the audit is not an SPDX licence identifier. It is
+    represented as NOASSERTION in the SPDX document instead.
+    """
+    from license_expression import get_spdx_licensing
+    from spdx_tools.spdx.model.spdx_no_assertion import SpdxNoAssertion
+    from spdx_tools.spdx.model.spdx_none import SpdxNone
+
+    if not licence or licence.upper() in ("UNKNOWN", "NOASSERTION"):
+        return SpdxNoAssertion()
+    if licence.upper() == "NONE":
+        return SpdxNone()
+    return cast("Expression", get_spdx_licensing().parse(licence))
 
 
 def get_project_namespace(project_config_path: Path, document_name: str) -> str:

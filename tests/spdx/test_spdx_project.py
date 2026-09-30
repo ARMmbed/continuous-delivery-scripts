@@ -13,10 +13,67 @@ from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.package_helpers import ProjectMetadata, PackageMetadata
 from continuous_delivery_scripts.utils.noop.package_helpers import NoOpProjectMetadataFetcher
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
-from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
+from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file, generate_uuid_based_on_str
+from spdx_tools.spdx.parser.parse_anything import parse_file
+from spdx_tools.spdx.model.relationship import RelationshipType
+from spdx_tools.spdx.model.spdx_no_assertion import SpdxNoAssertion
+from spdx_tools.spdx.validation.document_validator import validate_full_spdx_document
 
 
 class TestSpdxFile(TestCase):
+    def test_tag_value_reports_parse_and_validate_with_dependency_and_source_file(self):
+        metadata = ProjectMetadata("example")
+        metadata.project_metadata = PackageMetadata(
+            {"Name": "example", "Version": "1.0", "License-Expression": "MIT", "Author": "Contributor"}
+        )
+        metadata.add_dependency_metadata(PackageMetadata({"Name": "dependency", "Version": "2.0"}))
+        parser = Mock()
+        parser.project_metadata = metadata
+        get_value = configuration.get_value
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            source_dir = root / "source"
+            source_dir.mkdir()
+            (source_dir / "main.py").write_text("# SPDX-License-Identifier: MIT\n", encoding="utf8")
+            config = root / "pyproject.toml"
+            config.write_text(
+                '[spdx]\nCreatorWebsite = "example.org"\nPathToSpdx = "spdx"\nUUID = "test"\n', encoding="utf8"
+            )
+            overrides = {
+                ConfigurationVariable.PROJECT_ROOT: root,
+                ConfigurationVariable.PROJECT_CONFIG: config,
+                ConfigurationVariable.SOURCE_DIR: "source",
+                ConfigurationVariable.PROJECT_UUID: "test",
+            }
+            with patch.object(configuration, "get_value", side_effect=lambda key: overrides.get(key, get_value(key))):
+                SpdxProject(parser).generate_tag_value_files(root)
+
+            main_path = root / "example.spdx"
+            dependency_path = root / "dependency.spdx"
+            main = parse_file(str(main_path))
+            dependency = parse_file(str(dependency_path))
+
+            self.assertEqual(validate_full_spdx_document(main), [])
+            self.assertEqual(validate_full_spdx_document(dependency), [])
+            self.assertEqual(len(main.files), 1)
+            self.assertEqual(main.files[0].name, "./source/main.py")
+            self.assertEqual(len(main.creation_info.external_document_refs), 1)
+            reference = main.creation_info.external_document_refs[0]
+            self.assertEqual(reference.document_ref_id, "DocumentRef-dependency-2.0")
+            self.assertEqual(reference.checksum.value, determine_sha1_hash_of_file(dependency_path))
+            self.assertEqual(len(dependency.files), 0)
+            self.assertFalse(dependency.packages[0].files_analyzed)
+            self.assertIsInstance(dependency.packages[0].license_declared, SpdxNoAssertion)
+            self.assertEqual(
+                {relationship.relationship_type for relationship in main.relationships},
+                {RelationshipType.DESCRIBES, RelationshipType.CONTAINS, RelationshipType.DEPENDS_ON},
+            )
+            self.assertIn(
+                f"{reference.document_ref_id}:{dependency.packages[0].spdx_id}",
+                [relationship.related_spdx_element_id for relationship in main.relationships],
+            )
+
     def test_summary_shows_configured_licence_policy(self):
         metadata = ProjectMetadata("test_package")
         metadata.project_metadata = PackageMetadata({"Name": "test_package", "License": "MIT"})

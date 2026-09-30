@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
-    determine_spdx_value,
+    parse_spdx_licence,
     determine_file_licence,
     determine_file_copyright_text,
 )
@@ -22,7 +22,7 @@ from continuous_delivery_scripts.utils.third_party_licences import (
 )
 
 if TYPE_CHECKING:
-    from spdx.file import File
+    from spdx_tools.spdx.model.file import File
 
 
 class SpdxFile:
@@ -119,17 +119,17 @@ class SpdxFile:
         Returns:
             the corresponding file
         """
-        from spdx.checksum import Algorithm
-        from spdx.document import License
-        from spdx.file import File, FileType
-        from spdx.utils import SPDXNone
+        from spdx_tools.spdx.model.checksum import Checksum, ChecksumAlgorithm
+        from spdx_tools.spdx.model.file import File, FileType
+        from spdx_tools.spdx.model.spdx_none import SpdxNone
 
-        source_file = File(determine_spdx_value(self.unix_relative_path))
-        source_file.type = FileType.SOURCE
-        source_file.comment = determine_spdx_value(None)
-        source_file.chk_sum = Algorithm("SHA1", self.sha1_check_sum)
-        source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
-        source_file.spdx_id = f"SPDXRef-{self.id}"
-        source_file.copyright = self.copyright if self.copyright else SPDXNone()
-        source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
-        return source_file
+        licence = parse_spdx_licence(self.licence)
+        return File(
+            name=self.unix_relative_path,
+            spdx_id=f"SPDXRef-{self.id}",
+            checksums=[Checksum(ChecksumAlgorithm.SHA1, self.sha1_check_sum)],
+            file_types=[FileType.SOURCE],
+            license_concluded=licence,
+            license_info_in_file=[licence],
+            copyright_text=self.copyright or SpdxNone(),
+        )

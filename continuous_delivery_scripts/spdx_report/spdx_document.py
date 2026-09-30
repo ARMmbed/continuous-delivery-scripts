@@ -5,13 +5,13 @@
 """Definition of an SPDX Document."""
 
 from pathlib import Path
+from datetime import datetime, timezone
 from typing import TYPE_CHECKING, List, Optional
 
 from continuous_delivery_scripts.spdx_report.spdx_dependency import (
     DependencySpdxDocumentRef,
 )
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
-    determine_spdx_value,
     get_project_namespace,
 )
 from continuous_delivery_scripts.spdx_report.spdx_package import (
@@ -26,9 +26,10 @@ from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_o
 from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 
 if TYPE_CHECKING:
-    from spdx.document import Document
+    from spdx_tools.spdx.model.document import Document
 
 TOOL_NAME = "mbed-spdx-generator"
+SPDX_VERSION = "SPDX-2.3"
 
 
 class SpdxDocument:
@@ -40,7 +41,7 @@ class SpdxDocument:
     def __init__(
         self,
         package_metadata: PackageMetadata,
-        other_document_refs: List[DependencySpdxDocumentRef] = list(),
+        other_document_refs: Optional[List[DependencySpdxDocumentRef]] = None,
         is_dependency: bool = False,
         document_namespace: Optional[str] = None,
     ):
@@ -51,7 +52,7 @@ class SpdxDocument:
         self._project_source = self._project_root.joinpath(configuration.get_value(ConfigurationVariable.SOURCE_DIR))
         self._package_metadata: PackageMetadata = package_metadata
         self._is_dependency: bool = is_dependency
-        self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs
+        self._other_document_references: List[DependencySpdxDocumentRef] = other_document_refs or []
         self._document_namespace = document_namespace
         self._spdx_package: Optional[SpdxPackage] = None
 
@@ -213,11 +214,11 @@ class SpdxDocument:
         """Generates the SPDX document.
 
         Example of SPDX document section.
-        SPDXVersion: SPDX-2.1
+        SPDXVersion: SPDX-2.3
         DataLicense: CC0-1.0
         SPDXID: SPDXRef-DOCUMENT
         DocumentName: mbed-targets
-        DocumentNamespace: http://spdx.org/spdxdocs/spdx-v2.1-3c4714e6-a7b1-4574-abb8-861149cbc590
+        DocumentNamespace: http://spdx.org/spdxdocs/spdx-v2.3-3c4714e6-a7b1-4574-abb8-861149cbc590
         Creator: Person: Anonymous ()
         Creator: Organization: Anonymous ()
         Creator: Tool: reuse-0.8.0
@@ -229,41 +230,53 @@ class SpdxDocument:
         Returns:
             the corresponding document
         """
-        from spdx.creationinfo import Person, Organization, Tool
-        from spdx.document import Document, License
-        from spdx.review import Review
-        from spdx.version import Version
+        from spdx_tools.spdx.model.actor import Actor, ActorType
+        from spdx_tools.spdx.model.annotation import Annotation, AnnotationType
+        from spdx_tools.spdx.model.document import CreationInfo, Document
+        from spdx_tools.spdx.model.relationship import Relationship, RelationshipType
 
-        doc = Document()
-        doc.version = Version(1, 2)
-        doc.name = determine_spdx_value(self.document_name)
-        doc.namespace = determine_spdx_value(self.document_namespace)
-        doc.spdx_id = "SPDXRef-DOCUMENT"
-        doc.comment = determine_spdx_value(
-            "This document was created automatically using available project and dependency information."
+        creators = [Actor(ActorType.PERSON, self.author, self.author_email or None)]
+        if not self._is_dependency:
+            creators.append(Actor(ActorType.ORGANIZATION, self.organisation, self.organisation_email or None))
+        creators.append(Actor(ActorType.TOOL, self.tool_name))
+        created = datetime.now(timezone.utc)
+        creation_info = CreationInfo(
+            spdx_version=SPDX_VERSION,
+            spdx_id="SPDXRef-DOCUMENT",
+            name=self.document_name,
+            document_namespace=self.document_namespace,
+            creators=creators,
+            created=created,
+            document_comment=(
+                "This document was created automatically using available project and dependency information."
+            ),
+            external_document_refs=[ref.generate_external_reference() for ref in self.external_refs],
         )
-        doc.data_license = License.from_identifier("CC0-1.0")
-        doc.creation_info.add_creator(Person(self.author, self.author_email))
+
+        spdx_package = self.generate_spdx_package()
+        package = spdx_package.generate_spdx_package()
+        files = [file.generate_spdx_file() for file in spdx_package.get_spdx_files() or []]
+        relationships = [Relationship("SPDXRef-DOCUMENT", RelationshipType.DESCRIBES, package.spdx_id)]
+        relationships.extend(Relationship(package.spdx_id, RelationshipType.CONTAINS, file.spdx_id) for file in files)
+        relationships.extend(
+            Relationship(package.spdx_id, RelationshipType.DEPENDS_ON, ref.package_spdx_id)
+            for ref in self.external_refs
+        )
+        annotations = []
         if not self._is_dependency:
-            doc.creation_info.add_creator(Organization(self.organisation, self.organisation_email))
-        doc.creation_info.add_creator(Tool(self.tool_name))
-        doc.creation_info.set_created_now()
-        if not self._is_dependency:
-            review = Review(
-                Person(
-                    determine_spdx_value(self.reviewer),
-                    determine_spdx_value(self.reviewer_email),
+            annotations.append(
+                Annotation(
+                    spdx_id="SPDXRef-DOCUMENT",
+                    annotation_type=AnnotationType.REVIEW,
+                    annotator=Actor(ActorType.PERSON, self.reviewer, self.reviewer_email or None),
+                    annotation_date=created,
+                    annotation_comment="Reviewed by the configured project reviewer.",
                 )
             )
-            review.set_review_date_now()
-            doc.add_review(review)
-
-        # FIXME with current tooling and specification, only one package can
-        #  be described in a file and hence, all dependencies are described
-        #  in separate files. Find out what to do with dependencies when new
-        #  tools are released as it is not entirely clear in the specification
-        doc.package = self.generate_spdx_package().generate_spdx_package()
-
-        for external_reference in self.external_refs:
-            doc.add_ext_document_reference(external_reference.generate_external_reference())
-        return doc
+        return Document(
+            creation_info=creation_info,
+            packages=[package],
+            files=files,
+            relationships=relationships,
+            annotations=annotations,
+        )

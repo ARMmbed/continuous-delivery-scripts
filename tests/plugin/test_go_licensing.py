@@ -4,7 +4,6 @@
 #
 import os
 import shutil
-from importlib.util import find_spec
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase, mock, skipUnless
@@ -14,6 +13,8 @@ from continuous_delivery_scripts.spdx_report.spdx_package import PackageInfo, Sp
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 from continuous_delivery_scripts.utils.package_helpers import LicenceSource, PackageMetadata, ProjectMetadata
+from spdx_tools.spdx.parser.parse_anything import parse_file
+from spdx_tools.spdx.validation.document_validator import validate_full_spdx_document
 
 
 class TestGoLicenceCollection(TestCase):
@@ -184,10 +185,6 @@ class TestGoLicenceCollection(TestCase):
         self.assertTrue(golang.Go().can_get_project_metadata())
         self.assertIsInstance(golang.Go().get_current_spdx_project(), SpdxProject)
 
-    @skipUnless(
-        find_spec("spdx") and find_spec("pkg_resources"),
-        "Legacy SPDX writer and its pkg_resources dependency are required",
-    )
     def test_go_import_paths_generate_valid_tag_value_files(self):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -223,6 +220,8 @@ class TestGoLicenceCollection(TestCase):
                 SpdxProject(parser).generate_tag_value_files(root)
 
             self.assertEqual(len(list(root.glob("*.spdx"))), 2)
+            for spdx_file in root.glob("*.spdx"):
+                self.assertEqual(validate_full_spdx_document(parse_file(str(spdx_file))), [])
 
     def test_go_metadata_uses_shared_spdx_reporting_and_compliance(self):
         with TemporaryDirectory() as temp_dir:

@@ -80,10 +80,10 @@ class SpdxProject:
             raise NotADirectoryError(str(dir))
 
         path = dir.joinpath(filename)
-        from spdx.writers.tagvalue import write_document
+        from spdx_tools.spdx.writer.tagvalue.tagvalue_writer import write_document_to_stream
 
         with open(str(path), mode="w", encoding="utf-8") as out:
-            write_document(spdx_doc.generate_spdx_document(), out)
+            write_document_to_stream(spdx_doc.generate_spdx_document(), out)
         return str(determine_sha1_hash_of_file(path))
 
     def generate_licensing_summary(self, dir: Path) -> None:
@@ -132,6 +132,7 @@ class SpdxProject:
                     name=spdx_dependency.document_name,
                     namespace=spdx_dependency.document_namespace,
                     checksum=checksum,
+                    package_id=spdx_dependency.generate_spdx_package().id,
                 )
             )
         self.main_document.external_refs = externalRefs
