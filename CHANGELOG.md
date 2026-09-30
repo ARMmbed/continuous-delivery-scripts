@@ -17,6 +17,38 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.2.0" (2026-09-30)
+====================
+
+Features
+--------
+
+- :sparkles: Generate Go SPDX and third-party IP licence reports using go-licenses and the shared compliance policy. (#20260930100520944059100)
+- :sparkles: Make release-time third-party licence summaries opt-in by default while retaining them for this project. (#20260930134135824831900)
+
+
+Bugfixes
+--------
+
+- :bug: Generate filesystem-safe SPDX filenames and identifiers for packages named with import paths. (#20260930100520944103000)
+- :bug: Include language plugins and SPDX templates in package builds so installed tools can generate reports. (#20260930101509773515900)
+- :bug: Show guide headings rather than leading licence comments as titles on the documentation index. (#20260930142031314098900)
+- :bug: Link a generated third-party IP report from the documentation index and show the configured project licence. (#20260930142031314152400)
+
+
+Improved Documentation
+----------------------
+
+- :book: Make the third-party IP report easier to read with a responsive summary, clearer compliance statuses and collapsible licence evidence. (#20260930144256123961900)
+- :book: Clarify TPIP metrics, audit gaps and manual reviews, and show the project's licence and accepted-licence policy alongside linked dependency results. (#20260930154855098239800)
+
+
+Misc
+----
+
+- #20260930132108079266500, #20260930133028282863400
+
+
 "4.1.0" (2026-09-29)
 ====================
 

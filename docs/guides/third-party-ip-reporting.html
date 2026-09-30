@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>&lt;!--</title><meta name="description" content="&lt;!-- — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Generate a third-party IP (TPIP) and licence report</title><meta name="description" content="Generate a third-party IP (TPIP) and licence report — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
 Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -21,9 +21,11 @@ and set <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any documented manual che
 <pre><code class="language-bash">mkdir -p licensing
 cd-generate-spdx --output-dir licensing
 </code></pre>
-<p>The plugin must support metadata extraction. Check its
-<code>can_get_project_metadata()</code> implementation; see the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/pull/166">Python reporting work</a>
-for the status of Python metadata support.
+<p>The selected plugin must support metadata extraction. It uses tools suited to
+the project's language to obtain dependency and licence information for the
+shared report and accepted-licence policy. Check the
+<a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin documentation</a>
+for language-specific prerequisites and support.
 An audit covers the installed environment, so run it for each supported
 platform if dependencies differ by operating system. Review unknown licences
 and packaged notices rather than assuming a missing value means permission.</p>
@@ -41,6 +43,4 @@ Additional formats, such as JSON, depend on the installed package version.</p>
     path: licensing/
 </code></pre>
 <p>Related commands: <a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a> and
-<a href="licence-header-management.html"><code>cd-license-files</code></a>. See the
-<a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin guides</a>
-to check whether metadata reporting is supported for a particular language.</p></main></body></html>
+<a href="licence-header-management.html"><code>cd-license-files</code></a>.</p></main></body></html>

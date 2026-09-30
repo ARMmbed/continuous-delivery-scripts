@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>&lt;!--</title><meta name="description" content="&lt;!-- — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Generate an SPDX SBOM for a software project</title><meta name="description" content="Generate an SPDX SBOM for a software project — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
 Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -17,7 +17,7 @@ see <a href="third-party-ip-reporting.html">TPIP reporting</a>.</p>
 <p>Install the project and its dependencies in the environment being audited.
 Configure <code>pyproject.toml</code> with <code>PROJECT_ROOT</code>, <code>SOURCE_DIR</code>,
 <code>PROGRAMMING_LANGUAGE</code>, your licence policy and any values required by the
-selected language plugin (for example, <code>PACKAGE_NAME</code> for Python). Provide
+selected language plugin. Provide
 <code>PROJECT_UUID</code> and an <code>[spdx]</code> section for the document namespace; see
 <a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/DEVELOPMENT.md#spdx-document-identity">SPDX document identity</a>.
 Then provide an <strong>existing</strong> output directory:</p>
@@ -25,9 +25,10 @@ Then provide an <strong>existing</strong> output directory:</p>
 cd-generate-spdx --output-dir spdx-output
 </code></pre>
 <p>The selected language plugin must return project metadata; if it does not,
-the command returns without a report. Check the installed version's
-<code>can_get_project_metadata()</code> implementation; see <a href="https://github.com/ARMmbed/continuous-delivery-scripts/pull/166">the Python reporting work</a>
-for the status of Python metadata support.
+the command returns without a report. The selected plugin uses language-specific
+tools to obtain dependency and licence information; consult the
+<a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin documentation</a>
+for its prerequisites and metadata support.
 SPDX tag-value generation also requires an SDK compatible with this project's
 writer. Check the output files before treating an audit as complete. Installed
 packages and platform-specific dependency markers determine what is covered;
@@ -46,5 +47,4 @@ not a single merged dependency graph.</p>
     path: spdx-output/
 </code></pre>
 <p>See <a href="https://armmbed.github.io/continuous-delivery-scripts/report_third_party_ip.html"><code>cd-generate-spdx</code>'s API</a>
-and the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin guides</a>
-for language-specific metadata support and requirements.</p></main></body></html>
+for the common reporting interface.</p></main></body></html>

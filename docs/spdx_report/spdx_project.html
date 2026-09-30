@@ -9,7 +9,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.6">
 <title>continuous_delivery_scripts.spdx_report.spdx_project API documentation</title>
-<meta name="description" content="Definition of an SPDX report for a Python project.">
+<meta name="description" content="Definition of an SPDX report for a project.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -40,7 +40,7 @@ el.replaceWith(d);
 <h1 class="title">Module <code>continuous_delivery_scripts.spdx_report.spdx_project</code></h1>
 </header>
 <section id="section-intro">
-<p>Definition of an SPDX report for a Python project.</p>
+<p>Definition of an SPDX report for a project.</p>
 </section>
 <section>
 </section>
@@ -133,6 +133,16 @@ el.replaceWith(d);
             self._parser.project_metadata.missing_dependencies,
         ).generate_summary(dir)
 
+    @staticmethod
+    def _spdx_filename(name: str) -&gt; str:
+        &#34;&#34;&#34;Use a stable, filesystem-safe SPDX filename for any package name.&#34;&#34;&#34;
+        safe_name = (
+            name
+            if re.fullmatch(r&#34;[A-Za-z0-9_.-]+&#34;, name) and name not in (&#34;.&#34;, &#34;..&#34;)
+            else str(generate_uuid_based_on_str(name))
+        )
+        return f&#34;{safe_name}.spdx&#34;
+
     def generate_tag_value_files(self, dir: Path) -&gt; None:
         &#34;&#34;&#34;Generates SPDX tag-value files into the specified directory.
 
@@ -150,7 +160,7 @@ el.replaceWith(d);
 
         externalRefs = list()
         for spdx_dependency in self.dependency_documents:
-            file_name = f&#34;{spdx_dependency.name}.spdx&#34;
+            file_name = self._spdx_filename(spdx_dependency.name)
             checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
             externalRefs.append(
                 DependencySpdxDocumentRef(
@@ -160,7 +170,7 @@ el.replaceWith(d);
                 )
             )
         self.main_document.external_refs = externalRefs
-        SpdxProject.generate_tag_value_file(dir, self.main_document, f&#34;{self.main_document.name}.spdx&#34;)
+        SpdxProject.generate_tag_value_file(dir, self.main_document, self._spdx_filename(self.main_document.name))
 
     def _report_issues(self, issues: Dict[str, str]) -&gt; None:
         if issues:
@@ -199,7 +209,7 @@ el.replaceWith(d);
                 package.name
                 for package in [self.main_document, *self.dependency_documents]
                 if (
-                    package.generate_spdx_package().metadata.licence_source == &#34;unknown&#34;
+                    package.generate_spdx_package().metadata.has_unknown_licence
                     or package.generate_spdx_package().main_licence == UNKNOWN_LICENCE.identifier
                 )
                 and not is_package_licence_manually_checked(package.name)
@@ -328,7 +338,7 @@ def main_document(self) -&gt; SpdxDocument:
             package.name
             for package in [self.main_document, *self.dependency_documents]
             if (
-                package.generate_spdx_package().metadata.licence_source == &#34;unknown&#34;
+                package.generate_spdx_package().metadata.has_unknown_licence
                 or package.generate_spdx_package().main_licence == UNKNOWN_LICENCE.identifier
             )
             and not is_package_licence_manually_checked(package.name)
@@ -401,7 +411,7 @@ def main_document(self) -&gt; SpdxDocument:
 
     externalRefs = list()
     for spdx_dependency in self.dependency_documents:
-        file_name = f&#34;{spdx_dependency.name}.spdx&#34;
+        file_name = self._spdx_filename(spdx_dependency.name)
         checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
         externalRefs.append(
             DependencySpdxDocumentRef(
@@ -411,7 +421,7 @@ def main_document(self) -&gt; SpdxDocument:
             )
         )
     self.main_document.external_refs = externalRefs
-    SpdxProject.generate_tag_value_file(dir, self.main_document, f&#34;{self.main_document.name}.spdx&#34;)</code></pre>
+    SpdxProject.generate_tag_value_file(dir, self.main_document, self._spdx_filename(self.main_document.name))</code></pre>
 </details>
 <div class="desc"><p>Generates SPDX tag-value files into the specified directory.</p>
 <p>See <a href="https://github.com/david-a-wheeler/spdx-tutorial#spdx-files">https://github.com/david-a-wheeler/spdx-tutorial#spdx-files</a>

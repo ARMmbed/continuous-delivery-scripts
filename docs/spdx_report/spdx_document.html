@@ -269,7 +269,7 @@ el.replaceWith(d);
         doc.namespace = determine_spdx_value(self.document_namespace)
         doc.spdx_id = &#34;SPDXRef-DOCUMENT&#34;
         doc.comment = determine_spdx_value(
-            &#34;This document was created automatically using available information from python packages.&#34;
+            &#34;This document was created automatically using available project and dependency information.&#34;
         )
         doc.data_license = License.from_identifier(&#34;CC0-1.0&#34;)
         doc.creation_info.add_creator(Person(self.author, self.author_email))
@@ -612,7 +612,7 @@ package version</p></div>
     doc.namespace = determine_spdx_value(self.document_namespace)
     doc.spdx_id = &#34;SPDXRef-DOCUMENT&#34;
     doc.comment = determine_spdx_value(
-        &#34;This document was created automatically using available information from python packages.&#34;
+        &#34;This document was created automatically using available project and dependency information.&#34;
     )
     doc.data_license = License.from_identifier(&#34;CC0-1.0&#34;)
     doc.creation_info.add_creator(Person(self.author, self.author_email))

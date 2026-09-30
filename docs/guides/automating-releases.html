@@ -3,7 +3,7 @@
 -- SPDX-License-Identifier: Apache-2.0
 -->
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>&lt;!--</title><meta name="description" content="&lt;!-- — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Automate semantic versioning, Git tags and releases</title><meta name="description" content="Automate semantic versioning, Git tags and releases — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
 Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 SPDX-License-Identifier: Apache-2.0
 -->
@@ -13,19 +13,15 @@ SPDX-License-Identifier: Apache-2.0
 repeating versioning, documentation, Git tagging, packaging and publication
 steps in each CI system. The shared release definition comes from
 <code>[ProjectConfig]</code> in <code>pyproject.toml</code>. A language plugin supplies
-project-specific actions; the Go plugin uses GoReleaser, while the Python
-plugin uses wheel and Twine for package publication. Other plugins can use
-the tools best suited to their projects. Publication destinations, including
-GitHub Releases where configured, depend on the plugin. See
+project-specific actions using the tools best suited to its language.
+Publication destinations also depend on the plugin. See
 <a href="managing-changelogs.html">changelog management</a> for the
 news fragments used to calculate release versions.</p>
 <h2>Inputs and example</h2>
 <p>Run from a configured Git checkout with installed dependencies, a writable
 remote and the credentials required by the selected language plugin. The
-<a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/PYTHON.MD">Python plugin</a>,
-<a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/GOLAND.MD">Go plugin</a>
-and <a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">other plugins</a>
-document their own packaging, publication and credential requirements.
+<a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin documentation</a>
+describes packaging, publication and credential requirements for each language.
 Use a release type of <code>development</code>, <code>beta</code> or <code>release</code>:</p>
 <pre><code class="language-bash">cd-determine-version --release-type release
 cd-tag-and-release --release-type release --current-branch main
@@ -44,7 +40,6 @@ varies by plugin; see the <a href="https://github.com/ARMmbed/continuous-deliver
     GIT_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 </code></pre>
 <p>Configure the Git token for GitHub-hosted repositories and add the credentials
-required by the selected plugin. For example, PyPI credentials belong to the
-Python plugin; see the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/PYTHON.MD">Python release configuration</a>.
+required by the selected plugin; see its documentation for details.
 Related commands: <a href="previewing-versions.html"><code>cd-determine-version</code></a> and
 <a href="managing-changelogs.html"><code>cd-generate-news</code></a>.</p></main></body></html>

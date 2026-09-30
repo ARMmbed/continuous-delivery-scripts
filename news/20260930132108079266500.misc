@@ -1,1 +1,0 @@
-:recycle: Use named package metadata fields for language plugins instead of scattering string-based metadata keys throughout the code.

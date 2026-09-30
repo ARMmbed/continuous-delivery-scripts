@@ -62,7 +62,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">@dataclass(frozen=True, order=True)
 class PackageInfo:
-    &#34;&#34;&#34;Definition of a Python package.
+    &#34;&#34;&#34;Definition of a project or dependency package.
 
     Attributes:
         metadata: metadata about an installed package.
@@ -76,7 +76,7 @@ class PackageInfo:
     source_dir: Path
     uuid: str</code></pre>
 </details>
-<div class="desc"><p>Definition of a Python package.</p>
+<div class="desc"><p>Definition of a project or dependency package.</p>
 <dl>
 <dt>Attributes</dt>
 <dt>-----=</dt>
@@ -157,7 +157,9 @@ class PackageInfo:
         Returns:
             An ID
         &#34;&#34;&#34;
-        return self.name if self._is_dependency else self._package_info.uuid
+        if not self._is_dependency:
+            return self._package_info.uuid
+        return self.name if re.fullmatch(r&#34;[A-Za-z0-9.-]+&#34;, self.name) else str(generate_uuid_based_on_str(self.name))
 
     @property
     def is_dependency(self) -&gt; bool:
@@ -442,7 +444,9 @@ def id(self) -&gt; str:
     Returns:
         An ID
     &#34;&#34;&#34;
-    return self.name if self._is_dependency else self._package_info.uuid</code></pre>
+    if not self._is_dependency:
+        return self._package_info.uuid
+    return self.name if re.fullmatch(r&#34;[A-Za-z0-9.-]+&#34;, self.name) else str(generate_uuid_based_on_str(self.name))</code></pre>
 </details>
 <div class="desc"><p>Gets Package's identifier.</p>
 <p>Returns

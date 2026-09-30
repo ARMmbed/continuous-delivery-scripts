@@ -1,10 +1,10 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-09-29 17:30:03.140678
+                                         2026-09-30 16:35:17.105266
 
 # Summary:
     Licence compliance: Compliant
-    Details: Project [continuous-delivery-scripts]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.
+    Details: The project is licensed under the Apache-2.0 licence. The project and all assessed dependencies meet the configured licence policy, including any documented manual reviews.
     Missing dependencies: None
     Unknown licences: click-default-group, docutils, python-dateutil
     Undocumented exemptions: None
@@ -20,7 +20,7 @@
     Declared licence: BSD-2-Clause
     Licence classifiers: None
     Evidence: licence: boolean_py-5.0.dist-info/licenses/CHANGELOG.rst; licence: boolean_py-5.0.dist-info/licenses/LICENSE.txt; licence: boolean_py-5.0.dist-info/licenses/README.rst
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - boto3:
     [X] Compliant?
@@ -30,8 +30,8 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.104.dist-info/LICENSE; notice: boto3-1.43.104.dist-info/NOTICE
-    Licence compliance: Licence is compliant.
+    Evidence: licence: boto3-1.43.105.dist-info/LICENSE; notice: boto3-1.43.105.dist-info/NOTICE
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - botocore:
     [X] Compliant?
@@ -41,8 +41,8 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.104.dist-info/LICENSE.txt; notice: botocore-1.43.104.dist-info/NOTICE
-    Licence compliance: Licence is compliant.
+    Evidence: licence: botocore-1.43.105.dist-info/LICENSE.txt; notice: botocore-1.43.105.dist-info/NOTICE
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - bracex:
     [X] Compliant?
@@ -53,7 +53,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: bracex-3.0.1.dist-info/licenses/LICENSE.md
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - certifi:
     [X] Compliant?
@@ -64,7 +64,7 @@
     Declared licence: MPL-2.0
     Licence classifiers: Mozilla Public License 2.0 (MPL 2.0)
     Evidence: licence: certifi-2026.7.22.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - cffi:
     [X] Compliant?
@@ -75,7 +75,7 @@
     Declared licence: MIT-0
     Licence classifiers: None
     Evidence: licence: cffi-2.1.1.dist-info/licenses/LICENSE
-    Licence compliance: Package's licence manually checked: MIT
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: MIT.
 
 - charset-normalizer:
     [X] Compliant?
@@ -85,8 +85,8 @@
     Licence source: License
     Declared licence: MIT
     Licence classifiers: None
-    Evidence: licence: charset_normalizer-3.5.1.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Evidence: licence: charset_normalizer-3.5.2.dist-info/licenses/LICENSE
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - click:
     [X] Compliant?
@@ -97,7 +97,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: click-8.5.0.dist-info/licenses/LICENSE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - click-default-group:
     [X] Compliant?
@@ -108,7 +108,7 @@
     Declared licence: Public Domain
     Licence classifiers: Public Domain
     Evidence: licence: click_default_group-1.2.4.dist-info/LICENSE
-    Licence compliance: Package's licence manually checked: BSD-3-Clause
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.
 
 - continuous-delivery-scripts:
     [X] Compliant?
@@ -118,8 +118,8 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.0.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Evidence: licence: continuous_delivery_scripts-4.1.0.dist-info/licenses/LICENSE
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - cryptography:
     [X] Compliant?
@@ -129,8 +129,8 @@
     Licence source: License-Expression
     Declared licence: Apache-2.0 OR BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: cryptography-50.0.1.dist-info/licenses/LICENSE; licence: cryptography-50.0.1.dist-info/licenses/LICENSE.APACHE; licence: cryptography-50.0.1.dist-info/licenses/LICENSE.BSD
-    Licence compliance: Licence is compliant.
+    Evidence: licence: cryptography-50.0.2.dist-info/licenses/LICENSE; licence: cryptography-50.0.2.dist-info/licenses/LICENSE.APACHE; licence: cryptography-50.0.2.dist-info/licenses/LICENSE.BSD
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - detect-secrets:
     [X] Compliant?
@@ -141,7 +141,7 @@
     Declared licence: UNKNOWN
     Licence classifiers: Apache Software License
     Evidence: licence: detect_secrets-1.5.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - docutils:
     [X] Compliant?
@@ -152,7 +152,7 @@
     Declared licence: Public Domain; BSD License; GNU General Public License (GPL)
     Licence classifiers: Public Domain; BSD License; GNU General Public License (GPL)
     Evidence: licence: docutils-0.23.dist-info/licenses/COPYING.rst; licence: docutils-0.23.dist-info/licenses/licenses/BSD-0-Clause.rst; licence: docutils-0.23.dist-info/licenses/licenses/BSD-2-Clause.rst; licence: docutils-0.23.dist-info/licenses/licenses/gpl-3-0.txt
-    Licence compliance: Package's licence manually checked: BSD-3-Clause
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.
 
 - gibberish-detector:
     [X] Compliant?
@@ -163,7 +163,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: gibberish_detector-0.1.1.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - gitdb:
     [X] Compliant?
@@ -174,18 +174,18 @@
     Declared licence: BSD License
     Licence classifiers: BSD License
     Evidence: licence: gitdb-4.0.12.dist-info/AUTHORS; licence: gitdb-4.0.12.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - GitPython:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/gitpython-developers/GitPython
+    URL: https://gitpython.readthedocs.io/en/stable/
     Licence: BSD-3-Clause
     Licence source: License
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: gitpython-3.1.62.dist-info/licenses/AUTHORS; licence: gitpython-3.1.62.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Evidence: licence: gitpython-3.2.0.dist-info/licenses/AUTHORS; licence: gitpython-3.2.0.dist-info/licenses/LICENSE
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - id:
     [X] Compliant?
@@ -196,7 +196,7 @@
     Declared licence: Apache Software License
     Licence classifiers: Apache Software License
     Evidence: licence: id-1.6.1.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - idna:
     [X] Compliant?
@@ -207,7 +207,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: idna-3.20.dist-info/licenses/LICENSE.md
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - Incremental:
     [X] Compliant?
@@ -218,7 +218,7 @@
     Declared licence: MIT License
     Licence classifiers: MIT License
     Evidence: licence: incremental-24.11.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - jaraco.classes:
     [X] Compliant?
@@ -229,7 +229,7 @@
     Declared licence: MIT License
     Licence classifiers: MIT License
     Evidence: licence: jaraco.classes-3.4.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - jaraco.context:
     [X] Compliant?
@@ -240,7 +240,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: jaraco_context-6.1.2.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - jaraco.functools:
     [X] Compliant?
@@ -251,7 +251,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: jaraco_functools-4.6.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - jeepney:
     [X] Compliant?
@@ -262,7 +262,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: jeepney-0.9.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - jellyfish:
     [X] Compliant?
@@ -273,7 +273,7 @@
     Declared licence: MIT License
     Licence classifiers: MIT License
     Evidence: licence: jellyfish-1.2.1.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - Jinja2:
     [X] Compliant?
@@ -284,7 +284,7 @@
     Declared licence: BSD License
     Licence classifiers: BSD License
     Evidence: licence: jinja2-3.1.6.dist-info/licenses/LICENSE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - jmespath:
     [X] Compliant?
@@ -295,7 +295,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: jmespath-1.1.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - keyring:
     [X] Compliant?
@@ -306,7 +306,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: keyring-25.7.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - license-expression:
     [X] Compliant?
@@ -317,7 +317,7 @@
     Declared licence: Apache-2.0
     Licence classifiers: None
     Evidence: licence: license_expression-30.4.4.dist-info/licenses/AUTHORS.rst; licence: license_expression-30.4.4.dist-info/licenses/CHANGELOG.rst; licence: license_expression-30.4.4.dist-info/licenses/CODE_OF_CONDUCT.rst; notice: license_expression-30.4.4.dist-info/licenses/NOTICE; licence: license_expression-30.4.4.dist-info/licenses/README.rst; licence: license_expression-30.4.4.dist-info/licenses/apache-2.0.LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - licenseheaders:
     [X] Compliant?
@@ -328,7 +328,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: licenseheaders-0.8.8.dist-info/LICENSE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - Mako:
     [X] Compliant?
@@ -339,7 +339,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: mako-1.4.3.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - Markdown:
     [X] Compliant?
@@ -350,7 +350,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: markdown-3.11.dist-info/licenses/LICENSE.md
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - markdown-it-py:
     [X] Compliant?
@@ -361,7 +361,7 @@
     Declared licence: MIT License
     Licence classifiers: MIT License
     Evidence: licence: markdown_it_py-4.2.0.dist-info/licenses/LICENSE; licence: markdown_it_py-4.2.0.dist-info/licenses/LICENSE.markdown-it
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - MarkupSafe:
     [X] Compliant?
@@ -372,7 +372,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: markupsafe-3.0.3.dist-info/licenses/LICENSE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - mdurl:
     [X] Compliant?
@@ -383,7 +383,7 @@
     Declared licence: MIT License
     Licence classifiers: MIT License
     Evidence: licence: mdurl-0.1.2.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - more-itertools:
     [X] Compliant?
@@ -394,7 +394,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: more_itertools-11.1.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - nh3:
     [X] Compliant?
@@ -405,7 +405,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: nh3-0.3.7.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - packaging:
     [X] Compliant?
@@ -416,7 +416,7 @@
     Declared licence: Apache-2.0 OR BSD-2-Clause
     Licence classifiers: None
     Evidence: licence: packaging-26.3.dist-info/licenses/LICENSE; licence: packaging-26.3.dist-info/licenses/LICENSE.APACHE; licence: packaging-26.3.dist-info/licenses/LICENSE.BSD
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - pdoc3:
     [X] Compliant?
@@ -427,7 +427,7 @@
     Declared licence: AGPL-3.0
     Licence classifiers: GNU Affero General Public License v3 or later (AGPLv3+)
     Evidence: licence: pdoc3-0.11.6.dist-info/LICENSE.txt
-    Licence compliance: Package's licence manually checked: Accepted for this project since not distributed
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: Accepted for this project since not distributed.
 
 - ply:
     [X] Compliant?
@@ -438,7 +438,7 @@
     Declared licence: BSD
     Licence classifiers: None
     Evidence: None
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - pyautoversion:
     [X] Compliant?
@@ -449,7 +449,7 @@
     Declared licence: Apache 2.0
     Licence classifiers: None
     Evidence: licence: pyautoversion-1.2.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - pycparser:
     [X] Compliant?
@@ -460,7 +460,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: pycparser-3.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - Pygments:
     [X] Compliant?
@@ -471,7 +471,7 @@
     Declared licence: BSD-2-Clause
     Licence classifiers: None
     Evidence: licence: pygments-2.21.0.dist-info/licenses/AUTHORS; licence: pygments-2.21.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - pyparsing:
     [X] Compliant?
@@ -482,7 +482,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: pyparsing-3.3.3.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - python-dateutil:
     [X] Compliant?
@@ -493,7 +493,7 @@
     Declared licence: Dual License
     Licence classifiers: BSD License; Apache Software License
     Evidence: licence: python_dateutil-2.9.0.post0.dist-info/LICENSE
-    Licence compliance: Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License..
 
 - python-dotenv:
     [X] Compliant?
@@ -504,7 +504,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: python_dotenv-1.2.3.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - PyYAML:
     [X] Compliant?
@@ -515,7 +515,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: pyyaml-6.0.3.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - rdflib:
     [X] Compliant?
@@ -526,7 +526,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: BSD License
     Evidence: licence: rdflib-7.6.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - readme_renderer:
     [X] Compliant?
@@ -537,7 +537,7 @@
     Declared licence: Apache-2.0
     Licence classifiers: None
     Evidence: licence: readme_renderer-46.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - regex:
     [X] Compliant?
@@ -548,7 +548,7 @@
     Declared licence: Apache-2.0 AND CNRI-Python
     Licence classifiers: None
     Evidence: licence: regex-2026.9.29.dist-info/licenses/LICENSE.txt
-    Licence compliance: Package's licence manually checked: Apache-2.0
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: Apache-2.0.
 
 - requests:
     [X] Compliant?
@@ -559,7 +559,7 @@
     Declared licence: Apache-2.0
     Licence classifiers: Apache Software License
     Evidence: licence: requests-2.34.2.dist-info/licenses/LICENSE; notice: requests-2.34.2.dist-info/licenses/NOTICE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - requests-toolbelt:
     [X] Compliant?
@@ -570,7 +570,7 @@
     Declared licence: Apache 2.0
     Licence classifiers: Apache Software License
     Evidence: licence: requests_toolbelt-1.0.0.dist-info/AUTHORS.rst; licence: requests_toolbelt-1.0.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - rfc3986:
     [X] Compliant?
@@ -581,7 +581,7 @@
     Declared licence: Apache 2.0
     Licence classifiers: Apache Software License
     Evidence: licence: rfc3986-2.0.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - rich:
     [X] Compliant?
@@ -592,7 +592,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: rich-15.0.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - s3transfer:
     [X] Compliant?
@@ -603,7 +603,7 @@
     Declared licence: Apache License 2.0
     Licence classifiers: Apache Software License
     Evidence: licence: s3transfer-0.19.2.dist-info/LICENSE.txt; notice: s3transfer-0.19.2.dist-info/NOTICE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - SecretStorage:
     [X] Compliant?
@@ -614,7 +614,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: secretstorage-3.5.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - semver:
     [X] Compliant?
@@ -625,7 +625,7 @@
     Declared licence: BSD
     Licence classifiers: BSD License
     Evidence: licence: semver-2.13.0.dist-info/LICENSE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - setuptools:
     [X] Compliant?
@@ -636,7 +636,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: setuptools-80.10.2.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - six:
     [X] Compliant?
@@ -647,7 +647,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: six-1.17.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - smmap:
     [X] Compliant?
@@ -658,7 +658,7 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: BSD License
     Evidence: licence: smmap-5.0.3.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - spdx-tools:
     [X] Compliant?
@@ -669,7 +669,7 @@
     Declared licence: Apache-2.0
     Licence classifiers: Apache Software License
     Evidence: licence: spdx_tools-0.6.1.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - toml:
     [X] Compliant?
@@ -680,7 +680,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: toml-0.10.2.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - towncrier:
     [X] Compliant?
@@ -691,7 +691,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: towncrier-22.12.0.dist-info/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - twine:
     [X] Compliant?
@@ -702,7 +702,7 @@
     Declared licence: Apache-2.0
     Licence classifiers: None
     Evidence: licence: twine-7.0.0.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - urllib3:
     [X] Compliant?
@@ -713,7 +713,7 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: urllib3-2.8.0.dist-info/licenses/LICENSE.txt
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - wcmatch:
     [X] Compliant?
@@ -724,7 +724,7 @@
     Declared licence: MIT
     Licence classifiers: MIT License
     Evidence: licence: wcmatch-11.0.1.dist-info/licenses/LICENSE.md
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
 
 - xmltodict:
     [X] Compliant?
@@ -735,4 +735,4 @@
     Declared licence: MIT
     Licence classifiers: None
     Evidence: licence: xmltodict-1.0.4.dist-info/licenses/LICENSE
-    Licence compliance: Licence is compliant.
+    Licence compliance: Automatic licence assessment meets the configured policy.
