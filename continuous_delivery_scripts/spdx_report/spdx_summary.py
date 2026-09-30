@@ -159,7 +159,7 @@ class SummaryGenerator:
         if not arguments["project"]["complete"]:
             compliance_points = [
                 "The licence audit is incomplete.",
-                "Review missing dependencies, unknown licences and undocumented exemptions before relying on this report.",
+                "Review missing dependencies, unknown licences and undocumented exemptions before using this report.",
             ]
             arguments["project"]["compliance_points"] = compliance_points
             arguments["project"]["compliance_details"] = " ".join(
