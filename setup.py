@@ -6,7 +6,7 @@
 
 import os
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 PROJECT_SLUG = "continuous-delivery-scripts"
 SOURCE_DIR = "continuous_delivery_scripts"
@@ -98,7 +98,8 @@ setup(
     long_description_content_type="text/markdown",
     long_description=long_description,
     name=PROJECT_SLUG,
-    packages=[SOURCE_DIR],
+    packages=find_packages(include=[SOURCE_DIR, f"{SOURCE_DIR}.*"]),
+    package_data={f"{SOURCE_DIR}.spdx_report": ["templates/*.jinja2"]},
     python_requires=">=3.10,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     project_urls={

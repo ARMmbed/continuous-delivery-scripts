@@ -67,7 +67,7 @@ COPYRIGHT_PATTERN = r"Copyright.*$"
 COPYRIGHT_REGEX_PATTERN = re.compile(COPYRIGHT_PATTERN, flags=re.MULTILINE | re.IGNORECASE)
 # Specification of the identifier based on https://spdx.org/spdx-specification-21-web-version#h.twlc0ztnng3b
 # and https://spdx.org/ids-how
-SPDX_LICENCE_IDENTIFIER_PATTERN = r"SPDX-License-Identifier: ([\.\w+\-\(\)\s]+)[\*]?$"
+SPDX_LICENCE_IDENTIFIER_PATTERN = r"SPDX-License-Identifier: ([\.\w+\-\(\)\t ]+)[\*]?$"
 SPDX_IDENTIFIER_REGEX_PATTERN = re.compile(SPDX_LICENCE_IDENTIFIER_PATTERN, re.MULTILINE)
 THIRD_PARTY_CONFIG_NAMESPACE = "spdx"
 PATHS_TO_EXCLUDE = [
@@ -77,6 +77,7 @@ PATHS_TO_EXCLUDE = [
     "*.rdf",
     "*.pyc",
     "*.bin",
+    "*.exe",
     "*.tar",
     "*.zip",
     "**/__pycache__/**",

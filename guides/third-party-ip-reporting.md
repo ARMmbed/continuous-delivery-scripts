@@ -19,9 +19,11 @@ mkdir -p licensing
 cd-generate-spdx --output-dir licensing
 ```
 
-The plugin must support metadata extraction. Check its
-`can_get_project_metadata()` implementation; see the [Python reporting work](https://github.com/ARMmbed/continuous-delivery-scripts/pull/166)
-for the status of Python metadata support.
+The selected plugin must support metadata extraction. It uses tools suited to
+the project's language to obtain dependency and licence information for the
+shared report and accepted-licence policy. Check the
+[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+for language-specific prerequisites and support.
 An audit covers the installed environment, so run it for each supported
 platform if dependencies differ by operating system. Review unknown licences
 and packaged notices rather than assuming a missing value means permission.
@@ -46,6 +48,4 @@ Once the project and its dependencies are installed:
 ```
 
 Related commands: [`cd-generate-spdx`](generating-an-spdx-sbom.md) and
-[`cd-license-files`](licence-header-management.md). See the
-[plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
-to check whether metadata reporting is supported for a particular language.
+[`cd-license-files`](licence-header-management.md).

@@ -10,6 +10,7 @@ from unittest import mock
 from pathlib import Path
 
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.package_helpers import LicenceSource, PackageMetadata
 from continuous_delivery_scripts.utils.python.package_helpers import (
     PythonProjectMetadataFetcher,
     parse_package_metadata,
@@ -19,6 +20,24 @@ from continuous_delivery_scripts.utils.python.package_helpers import (
 
 
 class TestPackaging(unittest.TestCase):
+    def test_language_plugin_can_supply_named_package_fields(self):
+        metadata = PackageMetadata.from_fields(
+            name="example.com/dependency",
+            version="v1.2.3",
+            licence="MIT",
+            licence_source=LicenceSource.EXPRESSION,
+            url="https://example.com/LICENSE",
+            licence_evidence=[{"kind": "licence", "path": "https://example.com/LICENSE", "text": ""}],
+        )
+
+        self.assertEqual(metadata.name, "example.com/dependency")
+        self.assertEqual(metadata.version, "v1.2.3")
+        self.assertEqual(metadata.licence_source, "License-Expression")
+        self.assertFalse(metadata.has_unknown_licence)
+        self.assertEqual(metadata.declared_licence, "MIT")
+        self.assertEqual(metadata.url, "https://example.com/LICENSE")
+        self.assertEqual(len(metadata.licence_evidence), 1)
+
     def test_parse_metadata(self):
         test_file = Path(__file__).parent.joinpath("fixtures", "PKG-INFO")
         with open(str(test_file), "r", encoding="utf8") as f:

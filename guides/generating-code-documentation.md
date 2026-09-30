@@ -26,8 +26,8 @@ do not point it at a directory containing unrelated files.
 
 Documentation in the format produced by the selected plugin. Where a plugin
 generates an HTML API index, the guide landing page links to it as `api.html`.
-This repository publishes task-oriented guides alongside its generated Python
-API pages when it regenerates `docs/`. See the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+This repository publishes task-oriented guides alongside generated documentation
+when it regenerates `docs/`. See the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
 for language-specific documentation tooling.
 
 ## GitHub Actions example

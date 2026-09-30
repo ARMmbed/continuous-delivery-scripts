@@ -99,6 +99,8 @@ class ConfigurationVariable(enum.Enum):
     """Relative folder for rendered guides beneath the documentation output."""
     FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 40
     """Fail the licence audit when dependencies or usable licence declarations are missing."""
+    GENERATE_LICENSING_SUMMARY_ON_RELEASE = 41
+    """Generate third-party licence summaries during a release when the plugin supports metadata."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -206,6 +208,7 @@ class StaticConfig(GenericConfig):
     TAG_VERSION_SHORTCUTS = False
     SECRETS_BASELINE_FILENAME = ".secrets.baseline"
     FAIL_ON_INCOMPLETE_LICENCE_AUDIT = False
+    GENERATE_LICENSING_SUMMARY_ON_RELEASE = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"

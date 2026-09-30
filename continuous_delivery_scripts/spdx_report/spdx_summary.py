@@ -15,6 +15,8 @@ from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     get_package_manual_check,
 )
 from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.utils.third_party_licences import UNKNOWN_LICENCE
 
 JINJA_TEMPLATE_SUMMARY_HTML = "third_party_IP_report.html.jinja2"
@@ -26,6 +28,40 @@ JINJA_TEMPLATES = [
     JINJA_TEMPLATE_SUMMARY_TEXT,
 ]
 logger = logging.getLogger(__name__)
+
+
+def _configured_licence_policy() -> List[str]:
+    """List the accepted licence entries as configured, retaining wildcard patterns."""
+    accepted = configuration.get_value(ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES)
+    if isinstance(accepted, str):
+        entries = accepted.split(",")
+    elif isinstance(accepted, (list, tuple, dict)):
+        entries = [str(entry) for entry in accepted]
+    elif isinstance(accepted, set):
+        entries = sorted(str(entry) for entry in accepted)
+    else:
+        entries = []
+    return [entry.strip() for entry in entries if entry.strip()]
+
+
+def _link_report_from_index(output_dir: Path) -> None:
+    """Link the completed TPIP report from a generated documentation index, when present."""
+    index = output_dir / "index.html"
+    report = output_dir / JINJA_TEMPLATE_SUMMARY_HTML.removesuffix(".jinja2")
+    if not index.is_file() or not report.is_file():
+        return
+    contents = index.read_text(encoding="utf8")
+    report_href = f'href="{report.name}"'
+    if report_href in contents:
+        return
+    link = (
+        '<section id="third-party-ip-report"><h2>Third-party IP and licence report</h2>'
+        f"<p><a {report_href}>View the report</a></p></section>"
+    )
+    for closing_tag in ("</main>", "</body>"):
+        if closing_tag in contents:
+            index.write_text(contents.replace(closing_tag, f"{link}{closing_tag}", 1), encoding="utf8")
+            return
 
 
 def _get_jinja2_env() -> jinja2.Environment:
@@ -81,16 +117,25 @@ class SummaryGenerator:
         arguments: Dict[str, Any] = dict()
 
         global_compliance, description_list = self._generate_packages_description()
+        compliance_points = (
+            [
+                "The project and all assessed dependencies meet the configured licence policy, "
+                "including any documented manual reviews.",
+            ]
+            if global_compliance
+            else [
+                "The project or one or more dependencies do not meet the configured licence policy.",
+                "Review the package results below for details.",
+            ]
+        )
         arguments["project"] = {
             "name": self.project.name,
+            "licence": self.project.main_licence,
+            "accepted_licences": _configured_licence_policy(),
             "compliance": global_compliance,
-            "compliance_details": (
-                (
-                    f"Project [{self.project.name}]'s licence is compliant: {self.project.licence}."
-                    "All its dependencies are also compliant licence-wise."
-                )
-                if global_compliance
-                else f"Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence"
+            "compliance_points": compliance_points,
+            "compliance_details": " ".join(
+                [f"The project is licensed under the {self.project.main_licence} licence.", *compliance_points]
             ),
         }
         arguments["packages"] = description_list
@@ -98,7 +143,7 @@ class SummaryGenerator:
         arguments["unknown_licences"] = sorted(
             p.name
             for p in self.all_packages
-            if p.metadata.licence_source == "unknown" or p.main_licence == UNKNOWN_LICENCE.identifier
+            if p.metadata.has_unknown_licence or p.main_licence == UNKNOWN_LICENCE.identifier
         )
         arguments["unreviewed_licences"] = [
             name for name in arguments["unknown_licences"] if not get_package_manual_check(name)[1]
@@ -112,8 +157,14 @@ class SummaryGenerator:
             self.missing_dependencies or arguments["unreviewed_licences"] or arguments["undocumented_exemptions"]
         )
         if not arguments["project"]["complete"]:
-            details = "Incomplete audit: review missing dependencies, unknown licences and undocumented exemptions."
-            arguments["project"]["compliance_details"] = details
+            compliance_points = [
+                "The licence audit is incomplete.",
+                "Review missing dependencies, unknown licences and undocumented exemptions before using this report.",
+            ]
+            arguments["project"]["compliance_points"] = compliance_points
+            arguments["project"]["compliance_details"] = " ".join(
+                [f"The project is licensed under the {self.project.main_licence} licence.", *compliance_points]
+            )
         arguments["render_time"] = datetime.datetime.now()
         return arguments
 
@@ -148,6 +199,7 @@ class SummaryGenerator:
     ) -> dict:
         return {
             "name": p.name,
+            "anchor": f"package-{generate_uuid_based_on_str(p.name)}",
             "is_dependency": p.is_dependency,
             "url": p.url,
             "licence": p.licence,
@@ -161,12 +213,13 @@ class SummaryGenerator:
             "is_compliant": is_compliant,
             "mark_as_problematic": not is_licence_compliant,
             "licence_compliance_details": (
-                "Licence is compliant."
+                "Automatic licence assessment meets the configured policy."
                 if is_licence_compliant
                 else (
-                    f"Package's licence manually checked: {manual_check_details}"
+                    "Automatic licence assessment does not meet the configured policy; "
+                    f"accepted after manual review: {manual_check_details or 'no reason recorded'}."
                     if package_manually_checked
-                    else "Licence is not compliant according to project's configuration."
+                    else "Automatic licence assessment does not meet the configured policy."
                 )
             ),
         }
@@ -191,3 +244,4 @@ class SummaryGenerator:
         dir.joinpath("third_party_IP_report.json").write_text(
             json.dumps(arguments, indent=2, sort_keys=True) + "\n", encoding="utf8"
         )
+        _link_report_from_index(dir)

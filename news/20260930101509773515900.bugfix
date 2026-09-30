@@ -1,0 +1,1 @@
+:bug: Include language plugins and SPDX templates in package builds so installed tools can generate reports.

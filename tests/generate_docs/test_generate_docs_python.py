@@ -92,9 +92,14 @@ class TestGenerateDocs(TestCase):
             project_root = pathlib.Path(temporary_root, "project")
             guides = project_root / "guides"
             guides.mkdir(parents=True)
-            (guides / "index.md").write_text("# Guides\n\n[SPDX](generating-an-spdx-sbom.md)\n", encoding="utf8")
+            (guides / "index.md").write_text(
+                "<!--\nCopyright notice\n-->\n# Guides\n\n[SPDX](generating-an-spdx-sbom.md)\n", encoding="utf8"
+            )
             (guides / "generating-an-spdx-sbom.md").write_text(
-                "# Generate an SPDX SBOM\n\n```bash\ncd-generate-spdx --output-dir spdx-output\n```\n", encoding="utf8"
+                "<!--\nCopyright notice\n-->\n# Generate an SPDX SBOM\n\n"
+                "Guide text about SPDX reporting.\n\n"
+                "```bash\ncd-generate-spdx --output-dir spdx-output\n```\n",
+                encoding="utf8",
             )
             (project_root / "llms.txt").write_text("# Tool map\n", encoding="utf8")
             get_value_or_default.side_effect = lambda key, _default: {
@@ -102,6 +107,7 @@ class TestGenerateDocs(TestCase):
                 ConfigurationVariable.DOCUMENTATION_GUIDES_DIR: str(guides),
                 ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER: "reference/guides",
                 ConfigurationVariable.PROJECT_NAME: "Another Project",
+                ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "MIT",
             }.get(key)
             output = pathlib.Path(temporary_root, "site")
 
@@ -122,10 +128,22 @@ class TestGenerateDocs(TestCase):
 
             self.assertEqual((output / "api.html").read_text(encoding="utf8"), "API reference")
             self.assertIn("<h1>Another Project</h1>", (output / "index.html").read_text(encoding="utf8"))
+            self.assertIn("<p>Project licence: MIT</p>", (output / "index.html").read_text(encoding="utf8"))
+            self.assertIn(">Generate an SPDX SBOM</a>", (output / "index.html").read_text(encoding="utf8"))
+            self.assertNotIn("&lt;!--", (output / "index.html").read_text(encoding="utf8"))
+            self.assertNotIn("third_party_IP_report.html", (output / "index.html").read_text(encoding="utf8"))
             self.assertIn(
                 "Generate an SPDX SBOM — Another Project.",
                 (output / "reference" / "guides" / "generating-an-spdx-sbom.html").read_text(encoding="utf8"),
             )
+            self.assertIn(
+                "<title>Generate an SPDX SBOM</title>",
+                (output / "reference" / "guides" / "generating-an-spdx-sbom.html").read_text(encoding="utf8"),
+            )
+            guide_text = (output / "reference" / "guides" / "generating-an-spdx-sbom.html").read_text(encoding="utf8")
+            self.assertIn("<h1>Generate an SPDX SBOM</h1>", guide_text)
+            self.assertIn("<p>Guide text about SPDX reporting.</p>", guide_text)
+            self.assertNotIn("&lt;!--", guide_text)
             self.assertIn('href="api.html"', (output / "module.html").read_text(encoding="utf8"))
             self.assertIn('href="../api.html"', (output / "subpackage" / "module.html").read_text(encoding="utf8"))
             self.assertIn('href="index.html"', (output / "subpackage" / "module.html").read_text(encoding="utf8"))
@@ -157,12 +175,12 @@ class TestGenerateDocs(TestCase):
             self.assertFalse(fake_output_dir.is_dir())
 
     def test_clear_previous_docs_none_exist(self):
-        fake_output_dir = pathlib.Path("local_docs")
-        if fake_output_dir.exists():
-            fake_output_dir.rmdir()
-        self.assertFalse(fake_output_dir.is_dir())
+        with SystemTemporaryDirectory() as temporary_root:
+            fake_output_dir = pathlib.Path(temporary_root, "local_docs")
+            self.assertFalse(fake_output_dir.is_dir())
 
-        _clear_previous_docs(fake_output_dir)
+            _clear_previous_docs(fake_output_dir)
+            self.assertFalse(fake_output_dir.is_dir())
 
     @mock.patch("continuous_delivery_scripts.generate_docs._clear_previous_docs")
     @mock.patch("continuous_delivery_scripts.plugins.python.check_call")

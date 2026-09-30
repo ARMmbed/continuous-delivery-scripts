@@ -2,11 +2,13 @@
 # Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Utilities for retrieving Python's package information."""
+"""Shared package metadata used by language plugins and licence reports."""
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Dict, List, Mapping, Optional, Union
 
 from continuous_delivery_scripts.utils.configuration import (
     ConfigurationVariable,
@@ -17,103 +19,187 @@ from continuous_delivery_scripts.utils.definitions import UNKNOWN
 logger = logging.getLogger(__name__)
 
 
-class PackageMetadata:
-    """Package's metadata.
+class LicenceSource(Enum):
+    """Where a package's declared licence was obtained."""
 
-    Retrieves all the information it needs from Python's metadata dictionary.
+    EXPRESSION = "License-Expression"
+    LEGACY = "License"
+    CLASSIFIER = "License-Classifier"
+    CONFIGURATION = "configuration"
+    TOOL = "tool"
+    UNKNOWN = "unknown"
+
+
+@dataclass
+class _PackageFields:
+    """Named, language-neutral values used by licence and SPDX reports."""
+
+    name: str = UNKNOWN
+    version: str = UNKNOWN
+    author: str = UNKNOWN
+    author_email: str = UNKNOWN
+    licence: str = UNKNOWN
+    licence_source: LicenceSource = LicenceSource.UNKNOWN
+    declared_licence: str = ""
+    description: str = UNKNOWN
+    url: str = UNKNOWN
+    licence_classifiers: List[str] = field(default_factory=list)
+    licence_candidates: List[str] = field(default_factory=list)
+    licence_evidence: List[Dict[str, str]] = field(default_factory=list)
+
+
+class PackageMetadata:
+    """Language-neutral package metadata supplied by a project plugin.
+
+    Metadata keys follow Python Core Metadata where possible so that other
+    languages can use the same SPDX and licence-reporting pipeline.
     It is based on https://www.python.org/dev/peps/pep-0314/
     https://packaging.python.org/specifications/core-metadata/
     """
 
-    def __init__(self, data: dict, licence_evidence: Optional[List[Dict[str, str]]] = None) -> None:
-        """Constructor."""
-        self._data: Dict[str, Any] = data
-        self._licence_evidence = licence_evidence or []
+    def __init__(
+        self, data: Union[Mapping[str, Any], _PackageFields], licence_evidence: Optional[List[Dict[str, str]]] = None
+    ) -> None:
+        """Accept named fields or adapt Python Core Metadata at the input boundary."""
+        if isinstance(data, _PackageFields):
+            self._fields = data
+            return
+
+        expression = str(data.get("License-Expression") or "").strip()
+        legacy = str(data.get("License") or "").strip()
+        classifier = str(data.get("License-Classifier") or "").strip()
+        if expression:
+            licence, source = expression, LicenceSource.EXPRESSION
+        elif legacy and not legacy.lower().startswith("copyright") and legacy.lower() not in ("unknown", "none"):
+            licence, source = legacy, LicenceSource.LEGACY
+        elif classifier:
+            licence, source = classifier, LicenceSource.CLASSIFIER
+        else:
+            licence, source = UNKNOWN, LicenceSource.UNKNOWN
+
+        project_url = str(data.get("Project-URL") or "")
+        url = str(data.get("Home-page") or project_url.partition(",")[2].strip() or UNKNOWN)
+        self._fields = _PackageFields(
+            name=str(data.get("Name", UNKNOWN)),
+            version=str(data.get("Version", UNKNOWN)),
+            author=str(data.get("Author", UNKNOWN)),
+            author_email=str(data.get("Author-email", UNKNOWN)),
+            licence=licence,
+            licence_source=source,
+            declared_licence=str(expression or legacy or "; ".join(data.get("License-Classifiers", []))),
+            description=str(data.get("Summary", UNKNOWN)),
+            url=url,
+            licence_classifiers=list(data.get("License-Classifiers", [])),
+            licence_candidates=list(data.get("Licence-Candidates", [])),
+            licence_evidence=licence_evidence or [],
+        )
+
+    @classmethod
+    def from_fields(
+        cls,
+        *,
+        name: str,
+        licence: str,
+        licence_source: LicenceSource,
+        version: str = UNKNOWN,
+        url: str = UNKNOWN,
+        declared_licence: Optional[str] = None,
+        licence_classifiers: Optional[List[str]] = None,
+        licence_candidates: Optional[List[str]] = None,
+        licence_evidence: Optional[List[Dict[str, str]]] = None,
+        author: str = UNKNOWN,
+        author_email: str = UNKNOWN,
+        description: str = UNKNOWN,
+    ) -> "PackageMetadata":
+        """Build metadata from named fields without relying on Python header keys."""
+        return cls(
+            _PackageFields(
+                name=name,
+                version=version,
+                author=author,
+                author_email=author_email,
+                licence=licence,
+                licence_source=licence_source,
+                declared_licence=licence if declared_licence is None else declared_licence,
+                description=description,
+                url=url,
+                licence_classifiers=list(licence_classifiers or []),
+                licence_candidates=list(licence_candidates or []),
+                licence_evidence=list(licence_evidence or []),
+            )
+        )
 
     @property
     def name(self) -> str:
         """Gets package's name."""
-        return str(self._data.get("Name", UNKNOWN))
+        return self._fields.name
 
     @property
     def version(self) -> str:
         """Gets package's version."""
-        return str(self._data.get("Version", UNKNOWN))
+        return self._fields.version
 
     @property
     def author(self) -> str:
         """Gets package's author."""
-        return str(self._data.get("Author", UNKNOWN))
+        return self._fields.author
 
     @property
     def author_email(self) -> str:
         """Gets package's author email."""
-        return str(self._data.get("Author-email", UNKNOWN))
+        return self._fields.author_email
 
     @property
     def licence(self) -> str:
         """Gets package's licence."""
-        source = self.licence_source
-        if source == "unknown":
-            return str(UNKNOWN)
-        return str(self._data[source]).strip()
+        return self._fields.licence
 
     @property
     def licence_source(self) -> str:
         """Gets the metadata field used to determine the licence."""
-        if self._data.get("License-Expression"):
-            return "License-Expression"
-        legacy = str(self._data.get("License") or "").strip()
-        if legacy and not legacy.lower().startswith("copyright") and legacy.lower() not in ("unknown", "none"):
-            return "License"
-        if self._data.get("License-Classifier"):
-            return "License-Classifier"
-        return "unknown"
+        return self._fields.licence_source.value
+
+    @property
+    def has_unknown_licence(self) -> bool:
+        """Whether no usable licence declaration was found."""
+        return self._fields.licence_source is LicenceSource.UNKNOWN
 
     @property
     def declared_licence(self) -> str:
         """Gets the licence declaration as provided by the package."""
-        return str(
-            self._data.get("License-Expression")
-            or self._data.get("License")
-            or "; ".join(self._data.get("License-Classifiers", []))
-        )
+        return self._fields.declared_licence
 
     @property
     def licence_classifiers(self) -> List[str]:
         """Gets all licence classifiers as declared by the package."""
-        return list(self._data.get("License-Classifiers", []))
+        return list(self._fields.licence_classifiers)
 
     @property
     def licence_candidates(self) -> List[str]:
-        """Gets normalised SPDX identifiers found in the licence classifiers."""
-        return list(self._data.get("Licence-Candidates", []))
+        """Gets normalised SPDX licence candidates that require review."""
+        return list(self._fields.licence_candidates)
 
     @property
     def licence_evidence(self) -> List[Dict[str, str]]:
         """Gets the packaged licence and notice file evidence."""
-        return self._licence_evidence
+        return self._fields.licence_evidence
 
     @property
     def description(self) -> str:
-        """Gets package's licence."""
-        return str(self._data.get("Summary", UNKNOWN))
+        """Gets the package description."""
+        return self._fields.description
 
     @property
     def url(self) -> str:
         """Gets package's URL."""
-        home_page = self._data.get("Home-page")
-        if home_page:
-            return str(home_page)
-        url = self._data.get("Project-URL")
-        if url:
-            return str(url).split(",")[1].strip()
-        return str(UNKNOWN)
+        return self._fields.url
 
     def __str__(self) -> str:
         """String representation."""
         relevant_data = [
-            f"{getter}: {getattr(self, getter, None)}" for getter in dir(self) if not getter.startswith("_") and getter
+            f"{getter}: {getattr(self, getter, None)}"
+            for getter in dir(self)
+            if not getter.startswith("_") and not callable(getattr(self, getter, None))
         ]
         return ", ".join(relevant_data)
 
