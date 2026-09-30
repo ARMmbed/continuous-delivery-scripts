@@ -2,10 +2,11 @@
 # Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Definition of an SPDX report for a Python project."""
+"""Definition of an SPDX report for a project."""
 
 from pathlib import Path
 import os
+import re
 from typing import Optional, List, cast, Tuple, Dict
 
 from continuous_delivery_scripts.spdx_report.spdx_dependency import (
@@ -13,15 +14,14 @@ from continuous_delivery_scripts.spdx_report.spdx_dependency import (
 )
 from continuous_delivery_scripts.spdx_report.spdx_document import SpdxDocument
 from continuous_delivery_scripts.utils.hash_helpers import determine_sha1_hash_of_file
-from continuous_delivery_scripts.utils.python.package_helpers import (
-    ProjectMetadataFetcher,
-)
+from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataFetcher
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     is_package_licence_manually_checked,
     get_package_manual_check,
 )
 from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.utils.third_party_licences import UNKNOWN_LICENCE
 
 
@@ -98,6 +98,16 @@ class SpdxProject:
             self._parser.project_metadata.missing_dependencies,
         ).generate_summary(dir)
 
+    @staticmethod
+    def _spdx_filename(name: str) -> str:
+        """Use a stable, filesystem-safe SPDX filename for any package name."""
+        safe_name = (
+            name
+            if re.fullmatch(r"[A-Za-z0-9_.-]+", name) and name not in (".", "..")
+            else str(generate_uuid_based_on_str(name))
+        )
+        return f"{safe_name}.spdx"
+
     def generate_tag_value_files(self, dir: Path) -> None:
         """Generates SPDX tag-value files into the specified directory.
 
@@ -115,7 +125,7 @@ class SpdxProject:
 
         externalRefs = list()
         for spdx_dependency in self.dependency_documents:
-            file_name = f"{spdx_dependency.name}.spdx"
+            file_name = self._spdx_filename(spdx_dependency.name)
             checksum = SpdxProject.generate_tag_value_file(dir, spdx_dependency, file_name)
             externalRefs.append(
                 DependencySpdxDocumentRef(
@@ -125,7 +135,7 @@ class SpdxProject:
                 )
             )
         self.main_document.external_refs = externalRefs
-        SpdxProject.generate_tag_value_file(dir, self.main_document, f"{self.main_document.name}.spdx")
+        SpdxProject.generate_tag_value_file(dir, self.main_document, self._spdx_filename(self.main_document.name))
 
     def _report_issues(self, issues: Dict[str, str]) -> None:
         if issues:
@@ -164,7 +174,7 @@ class SpdxProject:
                 package.name
                 for package in [self.main_document, *self.dependency_documents]
                 if (
-                    package.generate_spdx_package().metadata.licence_source == "unknown"
+                    package.generate_spdx_package().metadata.has_unknown_licence
                     or package.generate_spdx_package().main_licence == UNKNOWN_LICENCE.identifier
                 )
                 and not is_package_licence_manually_checked(package.name)

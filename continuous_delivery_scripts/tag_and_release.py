@@ -59,15 +59,24 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
         return
     # The documentation folder will be emptied when the documentation is updated
     _update_documentation()
-    # Adding the licensing summaries in /docs after folder has been cleared and regenerated.
-    spdx_project = _update_licensing_summary()
+    spdx_project: Optional["SpdxProject"] = None
+    generate_summary = configuration.get_value(ConfigurationVariable.GENERATE_LICENSING_SUMMARY_ON_RELEASE)
+    if isinstance(generate_summary, str):
+        generate_summary = generate_summary.strip().lower() in ("true", "1", "yes")
+    if generate_summary:
+        # Add summaries after the documentation output has been cleared and regenerated.
+        spdx_project = _update_licensing_summary()
     insert_licence_header(0)
     _update_repository(mode, is_new_version, version, current_branch, version_elements)
     if is_new_version:
         if get_language_specifics().should_clean_before_packaging():
             _clean_repository()
-        if spdx_project and get_language_specifics().should_include_spdx_in_package():
-            _generate_spdx_reports(spdx_project)
+        plugin = get_language_specifics()
+        if plugin.should_include_spdx_in_package():
+            if spdx_project is None and plugin.can_get_project_metadata():
+                spdx_project = plugin.get_current_spdx_project()
+            if spdx_project:
+                _generate_spdx_reports(spdx_project)
         get_language_specifics().package_software(mode, version)
         get_language_specifics().release_package_to_repository(mode, version)
 

@@ -1,0 +1,1 @@
+:green_heart: Test Go and Python plugins in dedicated CI jobs and install Go and go-licenses so Go reporting integration tests run.

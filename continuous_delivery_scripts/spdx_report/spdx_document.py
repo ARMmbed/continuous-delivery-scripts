@@ -23,7 +23,7 @@ from continuous_delivery_scripts.utils.configuration import (
     ConfigurationVariable,
 )
 from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
-from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 
 if TYPE_CHECKING:
     from spdx.document import Document
@@ -240,7 +240,7 @@ class SpdxDocument:
         doc.namespace = determine_spdx_value(self.document_namespace)
         doc.spdx_id = "SPDXRef-DOCUMENT"
         doc.comment = determine_spdx_value(
-            "This document was created automatically using available information from python packages."
+            "This document was created automatically using available project and dependency information."
         )
         doc.data_license = License.from_identifier("CC0-1.0")
         doc.creation_info.add_creator(Person(self.author, self.author_email))

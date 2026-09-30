@@ -6,17 +6,19 @@
 
 from dataclasses import dataclass
 from pathlib import Path
+import re
 from typing import TYPE_CHECKING, List, Optional
 
 from license_expression import ExpressionError
 
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     determine_spdx_value,
     list_project_files_for_licensing,
 )
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
-from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
     UNKNOWN_LICENCE,
     cleanse_licence_expression,
@@ -30,7 +32,7 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True, order=True)
 class PackageInfo:
-    """Definition of a Python package.
+    """Definition of a project or dependency package.
 
     Attributes:
         metadata: metadata about an installed package.
@@ -90,7 +92,9 @@ class SpdxPackage:
         Returns:
             An ID
         """
-        return self.name if self._is_dependency else self._package_info.uuid
+        if not self._is_dependency:
+            return self._package_info.uuid
+        return self.name if re.fullmatch(r"[A-Za-z0-9.-]+", self.name) else str(generate_uuid_based_on_str(self.name))
 
     @property
     def is_dependency(self) -> bool:
