@@ -184,7 +184,10 @@ class TestGoLicenceCollection(TestCase):
         self.assertTrue(golang.Go().can_get_project_metadata())
         self.assertIsInstance(golang.Go().get_current_spdx_project(), SpdxProject)
 
-    @skipUnless(find_spec("spdx"), "Legacy SPDX writer is required")
+    @skipUnless(
+        find_spec("spdx") and find_spec("pkg_resources"),
+        "Legacy SPDX writer and its pkg_resources dependency are required",
+    )
     def test_go_import_paths_generate_valid_tag_value_files(self):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
