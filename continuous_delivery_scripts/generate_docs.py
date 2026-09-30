@@ -93,7 +93,7 @@ def _guide_settings() -> tuple[Path, Path, Path, str] | None:
 def _render_guide(source: Path, destination: Path, project_name: str, nav_prefix: str, has_api_index: bool) -> str:
     """Render one Markdown guide to an HTML page and return its title."""
     text = source.read_text(encoding="utf8")
-    title = text.splitlines()[0].removeprefix("# ").strip()
+    title = next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), source.stem)
     body: str = markdown.markdown(text, extensions=["fenced_code", "tables"])
     body = re.sub(r'href="([a-z0-9-]+)\.md(#[^"]*)?"', _html_guide_link, body)
     description = f"{title} — {project_name}."
@@ -124,10 +124,13 @@ def _write_guide_index(
 ) -> None:
     """Write the project-specific landing page for the published guides."""
     guide_prefix = guide_folder.as_posix()
+    licence = configuration.get_value_or_default(ConfigurationVariable.FILE_LICENCE_IDENTIFIER, None)
+    licence_details = f"<p>Project licence: {escape(str(licence))}</p>" if licence else ""
     overview = (
         f"<h1>{escape(project_name)}</h1>"
         f"<p>Task guides for {escape(project_name)}, with setup, examples and project workflows.</p>"
-        f'<p><a href="{escape(guide_prefix)}/index.html">All task guides</a>'
+        + licence_details
+        + f'<p><a href="{escape(guide_prefix)}/index.html">All task guides</a>'
         + (' · <a href="api.html">API reference</a>' if has_api_index else "")
         + "</p><ul>"
         + "".join(links)
