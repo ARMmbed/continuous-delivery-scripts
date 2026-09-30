@@ -28,6 +28,26 @@ JINJA_TEMPLATES = [
 logger = logging.getLogger(__name__)
 
 
+def _link_report_from_index(output_dir: Path) -> None:
+    """Link the completed TPIP report from a generated documentation index, when present."""
+    index = output_dir / "index.html"
+    report = output_dir / JINJA_TEMPLATE_SUMMARY_HTML.removesuffix(".jinja2")
+    if not index.is_file() or not report.is_file():
+        return
+    contents = index.read_text(encoding="utf8")
+    report_href = f'href="{report.name}"'
+    if report_href in contents:
+        return
+    link = (
+        '<section id="third-party-ip-report"><h2>Third-party IP and licence report</h2>'
+        f"<p><a {report_href}>View the report</a></p></section>"
+    )
+    for closing_tag in ("</main>", "</body>"):
+        if closing_tag in contents:
+            index.write_text(contents.replace(closing_tag, f"{link}{closing_tag}", 1), encoding="utf8")
+            return
+
+
 def _get_jinja2_env() -> jinja2.Environment:
     return jinja2.Environment(
         loader=jinja2.FileSystemLoader(str(Path(__file__).resolve().parent.joinpath("templates"))),
@@ -191,3 +211,4 @@ class SummaryGenerator:
         dir.joinpath("third_party_IP_report.json").write_text(
             json.dumps(arguments, indent=2, sort_keys=True) + "\n", encoding="utf8"
         )
+        _link_report_from_index(dir)

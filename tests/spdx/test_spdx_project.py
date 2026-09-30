@@ -15,6 +15,24 @@ from continuous_delivery_scripts.utils.configuration import configuration, Confi
 
 
 class TestSpdxFile(TestCase):
+    def test_generated_report_is_linked_from_documentation_index_once(self):
+        metadata = ProjectMetadata("test_package")
+        metadata.project_metadata = PackageMetadata({"Name": "test_package", "License": "MIT"})
+        parser = Mock()
+        parser.project_metadata = metadata
+
+        with TemporaryDirectory() as output_dir:
+            index = Path(output_dir, "index.html")
+            index.write_text("<html><body><main><h1>Project overview</h1></main></body></html>", encoding="utf8")
+            project = SpdxProject(parser)
+            project.generate_licensing_summary(Path(output_dir))
+            project.generate_licensing_summary(Path(output_dir))
+
+            html = index.read_text(encoding="utf8")
+            self.assertIn('<a href="third_party_IP_report.html">View the report</a>', html)
+            self.assertEqual(html.count('href="third_party_IP_report.html"'), 1)
+            self.assertLess(html.index("third-party-ip-report"), html.index("</main>"))
+
     def test_missing_dependency_is_reported_and_can_fail_the_audit(self):
         metadata = ProjectMetadata("test_package")
         metadata.project_metadata = PackageMetadata({"Name": "test_package", "License": "MIT"})
