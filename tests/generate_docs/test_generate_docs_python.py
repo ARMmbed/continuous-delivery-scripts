@@ -175,12 +175,12 @@ class TestGenerateDocs(TestCase):
             self.assertFalse(fake_output_dir.is_dir())
 
     def test_clear_previous_docs_none_exist(self):
-        fake_output_dir = pathlib.Path("local_docs")
-        if fake_output_dir.exists():
-            fake_output_dir.rmdir()
-        self.assertFalse(fake_output_dir.is_dir())
+        with SystemTemporaryDirectory() as temporary_root:
+            fake_output_dir = pathlib.Path(temporary_root, "local_docs")
+            self.assertFalse(fake_output_dir.is_dir())
 
-        _clear_previous_docs(fake_output_dir)
+            _clear_previous_docs(fake_output_dir)
+            self.assertFalse(fake_output_dir.is_dir())
 
     @mock.patch("continuous_delivery_scripts.generate_docs._clear_previous_docs")
     @mock.patch("continuous_delivery_scripts.plugins.python.check_call")
