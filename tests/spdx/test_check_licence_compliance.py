@@ -77,13 +77,12 @@ class TestCheckLicenceCompliance(TestCase):
         ).encode("utf8")
         output = StringIO()
         warnings = StringIO()
-        override = {"schema_version": 1, "settings": {"fail_on": ["UNKNOWN"]}}
         get_policy = configuration.get_value_or_default
         with patch.object(
             configuration,
             "get_value_or_default",
             side_effect=lambda key, default: (
-                override if key == ConfigurationVariable.LICENCE_ASSESSMENT_RULES else get_policy(key, default)
+                ["UNKNOWN"] if key == ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON else get_policy(key, default)
             ),
         ):
             self.assertEqual(self._run_command(), 1)
@@ -115,6 +114,12 @@ class TestCheckLicenceCompliance(TestCase):
         self.assertEqual(self._run_command("-o", str(self.root)), 1)
         self.assertIn("restricted", (self.root / "third_party_IP_report.txt").read_text(encoding="utf8"))
         self.assertEqual(list(self.root.glob("*.spdx")), [])
+
+    def test_unreviewed_weak_copyleft_does_not_fail_deny_only_gate(self):
+        self.metadata.add_dependency_metadata(PackageMetadata({"Name": "unreviewed", "License": "MPL-2.0"}))
+
+        self.assertEqual(self._run_command(), 0)
+        self.assertEqual(list(self.root.iterdir()), [self.root / "source"])
 
     def test_failed_lookup_assisted_check_does_not_print_success_follow_up(self):
         self.metadata.add_dependency_metadata(PackageMetadata({"Name": "bsd-dependency", "License": "BSD-4-Clause"}))

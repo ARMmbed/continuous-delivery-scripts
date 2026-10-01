@@ -3,8 +3,8 @@
 schema_version = 1
 
 [settings]
-# Keep existing compliance exit codes unchanged unless a project opts in.
-fail_on = []
+# By default, only explicit DENY assessments fail. Projects may override this.
+fail_on = ["DENY"]
 
 [classifications]
 MIT = "PERMISSIVE"

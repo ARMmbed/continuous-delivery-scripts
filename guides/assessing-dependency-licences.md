@@ -164,6 +164,8 @@ reason = "Reviewed linking and distribution obligations (LEGAL-42)."
 
 The package name must match the discovered dependency. Matching its licence
 and version prevents the record applying after its terms or version change.
+Omit `version` only if the review is deliberately valid across versions with
+the same licence; a changed licence still requires a new review.
 For an unscoped review, `bar = "Review reason"` can instead be written directly
 under `[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS]`; the scoped form is
 recommended. A blank reason is invalid. A matching record changes the reported
@@ -183,11 +185,11 @@ automatically. For a small override, put the same policy tables directly in
 the project's `pyproject.toml`:
 
 ```toml
+[ProjectConfig]
+LICENCE_ASSESSMENT_FAIL_ON = ["REVIEW"]
+
 [ProjectConfig.LICENCE_ASSESSMENT_RULES]
 schema_version = 1
-
-[ProjectConfig.LICENCE_ASSESSMENT_RULES.settings]
-fail_on = ["DENY"]
 
 [ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]
 LicenseRef-Internal = "PROPRIETARY"
@@ -248,8 +250,10 @@ status = "ALLOW"
 reason = "Reviewed the vendor agreement for version 1.2."
 ```
 
-The order is **embedded defaults → project policy file → inline tables**. If
-both project options are present, the inline values win. Classifications
+The order is **embedded defaults → project policy file → inline tables →
+top-level `LICENCE_ASSESSMENT_FAIL_ON`**. If both project rule options are
+present, the inline values win; the top-level failure list takes precedence
+over `fail_on` in either policy file. Classifications
 override by licence ID; rules override by stable `id`, and unmentioned defaults
 remain in effect. Use the same `schema_version`, `settings`,
 `classifications`, `rules` and `packages` keys with either project option.
@@ -261,10 +265,14 @@ matches only classified project licences. Invalid or missing override files
 and invalid inline tables cause a clear error rather than silently reverting to
 defaults.
 
-The embedded `fail_on = []` keeps existing CI exit codes unchanged. An optional
-project `fail_on` list can gate on `DENY` or `DENY` and `UNKNOWN`; unreviewed
-`REVIEW` results only fail when explicitly configured. The
-pre-existing accepted-licence check can still fail independently of these
+The embedded `fail_on = ["DENY"]` fails explicit `DENY` findings by default;
+`REVIEW` remains advisory. Set `LICENCE_ASSESSMENT_FAIL_ON = ["REVIEW"]` under
+`[ProjectConfig]` to fail on unreviewed `REVIEW` assessments instead, including
+when generating release summaries. Set an empty list to disable assessment
+gating explicitly.
+The optional policy-file or inline `fail_on` list remains supported when the
+top-level setting is absent. The pre-existing accepted-licence check can still
+fail independently of these
 assessments. See [third-party IP reporting](third-party-ip-reporting.md) and
 the [check-only command](checking-licence-compliance.md) for generating and
 reviewing the results.

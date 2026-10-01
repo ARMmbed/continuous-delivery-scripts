@@ -21,6 +21,23 @@ from continuous_delivery_scripts.utils.third_party_licences import cleanse_licen
 
 
 class TestLicenceAssessment(TestCase):
+    def test_packaged_policy_fails_only_deny_when_no_project_configuration_is_provided(self):
+        with patch.object(configuration, "get_value_or_default", side_effect=lambda key, default: default):
+            policy = LicenceAssessmentPolicy.from_config()
+        self.assertEqual(policy.fail_on, (LicenceAssessment.DENY,))
+
+    def test_this_projects_certifi_review_is_licence_scoped_across_versions(self):
+        assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config())
+        self.assertEqual(assessor.policy.fail_on, (LicenceAssessment.DENY,))
+        for version in ("2025.10.5", "2026.7.22"):
+            with self.subTest(version=version):
+                reviewed = assessor.assess("Apache-2.0", "MPL-2.0", "certifi", version)
+                self.assertEqual(reviewed.status, LicenceAssessment.MANUALLY_REVIEWED)
+        changed_licence = assessor.assess("Apache-2.0", "LGPL-2.1-only", "certifi", "2026.7.22")
+        self.assertEqual(changed_licence.status, LicenceAssessment.REVIEW)
+        unreviewed = assessor.assess("Apache-2.0", "MPL-2.0", "unreviewed-dependency", "1.0")
+        self.assertEqual(unreviewed.status, LicenceAssessment.REVIEW)
+
     @classmethod
     def setUpClass(cls):
         """Exercise the packaged policy, not an in-test copy of its rules."""
@@ -334,6 +351,30 @@ class TestLicenceAssessment(TestCase):
             (result.status, result.source, result.reason),
             (LicenceAssessment.REVIEW, "pyproject.toml", "Inline policy."),
         )
+
+    def test_top_level_assessment_failures_override_inline_and_file_settings(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "assessment.toml").write_text(
+                'schema_version = 1\n[settings]\nfail_on = ["DENY"]\n', encoding="utf8"
+            )
+            project_config = root / "pyproject.toml"
+            project_config.write_text(
+                '[ProjectConfig]\nLICENCE_ASSESSMENT_RULES_PATH = "assessment.toml"\n'
+                'LICENCE_ASSESSMENT_FAIL_ON = ["UNKNOWN"]\n'
+                "[ProjectConfig.LICENCE_ASSESSMENT_RULES]\nschema_version = 1\n"
+                '[ProjectConfig.LICENCE_ASSESSMENT_RULES.settings]\nfail_on = ["REVIEW"]\n',
+                encoding="utf8",
+            )
+            config = FileConfig(str(project_config))
+            with patch.object(configuration, "get_value_or_default", side_effect=config.get_value_or_default):
+                self.assertEqual(LicenceAssessmentPolicy.from_config().fail_on, (LicenceAssessment.UNKNOWN,))
+
+            project_config.write_text('[ProjectConfig]\nLICENCE_ASSESSMENT_FAIL_ON = "REVIEW"\n', encoding="utf8")
+            config = FileConfig(str(project_config))
+            with patch.object(configuration, "get_value_or_default", side_effect=config.get_value_or_default):
+                with self.assertRaisesRegex(ValueError, "fail_on must be a list"):
+                    LicenceAssessmentPolicy.from_config()
 
     def test_invalid_inline_policy_does_not_fall_back_to_defaults(self):
         with TemporaryDirectory() as directory:

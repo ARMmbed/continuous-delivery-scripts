@@ -357,7 +357,19 @@ class LicenceAssessmentPolicy:
         override_path = configuration.get_value_or_default(ConfigurationVariable.LICENCE_ASSESSMENT_RULES_PATH, None)
         override = toml.load(Path(override_path)) if override_path else None
         inline_override = configuration.get_value_or_default(ConfigurationVariable.LICENCE_ASSESSMENT_RULES, None)
-        return cls(default, override, inline_override)
+        policy = cls(default, override, inline_override)
+        fail_on = configuration.get_value_or_default(ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON, None)
+        if fail_on is not None:
+            policy._set_fail_on(fail_on, "ProjectConfig.LICENCE_ASSESSMENT_FAIL_ON")
+        return policy
+
+    def _set_fail_on(self, values: Any, source: str) -> None:
+        """Validate the same status list for inline, file and top-level settings."""
+        if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+            raise ValueError(f"{source}: fail_on must be a list of assessment statuses")
+        self.fail_on = tuple(_require_status(value, f"{source} fail_on") for value in values)
+        if LicenceAssessment.ALLOW in self.fail_on:
+            raise ValueError(f"{source}: ALLOW cannot be a failing assessment status")
 
     def _apply(self, data: dict, source: str) -> None:
         if not isinstance(data, dict) or set(data) - {
@@ -375,12 +387,7 @@ class LicenceAssessmentPolicy:
         if not isinstance(settings, dict) or set(settings) - {"fail_on"}:
             raise ValueError(f"{source}: unknown licence assessment settings")
         if "fail_on" in settings:
-            values = settings["fail_on"]
-            if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
-                raise ValueError(f"{source}: fail_on must be a list of assessment statuses")
-            self.fail_on = tuple(_require_status(value, f"{source} fail_on") for value in values)
-            if LicenceAssessment.ALLOW in self.fail_on:
-                raise ValueError(f"{source}: ALLOW cannot be a failing assessment status")
+            self._set_fail_on(settings["fail_on"], source)
         classifications = data.get("classifications", {})
         if not isinstance(classifications, dict):
             raise ValueError(f"{source}: classifications must be a table")

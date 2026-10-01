@@ -24,6 +24,7 @@ VERSION_FILE_PATH = "continuous_delivery_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 PROGRAMMING_LANGUAGE = "Python"
 GENERATE_LICENSING_SUMMARY_ON_RELEASE = true
+LICENCE_ASSESSMENT_FAIL_ON = ["REVIEW"]
 TAG_VERSION_SHORTCUTS = true
 TAG_LATEST = true
 
@@ -74,9 +75,7 @@ reason = "Used separately to generate docs; not bundled or modified."
 
 [ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.certifi]
 licence = "MPL-2.0"
-version = "2025.10.5"
 reason = "Used indirectly for HTTPS; retain its MPL licence and notices."
-
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"
