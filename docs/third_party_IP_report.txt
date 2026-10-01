@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-01 15:10:31.675695
+                                         2026-10-01 16:56:16.439318
 
 # Summary:
     Licence compliance: Compliant
@@ -8,7 +8,7 @@
     Missing dependencies: None
     Unknown licences: click-default-group, docutils, python-dateutil
     Undocumented exemptions: None
-    Dependency licence assessment: ALLOW: 63; REVIEW: 1; MANUALLY_REVIEWED: 1; DENY: 0; UNKNOWN: 0
+    Dependency licence assessment: ALLOW: 63; REVIEW: 0; MANUALLY_REVIEWED: 2; DENY: 0; UNKNOWN: 0
     Licence assessment is advisory; allowlist compliance is evaluated separately.
 
 # More details:
@@ -95,8 +95,9 @@
     Licence classifiers: Mozilla Public License 2.0 (MPL 2.0)
     Evidence: licence: certifi-2026.7.22.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
-    Licence assessment: REVIEW (automatic: REVIEW) — Weak copyleft obligations depend on modification, linking and how the work is distributed.
+    Licence assessment: MANUALLY_REVIEWED (automatic: REVIEW) — Weak copyleft obligations depend on modification, linking and how the work is distributed.
 
+    Manual assessment review: Used indirectly for HTTPS; retain its MPL licence and notices.
 
     Project licence compared: Apache-2.0
     Assessment rule: weak-copyleft-dependency (built-in)
@@ -184,7 +185,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.3.0.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.4.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 

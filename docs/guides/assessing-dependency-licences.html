@@ -191,6 +191,8 @@ reason = &quot;Reviewed linking and distribution obligations (LEGAL-42).&quot;
 </code></pre>
 <p>The package name must match the discovered dependency. Matching its licence
 and version prevents the record applying after its terms or version change.
+Omit <code>version</code> only if the review is deliberately valid across versions with
+the same licence; a changed licence still requires a new review.
 For an unscoped review, <code>bar = "Review reason"</code> can instead be written directly
 under <code>[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS]</code>; the scoped form is
 recommended. A blank reason is invalid. A matching record changes the reported
@@ -205,11 +207,11 @@ licence). The report keeps both explanations separately.</p>
 <p>Projects <strong>do not need to supply any policy</strong>: embedded rules are applied
 automatically. For a small override, put the same policy tables directly in
 the project's <code>pyproject.toml</code>:</p>
-<pre><code class="language-toml">[ProjectConfig.LICENCE_ASSESSMENT_RULES]
-schema_version = 1
+<pre><code class="language-toml">[ProjectConfig]
+LICENCE_ASSESSMENT_FAIL_ON = [&quot;REVIEW&quot;]
 
-[ProjectConfig.LICENCE_ASSESSMENT_RULES.settings]
-fail_on = [&quot;DENY&quot;]
+[ProjectConfig.LICENCE_ASSESSMENT_RULES]
+schema_version = 1
 
 [ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]
 LicenseRef-Internal = &quot;PROPRIETARY&quot;
@@ -263,8 +265,10 @@ version = &quot;1.2&quot;
 status = &quot;ALLOW&quot;
 reason = &quot;Reviewed the vendor agreement for version 1.2.&quot;
 </code></pre>
-<p>The order is <strong>embedded defaults → project policy file → inline tables</strong>. If
-both project options are present, the inline values win. Classifications
+<p>The order is <strong>embedded defaults → project policy file → inline tables →
+top-level <code>LICENCE_ASSESSMENT_FAIL_ON</code></strong>. If both project rule options are
+present, the inline values win; the top-level failure list takes precedence
+over <code>fail_on</code> in either policy file. Classifications
 override by licence ID; rules override by stable <code>id</code>, and unmentioned defaults
 remain in effect. Use the same <code>schema_version</code>, <code>settings</code>,
 <code>classifications</code>, <code>rules</code> and <code>packages</code> keys with either project option.
@@ -275,10 +279,14 @@ conflicting rules of equal specificity fail validation. A <code>*</code> project
 matches only classified project licences. Invalid or missing override files
 and invalid inline tables cause a clear error rather than silently reverting to
 defaults.</p>
-<p>The embedded <code>fail_on = []</code> keeps existing CI exit codes unchanged. An optional
-project <code>fail_on</code> list can gate on <code>DENY</code> or <code>DENY</code> and <code>UNKNOWN</code>; unreviewed
-<code>REVIEW</code> results only fail when explicitly configured. The
-pre-existing accepted-licence check can still fail independently of these
+<p>The embedded <code>fail_on = ["DENY"]</code> fails explicit <code>DENY</code> findings by default;
+<code>REVIEW</code> remains advisory. Set <code>LICENCE_ASSESSMENT_FAIL_ON = ["REVIEW"]</code> under
+<code>[ProjectConfig]</code> to fail on unreviewed <code>REVIEW</code> assessments instead, including
+when generating release summaries. Set an empty list to disable assessment
+gating explicitly.
+The optional policy-file or inline <code>fail_on</code> list remains supported when the
+top-level setting is absent. The pre-existing accepted-licence check can still
+fail independently of these
 assessments. See <a href="third-party-ip-reporting.html">third-party IP reporting</a> and
 the <a href="checking-licence-compliance.html">check-only command</a> for generating and
 reviewing the results.</p></main></body></html>

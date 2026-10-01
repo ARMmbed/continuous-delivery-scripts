@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.4.1" (2026-10-01)
+====================
+
+Bugfixes
+--------
+
+- :page_facing_up: Record this project's manual review of certifi's MPL-2.0 licence for indirect HTTPS use, keep the review valid across versions, and fail releases on DENY assessments by default. (#20261001170158648583500)
+
+
 "4.4.0" (2026-10-01)
 ====================
 
