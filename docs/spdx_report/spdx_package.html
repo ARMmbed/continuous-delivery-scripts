@@ -206,7 +206,14 @@ class PackageInfo:
     @property
     def is_main_licence_accepted(self) -&gt; bool:
         &#34;&#34;&#34;States whether the main licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-        return bool(is_licence_accepted(self.main_licence))
+        return bool(is_licence_accepted(self.main_licence, self._project_licence_refs))
+
+    @property
+    def _project_licence_refs(self) -&gt; List[str]:
+        &#34;&#34;&#34;Allow the project&#39;s own proprietary licence without permitting it for dependencies.&#34;&#34;&#34;
+        if not self._is_dependency and LICENSE_REF_PROPRIETARY in self.main_licence:
+            return [LICENSE_REF_PROPRIETARY]
+        return []
 
     @property
     def licence(self) -&gt; str:
@@ -227,7 +234,7 @@ class PackageInfo:
     @property
     def is_licence_accepted(self) -&gt; bool:
         &#34;&#34;&#34;States whether the actual package&#39;s licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-        return bool(is_licence_accepted(self.licence))
+        return bool(is_licence_accepted(self.licence, self._project_licence_refs))
 
     @property
     def author(self) -&gt; str:
@@ -475,7 +482,7 @@ def is_dependency(self) -&gt; bool:
 <pre><code class="python">@property
 def is_licence_accepted(self) -&gt; bool:
     &#34;&#34;&#34;States whether the actual package&#39;s licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-    return bool(is_licence_accepted(self.licence))</code></pre>
+    return bool(is_licence_accepted(self.licence, self._project_licence_refs))</code></pre>
 </details>
 <div class="desc"><p>States whether the actual package's licence of the package is part of the accepted licence list.</p></div>
 </dd>
@@ -488,7 +495,7 @@ def is_licence_accepted(self) -&gt; bool:
 <pre><code class="python">@property
 def is_main_licence_accepted(self) -&gt; bool:
     &#34;&#34;&#34;States whether the main licence of the package is part of the accepted licence list.&#34;&#34;&#34;
-    return bool(is_licence_accepted(self.main_licence))</code></pre>
+    return bool(is_licence_accepted(self.main_licence, self._project_licence_refs))</code></pre>
 </details>
 <div class="desc"><p>States whether the main licence of the package is part of the accepted licence list.</p></div>
 </dd>

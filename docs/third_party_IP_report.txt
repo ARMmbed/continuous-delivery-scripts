@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-09-30 16:35:17.105266
+                                         2026-10-01 09:28:58.816100
 
 # Summary:
     Licence compliance: Compliant
@@ -30,7 +30,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.105.dist-info/LICENSE; notice: boto3-1.43.105.dist-info/NOTICE
+    Evidence: licence: boto3-1.43.106.dist-info/LICENSE; notice: boto3-1.43.106.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 - botocore:
@@ -41,7 +41,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.105.dist-info/LICENSE.txt; notice: botocore-1.43.105.dist-info/NOTICE
+    Evidence: licence: botocore-1.43.106.dist-info/LICENSE.txt; notice: botocore-1.43.106.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 - bracex:
@@ -118,7 +118,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.1.0.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.2.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 - cryptography:
@@ -503,7 +503,7 @@
     Licence source: License
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: python_dotenv-1.2.3.dist-info/licenses/LICENSE
+    Evidence: licence: python_dotenv-1.2.4.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 - PyYAML:

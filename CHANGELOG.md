@@ -17,6 +17,28 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.3.0" (2026-10-01)
+====================
+
+Features
+--------
+
+- Support proprietary projects with LicenseRef-Proprietary in SPDX reports and file headers, including available licence URL references. (#20260930183200522502000)
+- Add cd-check-licence-compliance to check project and dependency licences without generating SPDX documents, with optional third-party IP summaries. (#20260930184410503280900)
+
+
+Improved Documentation
+----------------------
+
+- Document CSV, JSON and text downloads from the HTML third-party IP report and the corresponding reporting guide. (#20260930184811003460000)
+
+
+Misc
+----
+
+- #20260930184902338342600
+
+
 "4.2.0" (2026-09-30)
 ====================
 

@@ -30,10 +30,11 @@ An audit covers the installed environment, so run it for each supported
 platform if dependencies differ by operating system. Review unknown licences
 and packaged notices rather than assuming a missing value means permission.</p>
 <h2>Output</h2>
-<p>Find <code>third_party_IP_report.html</code>, <code>.csv</code> and <code>.txt</code> in the output directory,
+<p>Find <code>third_party_IP_report.html</code>, <code>.csv</code>, <code>.json</code> and <code>.txt</code> in the output directory,
 alongside SPDX documents when generation is enabled. In this repository the
 HTML report is published to GitHub Pages after a release regenerates <code>docs/</code>.
-Additional formats, such as JSON, depend on the installed package version.</p>
+The HTML report has download links for the accompanying CSV, JSON and text
+reports when these files are kept together in the same directory.</p>
 <h2>GitHub Actions example</h2>
 <p>Once the project and its dependencies are installed:</p>
 <pre><code class="language-yaml">- run: mkdir -p licensing &amp;&amp; cd-generate-spdx --output-dir licensing
@@ -42,5 +43,6 @@ Additional formats, such as JSON, depend on the installed package version.</p>
     name: third-party-ip-report
     path: licensing/
 </code></pre>
-<p>Related commands: <a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a> and
-<a href="licence-header-management.html"><code>cd-license-files</code></a>.</p></main></body></html>
+<p>Related commands: <a href="checking-licence-compliance.html"><code>cd-check-licence-compliance</code></a>
+for reports without SPDX documents, <a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a>
+and <a href="licence-header-management.html"><code>cd-license-files</code></a>.</p></main></body></html>
