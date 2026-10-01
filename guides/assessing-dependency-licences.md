@@ -48,6 +48,62 @@ Expressions use the installed SPDX expression parser, not string splitting:
 - An unknown project or dependency licence receives `UNKNOWN`; an unclassified
   project licence needs `REVIEW` rather than an assumed permissive category.
 
+If discovery reports an **unknown dependency licence**, or finds an expression
+that results in an `UNKNOWN` assessment, the project can provide a verified
+SPDX expression in its existing `PACKAGES_WITH_CHECKED_LICENCE` table. Risk
+screening uses the verified value only when the original assessment is
+`UNKNOWN`:
+
+```toml
+[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
+click-default-group = "BSD-3-Clause"
+```
+
+Suppose `click-default-group` is installed but its package metadata reports
+`Unknown`, and the project declares `Apache-2.0`. With the entry above, the
+report makes the two sources of information distinct:
+
+| Report field | Value | Meaning |
+| --- | --- | --- |
+| Discovered licence | `Unknown` | No usable licence was found in the package metadata. The package row and SPDX output are not rewritten to claim discovery found BSD-3-Clause. |
+| Assessed dependency licence | `BSD-3-Clause` | The human-verified value from `PACKAGES_WITH_CHECKED_LICENCE`, labelled **manual licence review** in the assessment. |
+| Risk assessment | `ALLOW` | The existing `permissive-dependency` rule screens BSD-3-Clause against the project's Apache-2.0 licence. This does not waive BSD notice obligations. |
+| Unknown-licence audit gap | Still listed | Metadata discovery remains incomplete even though the manually verified licence was usable for assessment. |
+
+An entry such as `click-default-group = "Accepted because it is not distributed"`
+is an exemption explanation, **not** an SPDX licence expression. It may still
+serve as a manual allowlist record, but the risk assessment remains `UNKNOWN`.
+Only a recognised SPDX expression (or a valid `LicenseRef-*`) is used as a
+manually verified assessment input.
+
+Legacy flat entries with an explicit choice are also recognised. For example,
+`packaging = "either Apache-2.0 or BSD-2-Clause"` assesses the dependency under
+`Apache-2.0 OR BSD-2-Clause`. The recorded explanation for `python-dateutil`,
+`All contributions after December 1, 2017 released under dual license - either
+Apache 2.0 License or the BSD 3-Clause License.`, becomes `Apache-2.0 OR
+BSD-3-Clause`. Each named alternative must match an SPDX licence exactly after
+normalising standard names; unrelated prose or a fuzzy match is rejected.
+The prose fallback recognises a leading `either` or an explicit `dual licence`
+or `licensed under` introduction. Negations, illustrative examples and extra
+conditions are not inferred as licence choices; use the structured form below
+when the wording is more complex.
+
+For new entries, put the verified expression and its review rationale in
+separate fields instead of embedding an expression inside prose:
+
+```toml
+[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE.packaging]
+licence = "Apache-2.0 OR BSD-2-Clause"
+reason = "Verified against the packaged Apache and BSD licence files."
+```
+
+For `regex`, the project currently records `Apache-2.0`, but package metadata
+declares `Apache-2.0 AND CNRI-Python`, which has no complete screening rule.
+The manual value can be assessed, while the original expression remains visible
+in the report and SPDX output. An `ALLOW` for the manually entered Apache
+licence **does not establish that the CNRI-Python obligations disappeared**:
+review any terms left out of the manual value before relying on the result.
+
 ## Optional ScanCode LicenseDB lookup
 
 If an SPDX identifier is not classified locally or a directional assessment

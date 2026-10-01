@@ -23,6 +23,7 @@ from continuous_delivery_scripts.utils.package_helpers import ProjectMetadataFet
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     is_package_licence_manually_checked,
     get_package_manual_check,
+    get_package_manual_licence,
 )
 from continuous_delivery_scripts.spdx_report.spdx_summary import SummaryGenerator
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
@@ -96,7 +97,8 @@ class SpdxProject:
                     dependency.name,
                     dependency.version,
                     project.metadata.has_unknown_licence,
-                    dependency.metadata.has_unknown_licence,
+                    dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                    get_package_manual_licence(dependency.name),
                 )
             self._licence_assessments = assessments
         return self._licence_assessments

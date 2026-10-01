@@ -24,6 +24,8 @@
     Evidence: {% for evidence in package.licence_evidence %}{{ evidence.kind }}: {{ evidence.path }}{% if not loop.last %}; {% endif %}{% else %}None{% endfor %}
     Licence compliance: {{ package.licence_compliance_details }}
 {% if package.licence_assessment %}    Licence assessment: {{ package.licence_assessment.status }} (automatic: {{ package.licence_assessment.automatic_status }}) — {{ package.licence_assessment.reason }}
+{% if package.licence_assessment.assessed_licence_source == 'manual licence review' %}    Manually verified assessment licence: {{ package.licence_assessment.dependency_licence }} (discovered: {{ package.licence_assessment.discovered_licence }})
+{% endif %}
 {% if package.licence_assessment.manual_review.reviewed %}    Manual assessment review: {{ package.licence_assessment.manual_review.reason }}
 {% endif %}
     Project licence compared: {{ package.licence_assessment.project_licence }}

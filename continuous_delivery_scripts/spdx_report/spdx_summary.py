@@ -13,6 +13,7 @@ from typing import List, Tuple, Optional, Dict, Any
 
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     get_package_manual_check,
+    get_package_manual_licence,
 )
 from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage
 from continuous_delivery_scripts.spdx_report.licence_assessment import (
@@ -127,7 +128,8 @@ class SummaryGenerator:
                     dependency.name,
                     dependency.version,
                     project_package.metadata.has_unknown_licence,
-                    dependency.metadata.has_unknown_licence,
+                    dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                    get_package_manual_licence(dependency.name),
                 )
                 for dependency in dependencies_documents
             }

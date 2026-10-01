@@ -14,6 +14,7 @@ from continuous_delivery_scripts.spdx_report.licence_assessment import (
     LicenceAssessmentPolicy,
     LicenceAssessor,
     LicenceCategory,
+    verified_spdx_licence_expression,
 )
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, FileConfig, configuration
 from continuous_delivery_scripts.utils.third_party_licences import cleanse_licence_expression
@@ -89,6 +90,84 @@ class TestLicenceAssessment(TestCase):
             LicenceAssessment.UNKNOWN,
         )
 
+    def test_unknown_dependency_uses_only_a_manually_verified_spdx_licence(self):
+        verified = self.assessor.assess(
+            "Apache-2.0", "Unknown", "manually-checked", dependency_unknown=True, verified_licence="BSD-3-Clause"
+        )
+        self.assertEqual(verified.status, LicenceAssessment.ALLOW)
+        self.assertEqual(verified.dependency_licence, "BSD-3-Clause")
+        self.assertEqual(verified.discovered_licence, "Unknown")
+        self.assertEqual(verified.assessed_licence_source, "manual licence review")
+        self.assertIn("manually verified BSD-3-Clause", verified.reason)
+
+        for explanation in (
+            "Accepted for this project since not distributed",
+            "GPL-3.0-only but approved for this project",
+            "BSD",
+            "MIT WITH LicenseRef-UnknownException",
+            "",
+        ):
+            with self.subTest(explanation=explanation):
+                result = self.assessor.assess(
+                    "Apache-2.0",
+                    "Unknown",
+                    "manually-checked",
+                    dependency_unknown=True,
+                    verified_licence=explanation,
+                )
+                self.assertEqual(result.status, LicenceAssessment.UNKNOWN)
+
+        custom = self.assessor.assess(
+            "Apache-2.0",
+            "Unknown",
+            "manually-checked",
+            dependency_unknown=True,
+            verified_licence="LicenseRef-Proprietary",
+        )
+        self.assertEqual(custom.status, LicenceAssessment.REVIEW)
+        with_exception = self.assessor.assess(
+            "Apache-2.0",
+            "Unknown",
+            "manually-checked",
+            dependency_unknown=True,
+            verified_licence="GPL-2.0-only WITH Classpath-exception-2.0",
+        )
+        self.assertEqual(with_exception.status, LicenceAssessment.REVIEW)
+        self.assertEqual(with_exception.rule, "exception-needs-review")
+
+    def test_manual_choice_extraction_is_precise_and_preserves_either_or(self):
+        cases = [
+            ("either Apache-2.0 or BSD-2-Clause", "Apache-2.0 OR BSD-2-Clause"),
+            (
+                "All contributions after December 1, 2017 released under dual license - "
+                "either Apache 2.0 License or the BSD 3-Clause License.",
+                "Apache-2.0 OR BSD-3-Clause",
+            ),
+            ("Apache-2.0 or Python-2.0", "Apache-2.0 OR Python-2.0"),
+            ("MIT", "MIT"),
+            ("Accepted since not distributed", None),
+            ("either Apache-2.0 or unverified terms", None),
+            ("not either MIT or GPL-3.0-only", None),
+            ("This is an example: either MIT or GPL-3.0-only", None),
+            ("either MIT or GPL-3.0-only unless sold commercially", None),
+            ("either MIT or GPL-3.0-only. Further restrictions apply", None),
+            ("licensed under either MIT or Apache-2.0", "Apache-2.0 OR MIT"),
+        ]
+        for text, expected in cases:
+            with self.subTest(text=text):
+                self.assertEqual(verified_spdx_licence_expression(text), expected)
+
+        overridden = self.assessor.assess(
+            "Apache-2.0",
+            "Apache-2.0 AND CNRI-Python",
+            "regex",
+            verified_licence="Apache-2.0",
+        )
+        self.assertEqual(overridden.status, LicenceAssessment.ALLOW)
+        self.assertEqual(overridden.dependency_licence, "Apache-2.0")
+        self.assertEqual(overridden.discovered_licence, "Apache-2.0 AND CNRI-Python")
+        self.assertIn("could not be assessed reliably", overridden.reason)
+
     def test_project_policy_overrides_embedded_rules_and_classifies_custom_references(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
@@ -111,7 +190,7 @@ class TestLicenceAssessment(TestCase):
                 '[ProjectConfig]\nLICENCE_ASSESSMENT_RULES_PATH = "policy/assessment.toml"\n', encoding="utf8"
             )
             resolved = FileConfig(str(project_config)).get_value(ConfigurationVariable.LICENCE_ASSESSMENT_RULES_PATH)
-            self.assertEqual(Path(resolved), policy_file)
+            self.assertEqual(Path(resolved).resolve(), policy_file.resolve())
             with patch.object(
                 configuration,
                 "get_value_or_default",

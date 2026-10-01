@@ -117,22 +117,39 @@ class TestSpdxFile(TestCase):
             html = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
             report = json.loads(Path(output_dir, "third_party_IP_report.json").read_text(encoding="utf8"))
 
-        self.assertIn("A manual review record contains a separately verified licence or an exemption reason", html)
+        self.assertIn(
+            "Licence identification, configured-policy compliance and dependency compatibility are separate steps.",
+            html,
+        )
         manual_anchor = f"package-{generate_uuid_based_on_str('manual-package')}"
         manual_row = html.split(f'id="{manual_anchor}"', 1)[1].split("</tr>", 1)[0]
-        self.assertIn("<strong>Automatic assessment:</strong>", manual_row)
+        self.assertIn("<strong>Licence identification</strong>", manual_row)
+        self.assertIn("<strong>Configured licence policy</strong>", manual_row)
+        self.assertIn("<strong>Dependency licence compatibility</strong>", manual_row)
+        self.assertIn("<strong>Automatic policy check:</strong>", manual_row)
         self.assertIn("Does not meet the configured licence policy.", manual_row)
-        self.assertIn("<strong>Manual review record:</strong> BSD-3-Clause", manual_row)
-        self.assertEqual(manual_row.count("BSD-3-Clause"), 1)
+        self.assertIn("<strong>Manual policy review:</strong> BSD-3-Clause", manual_row)
+        self.assertIn("<td><strong>Unknown</strong></td>", manual_row)
+        self.assertIn("Manually verified licence for assessment: <code>BSD-3-Clause</code>", manual_row)
+        self.assertLess(manual_row.index("Licence identification"), manual_row.index("Configured licence policy"))
+        self.assertLess(
+            manual_row.index("Configured licence policy"), manual_row.index("Dependency licence compatibility")
+        )
 
         reviewed_anchor = f"package-{generate_uuid_based_on_str('reviewed-package')}"
         reviewed_row = html.split(f'id="{reviewed_anchor}"', 1)[1].split("</tr>", 1)[0]
         self.assertIn("Meets the configured licence policy.", reviewed_row)
-        self.assertIn("<strong>Manual review record:</strong> BSD-3-Clause", reviewed_row)
+        self.assertIn("<strong>Manual policy review:</strong> BSD-3-Clause", reviewed_row)
         self.assertIn(
             "accepted after manual review: BSD-3-Clause",
             report["packages"]["manual-package"]["licence_compliance_details"],
         )
+        assessment = report["packages"]["manual-package"]["licence_assessment"]
+        self.assertEqual(assessment["status"], "ALLOW")
+        self.assertEqual(assessment["dependency_licence"], "BSD-3-Clause")
+        self.assertEqual(assessment["discovered_licence"], "Unknown")
+        self.assertEqual(assessment["assessed_licence_source"], "manual licence review")
+        self.assertIn("Manually verified licence for assessment:", html)
 
     def test_html_report_highlights_compliance_and_safe_references(self):
         metadata = ProjectMetadata("example")

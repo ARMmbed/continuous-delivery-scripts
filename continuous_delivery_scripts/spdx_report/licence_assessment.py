@@ -16,10 +16,10 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 import toml
-from license_expression import AND, OR, LicenseSymbol, LicenseWithExceptionSymbol, get_spdx_licensing
+from license_expression import AND, OR, ExpressionError, LicenseSymbol, LicenseWithExceptionSymbol, get_spdx_licensing
 
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
-from continuous_delivery_scripts.utils.third_party_licences import normalise_proprietary_licence
+from continuous_delivery_scripts.utils.third_party_licences import OPENSOURCE_LICENCES, normalise_proprietary_licence
 from continuous_delivery_scripts.spdx_report.scancode_licence_db import ScanCodeLicenceDB, ScanCodeLicenceInfo
 
 
@@ -59,6 +59,8 @@ class LicenceAssessmentResult:
     automatic_status: Optional[LicenceAssessment] = None
     manual_review_reason: str = ""
     scancode_licences: Tuple[ScanCodeLicenceInfo, ...] = ()
+    discovered_licence: Optional[str] = None
+    assessed_licence_source: str = "discovered metadata"
 
     def as_report(self) -> Dict[str, Any]:
         """Return JSON- and template-friendly values."""
@@ -66,6 +68,8 @@ class LicenceAssessmentResult:
             "status": self.status.value,
             "project_licence": self.project_licence,
             "dependency_licence": self.dependency_licence,
+            "discovered_licence": self.discovered_licence or self.dependency_licence,
+            "assessed_licence_source": self.assessed_licence_source,
             "reason": self.reason,
             "rule": self.rule,
             "source": self.source,
@@ -240,6 +244,71 @@ def _normalise_exact(value: Any, context: str) -> Optional[str]:
         return str(get_spdx_licensing().parse(normalise_proprietary_licence(expression)))
     except Exception as error:
         raise ValueError(f"{context}: invalid SPDX expression {expression!r}") from error
+
+
+def verified_spdx_licence_expression(value: Optional[str]) -> Optional[str]:
+    """Extract a verified SPDX choice without treating exemption prose as a licence.
+
+    Accept a complete expression, or an explicit 'either X or Y' choice at
+    the end of a manual review explanation. Match spelled-out licence names
+    exactly; fuzzy matching could silently select unrelated licence terms.
+    """
+    if not isinstance(value, str) or not value.strip():
+        return None
+    licensing = get_spdx_licensing()
+
+    def parse_known_expression(text: str) -> Optional[str]:
+        try:
+            expression = licensing.parse(normalise_proprietary_licence(text), strict=True)
+        except (ExpressionError, ValueError):
+            return None
+        if expression is None:
+            return None
+        for symbol in expression.symbols:
+            if isinstance(symbol, LicenseWithExceptionSymbol):
+                if symbol.exception_symbol.key not in licensing.known_symbols:
+                    return None
+                identifiers = (symbol.license_symbol.key,)
+            elif isinstance(symbol, LicenseSymbol):
+                if symbol.is_exception:
+                    return None
+                identifiers = (symbol.key,)
+            else:
+                return None
+            if any(
+                identifier not in licensing.known_symbols and not re.fullmatch(r"LicenseRef-[A-Za-z0-9.-]+", identifier)
+                for identifier in identifiers
+            ):
+                return None
+        return str(expression.simplify())
+
+    whole_expression = parse_known_expression(value)
+    if whole_expression:
+        return whole_expression
+    choices = re.search(r"\beither\s+(.+?)\s+or\s+(.+)$", value.strip(), flags=re.IGNORECASE)
+    if not choices:
+        return None
+    prefix = value.strip()[: choices.start()].strip()
+    if prefix and (
+        re.search(r"\b(?:not|never|neither|example|hypothetical)\b", prefix, flags=re.IGNORECASE)
+        or not re.search(
+            r"(?:\bdual[- ]licen[cs]e(?:d)?\s*[-:;,]?|\blicen[cs]ed\s+under)\s*$",
+            prefix,
+            flags=re.IGNORECASE,
+        )
+    ):
+        return None
+    alternatives = []
+    for alternative in choices.groups():
+        candidate = re.sub(r"^the\s+", "", alternative.strip(" .;"), flags=re.IGNORECASE)
+        expression = parse_known_expression(candidate)
+        if expression is None:
+            licence = OPENSOURCE_LICENCES.get_licence(candidate, allow_fuzzy=False)
+            expression = parse_known_expression(licence.identifier) if licence else None
+        if expression is None:
+            return None
+        alternatives.append(expression)
+    return parse_known_expression(f"({alternatives[0]}) OR ({alternatives[1]})")
 
 
 def _parse_packages(entries: Any, source: str) -> Dict[str, _PackageOverride]:
@@ -417,8 +486,11 @@ class LicenceAssessor:
         dependency_version: str = "",
         project_unknown: bool = False,
         dependency_unknown: bool = False,
+        verified_licence: Optional[str] = None,
     ) -> LicenceAssessmentResult:
         """Keep the automatic finding while recording a matching manual review."""
+        manual_licence = verified_spdx_licence_expression(verified_licence)
+        assessed_licence = dependency_licence
         automatic = self._assess_automatic(
             project_licence,
             dependency_licence,
@@ -427,12 +499,38 @@ class LicenceAssessor:
             project_unknown,
             dependency_unknown,
         )
-        automatic = self._attach_lookup_references(automatic, project_licence, dependency_licence)
+        if automatic.status is LicenceAssessment.UNKNOWN and automatic.rule != "project-unknown" and manual_licence:
+            assessed_licence = manual_licence
+            automatic = self._assess_automatic(
+                project_licence, assessed_licence, dependency_name, dependency_version, project_unknown, False
+            )
+            source_details = (
+                "the discovered licence was unknown"
+                if dependency_unknown
+                else (
+                    "the discovered licence could not be assessed reliably; "
+                    "verify any obligations omitted by the manual value"
+                )
+            )
+            automatic = replace(
+                automatic,
+                discovered_licence=dependency_licence,
+                assessed_licence_source="manual licence review",
+                reason=(
+                    f"Assessed using manually verified {manual_licence} because {source_details}. " + automatic.reason
+                ),
+            )
+        elif automatic.status is LicenceAssessment.UNKNOWN and verified_licence and not manual_licence:
+            automatic = replace(
+                automatic,
+                reason=automatic.reason + " The manual review record is not a recognised SPDX licence expression.",
+            )
+        automatic = self._attach_lookup_references(automatic, project_licence, assessed_licence)
         review = self.manual_reviews.get(dependency_name)
         if (
             automatic.status is LicenceAssessment.REVIEW
             and review
-            and review.matches(dependency_licence, dependency_version)
+            and review.matches(assessed_licence, dependency_version)
         ):
             return replace(
                 automatic,

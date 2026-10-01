@@ -92,6 +92,8 @@
       tbody tr:target { outline: 3px solid var(--accent); outline-offset: -3px; }
       .package-name, .reference, td details { overflow-wrap: anywhere; }
       .package-name { min-width: 12rem; }
+      .detail-group + .detail-group { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); }
+      .detail-group p { margin: .35rem 0; }
       td code { white-space: nowrap; }
       details { margin-bottom: .5rem; border: 1px solid var(--border); border-radius: .45rem; padding: .35rem .55rem; }
       details:last-child { margin-bottom: 0; }
@@ -117,8 +119,8 @@
     <main class="container">
       <nav class="page-nav" aria-label="Report sections">
         <a href="#summary">Summary</a>
-        <a href="#licence-assessment">Licence assessment</a>
         <a href="#audit-gaps">Audit gaps</a>
+        <a href="#licence-assessment">Licence assessment</a>
         <a href="#dependency-summary">Dependency summary</a>
         <a href="#package-licences">Package licences</a>
       </nav>
@@ -171,25 +173,6 @@
           </div>
         </div>
       </section>
-      <section id="licence-assessment" aria-labelledby="assessment-heading">
-        <h2 id="assessment-heading">Dependency licence assessment</h2>
-        <p class="muted">Directional screening against the project's declared licence. Results indicate potential risks, not legal conclusions. The configured allowlist compliance check remains separate.</p>
-        <div class="stats" aria-label="Dependency licence assessment totals">
-          {% for status, count in licence_assessment_counts.items() %}
-          <div class="stat"><span class="stat-title">{{ status }}</span><strong>{{ count }}</strong></div>
-          {% endfor %}
-        </div>
-        <div class="panel">
-          <h3>Dependencies needing attention</h3>
-          <ul>
-            {% for name, package in packages|dictsort if package.is_dependency and package.licence_assessment.status not in ('ALLOW', 'MANUALLY_REVIEWED') %}
-            <li><a href="#{{ package.anchor }}">{{ name }}</a>: {{ package.licence_assessment.status }} — {{ package.licence_assessment.reason }}</li>
-            {% else %}
-            <li>No dependencies need further licence assessment.</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </section>
       <section id="audit-gaps" aria-labelledby="gaps-heading">
         <h2 id="gaps-heading">Audit gaps</h2>
         <p class="muted">Audit gaps highlight missing or uncertain dependency licence information that needs attention. An unknown licence can still appear here after a documented manual review, even when the overall policy status is compliant.</p>
@@ -216,6 +199,32 @@
         <p class="panel">No audit gaps were recorded.</p>
         {% endif %}
       </section>
+      <section id="licence-assessment" aria-labelledby="assessment-heading">
+        <h2 id="assessment-heading">Dependency licence assessment</h2>
+        <p class="muted">Directional screening against the project's declared licence. Results indicate potential risks, not legal conclusions. The configured allowlist compliance check remains separate.</p>
+        <div class="stats" aria-label="Dependency licence assessment totals">
+          {% set assessment_descriptions = {
+            'ALLOW': 'No obvious issue under the screening rules; licence notices and conditions still apply.',
+            'REVIEW': 'Needs human review of obligations that may depend on linking, modification or distribution.',
+            'MANUALLY_REVIEWED': 'An automatic REVIEW has a documented human assessment; see the dependency details.',
+            'DENY': 'A specific rule or project policy identifies a conflict or prohibition.',
+            'UNKNOWN': 'Missing licence details or no reliable assessment rule; a package may still declare a licence.'
+          } %}
+          {% for status, count in licence_assessment_counts.items() %}
+          <div class="stat"><span class="stat-title">{{ status }}</span><strong>{{ count }}</strong><small>{{ assessment_descriptions[status] }}</small></div>
+          {% endfor %}
+        </div>
+        <div class="panel">
+          <h3>Dependencies needing attention</h3>
+          <ul>
+            {% for name, package in packages|dictsort if package.is_dependency and package.licence_assessment.status not in ('ALLOW', 'MANUALLY_REVIEWED') %}
+            <li><a href="#{{ package.anchor }}">{{ name }}</a>: {{ package.licence_assessment.status }} — {{ package.licence_assessment.reason }}</li>
+            {% else %}
+            <li>No dependencies need further licence assessment.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
       <section id="dependency-summary" aria-labelledby="dependency-summary-heading">
         <h2 id="dependency-summary-heading">Dependency summary</h2>
         <p class="muted">Choose a package to jump to its licence and evidence in the detailed results.</p>
@@ -240,7 +249,7 @@
       <section id="package-licences" aria-labelledby="packages-heading">
         <h2 id="packages-heading">Package licences</h2>
         <p class="muted">Review the project's declared licence and the licences of its dependencies. Open the evidence panels to see original declarations and packaged notices.</p>
-        <p class="muted">Automatic assessment checks the detected licence against the configured policy. A manual review record contains a separately verified licence or an exemption reason (for example, BSD-3-Clause). It can approve a package without changing the detected licence shown in the table.</p>
+        <p class="muted">Licence identification, configured-policy compliance and dependency compatibility are separate steps. A manual licence record can approve a package for the configured policy and, when it contains a valid SPDX expression, supply an assessment licence without changing what discovery found.</p>
         <div class="table-wrap" role="region" aria-label="Package licence results" tabindex="0">
           <table id="third_party_ip">
             <caption>Licence declarations and compliance by package</caption>
@@ -307,22 +316,35 @@
                   {% endif %}
                 </td>
                 <td>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>{{ package.licence }}</code>.</p>
+                    {% if package.licence_assessment and package.licence_assessment.assessed_licence_source == 'manual licence review' %}
+                    <p>Manually verified licence for assessment: <code>{{ package.licence_assessment.dependency_licence }}</code>.</p>
+                    {% endif %}
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      {{ 'Does not meet the configured licence policy.' if package.mark_as_problematic else 'Meets the configured licence policy.' }}
+                    </p>
+                    {% if package.manual_check.checked %}
+                    <p class="muted"><strong>Manual policy review:</strong> {{ package.manual_check.reason or 'No reason recorded.' }}</p>
+                    {% endif %}
+                  </div>
                   {% if package.licence_assessment %}
-                  <p><strong>Licence assessment:</strong> {{ package.licence_assessment.automatic_status }} — {{ package.licence_assessment.reason }}</p>
-                  {% if package.licence_assessment.manual_review.reviewed %}
-                  <p><strong>Manual assessment review:</strong> {{ package.licence_assessment.manual_review.reason }}</p>
-                  {% endif %}
-                  <p class="muted">Compared with project licence <code>{{ package.licence_assessment.project_licence }}</code>.</p>
-                  <p class="muted">Rule: <code>{{ package.licence_assessment.rule }}</code> ({{ package.licence_assessment.source }}){% if package.licence_assessment.selected_licence %}; choice: <code>{{ package.licence_assessment.selected_licence }}</code>{% endif %}.</p>
-                  {% for info in package.licence_assessment.scancode_licences %}
-                  <p class="muted">ScanCode LicenseDB describes <code>{{ info.identifier }}</code> as {{ info.category }}: <a href="{{ info.url }}">View licence metadata</a>. This is not a compatibility decision.</p>
-                  {% endfor %}
-                  {% endif %}
-                  <p><strong>Automatic assessment:</strong>
-                    {{ 'Does not meet the configured licence policy.' if package.mark_as_problematic else 'Meets the configured licence policy.' }}
-                  </p>
-                  {% if package.manual_check.checked %}
-                  <p class="muted"><strong>Manual review record:</strong> {{ package.manual_check.reason or 'No reason recorded.' }}</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> {{ package.licence_assessment.automatic_status }} — {{ package.licence_assessment.reason }}</p>
+                    {% if package.licence_assessment.manual_review.reviewed %}
+                    <p><strong>Manual compatibility review:</strong> {{ package.licence_assessment.manual_review.reason }}</p>
+                    {% endif %}
+                    <p class="muted">Compared with project licence <code>{{ package.licence_assessment.project_licence }}</code>.</p>
+                    <p class="muted">Rule: <code>{{ package.licence_assessment.rule }}</code> ({{ package.licence_assessment.source }}){% if package.licence_assessment.selected_licence %}; choice: <code>{{ package.licence_assessment.selected_licence }}</code>{% endif %}.</p>
+                    {% for info in package.licence_assessment.scancode_licences %}
+                    <p class="muted">ScanCode LicenseDB describes <code>{{ info.identifier }}</code> as {{ info.category }}: <a href="{{ info.url }}">View licence metadata</a>. This is not a compatibility decision.</p>
+                    {% endfor %}
+                  </div>
                   {% endif %}
                 </td>
               </tr>
