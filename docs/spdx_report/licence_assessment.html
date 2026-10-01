@@ -1,0 +1,962 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>continuous_delivery_scripts.spdx_report.licence_assessment API documentation</title>
+<meta name="description" content="Explainable, directional licence-risk screening for third-party reports …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>continuous_delivery_scripts.spdx_report.licence_assessment</code></h1>
+</header>
+<section id="section-intro">
+<p>Explainable, directional licence-risk screening for third-party reports.</p>
+<p>Rules are data, not legal conclusions. The embedded TOML file can be reviewed
+and selectively overridden by a project without changing this evaluator.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.verified_spdx_licence_expression"><code class="name flex">
+<span>def <span class="ident">verified_spdx_licence_expression</span></span>(<span>value: str | None) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def verified_spdx_licence_expression(value: Optional[str]) -&gt; Optional[str]:
+    &#34;&#34;&#34;Extract a verified SPDX choice without treating exemption prose as a licence.
+
+    Accept a complete expression, or an explicit &#39;either X or Y&#39; choice at
+    the end of a manual review explanation. Match spelled-out licence names
+    exactly; fuzzy matching could silently select unrelated licence terms.
+    &#34;&#34;&#34;
+    if not isinstance(value, str) or not value.strip():
+        return None
+    licensing = get_spdx_licensing()
+
+    def parse_known_expression(text: str) -&gt; Optional[str]:
+        try:
+            expression = licensing.parse(normalise_proprietary_licence(text), strict=True)
+        except (ExpressionError, ValueError):
+            return None
+        if expression is None:
+            return None
+        for symbol in expression.symbols:
+            if isinstance(symbol, LicenseWithExceptionSymbol):
+                if symbol.exception_symbol.key not in licensing.known_symbols:
+                    return None
+                identifiers = (symbol.license_symbol.key,)
+            elif isinstance(symbol, LicenseSymbol):
+                if symbol.is_exception:
+                    return None
+                identifiers = (symbol.key,)
+            else:
+                return None
+            if any(
+                identifier not in licensing.known_symbols and not re.fullmatch(r&#34;LicenseRef-[A-Za-z0-9.-]+&#34;, identifier)
+                for identifier in identifiers
+            ):
+                return None
+        return str(expression.simplify())
+
+    whole_expression = parse_known_expression(value)
+    if whole_expression:
+        return whole_expression
+    choices = re.search(r&#34;\beither\s+(.+?)\s+or\s+(.+)$&#34;, value.strip(), flags=re.IGNORECASE)
+    if not choices:
+        return None
+    prefix = value.strip()[: choices.start()].strip()
+    if prefix and (
+        re.search(r&#34;\b(?:not|never|neither|example|hypothetical)\b&#34;, prefix, flags=re.IGNORECASE)
+        or not re.search(
+            r&#34;(?:\bdual[- ]licen[cs]e(?:d)?\s*[-:;,]?|\blicen[cs]ed\s+under)\s*$&#34;,
+            prefix,
+            flags=re.IGNORECASE,
+        )
+    ):
+        return None
+    alternatives = []
+    for alternative in choices.groups():
+        candidate = re.sub(r&#34;^the\s+&#34;, &#34;&#34;, alternative.strip(&#34; .;&#34;), flags=re.IGNORECASE)
+        expression = parse_known_expression(candidate)
+        if expression is None:
+            licence = OPENSOURCE_LICENCES.get_licence(candidate, allow_fuzzy=False)
+            expression = parse_known_expression(licence.identifier) if licence else None
+        if expression is None:
+            return None
+        alternatives.append(expression)
+    return parse_known_expression(f&#34;({alternatives[0]}) OR ({alternatives[1]})&#34;)</code></pre>
+</details>
+<div class="desc"><p>Extract a verified SPDX choice without treating exemption prose as a licence.</p>
+<p>Accept a complete expression, or an explicit 'either X or Y' choice at
+the end of a manual review explanation. Match spelled-out licence names
+exactly; fuzzy matching could silently select unrelated licence terms.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment"><code class="flex name class">
+<span>class <span class="ident">LicenceAssessment</span></span>
+<span>(</span><span>*values)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LicenceAssessment(Enum):
+    &#34;&#34;&#34;Outcomes of an advisory assessment, separate from allowlist compliance.&#34;&#34;&#34;
+
+    ALLOW = &#34;ALLOW&#34;
+    REVIEW = &#34;REVIEW&#34;
+    MANUALLY_REVIEWED = &#34;MANUALLY_REVIEWED&#34;
+    DENY = &#34;DENY&#34;
+    UNKNOWN = &#34;UNKNOWN&#34;</code></pre>
+</details>
+<div class="desc"><p>Outcomes of an advisory assessment, separate from allowlist compliance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.ALLOW"><code class="name">var <span class="ident">ALLOW</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.DENY"><code class="name">var <span class="ident">DENY</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.MANUALLY_REVIEWED"><code class="name">var <span class="ident">MANUALLY_REVIEWED</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.REVIEW"><code class="name">var <span class="ident">REVIEW</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.UNKNOWN"><code class="name">var <span class="ident">UNKNOWN</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy"><code class="flex name class">
+<span>class <span class="ident">LicenceAssessmentPolicy</span></span>
+<span>(</span><span>default: dict,<br>override: dict | None = None,<br>inline_override: dict | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LicenceAssessmentPolicy:
+    &#34;&#34;&#34;Packaged screening rules with optional file and inline project overlays.&#34;&#34;&#34;
+
+    def __init__(self, default: dict, override: Optional[dict] = None, inline_override: Optional[dict] = None) -&gt; None:
+        &#34;&#34;&#34;Validate and merge classifications, rules and package exceptions.&#34;&#34;&#34;
+        self.classifications: Dict[str, LicenceCategory] = {}
+        self.scancode_categories: Dict[str, LicenceCategory] = {}
+        self.rules: Dict[str, _Rule] = {}
+        self.packages: Dict[str, _PackageOverride] = {}
+        self.fail_on: Tuple[LicenceAssessment, ...] = ()
+        for data, source in ((default, &#34;built-in&#34;), (override, &#34;project&#34;), (inline_override, &#34;pyproject.toml&#34;)):
+            if data is None:
+                continue
+            self._apply(data, source)
+
+    @classmethod
+    def from_config(cls) -&gt; &#34;LicenceAssessmentPolicy&#34;:
+        &#34;&#34;&#34;Load packaged defaults, an optional project file, then inline rules.&#34;&#34;&#34;
+        resource = resources.files(&#34;continuous_delivery_scripts.spdx_report&#34;).joinpath(
+            &#34;data&#34;, &#34;licence_assessment.toml&#34;
+        )
+        default = toml.loads(resource.read_text(encoding=&#34;utf8&#34;))
+        override_path = configuration.get_value_or_default(ConfigurationVariable.LICENCE_ASSESSMENT_RULES_PATH, None)
+        override = toml.load(Path(override_path)) if override_path else None
+        inline_override = configuration.get_value_or_default(ConfigurationVariable.LICENCE_ASSESSMENT_RULES, None)
+        return cls(default, override, inline_override)
+
+    def _apply(self, data: dict, source: str) -&gt; None:
+        if not isinstance(data, dict) or set(data) - {
+            &#34;schema_version&#34;,
+            &#34;settings&#34;,
+            &#34;classifications&#34;,
+            &#34;scancode_categories&#34;,
+            &#34;rules&#34;,
+            &#34;packages&#34;,
+        }:
+            raise ValueError(f&#34;{source}: unexpected licence assessment policy fields&#34;)
+        if data.get(&#34;schema_version&#34;) != 1:
+            raise ValueError(f&#34;{source}: licence assessment policy requires schema_version = 1&#34;)
+        settings = data.get(&#34;settings&#34;, {})
+        if not isinstance(settings, dict) or set(settings) - {&#34;fail_on&#34;}:
+            raise ValueError(f&#34;{source}: unknown licence assessment settings&#34;)
+        if &#34;fail_on&#34; in settings:
+            values = settings[&#34;fail_on&#34;]
+            if not isinstance(values, list) or any(not isinstance(value, str) for value in values):
+                raise ValueError(f&#34;{source}: fail_on must be a list of assessment statuses&#34;)
+            self.fail_on = tuple(_require_status(value, f&#34;{source} fail_on&#34;) for value in values)
+            if LicenceAssessment.ALLOW in self.fail_on:
+                raise ValueError(f&#34;{source}: ALLOW cannot be a failing assessment status&#34;)
+        classifications = data.get(&#34;classifications&#34;, {})
+        if not isinstance(classifications, dict):
+            raise ValueError(f&#34;{source}: classifications must be a table&#34;)
+        for identifier, category in classifications.items():
+            self.classifications[_require_text(identifier, &#34;Licence identifier&#34;)] = _require_category(
+                category, identifier
+            )
+        categories = data.get(&#34;scancode_categories&#34;, {})
+        if not isinstance(categories, dict):
+            raise ValueError(f&#34;{source}: scancode_categories must be a table&#34;)
+        for category_name, classification in categories.items():
+            self.scancode_categories[_require_text(category_name, &#34;ScanCode category&#34;)] = _require_category(
+                classification, category_name
+            )
+        entries = data.get(&#34;rules&#34;, [])
+        if not isinstance(entries, list):
+            raise ValueError(f&#34;{source}: rules must be an array of tables&#34;)
+        parsed_rules = [_parse_rule(entry, source) for entry in entries]
+        if len({rule.id for rule in parsed_rules}) != len(parsed_rules):
+            raise ValueError(f&#34;{source}: duplicate licence assessment rule IDs&#34;)
+        self.rules.update((rule.id, rule) for rule in parsed_rules)
+        self.packages.update(_parse_packages(data.get(&#34;packages&#34;, []), source))</code></pre>
+</details>
+<div class="desc"><p>Packaged screening rules with optional file and inline project overlays.</p>
+<p>Validate and merge classifications, rules and package exceptions.</p></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy.from_config"><code class="name flex">
+<span>def <span class="ident">from_config</span></span>(<span>) ‑> <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy">LicenceAssessmentPolicy</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load packaged defaults, an optional project file, then inline rules.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult"><code class="flex name class">
+<span>class <span class="ident">LicenceAssessmentResult</span></span>
+<span>(</span><span>status: <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment">LicenceAssessment</a>,<br>project_licence: str,<br>dependency_licence: str,<br>reason: str,<br>rule: str,<br>source: str,<br>selected_licence: str | None = None,<br>automatic_status: <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment">LicenceAssessment</a> | None = None,<br>manual_review_reason: str = '',<br>scancode_licences: Tuple[<a title="continuous_delivery_scripts.spdx_report.scancode_licence_db.ScanCodeLicenceInfo" href="scancode_licence_db.html#continuous_delivery_scripts.spdx_report.scancode_licence_db.ScanCodeLicenceInfo">ScanCodeLicenceInfo</a>, ...] = (),<br>discovered_licence: str | None = None,<br>assessed_licence_source: str = 'discovered metadata')</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(frozen=True)
+class LicenceAssessmentResult:
+    &#34;&#34;&#34;A reportable, auditable assessment of one dependency.&#34;&#34;&#34;
+
+    status: LicenceAssessment
+    project_licence: str
+    dependency_licence: str
+    reason: str
+    rule: str
+    source: str
+    selected_licence: Optional[str] = None
+    automatic_status: Optional[LicenceAssessment] = None
+    manual_review_reason: str = &#34;&#34;
+    scancode_licences: Tuple[ScanCodeLicenceInfo, ...] = ()
+    discovered_licence: Optional[str] = None
+    assessed_licence_source: str = &#34;discovered metadata&#34;
+
+    def as_report(self) -&gt; Dict[str, Any]:
+        &#34;&#34;&#34;Return JSON- and template-friendly values.&#34;&#34;&#34;
+        return {
+            &#34;status&#34;: self.status.value,
+            &#34;project_licence&#34;: self.project_licence,
+            &#34;dependency_licence&#34;: self.dependency_licence,
+            &#34;discovered_licence&#34;: self.discovered_licence or self.dependency_licence,
+            &#34;assessed_licence_source&#34;: self.assessed_licence_source,
+            &#34;reason&#34;: self.reason,
+            &#34;rule&#34;: self.rule,
+            &#34;source&#34;: self.source,
+            &#34;selected_licence&#34;: self.selected_licence or &#34;&#34;,
+            &#34;automatic_status&#34;: (self.automatic_status or self.status).value,
+            &#34;manual_review&#34;: {
+                &#34;reviewed&#34;: self.status is LicenceAssessment.MANUALLY_REVIEWED,
+                &#34;reason&#34;: self.manual_review_reason,
+            },
+            &#34;scancode_licences&#34;: [
+                {&#34;identifier&#34;: info.identifier, &#34;category&#34;: info.category, &#34;url&#34;: info.url}
+                for info in self.scancode_licences
+            ],
+        }</code></pre>
+</details>
+<div class="desc"><p>A reportable, auditable assessment of one dependency.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.assessed_licence_source"><code class="name">var <span class="ident">assessed_licence_source</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.automatic_status"><code class="name">var <span class="ident">automatic_status</span> : <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment">LicenceAssessment</a> | None</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.dependency_licence"><code class="name">var <span class="ident">dependency_licence</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.discovered_licence"><code class="name">var <span class="ident">discovered_licence</span> : str | None</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.manual_review_reason"><code class="name">var <span class="ident">manual_review_reason</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.project_licence"><code class="name">var <span class="ident">project_licence</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.reason"><code class="name">var <span class="ident">reason</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.rule"><code class="name">var <span class="ident">rule</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.scancode_licences"><code class="name">var <span class="ident">scancode_licences</span> : Tuple[<a title="continuous_delivery_scripts.spdx_report.scancode_licence_db.ScanCodeLicenceInfo" href="scancode_licence_db.html#continuous_delivery_scripts.spdx_report.scancode_licence_db.ScanCodeLicenceInfo">ScanCodeLicenceInfo</a>, ...]</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.selected_licence"><code class="name">var <span class="ident">selected_licence</span> : str | None</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.status"><code class="name">var <span class="ident">status</span> : <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment">LicenceAssessment</a></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.as_report"><code class="name flex">
+<span>def <span class="ident">as_report</span></span>(<span>self) ‑> Dict[str, Any]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def as_report(self) -&gt; Dict[str, Any]:
+    &#34;&#34;&#34;Return JSON- and template-friendly values.&#34;&#34;&#34;
+    return {
+        &#34;status&#34;: self.status.value,
+        &#34;project_licence&#34;: self.project_licence,
+        &#34;dependency_licence&#34;: self.dependency_licence,
+        &#34;discovered_licence&#34;: self.discovered_licence or self.dependency_licence,
+        &#34;assessed_licence_source&#34;: self.assessed_licence_source,
+        &#34;reason&#34;: self.reason,
+        &#34;rule&#34;: self.rule,
+        &#34;source&#34;: self.source,
+        &#34;selected_licence&#34;: self.selected_licence or &#34;&#34;,
+        &#34;automatic_status&#34;: (self.automatic_status or self.status).value,
+        &#34;manual_review&#34;: {
+            &#34;reviewed&#34;: self.status is LicenceAssessment.MANUALLY_REVIEWED,
+            &#34;reason&#34;: self.manual_review_reason,
+        },
+        &#34;scancode_licences&#34;: [
+            {&#34;identifier&#34;: info.identifier, &#34;category&#34;: info.category, &#34;url&#34;: info.url}
+            for info in self.scancode_licences
+        ],
+    }</code></pre>
+</details>
+<div class="desc"><p>Return JSON- and template-friendly values.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor"><code class="flex name class">
+<span>class <span class="ident">LicenceAssessor</span></span>
+<span>(</span><span>policy: <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy">LicenceAssessmentPolicy</a>,<br>lookup_scancode: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LicenceAssessor:
+    &#34;&#34;&#34;Screen an SPDX dependency expression against a project licence.&#34;&#34;&#34;
+
+    def __init__(self, policy: LicenceAssessmentPolicy, lookup_scancode: bool = False) -&gt; None:
+        &#34;&#34;&#34;Use the same policy for reports and optional CI gating.&#34;&#34;&#34;
+        self.policy = policy
+        self._licensing = get_spdx_licensing()
+        self.manual_reviews = _load_manual_reviews()
+        self._scancode = ScanCodeLicenceDB() if lookup_scancode else None
+        self._scancode_references: Dict[str, ScanCodeLicenceInfo] = {}
+
+    def _lookup_info(self, identifier: str) -&gt; Optional[ScanCodeLicenceInfo]:
+        &#34;&#34;&#34;Consult the exact SPDX key only when lookup is explicitly enabled.&#34;&#34;&#34;
+        if self._scancode is None:
+            return None
+        info = self._scancode.find(identifier)
+        if info:
+            self._scancode_references[identifier] = info
+        return info
+
+    def _category_for(self, identifier: str) -&gt; Optional[LicenceCategory]:
+        &#34;&#34;&#34;Prefer reviewed project and embedded classifications over LicenseDB.&#34;&#34;&#34;
+        category = self.policy.classifications.get(identifier)
+        if category is not None:
+            return category
+        info = self._lookup_info(identifier)
+        return self.policy.scancode_categories.get(info.category) if info else None
+
+    def _attach_lookup_references(
+        self, result: LicenceAssessmentResult, project: str, dependency: str
+    ) -&gt; LicenceAssessmentResult:
+        &#34;&#34;&#34;Preserve where externally obtained licence information came from.&#34;&#34;&#34;
+        if not self._scancode_references:
+            return result
+        identifiers = set()
+        for expression in (project, dependency):
+            try:
+                parsed = self._licensing.parse(normalise_proprietary_licence(expression))
+                for symbol in parsed.symbols:
+                    if isinstance(symbol, LicenseWithExceptionSymbol):
+                        identifiers.add(symbol.license_symbol.key)
+                    elif isinstance(symbol, LicenseSymbol):
+                        identifiers.add(symbol.key)
+            except (ValueError, AttributeError):
+                continue
+        references = tuple(
+            self._scancode_references[key] for key in sorted(identifiers &amp; self._scancode_references.keys())
+        )
+        if not references:
+            return result
+        categories = &#34;, &#34;.join(f&#34;{info.identifier}: {info.category}&#34; for info in references)
+        return replace(
+            result,
+            reason=(
+                f&#34;{result.reason} ScanCode LicenseDB describes {categories}; &#34;
+                &#34;its category is not a compatibility verdict.&#34;
+            ),
+            source=f&#34;{result.source} + ScanCode LicenseDB&#34;,
+            scancode_licences=references,
+        )
+
+    def _result(
+        self,
+        status: LicenceAssessment,
+        project: str,
+        dependency: str,
+        reason: str,
+        rule: str,
+        source: str = &#34;built-in&#34;,
+        selected: Optional[str] = None,
+    ) -&gt; LicenceAssessmentResult:
+        return LicenceAssessmentResult(status, project, dependency, reason, rule, source, selected)
+
+    def assess(
+        self,
+        project_licence: str,
+        dependency_licence: str,
+        dependency_name: str = &#34;&#34;,
+        dependency_version: str = &#34;&#34;,
+        project_unknown: bool = False,
+        dependency_unknown: bool = False,
+        verified_licence: Optional[str] = None,
+    ) -&gt; LicenceAssessmentResult:
+        &#34;&#34;&#34;Keep the automatic finding while recording a matching manual review.&#34;&#34;&#34;
+        manual_licence = verified_spdx_licence_expression(verified_licence)
+        assessed_licence = dependency_licence
+        automatic = self._assess_automatic(
+            project_licence,
+            dependency_licence,
+            dependency_name,
+            dependency_version,
+            project_unknown,
+            dependency_unknown,
+        )
+        if automatic.status is LicenceAssessment.UNKNOWN and automatic.rule != &#34;project-unknown&#34; and manual_licence:
+            assessed_licence = manual_licence
+            automatic = self._assess_automatic(
+                project_licence, assessed_licence, dependency_name, dependency_version, project_unknown, False
+            )
+            source_details = (
+                &#34;the discovered licence was unknown&#34;
+                if dependency_unknown
+                else (
+                    &#34;the discovered licence could not be assessed reliably; &#34;
+                    &#34;verify any obligations omitted by the manual value&#34;
+                )
+            )
+            automatic = replace(
+                automatic,
+                discovered_licence=dependency_licence,
+                assessed_licence_source=&#34;manual licence review&#34;,
+                reason=(
+                    f&#34;Assessed using manually verified {manual_licence} because {source_details}. &#34; + automatic.reason
+                ),
+            )
+        elif automatic.status is LicenceAssessment.UNKNOWN and verified_licence and not manual_licence:
+            automatic = replace(
+                automatic,
+                reason=automatic.reason + &#34; The manual review record is not a recognised SPDX licence expression.&#34;,
+            )
+        automatic = self._attach_lookup_references(automatic, project_licence, assessed_licence)
+        review = self.manual_reviews.get(dependency_name)
+        if (
+            automatic.status is LicenceAssessment.REVIEW
+            and review
+            and review.matches(assessed_licence, dependency_version)
+        ):
+            return replace(
+                automatic,
+                status=LicenceAssessment.MANUALLY_REVIEWED,
+                automatic_status=LicenceAssessment.REVIEW,
+                manual_review_reason=review.reason,
+            )
+        return automatic
+
+    def _assess_automatic(
+        self,
+        project_licence: str,
+        dependency_licence: str,
+        dependency_name: str,
+        dependency_version: str,
+        project_unknown: bool,
+        dependency_unknown: bool,
+    ) -&gt; LicenceAssessmentResult:
+        &#34;&#34;&#34;Return a conservative, directional result without invoking licence discovery.&#34;&#34;&#34;
+        project = project_licence or &#34;Unknown&#34;
+        dependency = dependency_licence or &#34;Unknown&#34;
+        if project_unknown or project.casefold() in (&#34;unknown&#34;, &#34;none&#34;, &#34;noassertion&#34;):
+            return self._result(
+                LicenceAssessment.UNKNOWN,
+                project,
+                dependency,
+                &#34;Project licence is not reliably known.&#34;,
+                &#34;project-unknown&#34;,
+            )
+        matching = [
+            item
+            for item in self.policy.packages.values()
+            if item.name.casefold() == dependency_name.casefold()
+            and (item.version is None or item.version == dependency_version)
+        ]
+        if matching:
+            most_specific = sorted(matching, key=lambda item: item.version is not None, reverse=True)
+            if len(most_specific) &gt; 1 and most_specific[0].version == most_specific[1].version:
+                raise ValueError(f&#34;Conflicting licence assessment overrides for {dependency_name}&#34;)
+            override = most_specific[0]
+            return self._result(override.status, project, dependency, override.reason, override.id, &#34;project&#34;)
+        if dependency_unknown or dependency.casefold() in (&#34;unknown&#34;, &#34;none&#34;, &#34;noassertion&#34;):
+            return self._result(
+                LicenceAssessment.UNKNOWN,
+                project,
+                dependency,
+                &#34;Dependency licence is not reliably known.&#34;,
+                &#34;dependency-unknown&#34;,
+            )
+        try:
+            project_node = self._licensing.parse(normalise_proprietary_licence(project))
+            dependency_node = self._licensing.parse(normalise_proprietary_licence(dependency))
+            if project_node is None or dependency_node is None:
+                raise ValueError(&#34;Empty SPDX expression&#34;)
+        except Exception:
+            return self._result(
+                LicenceAssessment.UNKNOWN,
+                project,
+                dependency,
+                &#34;Licence expression cannot be parsed.&#34;,
+                &#34;expression-invalid&#34;,
+            )
+        project_name = str(project_node)
+        project_category = self._category_for(project_node.key) if isinstance(project_node, LicenseSymbol) else None
+        if project_category is LicenceCategory.UNKNOWN:
+            return self._result(
+                LicenceAssessment.UNKNOWN,
+                project,
+                dependency,
+                &#34;The project licence is classified as unknown.&#34;,
+                &#34;project-unknown&#34;,
+            )
+        return self._assess_node(project, dependency, project_name, project_category, dependency_node)
+
+    def _matching_rule(
+        self,
+        project: str,
+        dependency: str,
+        project_category: Optional[LicenceCategory],
+        dependency_category: Optional[LicenceCategory],
+    ) -&gt; Optional[_Rule]:
+        matching = [
+            rule
+            for rule in self.policy.rules.values()
+            if rule.matches(
+                project,
+                dependency,
+                project_category.value if project_category else None,
+                dependency_category.value if dependency_category else &#34;UNKNOWN&#34;,
+            )
+        ]
+        if not matching:
+            return None
+        matching.sort(key=lambda rule: rule.specificity, reverse=True)
+        if len(matching) &gt; 1 and matching[0].specificity == matching[1].specificity:
+            raise ValueError(f&#34;Conflicting licence assessment rules: {matching[0].id} and {matching[1].id}&#34;)
+        return matching[0]
+
+    def _assess_node(
+        self, project: str, dependency: str, project_name: str, project_category: Optional[LicenceCategory], node: Any
+    ) -&gt; LicenceAssessmentResult:
+        name = str(node)
+        category = self._category_for(node.key) if isinstance(node, LicenseSymbol) else None
+        rule = self._matching_rule(project_name, name, project_category, category)
+        if rule:
+            return self._result(rule.status, project, dependency, rule.reason, rule.id, rule.source, name)
+        if isinstance(node, LicenseSymbol) and category is not None:
+            self._lookup_info(node.key)
+        if category is LicenceCategory.UNKNOWN:
+            return self._result(
+                LicenceAssessment.UNKNOWN,
+                project,
+                dependency,
+                f&#34;The dependency licence {name} is classified as unknown.&#34;,
+                &#34;dependency-unknown&#34;,
+                selected=name,
+            )
+        if not project_category:
+            return self._result(
+                LicenceAssessment.REVIEW,
+                project,
+                dependency,
+                &#34;Project licence is unclassified or offers multiple terms; &#34;
+                &#34;determine the applicable terms before comparison.&#34;,
+                &#34;project-needs-review&#34;,
+            )
+        if isinstance(node, OR):
+            branches = [
+                self._assess_node(project, dependency, project_name, project_category, part) for part in node.args
+            ]
+            for status in (
+                LicenceAssessment.ALLOW,
+                LicenceAssessment.REVIEW,
+                LicenceAssessment.UNKNOWN,
+                LicenceAssessment.DENY,
+            ):
+                selected = next((branch for branch in branches if branch.status is status), None)
+                if selected:
+                    return self._result(
+                        status,
+                        project,
+                        dependency,
+                        f&#34;An OR choice of {selected.selected_licence or name} is {status.value}: {selected.reason}&#34;,
+                        &#34;expression-or&#34;,
+                        source=selected.source,
+                        selected=selected.selected_licence,
+                    )
+        if isinstance(node, AND):
+            branches = [
+                self._assess_node(project, dependency, project_name, project_category, part) for part in node.args
+            ]
+            for status in (
+                LicenceAssessment.DENY,
+                LicenceAssessment.UNKNOWN,
+                LicenceAssessment.REVIEW,
+                LicenceAssessment.ALLOW,
+            ):
+                if any(branch.status is status for branch in branches):
+                    source = &#34;project&#34; if any(branch.source == &#34;project&#34; for branch in branches) else &#34;built-in&#34;
+                    return self._result(
+                        status,
+                        project,
+                        dependency,
+                        &#34;All AND obligations apply: &#34;
+                        + &#34;; &#34;.join(f&#34;{branch.selected_licence}: {branch.reason}&#34; for branch in branches),
+                        &#34;expression-and&#34;,
+                        source=source,
+                        selected=name,
+                    )
+        if isinstance(node, LicenseWithExceptionSymbol):
+            self._lookup_info(node.license_symbol.key)
+            return self._result(
+                LicenceAssessment.REVIEW,
+                project,
+                dependency,
+                f&#34;The exception in {name} has not been reviewed in the configured policy.&#34;,
+                &#34;exception-needs-review&#34;,
+                selected=name,
+            )
+        if isinstance(node, LicenseSymbol):
+            if name.startswith(&#34;LicenseRef-&#34;):
+                reason = f&#34;The terms of the project-defined licence reference {name} need human review.&#34;
+                status = LicenceAssessment.REVIEW
+                identifier = &#34;licence-reference-needs-review&#34;
+            elif category is not None:
+                reason = f&#34;No directional assessment rule is defined for {name}; review its obligations.&#34;
+                status = LicenceAssessment.REVIEW
+                identifier = &#34;directional-rule-missing&#34;
+            else:
+                reason = f&#34;No classification or directional rule is available for {name}.&#34;
+                status = LicenceAssessment.UNKNOWN
+                identifier = &#34;licence-unclassified&#34;
+            return self._result(status, project, dependency, reason, identifier, selected=name)
+        return self._result(
+            LicenceAssessment.UNKNOWN, project, dependency, &#34;Unsupported SPDX expression.&#34;, &#34;expression-unsupported&#34;
+        )</code></pre>
+</details>
+<div class="desc"><p>Screen an SPDX dependency expression against a project licence.</p>
+<p>Use the same policy for reports and optional CI gating.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor.assess"><code class="name flex">
+<span>def <span class="ident">assess</span></span>(<span>self,<br>project_licence: str,<br>dependency_licence: str,<br>dependency_name: str = '',<br>dependency_version: str = '',<br>project_unknown: bool = False,<br>dependency_unknown: bool = False,<br>verified_licence: str | None = None) ‑> <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult">LicenceAssessmentResult</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def assess(
+    self,
+    project_licence: str,
+    dependency_licence: str,
+    dependency_name: str = &#34;&#34;,
+    dependency_version: str = &#34;&#34;,
+    project_unknown: bool = False,
+    dependency_unknown: bool = False,
+    verified_licence: Optional[str] = None,
+) -&gt; LicenceAssessmentResult:
+    &#34;&#34;&#34;Keep the automatic finding while recording a matching manual review.&#34;&#34;&#34;
+    manual_licence = verified_spdx_licence_expression(verified_licence)
+    assessed_licence = dependency_licence
+    automatic = self._assess_automatic(
+        project_licence,
+        dependency_licence,
+        dependency_name,
+        dependency_version,
+        project_unknown,
+        dependency_unknown,
+    )
+    if automatic.status is LicenceAssessment.UNKNOWN and automatic.rule != &#34;project-unknown&#34; and manual_licence:
+        assessed_licence = manual_licence
+        automatic = self._assess_automatic(
+            project_licence, assessed_licence, dependency_name, dependency_version, project_unknown, False
+        )
+        source_details = (
+            &#34;the discovered licence was unknown&#34;
+            if dependency_unknown
+            else (
+                &#34;the discovered licence could not be assessed reliably; &#34;
+                &#34;verify any obligations omitted by the manual value&#34;
+            )
+        )
+        automatic = replace(
+            automatic,
+            discovered_licence=dependency_licence,
+            assessed_licence_source=&#34;manual licence review&#34;,
+            reason=(
+                f&#34;Assessed using manually verified {manual_licence} because {source_details}. &#34; + automatic.reason
+            ),
+        )
+    elif automatic.status is LicenceAssessment.UNKNOWN and verified_licence and not manual_licence:
+        automatic = replace(
+            automatic,
+            reason=automatic.reason + &#34; The manual review record is not a recognised SPDX licence expression.&#34;,
+        )
+    automatic = self._attach_lookup_references(automatic, project_licence, assessed_licence)
+    review = self.manual_reviews.get(dependency_name)
+    if (
+        automatic.status is LicenceAssessment.REVIEW
+        and review
+        and review.matches(assessed_licence, dependency_version)
+    ):
+        return replace(
+            automatic,
+            status=LicenceAssessment.MANUALLY_REVIEWED,
+            automatic_status=LicenceAssessment.REVIEW,
+            manual_review_reason=review.reason,
+        )
+    return automatic</code></pre>
+</details>
+<div class="desc"><p>Keep the automatic finding while recording a matching manual review.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory"><code class="flex name class">
+<span>class <span class="ident">LicenceCategory</span></span>
+<span>(</span><span>*values)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LicenceCategory(Enum):
+    &#34;&#34;&#34;Broad screening categories, not a substitute for individual licence terms.&#34;&#34;&#34;
+
+    PERMISSIVE = &#34;PERMISSIVE&#34;
+    WEAK_COPYLEFT = &#34;WEAK_COPYLEFT&#34;
+    STRONG_COPYLEFT = &#34;STRONG_COPYLEFT&#34;
+    NETWORK_COPYLEFT = &#34;NETWORK_COPYLEFT&#34;
+    PUBLIC_DOMAIN = &#34;PUBLIC_DOMAIN&#34;
+    PROPRIETARY = &#34;PROPRIETARY&#34;
+    UNKNOWN = &#34;UNKNOWN&#34;</code></pre>
+</details>
+<div class="desc"><p>Broad screening categories, not a substitute for individual licence terms.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.NETWORK_COPYLEFT"><code class="name">var <span class="ident">NETWORK_COPYLEFT</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PERMISSIVE"><code class="name">var <span class="ident">PERMISSIVE</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PROPRIETARY"><code class="name">var <span class="ident">PROPRIETARY</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PUBLIC_DOMAIN"><code class="name">var <span class="ident">PUBLIC_DOMAIN</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.STRONG_COPYLEFT"><code class="name">var <span class="ident">STRONG_COPYLEFT</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.UNKNOWN"><code class="name">var <span class="ident">UNKNOWN</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.WEAK_COPYLEFT"><code class="name">var <span class="ident">WEAK_COPYLEFT</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="continuous_delivery_scripts.spdx_report" href="index.html">continuous_delivery_scripts.spdx_report</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.verified_spdx_licence_expression" href="#continuous_delivery_scripts.spdx_report.licence_assessment.verified_spdx_licence_expression">verified_spdx_licence_expression</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment">LicenceAssessment</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.ALLOW" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.ALLOW">ALLOW</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.DENY" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.DENY">DENY</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.MANUALLY_REVIEWED" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.MANUALLY_REVIEWED">MANUALLY_REVIEWED</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.REVIEW" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.REVIEW">REVIEW</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.UNKNOWN" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessment.UNKNOWN">UNKNOWN</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy">LicenceAssessmentPolicy</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy.from_config" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentPolicy.from_config">from_config</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult">LicenceAssessmentResult</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.as_report" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.as_report">as_report</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.assessed_licence_source" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.assessed_licence_source">assessed_licence_source</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.automatic_status" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.automatic_status">automatic_status</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.dependency_licence" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.dependency_licence">dependency_licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.discovered_licence" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.discovered_licence">discovered_licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.manual_review_reason" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.manual_review_reason">manual_review_reason</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.project_licence" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.project_licence">project_licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.reason" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.reason">reason</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.rule" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.rule">rule</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.scancode_licences" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.scancode_licences">scancode_licences</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.selected_licence" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.selected_licence">selected_licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.source" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.source">source</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.status" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult.status">status</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor">LicenceAssessor</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor.assess" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor.assess">assess</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory">LicenceCategory</a></code></h4>
+<ul class="two-column">
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.NETWORK_COPYLEFT" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.NETWORK_COPYLEFT">NETWORK_COPYLEFT</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PERMISSIVE" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PERMISSIVE">PERMISSIVE</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PROPRIETARY" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PROPRIETARY">PROPRIETARY</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PUBLIC_DOMAIN" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.PUBLIC_DOMAIN">PUBLIC_DOMAIN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.STRONG_COPYLEFT" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.STRONG_COPYLEFT">STRONG_COPYLEFT</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.UNKNOWN" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.UNKNOWN">UNKNOWN</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.WEAK_COPYLEFT" href="#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceCategory.WEAK_COPYLEFT">WEAK_COPYLEFT</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

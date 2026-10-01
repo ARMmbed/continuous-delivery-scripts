@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-01 09:28:58.816100
+                                         2026-10-01 15:10:31.675695
 
 # Summary:
     Licence compliance: Compliant
@@ -8,6 +8,8 @@
     Missing dependencies: None
     Unknown licences: click-default-group, docutils, python-dateutil
     Undocumented exemptions: None
+    Dependency licence assessment: ALLOW: 63; REVIEW: 1; MANUALLY_REVIEWED: 1; DENY: 0; UNKNOWN: 0
+    Licence assessment is advisory; allowlist compliance is evaluated separately.
 
 # More details:
 
@@ -21,6 +23,13 @@
     Licence classifiers: None
     Evidence: licence: boolean_py-5.0.dist-info/licenses/CHANGELOG.rst; licence: boolean_py-5.0.dist-info/licenses/LICENSE.txt; licence: boolean_py-5.0.dist-info/licenses/README.rst
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - boto3:
     [X] Compliant?
@@ -32,6 +41,13 @@
     Licence classifiers: None
     Evidence: licence: boto3-1.43.106.dist-info/LICENSE; notice: boto3-1.43.106.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - botocore:
     [X] Compliant?
@@ -43,6 +59,13 @@
     Licence classifiers: None
     Evidence: licence: botocore-1.43.106.dist-info/LICENSE.txt; notice: botocore-1.43.106.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - bracex:
     [X] Compliant?
@@ -54,6 +77,13 @@
     Licence classifiers: MIT License
     Evidence: licence: bracex-3.0.1.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - certifi:
     [X] Compliant?
@@ -65,6 +95,13 @@
     Licence classifiers: Mozilla Public License 2.0 (MPL 2.0)
     Evidence: licence: certifi-2026.7.22.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: REVIEW (automatic: REVIEW) — Weak copyleft obligations depend on modification, linking and how the work is distributed.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: weak-copyleft-dependency (built-in)
+
+
 
 - cffi:
     [X] Compliant?
@@ -76,6 +113,13 @@
     Licence classifiers: None
     Evidence: licence: cffi-2.1.1.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: MIT.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - charset-normalizer:
     [X] Compliant?
@@ -87,6 +131,13 @@
     Licence classifiers: None
     Evidence: licence: charset_normalizer-3.5.2.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - click:
     [X] Compliant?
@@ -98,6 +149,13 @@
     Licence classifiers: None
     Evidence: licence: click-8.5.0.dist-info/licenses/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - click-default-group:
     [X] Compliant?
@@ -109,6 +167,14 @@
     Licence classifiers: Public Domain
     Evidence: licence: click_default_group-1.2.4.dist-info/LICENSE
     Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.
+    Licence assessment: ALLOW (automatic: ALLOW) — Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.
+    Manually verified assessment licence: BSD-3-Clause (discovered: Unknown)
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - continuous-delivery-scripts:
     [X] Compliant?
@@ -118,8 +184,9 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.2.0.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.3.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+
 
 - cryptography:
     [X] Compliant?
@@ -131,6 +198,13 @@
     Licence classifiers: None
     Evidence: licence: cryptography-50.0.2.dist-info/licenses/LICENSE; licence: cryptography-50.0.2.dist-info/licenses/LICENSE.APACHE; licence: cryptography-50.0.2.dist-info/licenses/LICENSE.BSD
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: expression-or (built-in)
+
+
 
 - detect-secrets:
     [X] Compliant?
@@ -142,6 +216,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: detect_secrets-1.5.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - docutils:
     [X] Compliant?
@@ -153,6 +234,14 @@
     Licence classifiers: Public Domain; BSD License; GNU General Public License (GPL)
     Evidence: licence: docutils-0.23.dist-info/licenses/COPYING.rst; licence: docutils-0.23.dist-info/licenses/licenses/BSD-0-Clause.rst; licence: docutils-0.23.dist-info/licenses/licenses/BSD-2-Clause.rst; licence: docutils-0.23.dist-info/licenses/licenses/gpl-3-0.txt
     Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.
+    Licence assessment: ALLOW (automatic: ALLOW) — Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.
+    Manually verified assessment licence: BSD-3-Clause (discovered: Unknown)
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - gibberish-detector:
     [X] Compliant?
@@ -164,6 +253,13 @@
     Licence classifiers: MIT License
     Evidence: licence: gibberish_detector-0.1.1.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - gitdb:
     [X] Compliant?
@@ -175,6 +271,13 @@
     Licence classifiers: BSD License
     Evidence: licence: gitdb-4.0.12.dist-info/AUTHORS; licence: gitdb-4.0.12.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - GitPython:
     [X] Compliant?
@@ -186,6 +289,13 @@
     Licence classifiers: None
     Evidence: licence: gitpython-3.2.0.dist-info/licenses/AUTHORS; licence: gitpython-3.2.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - id:
     [X] Compliant?
@@ -197,6 +307,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: id-1.6.1.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - idna:
     [X] Compliant?
@@ -208,6 +325,13 @@
     Licence classifiers: None
     Evidence: licence: idna-3.20.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - Incremental:
     [X] Compliant?
@@ -219,6 +343,13 @@
     Licence classifiers: MIT License
     Evidence: licence: incremental-24.11.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - jaraco.classes:
     [X] Compliant?
@@ -230,6 +361,13 @@
     Licence classifiers: MIT License
     Evidence: licence: jaraco.classes-3.4.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - jaraco.context:
     [X] Compliant?
@@ -241,6 +379,13 @@
     Licence classifiers: None
     Evidence: licence: jaraco_context-6.1.2.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - jaraco.functools:
     [X] Compliant?
@@ -252,6 +397,13 @@
     Licence classifiers: None
     Evidence: licence: jaraco_functools-4.6.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - jeepney:
     [X] Compliant?
@@ -263,6 +415,13 @@
     Licence classifiers: None
     Evidence: licence: jeepney-0.9.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - jellyfish:
     [X] Compliant?
@@ -274,6 +433,13 @@
     Licence classifiers: MIT License
     Evidence: licence: jellyfish-1.2.1.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - Jinja2:
     [X] Compliant?
@@ -285,6 +451,13 @@
     Licence classifiers: BSD License
     Evidence: licence: jinja2-3.1.6.dist-info/licenses/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - jmespath:
     [X] Compliant?
@@ -296,6 +469,13 @@
     Licence classifiers: MIT License
     Evidence: licence: jmespath-1.1.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - keyring:
     [X] Compliant?
@@ -307,6 +487,13 @@
     Licence classifiers: None
     Evidence: licence: keyring-25.7.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - license-expression:
     [X] Compliant?
@@ -318,6 +505,13 @@
     Licence classifiers: None
     Evidence: licence: license_expression-30.4.4.dist-info/licenses/AUTHORS.rst; licence: license_expression-30.4.4.dist-info/licenses/CHANGELOG.rst; licence: license_expression-30.4.4.dist-info/licenses/CODE_OF_CONDUCT.rst; notice: license_expression-30.4.4.dist-info/licenses/NOTICE; licence: license_expression-30.4.4.dist-info/licenses/README.rst; licence: license_expression-30.4.4.dist-info/licenses/apache-2.0.LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - licenseheaders:
     [X] Compliant?
@@ -329,6 +523,13 @@
     Licence classifiers: MIT License
     Evidence: licence: licenseheaders-0.8.8.dist-info/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - Mako:
     [X] Compliant?
@@ -340,6 +541,13 @@
     Licence classifiers: None
     Evidence: licence: mako-1.4.3.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - Markdown:
     [X] Compliant?
@@ -351,6 +559,13 @@
     Licence classifiers: None
     Evidence: licence: markdown-3.11.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - markdown-it-py:
     [X] Compliant?
@@ -362,6 +577,13 @@
     Licence classifiers: MIT License
     Evidence: licence: markdown_it_py-4.2.0.dist-info/licenses/LICENSE; licence: markdown_it_py-4.2.0.dist-info/licenses/LICENSE.markdown-it
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - MarkupSafe:
     [X] Compliant?
@@ -373,6 +595,13 @@
     Licence classifiers: None
     Evidence: licence: markupsafe-3.0.3.dist-info/licenses/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - mdurl:
     [X] Compliant?
@@ -384,6 +613,13 @@
     Licence classifiers: MIT License
     Evidence: licence: mdurl-0.1.2.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - more-itertools:
     [X] Compliant?
@@ -395,6 +631,13 @@
     Licence classifiers: None
     Evidence: licence: more_itertools-11.1.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - nh3:
     [X] Compliant?
@@ -406,6 +649,13 @@
     Licence classifiers: None
     Evidence: licence: nh3-0.3.7.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - packaging:
     [X] Compliant?
@@ -417,6 +667,13 @@
     Licence classifiers: None
     Evidence: licence: packaging-26.3.dist-info/licenses/LICENSE; licence: packaging-26.3.dist-info/licenses/LICENSE.APACHE; licence: packaging-26.3.dist-info/licenses/LICENSE.BSD
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: expression-or (built-in)
+
+
 
 - pdoc3:
     [X] Compliant?
@@ -427,7 +684,15 @@
     Declared licence: AGPL-3.0
     Licence classifiers: GNU Affero General Public License v3 or later (AGPLv3+)
     Evidence: licence: pdoc3-0.11.6.dist-info/LICENSE.txt
-    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: Accepted for this project since not distributed.
+    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: Used separately to generate docs; not bundled or modified..
+    Licence assessment: MANUALLY_REVIEWED (automatic: REVIEW) — Network copyleft obligations may apply to network use as well as distribution; review the usage.
+
+    Manual assessment review: Used separately to generate docs; not bundled or modified.
+
+    Project licence compared: Apache-2.0
+    Assessment rule: network-copyleft-dependency (built-in)
+
+
 
 - ply:
     [X] Compliant?
@@ -439,6 +704,13 @@
     Licence classifiers: None
     Evidence: None
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - pyautoversion:
     [X] Compliant?
@@ -450,6 +722,13 @@
     Licence classifiers: None
     Evidence: licence: pyautoversion-1.2.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - pycparser:
     [X] Compliant?
@@ -461,6 +740,13 @@
     Licence classifiers: None
     Evidence: licence: pycparser-3.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - Pygments:
     [X] Compliant?
@@ -472,6 +758,13 @@
     Licence classifiers: None
     Evidence: licence: pygments-2.21.0.dist-info/licenses/AUTHORS; licence: pygments-2.21.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - pyparsing:
     [X] Compliant?
@@ -483,6 +776,13 @@
     Licence classifiers: None
     Evidence: licence: pyparsing-3.3.3.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - python-dateutil:
     [X] Compliant?
@@ -494,6 +794,14 @@
     Licence classifiers: BSD License; Apache Software License
     Evidence: licence: python_dateutil-2.9.0.post0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License..
+    Licence assessment: ALLOW (automatic: ALLOW) — Assessed using manually verified Apache-2.0 OR BSD-3-Clause because the discovered licence was unknown. An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.
+    Manually verified assessment licence: Apache-2.0 OR BSD-3-Clause (discovered: Unknown)
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: expression-or (built-in)
+
+
 
 - python-dotenv:
     [X] Compliant?
@@ -505,6 +813,13 @@
     Licence classifiers: None
     Evidence: licence: python_dotenv-1.2.4.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - PyYAML:
     [X] Compliant?
@@ -516,6 +831,13 @@
     Licence classifiers: MIT License
     Evidence: licence: pyyaml-6.0.3.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - rdflib:
     [X] Compliant?
@@ -527,6 +849,13 @@
     Licence classifiers: BSD License
     Evidence: licence: rdflib-7.6.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - readme_renderer:
     [X] Compliant?
@@ -538,6 +867,13 @@
     Licence classifiers: None
     Evidence: licence: readme_renderer-46.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - regex:
     [X] Compliant?
@@ -549,6 +885,14 @@
     Licence classifiers: None
     Evidence: licence: regex-2026.9.29.dist-info/licenses/LICENSE.txt
     Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: Apache-2.0.
+    Licence assessment: ALLOW (automatic: ALLOW) — Assessed using manually verified Apache-2.0 because the discovered licence could not be assessed reliably; verify any obligations omitted by the manual value. A permissive dependency generally permits redistribution; retain its notices and conditions.
+    Manually verified assessment licence: Apache-2.0 (discovered: Apache-2.0 AND CNRI-Python)
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - requests:
     [X] Compliant?
@@ -560,6 +904,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: requests-2.34.2.dist-info/licenses/LICENSE; notice: requests-2.34.2.dist-info/licenses/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - requests-toolbelt:
     [X] Compliant?
@@ -571,6 +922,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: requests_toolbelt-1.0.0.dist-info/AUTHORS.rst; licence: requests_toolbelt-1.0.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - rfc3986:
     [X] Compliant?
@@ -582,6 +940,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: rfc3986-2.0.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - rich:
     [X] Compliant?
@@ -593,6 +958,13 @@
     Licence classifiers: MIT License
     Evidence: licence: rich-15.0.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - s3transfer:
     [X] Compliant?
@@ -604,6 +976,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: s3transfer-0.19.2.dist-info/LICENSE.txt; notice: s3transfer-0.19.2.dist-info/NOTICE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - SecretStorage:
     [X] Compliant?
@@ -615,6 +994,13 @@
     Licence classifiers: None
     Evidence: licence: secretstorage-3.5.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - semver:
     [X] Compliant?
@@ -626,6 +1012,13 @@
     Licence classifiers: BSD License
     Evidence: licence: semver-2.13.0.dist-info/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - setuptools:
     [X] Compliant?
@@ -637,6 +1030,13 @@
     Licence classifiers: None
     Evidence: licence: setuptools-80.10.2.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - six:
     [X] Compliant?
@@ -648,6 +1048,13 @@
     Licence classifiers: MIT License
     Evidence: licence: six-1.17.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - smmap:
     [X] Compliant?
@@ -659,6 +1066,13 @@
     Licence classifiers: BSD License
     Evidence: licence: smmap-5.0.3.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - spdx-tools:
     [X] Compliant?
@@ -670,6 +1084,13 @@
     Licence classifiers: Apache Software License
     Evidence: licence: spdx_tools-0.6.1.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - toml:
     [X] Compliant?
@@ -681,6 +1102,13 @@
     Licence classifiers: MIT License
     Evidence: licence: toml-0.10.2.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - towncrier:
     [X] Compliant?
@@ -692,6 +1120,13 @@
     Licence classifiers: MIT License
     Evidence: licence: towncrier-22.12.0.dist-info/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - twine:
     [X] Compliant?
@@ -703,6 +1138,13 @@
     Licence classifiers: None
     Evidence: licence: twine-7.0.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - urllib3:
     [X] Compliant?
@@ -714,6 +1156,13 @@
     Licence classifiers: None
     Evidence: licence: urllib3-2.8.0.dist-info/licenses/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - wcmatch:
     [X] Compliant?
@@ -725,6 +1174,13 @@
     Licence classifiers: MIT License
     Evidence: licence: wcmatch-11.0.1.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - xmltodict:
     [X] Compliant?
@@ -736,3 +1192,10 @@
     Licence classifiers: None
     Evidence: licence: xmltodict-1.0.4.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+

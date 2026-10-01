@@ -1,0 +1,284 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Assess dependency licence risks</title><meta name="description" content="Assess dependency licence risks — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Assess dependency licence risks</h1>
+<h2>What this assessment does</h2>
+<p>The existing third-party IP report screens each discovered dependency against
+the <strong>project's declared licence</strong>, as provided by the selected language
+plugin. No second dependency scan or extra project-licence setting is needed.
+This directional screening highlights possible obligations; it cannot decide
+whether a particular use, linking arrangement or distribution is legally
+permitted. The existing accepted-licence policy and manual reviews remain a
+separate compliance check.</p>
+<p>The automatic screen produces one of four results for each dependency. A
+documented manual review moves an automatic <code>REVIEW</code> to <code>MANUALLY_REVIEWED</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Assessment</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ALLOW</code></td>
+<td>An identified, low-risk combination under the screening rules. Licence notices and conditions still apply.</td>
+</tr>
+<tr>
+<td><code>REVIEW</code></td>
+<td>Additional facts or obligations need human review; this is not a finding of infringement.</td>
+</tr>
+<tr>
+<td><code>MANUALLY_REVIEWED</code></td>
+<td>A <code>REVIEW</code> has a matching project review record and explanation. The automatic <code>REVIEW</code>, reason and rule remain visible.</td>
+</tr>
+<tr>
+<td><code>DENY</code></td>
+<td>An explicit project prohibition or narrowly specified directional rule applies.</td>
+</tr>
+<tr>
+<td><code>UNKNOWN</code></td>
+<td>A licence or usable project declaration is missing or cannot be classified reliably.</td>
+</tr>
+</tbody>
+</table>
+<p>Every result includes a reason, the rule ID, and whether the rule came from the
+embedded policy or a project override. HTML and text reports show counts for
+each outcome; JSON and CSV expose per-dependency values. Missing dependencies
+are listed separately as audit gaps because no licence was discovered for them.
+No screening decision is written into the SPDX documents.</p>
+<h2>Default rules and expressions</h2>
+<p>The <a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/spdx_report/data/licence_assessment.toml">embedded TOML policy</a>
+is loaded automatically. Its explicit SPDX classifications draw on the
+approach used by <a href="https://www.oss-review-toolkit.org/ort/docs/configuration/license-classifications">OSS Review Toolkit</a>
+and <a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a>. They are
+screening categories, not legal conclusions. For a BSD-3-Clause project, MIT,
+BSD-3-Clause and Apache-2.0 dependencies normally receive <code>ALLOW</code>, while
+LGPL, GPL and AGPL dependencies receive <code>REVIEW</code> with a reason. A proprietary
+project declared as <code>LicenseRef-Proprietary</code> gets the same conservative
+screening; unclassified custom <code>LicenseRef-*</code> terms require review.</p>
+<p>Expressions use the installed SPDX expression parser, not string splitting:</p>
+<ul>
+<li><code>MIT OR GPL-3.0-only</code> can select MIT and records the selected choice.</li>
+<li><code>MIT AND GPL-3.0-only</code> considers both sets of obligations and is marked <code>REVIEW</code>.</li>
+<li>A <code>WITH</code> exception needs an explicit rule for the full expression; otherwise
+  it receives <code>REVIEW</code>. <code>-only</code> and <code>-or-later</code> are distinct identifiers.</li>
+<li>An unknown project or dependency licence receives <code>UNKNOWN</code>; an unclassified
+  project licence needs <code>REVIEW</code> rather than an assumed permissive category.</li>
+</ul>
+<p>If discovery reports an <strong>unknown dependency licence</strong>, or finds an expression
+that results in an <code>UNKNOWN</code> assessment, the project can provide a verified
+SPDX expression in its existing <code>PACKAGES_WITH_CHECKED_LICENCE</code> table. Risk
+screening uses the verified value only when the original assessment is
+<code>UNKNOWN</code>:</p>
+<pre><code class="language-toml">[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
+click-default-group = &quot;BSD-3-Clause&quot;
+</code></pre>
+<p>Suppose <code>click-default-group</code> is installed but its package metadata reports
+<code>Unknown</code>, and the project declares <code>Apache-2.0</code>. With the entry above, the
+report makes the two sources of information distinct:</p>
+<table>
+<thead>
+<tr>
+<th>Report field</th>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discovered licence</td>
+<td><code>Unknown</code></td>
+<td>No usable licence was found in the package metadata. The package row and SPDX output are not rewritten to claim discovery found BSD-3-Clause.</td>
+</tr>
+<tr>
+<td>Assessed dependency licence</td>
+<td><code>BSD-3-Clause</code></td>
+<td>The human-verified value from <code>PACKAGES_WITH_CHECKED_LICENCE</code>, labelled <strong>manual licence review</strong> in the assessment.</td>
+</tr>
+<tr>
+<td>Risk assessment</td>
+<td><code>ALLOW</code></td>
+<td>The existing <code>permissive-dependency</code> rule screens BSD-3-Clause against the project's Apache-2.0 licence. This does not waive BSD notice obligations.</td>
+</tr>
+<tr>
+<td>Unknown-licence audit gap</td>
+<td>Still listed</td>
+<td>Metadata discovery remains incomplete even though the manually verified licence was usable for assessment.</td>
+</tr>
+</tbody>
+</table>
+<p>An entry such as <code>click-default-group = "Accepted because it is not distributed"</code>
+is an exemption explanation, <strong>not</strong> an SPDX licence expression. It may still
+serve as a manual allowlist record, but the risk assessment remains <code>UNKNOWN</code>.
+Only a recognised SPDX expression (or a valid <code>LicenseRef-*</code>) is used as a
+manually verified assessment input.</p>
+<p>Legacy flat entries with an explicit choice are also recognised. For example,
+<code>packaging = "either Apache-2.0 or BSD-2-Clause"</code> assesses the dependency under
+<code>Apache-2.0 OR BSD-2-Clause</code>. The recorded explanation for <code>python-dateutil</code>,
+<code>All contributions after December 1, 2017 released under dual license - either
+Apache 2.0 License or the BSD 3-Clause License.</code>, becomes <code>Apache-2.0 OR
+BSD-3-Clause</code>. Each named alternative must match an SPDX licence exactly after
+normalising standard names; unrelated prose or a fuzzy match is rejected.
+The prose fallback recognises a leading <code>either</code> or an explicit <code>dual licence</code>
+or <code>licensed under</code> introduction. Negations, illustrative examples and extra
+conditions are not inferred as licence choices; use the structured form below
+when the wording is more complex.</p>
+<p>For new entries, put the verified expression and its review rationale in
+separate fields instead of embedding an expression inside prose:</p>
+<pre><code class="language-toml">[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE.packaging]
+licence = &quot;Apache-2.0 OR BSD-2-Clause&quot;
+reason = &quot;Verified against the packaged Apache and BSD licence files.&quot;
+</code></pre>
+<p>For <code>regex</code>, the project currently records <code>Apache-2.0</code>, but package metadata
+declares <code>Apache-2.0 AND CNRI-Python</code>, which has no complete screening rule.
+The manual value can be assessed, while the original expression remains visible
+in the report and SPDX output. An <code>ALLOW</code> for the manually entered Apache
+licence <strong>does not establish that the CNRI-Python obligations disappeared</strong>:
+review any terms left out of the manual value before relying on the result.</p>
+<h2>Optional ScanCode LicenseDB lookup</h2>
+<p>If an SPDX identifier is not classified locally or a directional assessment
+rule is missing, opt in to a bounded lookup of the public
+<a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a> index:</p>
+<pre><code class="language-bash">cd-check-licence-compliance --lookup-scancode --output-dir licensing
+cd-generate-spdx --lookup-scancode --output-dir licensing
+</code></pre>
+<p>Create the output directory first, or omit <code>--output-dir</code> from the check-only
+command if no report files are needed. Lookups are <strong>off by default</strong>; when
+enabled, the index is fetched at most once per command run,
+with a timeout. Only exact SPDX licence identifiers are matched: it cannot
+infer a missing licence from a dependency name or decipher an arbitrary
+<code>LicenseRef-*</code>. Project and embedded classifications always take precedence.</p>
+<p><a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a> supplies licence
+categories and links to licence records, <strong>not project/dependency compatibility
+verdicts</strong>. The mapping from its categories
+to assessment categories is in the embedded policy's <code>scancode_categories</code>
+table and can be overridden in either project policy format. A previously
+unclassified permissive licence may therefore follow an existing screening
+rule, but an absent directional rule still yields <code>REVIEW</code>, not an invented
+decision. Unrecognised categories, unavailable network access and missing
+identifiers retain the conservative assessment; use <code>-v</code> to see lookup
+warnings. Consulted categories and URLs are recorded in the reports and
+printed by the check-only command. SPDX output and the accepted-licence policy
+are unchanged by this option.</p>
+<p>After a <strong>successful</strong> lookup-assisted command, warnings on standard error
+identify each consulted licence, its
+<a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a> source URL and
+the local action needed to make future runs reproducible without the flag. For
+example, after
+checking the terms at the supplied URL, add a verified SPDX classification to
+<code>[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]</code> (or to the project
+policy file). If a category is already defined but no directional rule applies,
+the warning instead asks for a rule under
+<code>[[ProjectConfig.LICENCE_ASSESSMENT_RULES.rules]]</code> with a documented reason.
+Run the command without <code>--lookup-scancode</code> to verify the local policy works.
+Warnings are not printed as successful remediation advice when the compliance
+check fails. External categories are evidence for review, not a substitute for
+reviewing licence terms or the separate accepted-licence policy.</p>
+<h2>Record a manual assessment review</h2>
+<p>After reviewing a dependency with an automatic <code>REVIEW</code> result, add a reason
+under <code>[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS]</code> in <code>pyproject.toml</code>:</p>
+<pre><code class="language-toml">[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.bar]
+licence = &quot;LGPL-2.1-only&quot;
+version = &quot;2.0&quot;
+reason = &quot;Reviewed linking and distribution obligations (LEGAL-42).&quot;
+</code></pre>
+<p>The package name must match the discovered dependency. Matching its licence
+and version prevents the record applying after its terms or version change.
+For an unscoped review, <code>bar = "Review reason"</code> can instead be written directly
+under <code>[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS]</code>; the scoped form is
+recommended. A blank reason is invalid. A matching record changes the reported
+status and counts to <code>MANUALLY_REVIEWED</code> but preserves the automatic <code>REVIEW</code>
+and its rule. It does not turn <code>DENY</code> or <code>UNKNOWN</code> into reviewed outcomes.</p>
+<p>If <code>fail_on = ["REVIEW"]</code> was configured, the matching review clears <strong>that</strong>
+assessment gate. The existing accepted-licence check remains independent: for
+an LGPL dependency not on the accepted list, also record its approval under
+<code>[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]</code> (or explicitly accept the
+licence). The report keeps both explanations separately.</p>
+<h2>Override the embedded policy when necessary</h2>
+<p>Projects <strong>do not need to supply any policy</strong>: embedded rules are applied
+automatically. For a small override, put the same policy tables directly in
+the project's <code>pyproject.toml</code>:</p>
+<pre><code class="language-toml">[ProjectConfig.LICENCE_ASSESSMENT_RULES]
+schema_version = 1
+
+[ProjectConfig.LICENCE_ASSESSMENT_RULES.settings]
+fail_on = [&quot;DENY&quot;]
+
+[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]
+LicenseRef-Internal = &quot;PROPRIETARY&quot;
+
+[[ProjectConfig.LICENCE_ASSESSMENT_RULES.rules]]
+id = &quot;review-internal-vendor&quot;
+project_licence = &quot;LicenseRef-Proprietary&quot;
+dependency_licence = &quot;LicenseRef-Internal&quot;
+status = &quot;REVIEW&quot;
+reason = &quot;Check the agreement for this licence before distribution.&quot;
+
+[[ProjectConfig.LICENCE_ASSESSMENT_RULES.packages]]
+id = &quot;vendor-1.2-agreement&quot;
+name = &quot;vendor&quot;
+version = &quot;1.2&quot;
+status = &quot;ALLOW&quot;
+reason = &quot;Reviewed the vendor agreement for version 1.2.&quot;
+</code></pre>
+<p>For a larger policy, alternatively set a path under <code>[ProjectConfig]</code> in
+<code>pyproject.toml</code>. The path is resolved relative to that file:</p>
+<pre><code class="language-toml">[ProjectConfig]
+LICENCE_ASSESSMENT_RULES_PATH = &quot;policy/licence-assessment.toml&quot;
+</code></pre>
+<p>For example, the project file could contain:</p>
+<pre><code class="language-toml">schema_version = 1
+
+[settings]
+fail_on = [&quot;DENY&quot;, &quot;UNKNOWN&quot;]
+
+[classifications]
+LicenseRef-Internal = &quot;PROPRIETARY&quot;
+
+[[rules]]
+id = &quot;strong-copyleft-dependency&quot;
+project_category = &quot;*&quot;
+dependency_category = &quot;STRONG_COPYLEFT&quot;
+status = &quot;DENY&quot;
+reason = &quot;Our organisation does not distribute combined works under these terms.&quot;
+
+[[rules]]
+id = &quot;review-internal-vendor&quot;
+project_licence = &quot;LicenseRef-Proprietary&quot;
+dependency_licence = &quot;LicenseRef-Internal&quot;
+status = &quot;REVIEW&quot;
+reason = &quot;Check the agreement for this licence before distribution.&quot;
+
+[[packages]]
+id = &quot;vendor-1.2-agreement&quot;
+name = &quot;vendor&quot;
+version = &quot;1.2&quot;
+status = &quot;ALLOW&quot;
+reason = &quot;Reviewed the vendor agreement for version 1.2.&quot;
+</code></pre>
+<p>The order is <strong>embedded defaults → project policy file → inline tables</strong>. If
+both project options are present, the inline values win. Classifications
+override by licence ID; rules override by stable <code>id</code>, and unmentioned defaults
+remain in effect. Use the same <code>schema_version</code>, <code>settings</code>,
+<code>classifications</code>, <code>rules</code> and <code>packages</code> keys with either project option.
+Package exceptions match a dependency name and optional exact version before
+general rules, including when its licence is otherwise unknown. For rules,
+an exact directional licence match takes precedence over a category match;
+conflicting rules of equal specificity fail validation. A <code>*</code> project category
+matches only classified project licences. Invalid or missing override files
+and invalid inline tables cause a clear error rather than silently reverting to
+defaults.</p>
+<p>The embedded <code>fail_on = []</code> keeps existing CI exit codes unchanged. An optional
+project <code>fail_on</code> list can gate on <code>DENY</code> or <code>DENY</code> and <code>UNKNOWN</code>; unreviewed
+<code>REVIEW</code> results only fail when explicitly configured. The
+pre-existing accepted-licence check can still fail independently of these
+assessments. See <a href="third-party-ip-reporting.html">third-party IP reporting</a> and
+the <a href="checking-licence-compliance.html">check-only command</a> for generating and
+reviewing the results.</p></main></body></html>

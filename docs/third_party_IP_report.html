@@ -96,6 +96,8 @@
       tbody tr:target { outline: 3px solid var(--accent); outline-offset: -3px; }
       .package-name, .reference, td details { overflow-wrap: anywhere; }
       .package-name { min-width: 12rem; }
+      .detail-group + .detail-group { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); }
+      .detail-group p { margin: .35rem 0; }
       td code { white-space: nowrap; }
       details { margin-bottom: .5rem; border: 1px solid var(--border); border-radius: .45rem; padding: .35rem .55rem; }
       details:last-child { margin-bottom: 0; }
@@ -115,13 +117,14 @@
       <div class="container">
         <p class="eyebrow">Licence reporting</p>
         <h1>Third-party licence and IP report</h1>
-        <p class="meta">continuous-delivery-scripts · Generated <time datetime="2026-10-01T09:28:58.816100">01 October 2026 at 09:28</time></p>
+        <p class="meta">continuous-delivery-scripts · Generated <time datetime="2026-10-01T15:10:31.675695">01 October 2026 at 15:10</time></p>
       </div>
     </header>
     <main class="container">
       <nav class="page-nav" aria-label="Report sections">
         <a href="#summary">Summary</a>
         <a href="#audit-gaps">Audit gaps</a>
+        <a href="#licence-assessment">Licence assessment</a>
         <a href="#dependency-summary">Dependency summary</a>
         <a href="#package-licences">Package licences</a>
       </nav>
@@ -180,6 +183,32 @@
           
         </div>
         
+      </section>
+      <section id="licence-assessment" aria-labelledby="assessment-heading">
+        <h2 id="assessment-heading">Dependency licence assessment</h2>
+        <p class="muted">Directional screening against the project's declared licence. Results indicate potential risks, not legal conclusions. The configured allowlist compliance check remains separate.</p>
+        <div class="stats" aria-label="Dependency licence assessment totals">
+          
+          
+          <div class="stat"><span class="stat-title">ALLOW</span><strong>63</strong><small>No obvious issue under the screening rules; licence notices and conditions still apply.</small></div>
+          
+          <div class="stat"><span class="stat-title">REVIEW</span><strong>1</strong><small>Needs human review of obligations that may depend on linking, modification or distribution.</small></div>
+          
+          <div class="stat"><span class="stat-title">MANUALLY_REVIEWED</span><strong>1</strong><small>An automatic REVIEW has a documented human assessment; see the dependency details.</small></div>
+          
+          <div class="stat"><span class="stat-title">DENY</span><strong>0</strong><small>A specific rule or project policy identifies a conflict or prohibition.</small></div>
+          
+          <div class="stat"><span class="stat-title">UNKNOWN</span><strong>0</strong><small>Missing licence details or no reliable assessment rule; a package may still declare a licence.</small></div>
+          
+        </div>
+        <div class="panel">
+          <h3>Dependencies needing attention</h3>
+          <ul>
+            
+            <li><a href="#package-d7d0abc9-0667-15a8-d02b-9f61cd64a871">certifi</a>: REVIEW — Weak copyleft obligations depend on modification, linking and how the work is distributed.</li>
+            
+          </ul>
+        </div>
       </section>
       <section id="dependency-summary" aria-labelledby="dependency-summary-heading">
         <h2 id="dependency-summary-heading">Dependency summary</h2>
@@ -331,13 +360,13 @@
       <section id="package-licences" aria-labelledby="packages-heading">
         <h2 id="packages-heading">Package licences</h2>
         <p class="muted">Review the project's declared licence and the licences of its dependencies. Open the evidence panels to see original declarations and packaged notices.</p>
-        <p class="muted">Automatic assessment checks the detected licence against the configured policy. A manual review record contains a separately verified licence or an exemption reason (for example, BSD-3-Clause). It can approve a package without changing the detected licence shown in the table.</p>
+        <p class="muted">Licence identification, configured-policy compliance and dependency compatibility are separate steps. A manual licence record can approve a package for the configured policy and, when it contains a valid SPDX expression, supply an assessment licence without changing what discovery found.</p>
         <div class="table-wrap" role="region" aria-label="Package licence results" tabindex="0">
           <table id="third_party_ip">
             <caption>Licence declarations and compliance by package</caption>
             <thead>
               <tr>
-                <th scope="col">Status</th><th scope="col">Package</th><th scope="col">Version</th>
+                <th scope="col">Status</th><th scope="col">Assessment</th><th scope="col">Package</th><th scope="col">Version</th>
                 <th scope="col">Scope</th><th scope="col">Reference</th><th scope="col">Licence</th>
                 <th scope="col">Source</th><th scope="col">Packaged evidence</th><th scope="col">Details</th>
               </tr>
@@ -348,6 +377,11 @@
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>boolean.py</strong></td>
@@ -668,9 +702,27 @@ SPDX-License-Identifier: BSD-2-Clause
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-2-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-2-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -679,6 +731,11 @@ SPDX-License-Identifier: BSD-2-Clause
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>boto3</strong></td>
@@ -894,9 +951,27 @@ Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -905,6 +980,11 @@ Copyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>botocore</strong></td>
@@ -1178,9 +1258,27 @@ one at http://mozilla.org/MPL/2.0/.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1189,6 +1287,11 @@ one at http://mozilla.org/MPL/2.0/.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>bracex</strong></td>
@@ -1243,11 +1346,29 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1256,6 +1377,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--warning">REVIEW</span>
                   
                 </td>
                 <td class="package-name"><strong>certifi</strong></td>
@@ -1307,9 +1433,27 @@ one at http://mozilla.org/MPL/2.0/.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MPL-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> REVIEW — Weak copyleft obligations depend on modification, linking and how the work is distributed.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>weak-copyleft-dependency</code> (built-in); choice: <code>MPL-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1318,6 +1462,11 @@ one at http://mozilla.org/MPL/2.0/.
                 <td>
                   
                   <span class="status status--warning">Reviewed</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>cffi</strong></td>
@@ -1370,11 +1519,29 @@ documentation is licensed as follows:
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Does not meet the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT-0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Does not meet the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT-0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1383,6 +1550,11 @@ documentation is licensed as follows:
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>charset-normalizer</strong></td>
@@ -1433,9 +1605,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1444,6 +1634,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>click</strong></td>
@@ -1501,11 +1696,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1514,6 +1727,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--warning">Reviewed</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>click-default-group</strong></td>
@@ -1572,11 +1790,31 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Does not meet the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Unknown</code>.</p>
+                    
+                    <p>Manually verified licence for assessment: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Does not meet the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1587,8 +1825,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   <span class="status status--good">Compliant</span>
                   
                 </td>
+                <td>
+                  <span class="muted">—</span>
+                </td>
                 <td class="package-name"><strong>continuous-delivery-scripts</strong></td>
-                <td><code>4.2.0</code></td>
+                <td><code>4.3.0</code></td>
                 <td>Project</td>
                 <td class="reference">
                   
@@ -1605,7 +1846,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                   
                   <details>
-                    <summary>Licence: continuous_delivery_scripts-4.2.0.dist-info/licenses/LICENSE</summary>
+                    <summary>Licence: continuous_delivery_scripts-4.3.0.dist-info/licenses/LICENSE</summary>
                     
                     <pre>                                 Apache License
                            Version 2.0, January 2004
@@ -1788,9 +2029,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -1799,6 +2049,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>cryptography</strong></td>
@@ -2074,11 +2329,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0 OR BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> ((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> ((Apache-2.0 OR BSD-3-Clause) AND PSF-2.0)</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>expression-or</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -2087,6 +2360,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>detect-secrets</strong></td>
@@ -2321,9 +2599,27 @@ limitations under the License.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -2332,6 +2628,11 @@ limitations under the License.
                 <td>
                   
                   <span class="status status--warning">Reviewed</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>docutils</strong></td>
@@ -3247,11 +3548,31 @@ Public License instead of this License.  But first, please read
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Does not meet the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Unknown</code>.</p>
+                    
+                    <p>Manually verified licence for assessment: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Does not meet the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -3260,6 +3581,11 @@ Public License instead of this License.  But first, please read
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>gibberish-detector</strong></td>
@@ -3314,9 +3640,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -3325,6 +3669,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>gitdb</strong></td>
@@ -3411,9 +3760,27 @@ in the distribution package.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>0BSD</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>0BSD</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -3422,6 +3789,11 @@ in the distribution package.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>GitPython</strong></td>
@@ -3549,11 +3921,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -3562,6 +3952,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>id</strong></td>
@@ -3797,11 +4192,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> Apache-2.0</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> Apache-2.0</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -3810,6 +4223,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>idna</strong></td>
@@ -3870,11 +4288,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -3883,6 +4319,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>Incremental</strong></td>
@@ -3990,9 +4431,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4001,6 +4460,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>jaraco.classes</strong></td>
@@ -4051,11 +4515,29 @@ IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4064,6 +4546,11 @@ IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>jaraco.context</strong></td>
@@ -4111,11 +4598,29 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4124,6 +4629,11 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>jaraco.functools</strong></td>
@@ -4171,11 +4681,29 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4184,6 +4712,11 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>jeepney</strong></td>
@@ -4234,11 +4767,29 @@ THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4247,6 +4798,11 @@ THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>jellyfish</strong></td>
@@ -4301,11 +4857,29 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-2-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-2-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4314,6 +4888,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>Jinja2</strong></td>
@@ -4375,9 +4954,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>0BSD</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>0BSD</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4386,6 +4983,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>jmespath</strong></td>
@@ -4440,9 +5042,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4451,6 +5071,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>keyring</strong></td>
@@ -4498,11 +5123,29 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -4511,6 +5154,11 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>license-expression</strong></td>
@@ -5311,9 +5959,27 @@ Development
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5322,6 +5988,11 @@ Development
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>licenseheaders</strong></td>
@@ -5377,9 +6048,27 @@ Development
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5388,6 +6077,11 @@ Development
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>Mako</strong></td>
@@ -5436,9 +6130,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5447,6 +6159,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>Markdown</strong></td>
@@ -5506,11 +6223,29 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5519,6 +6254,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>markdown-it-py</strong></td>
@@ -5602,11 +6342,29 @@ OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5615,6 +6373,11 @@ OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>MarkupSafe</strong></td>
@@ -5672,9 +6435,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5683,6 +6464,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>mdurl</strong></td>
@@ -5762,11 +6548,29 @@ IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5775,6 +6579,11 @@ IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>more-itertools</strong></td>
@@ -5823,11 +6632,29 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5836,6 +6663,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>nh3</strong></td>
@@ -5886,9 +6718,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -5897,6 +6747,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>packaging</strong></td>
@@ -6143,11 +6998,29 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0 OR BSD-2-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> either Apache-2.0 or BSD-2-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> either Apache-2.0 or BSD-2-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>expression-or</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -6156,6 +7029,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--warning">Reviewed</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--warning">MANUALLY_REVIEWED</span>
                   
                 </td>
                 <td class="package-name"><strong>pdoc3</strong></td>
@@ -6848,11 +7726,31 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Does not meet the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>AGPL-3.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Does not meet the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> Used separately to generate docs; not bundled or modified.</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> Accepted for this project since not distributed</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> REVIEW — Network copyleft obligations may apply to network use as well as distribution; review the usage.</p>
+                    
+                    <p><strong>Manual compatibility review:</strong> Used separately to generate docs; not bundled or modified.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>network-copyleft-dependency</code> (built-in); choice: <code>AGPL-3.0-only</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -6861,6 +7759,11 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>ply</strong></td>
@@ -6883,9 +7786,27 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>0BSD</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>0BSD</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -6894,6 +7815,11 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>pyautoversion</strong></td>
@@ -7124,9 +8050,27 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7135,6 +8079,11 @@ For more information on this, and how to apply and follow the GNU AGPL, see
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>pycparser</strong></td>
@@ -7191,9 +8140,27 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7202,6 +8169,11 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>Pygments</strong></td>
@@ -7559,9 +8531,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-2-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-2-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7570,6 +8560,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>pyparsing</strong></td>
@@ -7619,11 +8614,29 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7632,6 +8645,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--warning">Reviewed</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>python-dateutil</strong></td>
@@ -7718,11 +8736,31 @@ The above BSD License Applies to all code, even that also covered by Apache 2.0.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Does not meet the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Unknown</code>.</p>
+                    
+                    <p>Manually verified licence for assessment: <code>Apache-2.0 OR BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Does not meet the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — Assessed using manually verified Apache-2.0 OR BSD-3-Clause because the discovered licence was unknown. An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>expression-or</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7731,6 +8769,11 @@ The above BSD License Applies to all code, even that also covered by Apache 2.0.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>python-dotenv</strong></td>
@@ -7787,11 +8830,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7800,6 +8861,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>PyYAML</strong></td>
@@ -7853,9 +8919,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7864,6 +8948,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>rdflib</strong></td>
@@ -7926,9 +9015,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -7937,6 +9044,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>readme_renderer</strong></td>
@@ -8140,9 +9252,27 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -8151,6 +9281,11 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
                 <td>
                   
                   <span class="status status--warning">Reviewed</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>regex</strong></td>
@@ -8388,11 +9523,31 @@ All additions and alterations are licensed under the Apache 2.0 License.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Does not meet the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0 AND CNRI-Python</code>.</p>
+                    
+                    <p>Manually verified licence for assessment: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Does not meet the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> Apache-2.0</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> Apache-2.0</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — Assessed using manually verified Apache-2.0 because the discovered licence could not be assessed reliably; verify any obligations omitted by the manual value. A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -8401,6 +9556,11 @@ All additions and alterations are licensed under the Apache 2.0 License.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>requests</strong></td>
@@ -8618,9 +9778,27 @@ Copyright 2019 Kenneth Reitz
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -8629,6 +9807,11 @@ Copyright 2019 Kenneth Reitz
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>requests-toolbelt</strong></td>
@@ -8739,9 +9922,27 @@ Patches and Suggestions
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -8750,6 +9951,11 @@ Patches and Suggestions
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>rfc3986</strong></td>
@@ -8796,9 +10002,27 @@ limitations under the License.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -8807,6 +10031,11 @@ limitations under the License.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>rich</strong></td>
@@ -8859,9 +10088,27 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -8870,6 +10117,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>s3transfer</strong></td>
@@ -9114,9 +10366,27 @@ Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9125,6 +10395,11 @@ Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>SecretStorage</strong></td>
@@ -9179,11 +10454,29 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> BSD-3-Clause</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> BSD-3-Clause</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9192,6 +10485,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>semver</strong></td>
@@ -9252,9 +10550,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>0BSD</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>0BSD</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9263,6 +10579,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>setuptools</strong></td>
@@ -9309,11 +10630,29 @@ IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9322,6 +10661,11 @@ IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>six</strong></td>
@@ -9373,9 +10717,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9384,6 +10746,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>smmap</strong></td>
@@ -9447,9 +10814,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>BSD-3-Clause</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9458,6 +10843,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>spdx-tools</strong></td>
@@ -9691,9 +11081,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9702,6 +11110,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>toml</strong></td>
@@ -9761,9 +11174,27 @@ THE SOFTWARE.</pre>
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9772,6 +11203,11 @@ THE SOFTWARE.</pre>
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>towncrier</strong></td>
@@ -9825,9 +11261,27 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -9836,6 +11290,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>twine</strong></td>
@@ -10039,11 +11498,29 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> Apache-2.0</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> Apache-2.0</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>Apache-2.0</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -10052,6 +11529,11 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>urllib3</strong></td>
@@ -10102,11 +11584,29 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -10115,6 +11615,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>wcmatch</strong></td>
@@ -10169,11 +11674,29 @@ SOFTWARE.
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                    <p class="muted"><strong>Manual policy review:</strong> MIT</p>
+                    
+                  </div>
                   
-                  <p class="muted"><strong>Manual review record:</strong> MIT</p>
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>
@@ -10182,6 +11705,11 @@ SOFTWARE.
                 <td>
                   
                   <span class="status status--good">Compliant</span>
+                  
+                </td>
+                <td>
+                  
+                  <span class="status status--good">ALLOW</span>
                   
                 </td>
                 <td class="package-name"><strong>xmltodict</strong></td>
@@ -10218,9 +11746,27 @@ THE SOFTWARE IS PROVIDED &#34;AS IS&#34;, WITHOUT WARRANTY OF ANY KIND, EXPRESS 
                   
                 </td>
                 <td>
-                  <p><strong>Automatic assessment:</strong>
-                    Meets the configured licence policy.
-                  </p>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>MIT</code>.</p>
+                    
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      Meets the configured licence policy.
+                    </p>
+                    
+                  </div>
+                  
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> ALLOW — A permissive dependency generally permits redistribution; retain its notices and conditions.</p>
+                    
+                    <p class="muted">Compared with project licence <code>Apache-2.0</code>.</p>
+                    <p class="muted">Rule: <code>permissive-dependency</code> (built-in); choice: <code>MIT</code>.</p>
+                    
+                  </div>
                   
                 </td>
               </tr>

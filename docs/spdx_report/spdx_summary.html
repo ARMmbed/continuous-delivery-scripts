@@ -91,7 +91,7 @@ el.replaceWith(d);
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_summary.SummaryGenerator"><code class="flex name class">
 <span>class <span class="ident">SummaryGenerator</span></span>
-<span>(</span><span>project_package: <a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>,<br>dependencies_documents: List[<a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>],<br>missing_dependencies: List[str] | None = None)</span>
+<span>(</span><span>project_package: <a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>,<br>dependencies_documents: List[<a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>],<br>missing_dependencies: List[str] | None = None,<br>licence_assessments: Dict[str, <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult" href="licence_assessment.html#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult">LicenceAssessmentResult</a>] | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -106,12 +106,28 @@ el.replaceWith(d);
         project_package: SpdxPackage,
         dependencies_documents: List[SpdxPackage],
         missing_dependencies: Optional[List[str]] = None,
+        licence_assessments: Optional[Dict[str, LicenceAssessmentResult]] = None,
     ) -&gt; None:
         &#34;&#34;&#34;Initialiser.&#34;&#34;&#34;
         self.project = project_package
         self.all_packages = list(dependencies_documents)
         self.all_packages.append(self.project)
         self.missing_dependencies = sorted(set(missing_dependencies or []))
+        if licence_assessments is None:
+            assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config())
+            licence_assessments = {
+                dependency.name: assessor.assess(
+                    project_package.main_licence,
+                    dependency.licence,
+                    dependency.name,
+                    dependency.version,
+                    project_package.metadata.has_unknown_licence,
+                    dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                    get_package_manual_licence(dependency.name),
+                )
+                for dependency in dependencies_documents
+            }
+        self.licence_assessments = licence_assessments
         self._template_arguments: Optional[dict] = None
 
     def _generate_template_arguments(self) -&gt; Dict[str, Any]:
@@ -140,6 +156,10 @@ el.replaceWith(d);
             ),
         }
         arguments[&#34;packages&#34;] = description_list
+        arguments[&#34;licence_assessment_counts&#34;] = {
+            status.value: sum(result.status is status for result in self.licence_assessments.values())
+            for status in LicenceAssessment
+        }
         arguments[&#34;missing_dependencies&#34;] = self.missing_dependencies
         arguments[&#34;unknown_licences&#34;] = sorted(
             p.name
@@ -198,7 +218,7 @@ el.replaceWith(d);
         manual_check_details: Optional[str],
         p: SpdxPackage,
     ) -&gt; dict:
-        return {
+        description = {
             &#34;name&#34;: p.name,
             &#34;anchor&#34;: f&#34;package-{generate_uuid_based_on_str(p.name)}&#34;,
             &#34;is_dependency&#34;: p.is_dependency,
@@ -224,6 +244,9 @@ el.replaceWith(d);
                 )
             ),
         }
+        if p.is_dependency:
+            description[&#34;licence_assessment&#34;] = self.licence_assessments[p.name].as_report()
+        return description
 
     @property
     def template_arguments(self) -&gt; dict:

@@ -72,6 +72,16 @@ el.replaceWith(d);
         self._parser = parser
         self._main_document: Optional[SpdxDocument] = None
         self._dependency_documents: Optional[List[SpdxDocument]] = None
+        self._licence_assessor: Optional[LicenceAssessor] = None
+        self._licence_assessments: Optional[Dict[str, LicenceAssessmentResult]] = None
+        self._lookup_scancode = False
+
+    def enable_scancode_lookup(self) -&gt; None:
+        &#34;&#34;&#34;Opt in to LicenseDB lookups for missing assessment information.&#34;&#34;&#34;
+        if not self._lookup_scancode:
+            self._lookup_scancode = True
+            self._licence_assessor = None
+            self._licence_assessments = None
 
     def _generate_documents(self) -&gt; None:
         if self._main_document:
@@ -94,6 +104,63 @@ el.replaceWith(d);
         &#34;&#34;&#34;Gets the list of project&#39;s dependencies SPDX documents.&#34;&#34;&#34;
         self._generate_documents()
         return self._dependency_documents if self._dependency_documents else list()
+
+    @property
+    def licence_assessor(self) -&gt; LicenceAssessor:
+        &#34;&#34;&#34;Use the same loaded policy in reports and optional CI gating.&#34;&#34;&#34;
+        if self._licence_assessor is None:
+            self._licence_assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config(), self._lookup_scancode)
+        return self._licence_assessor
+
+    @property
+    def licence_assessments(self) -&gt; Dict[str, LicenceAssessmentResult]:
+        &#34;&#34;&#34;Assess already-discovered dependency licences against the project licence.&#34;&#34;&#34;
+        if self._licence_assessments is None:
+            project = self.main_document.generate_spdx_package()
+            assessments = {}
+            for document in self.dependency_documents:
+                dependency = document.generate_spdx_package()
+                assessments[dependency.name] = self.licence_assessor.assess(
+                    project.main_licence,
+                    dependency.licence,
+                    dependency.name,
+                    dependency.version,
+                    project.metadata.has_unknown_licence,
+                    dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                    get_package_manual_licence(dependency.name),
+                )
+            self._licence_assessments = assessments
+        return self._licence_assessments
+
+    def scancode_follow_up_warnings(self) -&gt; List[str]:
+        &#34;&#34;&#34;Describe local policy changes needed to reproduce lookup-assisted results.&#34;&#34;&#34;
+        if not self._lookup_scancode:
+            return []
+        policy = self.licence_assessor.policy
+        warnings = []
+        for package_name, result in self.licence_assessments.items():
+            for info in result.scancode_licences:
+                if info.identifier in policy.classifications:
+                    action = (
+                        &#34;Add a directional assessment rule under [[ProjectConfig.LICENCE_ASSESSMENT_RULES.rules]] &#34;
+                        f&#34;for project {result.project_licence} and dependency {result.dependency_licence}.&#34;
+                    )
+                else:
+                    category = policy.scancode_categories.get(info.category)
+                    action = (
+                        f&#39;After reviewing the source, add &#34;{info.identifier}&#34; = &#34;{category.value}&#34; under &#39;
+                        &#34;[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications] (or the project policy file).&#34;
+                        if category
+                        else &#34;Review the LicenseDB category and add a project licence classification &#34;
+                        &#34;and directional rule.&#34;
+                    )
+                    if result.rule in (&#34;directional-rule-missing&#34;, &#34;project-needs-review&#34;):
+                        action += &#34; Add a directional rule if the classification alone does not resolve the assessment.&#34;
+                warnings.append(
+                    f&#34;{package_name}: ScanCode LicenseDB supplied {info.identifier} ({info.category}) from {info.url}. &#34;
+                    + action
+                )
+        return warnings
 
     @staticmethod
     def generate_tag_value_file(dir: Path, spdx_doc: SpdxDocument, filename: str = &#34;LICENSE.spdx&#34;) -&gt; str:
@@ -131,6 +198,7 @@ el.replaceWith(d);
             self.main_document.generate_spdx_package(),
             [d.generate_spdx_package() for d in self.dependency_documents],
             self._parser.project_metadata.missing_dependencies,
+            self.licence_assessments,
         ).generate_summary(dir)
 
     @staticmethod
@@ -224,7 +292,14 @@ el.replaceWith(d);
                     f&#34;Incomplete licence audit: missing dependencies: {sorted(set(missing))}; &#34;
                     f&#34;unknown licences: {unknown}; undocumented exemptions: {undocumented}&#34;
                 )
-        self._report_issues(issues)</code></pre>
+        self._report_issues(issues)
+        failing = [
+            f&#34;{name}: {result.status.value} ({result.rule})&#34;
+            for name, result in self.licence_assessments.items()
+            if result.status in self.licence_assessor.policy.fail_on
+        ]
+        if failing:
+            raise ValueError(f&#34;Licence assessment policy failed for: {&#39;, &#39;.join(failing)}&#34;)</code></pre>
 </details>
 <div class="desc"><p>SPDX for a project.</p>
 <p>SPDX information about a project so that it complies with OpenChain
@@ -299,6 +374,49 @@ def dependency_documents(self) -&gt; List[SpdxDocument]:
 </details>
 <div class="desc"><p>Gets the list of project's dependencies SPDX documents.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.licence_assessments"><code class="name">prop <span class="ident">licence_assessments</span> : Dict[str, <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult" href="licence_assessment.html#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult">LicenceAssessmentResult</a>]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_assessments(self) -&gt; Dict[str, LicenceAssessmentResult]:
+    &#34;&#34;&#34;Assess already-discovered dependency licences against the project licence.&#34;&#34;&#34;
+    if self._licence_assessments is None:
+        project = self.main_document.generate_spdx_package()
+        assessments = {}
+        for document in self.dependency_documents:
+            dependency = document.generate_spdx_package()
+            assessments[dependency.name] = self.licence_assessor.assess(
+                project.main_licence,
+                dependency.licence,
+                dependency.name,
+                dependency.version,
+                project.metadata.has_unknown_licence,
+                dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                get_package_manual_licence(dependency.name),
+            )
+        self._licence_assessments = assessments
+    return self._licence_assessments</code></pre>
+</details>
+<div class="desc"><p>Assess already-discovered dependency licences against the project licence.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.licence_assessor"><code class="name">prop <span class="ident">licence_assessor</span> : <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor" href="licence_assessment.html#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessor">LicenceAssessor</a></code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_assessor(self) -&gt; LicenceAssessor:
+    &#34;&#34;&#34;Use the same loaded policy in reports and optional CI gating.&#34;&#34;&#34;
+    if self._licence_assessor is None:
+        self._licence_assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config(), self._lookup_scancode)
+    return self._licence_assessor</code></pre>
+</details>
+<div class="desc"><p>Use the same loaded policy in reports and optional CI gating.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.main_document"><code class="name">prop <span class="ident">main_document</span> : <a title="continuous_delivery_scripts.spdx_report.spdx_document.SpdxDocument" href="spdx_document.html#continuous_delivery_scripts.spdx_report.spdx_document.SpdxDocument">SpdxDocument</a></code></dt>
 <dd>
 <details class="source">
@@ -353,10 +471,34 @@ def main_document(self) -&gt; SpdxDocument:
                 f&#34;Incomplete licence audit: missing dependencies: {sorted(set(missing))}; &#34;
                 f&#34;unknown licences: {unknown}; undocumented exemptions: {undocumented}&#34;
             )
-    self._report_issues(issues)</code></pre>
+    self._report_issues(issues)
+    failing = [
+        f&#34;{name}: {result.status.value} ({result.rule})&#34;
+        for name, result in self.licence_assessments.items()
+        if result.status in self.licence_assessor.policy.fail_on
+    ]
+    if failing:
+        raise ValueError(f&#34;Licence assessment policy failed for: {&#39;, &#39;.join(failing)}&#34;)</code></pre>
 </details>
 <div class="desc"><p>Checks whether the licences of the package as well as all its dependencies are compliant.</p>
 <p>By compliant, it is meant that all the licences are in the list of accepted licences set for the given project.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.enable_scancode_lookup"><code class="name flex">
+<span>def <span class="ident">enable_scancode_lookup</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def enable_scancode_lookup(self) -&gt; None:
+    &#34;&#34;&#34;Opt in to LicenseDB lookups for missing assessment information.&#34;&#34;&#34;
+    if not self._lookup_scancode:
+        self._lookup_scancode = True
+        self._licence_assessor = None
+        self._licence_assessments = None</code></pre>
+</details>
+<div class="desc"><p>Opt in to LicenseDB lookups for missing assessment information.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_licensing_summary"><code class="name flex">
 <span>def <span class="ident">generate_licensing_summary</span></span>(<span>self, dir: pathlib.Path) ‑> None</span>
@@ -376,6 +518,7 @@ def main_document(self) -&gt; SpdxDocument:
         self.main_document.generate_spdx_package(),
         [d.generate_spdx_package() for d in self.dependency_documents],
         self._parser.project_metadata.missing_dependencies,
+        self.licence_assessments,
     ).generate_summary(dir)</code></pre>
 </details>
 <div class="desc"><p>Generates licensing summary into the specified directory.</p>
@@ -434,6 +577,46 @@ per third-party dependencies</p>
 <dd>output directory</dd>
 </dl></div>
 </dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.scancode_follow_up_warnings"><code class="name flex">
+<span>def <span class="ident">scancode_follow_up_warnings</span></span>(<span>self) ‑> List[str]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def scancode_follow_up_warnings(self) -&gt; List[str]:
+    &#34;&#34;&#34;Describe local policy changes needed to reproduce lookup-assisted results.&#34;&#34;&#34;
+    if not self._lookup_scancode:
+        return []
+    policy = self.licence_assessor.policy
+    warnings = []
+    for package_name, result in self.licence_assessments.items():
+        for info in result.scancode_licences:
+            if info.identifier in policy.classifications:
+                action = (
+                    &#34;Add a directional assessment rule under [[ProjectConfig.LICENCE_ASSESSMENT_RULES.rules]] &#34;
+                    f&#34;for project {result.project_licence} and dependency {result.dependency_licence}.&#34;
+                )
+            else:
+                category = policy.scancode_categories.get(info.category)
+                action = (
+                    f&#39;After reviewing the source, add &#34;{info.identifier}&#34; = &#34;{category.value}&#34; under &#39;
+                    &#34;[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications] (or the project policy file).&#34;
+                    if category
+                    else &#34;Review the LicenseDB category and add a project licence classification &#34;
+                    &#34;and directional rule.&#34;
+                )
+                if result.rule in (&#34;directional-rule-missing&#34;, &#34;project-needs-review&#34;):
+                    action += &#34; Add a directional rule if the classification alone does not resolve the assessment.&#34;
+            warnings.append(
+                f&#34;{package_name}: ScanCode LicenseDB supplied {info.identifier} ({info.category}) from {info.url}. &#34;
+                + action
+            )
+    return warnings</code></pre>
+</details>
+<div class="desc"><p>Describe local policy changes needed to reproduce lookup-assisted results.</p></div>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -456,10 +639,14 @@ per third-party dependencies</p>
 <ul class="">
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.check_licence_compliance" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.check_licence_compliance">check_licence_compliance</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.dependency_documents" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.dependency_documents">dependency_documents</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.enable_scancode_lookup" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.enable_scancode_lookup">enable_scancode_lookup</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_licensing_summary" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_licensing_summary">generate_licensing_summary</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_file" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_file">generate_tag_value_file</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_files" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.generate_tag_value_files">generate_tag_value_files</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.licence_assessments" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.licence_assessments">licence_assessments</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.licence_assessor" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.licence_assessor">licence_assessor</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.main_document" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.main_document">main_document</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.scancode_follow_up_warnings" href="#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject.scancode_follow_up_warnings">scancode_follow_up_warnings</a></code></li>
 </ul>
 </li>
 </ul>

@@ -17,6 +17,16 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.4.0" (2026-10-01)
+====================
+
+Features
+--------
+
+- :page_facing_up: Screen dependency licence compatibility in third-party IP reports with explainable assessments, packaged TOML rules and recorded manual reviews. (#20261001103621711570400)
+- :page_facing_up: Add opt-in ScanCode LicenseDB lookups for unclassified licences and missing rules, with source links and follow-up warnings for reproducible offline checks. (#20261001125051873518700)
+
+
 "4.3.0" (2026-10-01)
 ====================
 

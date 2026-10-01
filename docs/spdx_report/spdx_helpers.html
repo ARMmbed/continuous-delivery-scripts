@@ -161,14 +161,52 @@ correct SPDX value a string, UnKnown or SPDXNone</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_package_manual_check(package_name: str) -&gt; Tuple[bool, Optional[str]]:
-    &#34;&#34;&#34;Gets information about package licence manual check.&#34;&#34;&#34;
+    &#34;&#34;&#34;Return whether a licence was checked and the recorded explanation.&#34;&#34;&#34;
+    record = get_package_manual_record(package_name)
+    return record.checked, record.reason</code></pre>
+</details>
+<div class="desc"><p>Return whether a licence was checked and the recorded explanation.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_licence"><code class="name flex">
+<span>def <span class="ident">get_package_manual_licence</span></span>(<span>package_name: str) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_package_manual_licence(package_name: str) -&gt; Optional[str]:
+    &#34;&#34;&#34;Return the manually verified licence candidate, distinct from prose.&#34;&#34;&#34;
+    return get_package_manual_record(package_name).licence</code></pre>
+</details>
+<div class="desc"><p>Return the manually verified licence candidate, distinct from prose.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_record"><code class="name flex">
+<span>def <span class="ident">get_package_manual_record</span></span>(<span>package_name: str) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck">ManualLicenceCheck</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_package_manual_record(package_name: str) -&gt; ManualLicenceCheck:
+    &#34;&#34;&#34;Parse a flat or structured manual licence entry once into a model.&#34;&#34;&#34;
     checked_packages = get_packages_with_checked_licence()
     name = package_name.strip()
     if name not in checked_packages:
         name = name.replace(&#34;.&#34;, &#34;-&#34;)
-    return bool(name in checked_packages), checked_packages.get(name)</code></pre>
+    checked = name in checked_packages
+    entry = checked_packages.get(name)
+    record = ManualLicenceCheck(checked=checked)
+    if isinstance(entry, dict):
+        record.licence = entry.get(&#34;licence&#34;)
+        record.reason = entry.get(&#34;reason&#34;) or record.licence
+    elif isinstance(entry, str):
+        record.licence = entry
+        record.reason = entry
+    return record</code></pre>
 </details>
-<div class="desc"><p>Gets information about package licence manual check.</p></div>
+<div class="desc"><p>Parse a flat or structured manual licence entry once into a model.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence"><code class="name flex">
 <span>def <span class="ident">get_packages_with_checked_licence</span></span>(<span>) ‑> dict</span>
@@ -246,6 +284,82 @@ correct SPDX value a string, UnKnown or SPDXNone</p></div>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck"><code class="flex name class">
+<span>class <span class="ident">ManualLicenceCheck</span></span>
+<span>(</span><span>checked: bool = False)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass
+class ManualLicenceCheck:
+    &#34;&#34;&#34;A project&#39;s manually checked licence and its separate explanation.&#34;&#34;&#34;
+
+    checked: bool = False
+    _licence: Optional[str] = None
+    _reason: Optional[str] = None
+
+    @property
+    def licence(self) -&gt; Optional[str]:
+        &#34;&#34;&#34;Get the licence proposed for assessment, if supplied.&#34;&#34;&#34;
+        return self._licence
+
+    @licence.setter
+    def licence(self, value: Optional[str]) -&gt; None:
+        &#34;&#34;&#34;Set the manually verified licence candidate.&#34;&#34;&#34;
+        if value is not None and not isinstance(value, str):
+            raise ValueError(&#34;A manually checked licence must be text&#34;)
+        self._licence = value
+
+    @property
+    def reason(self) -&gt; Optional[str]:
+        &#34;&#34;&#34;Get the recorded explanation for the licence-policy check.&#34;&#34;&#34;
+        return self._reason
+
+    @reason.setter
+    def reason(self, value: Optional[str]) -&gt; None:
+        &#34;&#34;&#34;Set the manually recorded review explanation.&#34;&#34;&#34;
+        if value is not None and not isinstance(value, str):
+            raise ValueError(&#34;A manual licence review reason must be text&#34;)
+        self._reason = value</code></pre>
+</details>
+<div class="desc"><p>A project's manually checked licence and its separate explanation.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.checked"><code class="name">var <span class="ident">checked</span> : bool</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.licence"><code class="name">prop <span class="ident">licence</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence(self) -&gt; Optional[str]:
+    &#34;&#34;&#34;Get the licence proposed for assessment, if supplied.&#34;&#34;&#34;
+    return self._licence</code></pre>
+</details>
+<div class="desc"><p>Get the licence proposed for assessment, if supplied.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.reason"><code class="name">prop <span class="ident">reason</span> : str | None</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def reason(self) -&gt; Optional[str]:
+    &#34;&#34;&#34;Get the recorded explanation for the licence-policy check.&#34;&#34;&#34;
+    return self._reason</code></pre>
+</details>
+<div class="desc"><p>Get the recorded explanation for the licence-policy check.</p></div>
+</dd>
+</dl>
+</dd>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone"><code class="flex name class">
 <span>class <span class="ident">SPDXNone</span></span>
 </code></dt>
@@ -342,6 +456,8 @@ correct SPDX value a string, UnKnown or SPDXNone</p></div>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.determine_file_licence" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.determine_file_licence">determine_file_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.determine_spdx_value" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.determine_spdx_value">determine_spdx_value</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_check" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_check">get_package_manual_check</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_licence" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_licence">get_package_manual_licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_record" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.get_package_manual_record">get_package_manual_record</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.get_packages_with_checked_licence">get_packages_with_checked_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.get_project_namespace" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.get_project_namespace">get_project_namespace</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked">is_package_licence_manually_checked</a></code></li>
@@ -350,6 +466,14 @@ correct SPDX value a string, UnKnown or SPDXNone</p></div>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck">ManualLicenceCheck</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.checked" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.checked">checked</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.licence" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.licence">licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.reason" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.ManualLicenceCheck.reason">reason</a></code></li>
+</ul>
+</li>
 <li>
 <h4><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.SPDXNone">SPDXNone</a></code></h4>
 <ul class="">

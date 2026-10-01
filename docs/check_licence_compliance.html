@@ -66,6 +66,11 @@ el.replaceWith(d);
         type=Path,
         help=&#34;Write third-party IP summaries to this existing directory (no SPDX documents).&#34;,
     )
+    parser.add_argument(
+        &#34;--lookup-scancode&#34;,
+        action=&#34;store_true&#34;,
+        help=&#34;Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.&#34;,
+    )
     parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Increase logging verbosity.&#34;)
     args = parser.parse_args()
     set_log_level(args.verbose)
@@ -77,9 +82,23 @@ el.replaceWith(d);
         project = plugin.get_current_spdx_project()
         if project is None:
             raise ValueError(&#34;The selected language plugin did not return a project for licence compliance checks.&#34;)
+        if args.lookup_scancode:
+            project.enable_scancode_lookup()
         if args.output_dir is not None:
             project.generate_licensing_summary(args.output_dir)
+        counts = {
+            status.value: sum(result.status is status for result in project.licence_assessments.values())
+            for status in LicenceAssessment
+        }
+        print(&#34;Dependency licence assessment: &#34; + &#34;, &#34;.join(f&#34;{name}: {count}&#34; for name, count in counts.items()))
+        if args.lookup_scancode:
+            for name, result in project.licence_assessments.items():
+                for info in result.scancode_licences:
+                    print(f&#34;{name}: ScanCode LicenseDB: {info.identifier} ({info.category}): {info.url}&#34;)
         project.check_licence_compliance()
+        if args.lookup_scancode:
+            for warning in project.scancode_follow_up_warnings():
+                print(f&#34;WARNING: {warning}&#34;, file=sys.stderr)
         return 0
     except Exception as error:
         log_exception(logger, error)

@@ -34,7 +34,14 @@ and packaged notices rather than assuming a missing value means permission.</p>
 alongside SPDX documents when generation is enabled. In this repository the
 HTML report is published to GitHub Pages after a release regenerates <code>docs/</code>.
 The HTML report has download links for the accompanying CSV, JSON and text
-reports when these files are kept together in the same directory.</p>
+reports when these files are kept together in the same directory.
+Each dependency also has an advisory <code>ALLOW</code>, <code>REVIEW</code>, <code>DENY</code> or <code>UNKNOWN</code>
+licence assessment with a reason and rule ID. Documented <code>REVIEW</code> findings
+are shown as <code>MANUALLY_REVIEWED</code> with the review explanation. The assessment is separate from
+the configured accepted-licence check. See
+<a href="assessing-dependency-licences.html">dependency licence assessment</a> for the
+embedded rules, SPDX expression handling, optional project overrides and the
+opt-in <code>--lookup-scancode</code> option for missing licence information.</p>
 <h2>GitHub Actions example</h2>
 <p>Once the project and its dependencies are installed:</p>
 <pre><code class="language-yaml">- run: mkdir -p licensing &amp;&amp; cd-generate-spdx --output-dir licensing

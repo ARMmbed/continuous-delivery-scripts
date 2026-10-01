@@ -90,6 +90,9 @@ el.replaceWith(d);
         Licensing(), normalise_proprietary_licence(licence_expression)
     ).simplify()
     for s in simplified_expression.symbols:
+        if isinstance(s, LicenseWithExceptionSymbol):
+            # An exception changes the obligations: do not treat it as the base licence.
+            continue
         if s.key.startswith(&#34;LicenseRef-&#34;):
             continue
         corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)
@@ -401,8 +404,8 @@ class Licence:
             else None
         )
 
-    def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
-        &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+    def get_licence(self, licence_descriptor: Optional[str], allow_fuzzy: bool = True) -&gt; Optional[Licence]:
+        &#34;&#34;&#34;Determines a licence from its identifier or name, optionally without approximate matching.&#34;&#34;&#34;
         if licence_descriptor and normalise_proprietary_licence(licence_descriptor) == LICENSE_REF_PROPRIETARY:
             return PROPRIETARY_LICENCE
         if licence_descriptor and licence_descriptor.lower().startswith(&#34;licenseref-&#34;):
@@ -426,6 +429,8 @@ class Licence:
         if normalised_exact_match:
             return normalised_exact_match
 
+        if not allow_fuzzy:
+            return None
         likelihood, matched_key = determine_similar_string_from_list(normalised_descriptor, normalised_map.keys())
         return normalised_map.get(matched_key) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None</code></pre>
 </details>
@@ -434,15 +439,15 @@ class Licence:
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.OpenSourceLicences.get_licence"><code class="name flex">
-<span>def <span class="ident">get_licence</span></span>(<span>self, licence_descriptor: str | None) ‑> <a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a> | None</span>
+<span>def <span class="ident">get_licence</span></span>(<span>self, licence_descriptor: str | None, allow_fuzzy: bool = True) ‑> <a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a> | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
-    &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+<pre><code class="python">def get_licence(self, licence_descriptor: Optional[str], allow_fuzzy: bool = True) -&gt; Optional[Licence]:
+    &#34;&#34;&#34;Determines a licence from its identifier or name, optionally without approximate matching.&#34;&#34;&#34;
     if licence_descriptor and normalise_proprietary_licence(licence_descriptor) == LICENSE_REF_PROPRIETARY:
         return PROPRIETARY_LICENCE
     if licence_descriptor and licence_descriptor.lower().startswith(&#34;licenseref-&#34;):
@@ -466,10 +471,12 @@ class Licence:
     if normalised_exact_match:
         return normalised_exact_match
 
+    if not allow_fuzzy:
+        return None
     likelihood, matched_key = determine_similar_string_from_list(normalised_descriptor, normalised_map.keys())
     return normalised_map.get(matched_key) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None</code></pre>
 </details>
-<div class="desc"><p>Determines the licence based on a string descriptor e.g. Apache 2.</p></div>
+<div class="desc"><p>Determines a licence from its identifier or name, optionally without approximate matching.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.OpenSourceLicences.get_licences_from_pattern"><code class="name flex">
 <span>def <span class="ident">get_licences_from_pattern</span></span>(<span>self, licence_descriptor_pattern: Pattern) ‑> List[<a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a>] | None</span>

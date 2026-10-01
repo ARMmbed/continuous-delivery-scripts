@@ -33,7 +33,15 @@ licence does not meet that policy, the selected plugin cannot supply metadata,
 or report generation fails. If <code>FAIL_ON_INCOMPLETE_LICENCE_AUDIT</code> is enabled,
 missing dependencies, unknown licences and undocumented exemptions also fail
 the check. Results depend on the dependencies installed in the audited
-environment.</p>
+environment.
+The command also prints <code>ALLOW</code>, <code>REVIEW</code>, <code>MANUALLY_REVIEWED</code>, <code>DENY</code> and <code>UNKNOWN</code> dependency
+counts. These advisory results do not change exit codes unless a project
+explicitly opts into <a href="assessing-dependency-licences.html">assessment gating</a>.
+Pass <code>--lookup-scancode</code> to consult
+<a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a> for exact
+identifiers whose category or assessment rule is missing. The lookup is opt-in; see
+<a href="assessing-dependency-licences.html#optional-scancode-licensedb-lookup">dependency licence assessment</a>
+for the limits and report provenance.</p>
 <p>To generate SPDX tag-value documents as well as reports, use
 <a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a>. See
 <a href="third-party-ip-reporting.html">third-party IP reporting</a> for more on reviewing

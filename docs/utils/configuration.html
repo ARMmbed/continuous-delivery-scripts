@@ -142,6 +142,12 @@ el.replaceWith(d);
     &#34;&#34;&#34;Fail the licence audit when dependencies or usable licence declarations are missing.&#34;&#34;&#34;
     GENERATE_LICENSING_SUMMARY_ON_RELEASE = 41
     &#34;&#34;&#34;Generate third-party licence summaries during a release when the plugin supports metadata.&#34;&#34;&#34;
+    LICENCE_ASSESSMENT_RULES_PATH = 42
+    &#34;&#34;&#34;Optional project TOML file overriding the built-in licence assessment policy.&#34;&#34;&#34;
+    LICENCE_ASSESSMENT_RULES = 43
+    &#34;&#34;&#34;Optional inline licence assessment rules in the project&#39;s pyproject.toml.&#34;&#34;&#34;
+    REVIEWED_LICENCE_ASSESSMENTS = 44
+    &#34;&#34;&#34;Project-specific records explaining manual reviews of REVIEW assessments.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -254,6 +260,14 @@ el.replaceWith(d);
 <dd>
 <div class="desc"><p>States whether to release package to a test registry (e.g. pypi test) test before release.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LICENCE_ASSESSMENT_RULES"><code class="name">var <span class="ident">LICENCE_ASSESSMENT_RULES</span></code></dt>
+<dd>
+<div class="desc"><p>Optional inline licence assessment rules in the project's pyproject.toml.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LICENCE_ASSESSMENT_RULES_PATH"><code class="name">var <span class="ident">LICENCE_ASSESSMENT_RULES_PATH</span></code></dt>
+<dd>
+<div class="desc"><p>Optional project TOML file overriding the built-in licence assessment policy.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT"><code class="name">var <span class="ident">LOGGER_FORMAT</span></code></dt>
 <dd>
 <div class="desc"><p>Tools' logger format.</p></div>
@@ -313,6 +327,10 @@ el.replaceWith(d);
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS"><code class="name">var <span class="ident">REMOTE_ALIAS</span></code></dt>
 <dd>
 <div class="desc"><p>Git's remote alias.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REVIEWED_LICENCE_ASSESSMENTS"><code class="name">var <span class="ident">REVIEWED_LICENCE_ASSESSMENTS</span></code></dt>
+<dd>
+<div class="desc"><p>Project-specific records explaining manual reviews of REVIEW assessments.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME"><code class="name">var <span class="ident">SECRETS_BASELINE_FILENAME</span></code></dt>
 <dd>
@@ -1034,6 +1052,8 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GENERATE_LICENSING_SUMMARY_ON_RELEASE" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GENERATE_LICENSING_SUMMARY_ON_RELEASE">GENERATE_LICENSING_SUMMARY_ON_RELEASE</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.GIT_TOKEN">GIT_TOKEN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.IGNORE_REPOSITORY_TEST_UPLOAD">IGNORE_REPOSITORY_TEST_UPLOAD</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LICENCE_ASSESSMENT_RULES" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LICENCE_ASSESSMENT_RULES">LICENCE_ASSESSMENT_RULES</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LICENCE_ASSESSMENT_RULES_PATH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LICENCE_ASSESSMENT_RULES_PATH">LICENCE_ASSESSMENT_RULES_PATH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.LOGGER_FORMAT">LOGGER_FORMAT</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MASTER_BRANCH">MASTER_BRANCH</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.MODULE_TO_DOCUMENT">MODULE_TO_DOCUMENT</a></code></li>
@@ -1049,6 +1069,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.PROJECT_UUID">PROJECT_UUID</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REVIEWED_LICENCE_ASSESSMENTS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REVIEWED_LICENCE_ASSESSMENTS">REVIEWED_LICENCE_ASSESSMENTS</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME">SECRETS_BASELINE_FILENAME</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST">TAG_LATEST</a></code></li>
