@@ -170,6 +170,8 @@ jobs:
           python -m pip install -r dev-requirements.txt
           python -m pip install "setuptools<81"
           python -m pip list
+      - name: Check licence compliance
+        run: cd-check-licence-compliance
       - name: Generate SPDX documents
         run: |
           mkdir -p ./spdx-tmp
