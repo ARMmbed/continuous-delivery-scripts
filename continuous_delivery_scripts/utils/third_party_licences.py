@@ -9,7 +9,7 @@ import re
 import json
 from dataclasses import dataclass
 from importlib.util import find_spec
-from license_expression import Licensing, LicenseExpression, OR, get_spdx_licensing
+from license_expression import Licensing, LicenseExpression, LicenseWithExceptionSymbol, OR, get_spdx_licensing
 from pathlib import Path
 from typing import Dict, Iterable, cast, Optional, Iterator, List, Pattern, Any, Tuple
 
@@ -320,6 +320,9 @@ def cleanse_licence_expression(licence_expression: str) -> str:
         Licensing(), normalise_proprietary_licence(licence_expression)
     ).simplify()
     for s in simplified_expression.symbols:
+        if isinstance(s, LicenseWithExceptionSymbol):
+            # An exception changes the obligations: do not treat it as the base licence.
+            continue
         if s.key.startswith("LicenseRef-"):
             continue
         corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)

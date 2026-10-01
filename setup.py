@@ -100,7 +100,7 @@ setup(
     long_description=long_description,
     name=PROJECT_SLUG,
     packages=find_packages(include=[SOURCE_DIR, f"{SOURCE_DIR}.*"]),
-    package_data={f"{SOURCE_DIR}.spdx_report": ["templates/*.jinja2"]},
+    package_data={f"{SOURCE_DIR}.spdx_report": ["templates/*.jinja2", "data/*.toml"]},
     python_requires=">=3.10,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     project_urls={

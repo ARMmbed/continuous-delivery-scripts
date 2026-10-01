@@ -35,6 +35,13 @@ alongside SPDX documents when generation is enabled. In this repository the
 HTML report is published to GitHub Pages after a release regenerates `docs/`.
 The HTML report has download links for the accompanying CSV, JSON and text
 reports when these files are kept together in the same directory.
+Each dependency also has an advisory `ALLOW`, `REVIEW`, `DENY` or `UNKNOWN`
+licence assessment with a reason and rule ID. Documented `REVIEW` findings
+are shown as `MANUALLY_REVIEWED` with the review explanation. The assessment is separate from
+the configured accepted-licence check. See
+[dependency licence assessment](assessing-dependency-licences.md) for the
+embedded rules, SPDX expression handling, optional project overrides and the
+opt-in `--lookup-scancode` option for missing licence information.
 
 ## GitHub Actions example
 

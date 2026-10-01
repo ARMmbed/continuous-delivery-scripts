@@ -78,6 +78,8 @@ corresponding workflows; you only need to configure workflows you use.
 | `DOCUMENTATION_GUIDES_DIR`, `DOCUMENTATION_GUIDES_OUTPUT_FOLDER` | Optional Markdown guide source and its relative output folder; add an `index.md` in the source directory to publish guides with the API documentation. |
 | `ORGANISATION`, `COPYRIGHT_START_DATE`, `FILE_LICENCE_IDENTIFIER` | Creating source copyright and licence headers. Replace the built-in organisation default for your project. |
 | `ACCEPTED_THIRD_PARTY_LICENCES`, `PACKAGES_WITH_CHECKED_LICENCE` | Adjusting the accepted-licence policy and recording reviewed dependency licences where reporting is supported. |
+| `LICENCE_ASSESSMENT_RULES`, `LICENCE_ASSESSMENT_RULES_PATH` | Optionally overriding the [embedded dependency licence screening policy](./guides/assessing-dependency-licences.md) inline in `pyproject.toml`, in a project TOML file, or both. |
+| `REVIEWED_LICENCE_ASSESSMENTS` | Recording a dependency-specific [manual assessment review](./guides/assessing-dependency-licences.md#record-a-manual-assessment-review) with a reason and, preferably, its reviewed licence and version. |
 | `GENERATE_LICENSING_SUMMARY_ON_RELEASE` | Opting into third-party licence summaries during release after documentation generation. Defaults to `false`; this repository sets it to `true`. |
 
 Settings such as `DEPENDENCY_UPDATE_BRANCH_PATTERN` and
