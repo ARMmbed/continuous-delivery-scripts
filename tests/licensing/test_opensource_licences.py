@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import unittest
+from unittest.mock import patch
+
+from continuous_delivery_scripts.utils.configuration import configuration
 
 from continuous_delivery_scripts.utils.third_party_licences import (
     parse_licence,
@@ -16,6 +19,8 @@ from continuous_delivery_scripts.utils.third_party_licences import (
     determine_allowed_opensource_licences_from_string,
     cleanse_licence_expression,
     cleanse_licence_descriptor,
+    normalise_proprietary_licence,
+    LICENSE_REF_PROPRIETARY,
 )
 
 APACHE2_LICENCE = Licence(
@@ -122,6 +127,22 @@ class TestLicences(unittest.TestCase):
             ),
             "Apache-2.0 AND (0BSD OR MIT)",
         )
+
+    def test_proprietary_licence_is_not_fuzzily_matched_to_an_open_source_licence(self):
+        self.assertEqual(normalise_proprietary_licence("proprietary"), LICENSE_REF_PROPRIETARY)
+        self.assertEqual(normalise_proprietary_licence("Proprietary Licence AND MIT"), "LicenseRef-Proprietary AND MIT")
+        self.assertEqual(cleanse_licence_expression("Proprietary"), LICENSE_REF_PROPRIETARY)
+        self.assertEqual(cleanse_licence_expression("LicenseRef-Proprietary"), LICENSE_REF_PROPRIETARY)
+        self.assertEqual(cleanse_licence_expression("MIT AND Proprietary"), "LicenseRef-Proprietary AND MIT")
+        self.assertEqual(cleanse_licence_expression("LicenseRef-Private-Other"), "LicenseRef-Private-Other")
+        self.assertFalse(is_licence_accepted(LICENSE_REF_PROPRIETARY))
+        self.assertEqual(OpenSourceLicences().get_licence("Proprietary").identifier, LICENSE_REF_PROPRIETARY)
+        self.assertEqual(
+            [licence.identifier for licence in determine_allowed_opensource_licences_from_string("Proprietary")],
+            [LICENSE_REF_PROPRIETARY],
+        )
+        with patch.object(configuration, "get_value", return_value=["Proprietary"]):
+            self.assertTrue(is_licence_accepted(LICENSE_REF_PROPRIETARY))
 
     def test_licences_not_in_list(self):
         self.assertEqual(

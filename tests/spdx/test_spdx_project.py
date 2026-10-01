@@ -3,7 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import json
+from importlib.util import find_spec
 from unittest import TestCase
+from unittest import skipUnless
 
 from unittest.mock import Mock, PropertyMock, patch
 from pathlib import Path
@@ -17,6 +19,62 @@ from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_o
 
 
 class TestSpdxFile(TestCase):
+    @skipUnless(find_spec("spdx") and find_spec("pkg_resources"), "Legacy SPDX writer is required")
+    def test_proprietary_project_and_file_generate_referenced_licence(self):
+        metadata = ProjectMetadata("example")
+        metadata.project_metadata = PackageMetadata(
+            {"Name": "example", "License": "Proprietary"},
+            [
+                {"kind": "licence", "path": "https://example.org/licences/proprietary", "text": ""},
+                {"kind": "licence", "path": "LICENSE", "text": ""},
+                {"kind": "notice", "path": "https://example.org/notice", "text": ""},
+            ],
+        )
+        metadata.add_dependency_metadata(PackageMetadata({"Name": "vendor", "License": "MIT"}))
+        parser = Mock()
+        parser.project_metadata = metadata
+        get_value = configuration.get_value
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            source.mkdir()
+            (source / "main.go").write_text("// SPDX-License-Identifier: proprietary\npackage main\n", encoding="utf8")
+            project_config = root / "pyproject.toml"
+            project_config.write_text(
+                '[spdx]\nCreatorWebsite = "example.org"\nPathToSpdx = "spdx"\nUUID = "test"\n', encoding="utf8"
+            )
+            overrides = {
+                ConfigurationVariable.PROJECT_ROOT: root,
+                ConfigurationVariable.PROJECT_CONFIG: project_config,
+                ConfigurationVariable.SOURCE_DIR: "source",
+                ConfigurationVariable.PROJECT_UUID: "test",
+            }
+            with patch.object(configuration, "get_value", side_effect=lambda key: overrides.get(key, get_value(key))):
+                project = SpdxProject(parser)
+                project.check_licence_compliance()
+                project.generate_tag_value_files(root)
+                spdx = (root / "example.spdx").read_text(encoding="utf8")
+
+                self.assertIn("PackageLicenseDeclared: LicenseRef-Proprietary", spdx)
+                self.assertIn("LicenseInfoInFile: LicenseRef-Proprietary", spdx)
+                self.assertIn("LicenseID: LicenseRef-Proprietary", spdx)
+                self.assertEqual(spdx.count("LicenseID: LicenseRef-Proprietary"), 1)
+                self.assertIn("https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/", spdx)
+                self.assertIn("LicenseCrossReference: https://example.org/licences/proprietary", spdx)
+                self.assertNotIn("LicenseCrossReference: LICENSE", spdx)
+                self.assertNotIn("LicenseCrossReference: https://example.org/notice", spdx)
+
+                metadata.add_dependency_metadata(
+                    PackageMetadata({"Name": "proprietary-vendor", "License": "Proprietary"})
+                )
+                SpdxProject(parser).generate_tag_value_files(root)
+                dependency_spdx = (root / "proprietary-vendor.spdx").read_text(encoding="utf8")
+                self.assertIn("PackageLicenseDeclared: LicenseRef-Proprietary", dependency_spdx)
+                self.assertIn("LicenseID: LicenseRef-Proprietary", dependency_spdx)
+                with self.assertRaisesRegex(ValueError, "proprietary-vendor"):
+                    SpdxProject(parser).check_licence_compliance()
+
     def test_summary_shows_configured_licence_policy(self):
         metadata = ProjectMetadata("test_package")
         metadata.project_metadata = PackageMetadata({"Name": "test_package", "License": "MIT"})
@@ -92,8 +150,13 @@ class TestSpdxFile(TestCase):
         with TemporaryDirectory() as output_dir:
             SpdxProject(parser).generate_licensing_summary(Path(output_dir))
             html = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
+            for extension, label in (("csv", "CSV"), ("json", "JSON"), ("txt", "text")):
+                filename = f"third_party_IP_report.{extension}"
+                self.assertTrue(Path(output_dir, filename).is_file())
+                self.assertIn(f'href="{filename}" download="{filename}">Download {label}</a>', html)
 
         self.assertIn('<html lang="en">', html)
+        self.assertIn('<h2 id="downloads-heading">Download this report</h2>', html)
         self.assertIn('<meta name="viewport"', html)
         self.assertIn('<a href="#package-licences">Package licences</a>', html)
         self.assertIn('<table id="third_party_ip">', html)

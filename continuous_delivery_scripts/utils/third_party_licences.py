@@ -48,6 +48,16 @@ UNKNOWN_LICENCE = Licence(
     url="Unknown",
     reference="Unknown",
 )
+LICENSE_REF_PROPRIETARY = "LicenseRef-Proprietary"
+PROPRIETARY_LICENCE = Licence(
+    reference_number="",
+    identifier=LICENSE_REF_PROPRIETARY,
+    name="Proprietary licence",
+    is_deprecated=False,
+    is_osi_approved=False,
+    url="",
+    reference="",
+)
 
 LICENCE_LIKELIHOOD_THRESHOLD = 0.5
 
@@ -260,6 +270,10 @@ class OpenSourceLicences:
 
     def get_licence(self, licence_descriptor: Optional[str]) -> Optional[Licence]:
         """Determines the licence based on a string descriptor e.g. Apache 2."""
+        if licence_descriptor and normalise_proprietary_licence(licence_descriptor) == LICENSE_REF_PROPRIETARY:
+            return PROPRIETARY_LICENCE
+        if licence_descriptor and licence_descriptor.lower().startswith("licenseref-"):
+            return None
         self.load()
         if not self._licence_store or not self._licence_list or not licence_descriptor:
             return None
@@ -286,14 +300,28 @@ class OpenSourceLicences:
 OPENSOURCE_LICENCES = OpenSourceLicences()
 
 
+def normalise_proprietary_licence(licence_expression: str) -> str:
+    """Use a stable SPDX licence reference for proprietary declarations."""
+    return re.sub(
+        r"(?<![\w-])(?:LicenseRef-)?Proprietary(?:\s+Licen[cs]e)?(?![\w-])",
+        LICENSE_REF_PROPRIETARY,
+        licence_expression,
+        flags=re.IGNORECASE,
+    )
+
+
 def cleanse_licence_expression(licence_expression: str) -> str:
     """Cleanses a licence expression by using SPDX identifiers when possible.
 
     A licence expression can be a combination of licences and in a lot of cases is free-form text.
     The idea is to return an equivalent expression but using SPDX identifiers when possible.
     """
-    simplified_expression = _parse_licence_expression(Licensing(), licence_expression).simplify()
+    simplified_expression = _parse_licence_expression(
+        Licensing(), normalise_proprietary_licence(licence_expression)
+    ).simplify()
     for s in simplified_expression.symbols:
+        if s.key.startswith("LicenseRef-"):
+            continue
         corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)
         if corresponding_licence:
             s.key = corresponding_licence.identifier
@@ -301,6 +329,9 @@ def cleanse_licence_expression(licence_expression: str) -> str:
 
 
 def _iter_matching_licences(desc: str) -> Iterable[Licence]:
+    if normalise_proprietary_licence(desc.strip()) == LICENSE_REF_PROPRIETARY:
+        yield PROPRIETARY_LICENCE
+        return
     licence = OPENSOURCE_LICENCES.get_licence(desc)
     if licence:
         yield licence
@@ -342,7 +373,7 @@ def get_allowed_opensource_licences() -> Iterable[Licence]:
 
 def simplify_licence_expression(licence_expression: str) -> str:
     """Simplifies a licence expression."""
-    return str(_parse_licence_expression(Licensing(), licence_expression).simplify())
+    return str(_parse_licence_expression(Licensing(), normalise_proprietary_licence(licence_expression)).simplify())
 
 
 def determine_licence_compound(main_licence: str, additional_licences: List[str]) -> str:
@@ -374,9 +405,10 @@ def _is_expression_or(licence_expression: str) -> bool:
     return isinstance(_parse_licence_expression(licensing_util, licence_expression), OR)
 
 
-def is_licence_accepted(licence_expression: str) -> bool:
+def is_licence_accepted(licence_expression: str, additional_identifiers: Iterable[str] = ()) -> bool:
     """Determines whether the licence expressed is valid with regards to project's accepted licences."""
     authorised_licences = [licence.identifier for licence in get_allowed_opensource_licences()]
+    authorised_licences.extend(additional_identifiers)
     is_or = _is_expression_or(licence_expression)
     if bool([licence for licence in determine_licences_not_in_list(licence_expression, iter(authorised_licences))]):
         return (

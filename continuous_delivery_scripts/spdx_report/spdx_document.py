@@ -6,6 +6,7 @@
 
 from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional
+from urllib.parse import urlsplit
 
 from continuous_delivery_scripts.spdx_report.spdx_dependency import (
     DependencySpdxDocumentRef,
@@ -24,6 +25,7 @@ from continuous_delivery_scripts.utils.configuration import (
 )
 from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.third_party_licences import LICENSE_REF_PROPRIETARY
 
 if TYPE_CHECKING:
     from spdx.document import Document
@@ -230,7 +232,7 @@ class SpdxDocument:
             the corresponding document
         """
         from spdx.creationinfo import Person, Organization, Tool
-        from spdx.document import Document, License
+        from spdx.document import Document, ExtractedLicense, License
         from spdx.review import Review
         from spdx.version import Version
 
@@ -262,7 +264,35 @@ class SpdxDocument:
         #  be described in a file and hence, all dependencies are described
         #  in separate files. Find out what to do with dependencies when new
         #  tools are released as it is not entirely clear in the specification
-        doc.package = self.generate_spdx_package().generate_spdx_package()
+        spdx_package = self.generate_spdx_package()
+        doc.package = spdx_package.generate_spdx_package()
+        if LICENSE_REF_PROPRIETARY in spdx_package.main_licence or LICENSE_REF_PROPRIETARY in spdx_package.licence:
+            proprietary_licence = ExtractedLicense(LICENSE_REF_PROPRIETARY)
+            proprietary_licence.full_name = "Proprietary licence"
+            proprietary_licence.text = "Proprietary licence terms are not included in this SPDX document."
+            proprietary_licence.comment = (
+                "This is a locally defined licence reference, not an SPDX License List identifier. "
+                "See https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/ "
+                "for the LicenseRef format; consult the rights holder for the licence terms."
+            )
+            if LICENSE_REF_PROPRIETARY in spdx_package.main_licence:
+                licence_urls = {
+                    evidence.get("path", "")
+                    for evidence in self._package_metadata.licence_evidence
+                    if evidence.get("kind") == "licence"
+                }
+                for url in sorted(licence_urls):
+                    try:
+                        parsed_url = urlsplit(url)
+                    except ValueError:
+                        continue
+                    if (
+                        parsed_url.scheme in ("http", "https")
+                        and parsed_url.netloc
+                        and not any(c.isspace() for c in url)
+                    ):
+                        proprietary_licence.add_xref(url)
+            doc.add_extr_lic(proprietary_licence)
 
         for external_reference in self.external_refs:
             doc.add_ext_document_reference(external_reference.generate_external_reference())
