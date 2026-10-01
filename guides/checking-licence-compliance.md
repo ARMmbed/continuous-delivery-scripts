@@ -37,6 +37,14 @@ or report generation fails. If `FAIL_ON_INCOMPLETE_LICENCE_AUDIT` is enabled,
 missing dependencies, unknown licences and undocumented exemptions also fail
 the check. Results depend on the dependencies installed in the audited
 environment.
+The command also prints `ALLOW`, `REVIEW`, `MANUALLY_REVIEWED`, `DENY` and `UNKNOWN` dependency
+counts. These advisory results do not change exit codes unless a project
+explicitly opts into [assessment gating](assessing-dependency-licences.md).
+Pass `--lookup-scancode` to consult
+[ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/) for exact
+identifiers whose category or assessment rule is missing. The lookup is opt-in; see
+[dependency licence assessment](assessing-dependency-licences.md#optional-scancode-licensedb-lookup)
+for the limits and report provenance.
 
 To generate SPDX tag-value documents as well as reports, use
 [`cd-generate-spdx`](generating-an-spdx-sbom.md). See

@@ -4,6 +4,10 @@
 #
 """Command-line licence checks, with and without report output."""
 
+from contextlib import redirect_stderr, redirect_stdout
+import csv
+from io import BytesIO, StringIO
+import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
@@ -50,7 +54,13 @@ class TestCheckLicenceCompliance(TestCase):
     def test_checks_compliance_without_writing_reports(self):
         self.metadata.add_dependency_metadata(PackageMetadata({"Name": "dependency", "License": "MIT"}))
 
-        self.assertEqual(self._run_command(), 0)
+        output = StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(self._run_command(), 0)
+        self.assertIn(
+            "Dependency licence assessment: ALLOW: 1, REVIEW: 0, MANUALLY_REVIEWED: 0, DENY: 0, UNKNOWN: 0",
+            output.getvalue(),
+        )
         self.assertEqual(list(self.root.iterdir()), [self.root / "source"])
 
     def test_output_directory_writes_summaries_but_no_spdx_documents(self):
@@ -60,12 +70,64 @@ class TestCheckLicenceCompliance(TestCase):
             self.assertTrue((self.root / f"third_party_IP_report.{extension}").is_file())
         self.assertEqual(list(self.root.glob("*.spdx")), [])
 
+    def test_opt_in_scancode_lookup_enriches_reports_without_spdx_documents(self):
+        self.metadata.add_dependency_metadata(PackageMetadata({"Name": "bsd-dependency", "License": "BSD-4-Clause"}))
+        index = json.dumps(
+            [{"spdx_license_key": "BSD-4-Clause", "category": "Permissive", "json": "bsd-4-clause.json"}]
+        ).encode("utf8")
+        output = StringIO()
+        warnings = StringIO()
+        override = {"schema_version": 1, "settings": {"fail_on": ["UNKNOWN"]}}
+        get_policy = configuration.get_value_or_default
+        with patch.object(
+            configuration,
+            "get_value_or_default",
+            side_effect=lambda key, default: (
+                override if key == ConfigurationVariable.LICENCE_ASSESSMENT_RULES else get_policy(key, default)
+            ),
+        ):
+            self.assertEqual(self._run_command(), 1)
+            with patch(
+                "continuous_delivery_scripts.spdx_report.scancode_licence_db.urlopen", return_value=BytesIO(index)
+            ) as fetch, redirect_stdout(output), redirect_stderr(warnings):
+                self.assertEqual(self._run_command("--lookup-scancode", "-o", str(self.root)), 0)
+
+        fetch.assert_called_once()
+        report = json.loads((self.root / "third_party_IP_report.json").read_text(encoding="utf8"))
+        assessment = report["packages"]["bsd-dependency"]["licence_assessment"]
+        self.assertEqual(assessment["status"], "ALLOW")
+        self.assertEqual(assessment["scancode_licences"][0]["category"], "Permissive")
+        self.assertIn("bsd-4-clause.json", output.getvalue())
+        self.assertIn("WARNING: bsd-dependency: ScanCode LicenseDB supplied BSD-4-Clause", warnings.getvalue())
+        self.assertIn('"BSD-4-Clause" = "PERMISSIVE"', warnings.getvalue())
+        self.assertIn("[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]", warnings.getvalue())
+        self.assertIn("bsd-4-clause.json", warnings.getvalue())
+        self.assertIn("bsd-4-clause.json", (self.root / "third_party_IP_report.html").read_text(encoding="utf8"))
+        self.assertIn("bsd-4-clause.json", (self.root / "third_party_IP_report.txt").read_text(encoding="utf8"))
+        with (self.root / "third_party_IP_report.csv").open(encoding="utf8", newline="") as csv_file:
+            rows = list(csv.DictReader(csv_file, skipinitialspace=True))
+        self.assertIn("bsd-4-clause.json", {row["Name"]: row["ScanCode references"] for row in rows}["bsd-dependency"])
+        self.assertEqual(list(self.root.glob("*.spdx")), [])
+
     def test_noncompliant_dependency_fails_but_still_writes_requested_report(self):
         self.metadata.add_dependency_metadata(PackageMetadata({"Name": "restricted", "License": "GPL-3.0-only"}))
 
         self.assertEqual(self._run_command("-o", str(self.root)), 1)
         self.assertIn("restricted", (self.root / "third_party_IP_report.txt").read_text(encoding="utf8"))
         self.assertEqual(list(self.root.glob("*.spdx")), [])
+
+    def test_failed_lookup_assisted_check_does_not_print_success_follow_up(self):
+        self.metadata.add_dependency_metadata(PackageMetadata({"Name": "bsd-dependency", "License": "BSD-4-Clause"}))
+        self.metadata.add_dependency_metadata(PackageMetadata({"Name": "restricted", "License": "GPL-3.0-only"}))
+        index = json.dumps(
+            [{"spdx_license_key": "BSD-4-Clause", "category": "Permissive", "json": "bsd-4-clause.json"}]
+        ).encode("utf8")
+        warnings = StringIO()
+        with patch(
+            "continuous_delivery_scripts.spdx_report.scancode_licence_db.urlopen", return_value=BytesIO(index)
+        ), redirect_stderr(warnings):
+            self.assertEqual(self._run_command("--lookup-scancode"), 1)
+        self.assertNotIn("WARNING: bsd-dependency: ScanCode LicenseDB supplied", warnings.getvalue())
 
     def test_unsupported_plugin_does_not_silently_pass(self):
         self.plugin.can_get_project_metadata.return_value = False

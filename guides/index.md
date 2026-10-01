@@ -12,6 +12,7 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 
 ## Dependency licences and OpenChain workflows
 
+- [Assess dependency licence risks](assessing-dependency-licences.md): Review directional, explainable licence screening and optional project policy overrides.
 - [Check licence compliance](checking-licence-compliance.md): Gate a project without generating SPDX files; optionally write reports.
 - [Generate an SPDX SBOM](generating-an-spdx-sbom.md): Produce project and dependency SPDX tag-value documents.
 - [Generate a third-party IP / TPIP report](third-party-ip-reporting.md): Review dependency licences and compliance summaries.

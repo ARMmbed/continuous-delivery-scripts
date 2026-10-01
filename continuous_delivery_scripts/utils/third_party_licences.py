@@ -9,7 +9,7 @@ import re
 import json
 from dataclasses import dataclass
 from importlib.util import find_spec
-from license_expression import Licensing, LicenseExpression, OR, get_spdx_licensing
+from license_expression import Licensing, LicenseExpression, LicenseWithExceptionSymbol, OR, get_spdx_licensing
 from pathlib import Path
 from typing import Dict, Iterable, cast, Optional, Iterator, List, Pattern, Any, Tuple
 
@@ -268,8 +268,8 @@ class OpenSourceLicences:
             else None
         )
 
-    def get_licence(self, licence_descriptor: Optional[str]) -> Optional[Licence]:
-        """Determines the licence based on a string descriptor e.g. Apache 2."""
+    def get_licence(self, licence_descriptor: Optional[str], allow_fuzzy: bool = True) -> Optional[Licence]:
+        """Determines a licence from its identifier or name, optionally without approximate matching."""
         if licence_descriptor and normalise_proprietary_licence(licence_descriptor) == LICENSE_REF_PROPRIETARY:
             return PROPRIETARY_LICENCE
         if licence_descriptor and licence_descriptor.lower().startswith("licenseref-"):
@@ -293,6 +293,8 @@ class OpenSourceLicences:
         if normalised_exact_match:
             return normalised_exact_match
 
+        if not allow_fuzzy:
+            return None
         likelihood, matched_key = determine_similar_string_from_list(normalised_descriptor, normalised_map.keys())
         return normalised_map.get(matched_key) if likelihood > LICENCE_LIKELIHOOD_THRESHOLD else None
 
@@ -320,6 +322,9 @@ def cleanse_licence_expression(licence_expression: str) -> str:
         Licensing(), normalise_proprietary_licence(licence_expression)
     ).simplify()
     for s in simplified_expression.symbols:
+        if isinstance(s, LicenseWithExceptionSymbol):
+            # An exception changes the obligations: do not treat it as the base licence.
+            continue
         if s.key.startswith("LicenseRef-"):
             continue
         corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)

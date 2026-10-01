@@ -101,6 +101,12 @@ class ConfigurationVariable(enum.Enum):
     """Fail the licence audit when dependencies or usable licence declarations are missing."""
     GENERATE_LICENSING_SUMMARY_ON_RELEASE = 41
     """Generate third-party licence summaries during a release when the plugin supports metadata."""
+    LICENCE_ASSESSMENT_RULES_PATH = 42
+    """Optional project TOML file overriding the built-in licence assessment policy."""
+    LICENCE_ASSESSMENT_RULES = 43
+    """Optional inline licence assessment rules in the project's pyproject.toml."""
+    REVIEWED_LICENCE_ASSESSMENTS = 44
+    """Project-specific records explaining manual reviews of REVIEW assessments."""
 
     @staticmethod
     def choices() -> List[str]:
