@@ -83,6 +83,10 @@ class SpdxProject:
             self._licence_assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config(), self._lookup_scancode)
         return self._licence_assessor
 
+    def has_assessment_gate(self) -> bool:
+        """Whether an older rules-file or inline setting opts into gating."""
+        return bool(self.licence_assessor.policy.fail_on)
+
     @property
     def licence_assessments(self) -> Dict[str, LicenceAssessmentResult]:
         """Assess already-discovered dependency licences against the project licence."""

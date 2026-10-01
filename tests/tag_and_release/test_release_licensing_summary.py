@@ -4,12 +4,85 @@
 #
 from unittest import TestCase, mock
 
-from continuous_delivery_scripts.tag_and_release import tag_and_release
+from continuous_delivery_scripts.tag_and_release import _update_licensing_summary, tag_and_release
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, StaticConfig, configuration
 from continuous_delivery_scripts.utils.definitions import CommitType
 
 
 class TestReleaseLicensingSummary(TestCase):
+    def test_assessment_gate_is_checked_during_release_even_without_strict_audit(self):
+        project = mock.Mock()
+        project.has_assessment_gate.return_value = False
+        project.check_licence_compliance.side_effect = ValueError("Unreviewed licence risk")
+        plugin = mock.Mock()
+        plugin.can_get_project_metadata.return_value = True
+        plugin.get_current_spdx_project.return_value = project
+        get_value = configuration.get_value
+        values = {
+            ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT: False,
+            ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON: ["REVIEW"],
+        }
+        with (
+            mock.patch("continuous_delivery_scripts.tag_and_release.get_language_specifics", return_value=plugin),
+            mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: values[key] if key in values else get_value(key),
+            ),
+        ):
+            with self.assertRaisesRegex(ValueError, "Unreviewed licence risk"):
+                _update_licensing_summary()
+        project.generate_licensing_summary.assert_called_once()
+        project.check_licence_compliance.assert_called_once_with()
+        project.has_assessment_gate.assert_not_called()
+
+    def test_release_with_explicitly_disabled_assessment_gate_skips_check(self):
+        project = mock.Mock()
+        project.has_assessment_gate.return_value = False
+        plugin = mock.Mock()
+        plugin.can_get_project_metadata.return_value = True
+        plugin.get_current_spdx_project.return_value = project
+        get_value = configuration.get_value
+        values = {
+            ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT: False,
+            ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON: [],
+        }
+        with (
+            mock.patch("continuous_delivery_scripts.tag_and_release.get_language_specifics", return_value=plugin),
+            mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: values[key] if key in values else get_value(key),
+            ),
+        ):
+            _update_licensing_summary()
+        project.check_licence_compliance.assert_not_called()
+
+    def test_release_still_honours_a_policy_file_assessment_gate(self):
+        project = mock.Mock()
+        project.has_assessment_gate.return_value = True
+        plugin = mock.Mock()
+        plugin.can_get_project_metadata.return_value = True
+        plugin.get_current_spdx_project.return_value = project
+        get_value = configuration.get_value
+        values = {
+            ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT: False,
+            ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON: None,
+        }
+        with (
+            mock.patch("continuous_delivery_scripts.tag_and_release.get_language_specifics", return_value=plugin),
+            mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: values[key] if key in values else get_value(key),
+            ),
+        ):
+            _update_licensing_summary()
+        project.check_licence_compliance.assert_called_once_with()
+
+    def test_this_project_configures_assessment_failures(self):
+        self.assertEqual(configuration.get_value(ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON), ["DENY"])
+
     def test_default_is_to_skip_release_summary(self):
         self.assertFalse(StaticConfig().get_value(ConfigurationVariable.GENERATE_LICENSING_SUMMARY_ON_RELEASE))
 
