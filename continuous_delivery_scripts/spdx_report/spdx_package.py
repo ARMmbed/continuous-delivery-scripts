@@ -13,11 +13,11 @@ from license_expression import ExpressionError
 
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
 from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
-from continuous_delivery_scripts.spdx_report.spdx_helpers import (
-    determine_spdx_value,
-    list_project_files_for_licensing,
-)
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
+from continuous_delivery_scripts.spdx_report.spdx_helpers import (
+    list_project_files_for_licensing,
+    parse_spdx_licence,
+)
 from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
     LICENSE_REF_PROPRIETARY,
@@ -28,7 +28,7 @@ from continuous_delivery_scripts.utils.third_party_licences import (
 )
 
 if TYPE_CHECKING:
-    from spdx.package import Package
+    from spdx_tools.spdx.model.package import Package
 
 
 @dataclass(frozen=True, order=True)
@@ -51,7 +51,7 @@ class PackageInfo:
 def _set_package_copyright(file: SpdxFile, package: "Package") -> None:
     """Sets the copyright field of a package based on file copyright."""
     if file.copyright:
-        package.cr_text = determine_spdx_value(file.copyright)
+        package.copyright_text = file.copyright
 
 
 class SpdxPackage:
@@ -243,44 +243,33 @@ class SpdxPackage:
         Returns:
             the corresponding package
         """
-        from spdx.checksum import Algorithm
-        from spdx.creationinfo import Person
-        from spdx.document import License
-        from spdx.package import Package
-        from spdx.utils import NoAssert
+        from spdx_tools.spdx.model.actor import Actor, ActorType
+        from spdx_tools.spdx.model.package import Package
+        from spdx_tools.spdx.model.spdx_no_assertion import SpdxNoAssertion
+        from spdx_tools.spdx import spdx_element_utils
+
+        source_files = self.get_spdx_files() or []
+        files = [file.generate_spdx_file() for file in source_files]
 
         package = Package(
-            name=determine_spdx_value(self.name),
+            name=self.name,
             spdx_id=f"SPDXRef-{self.id}",
-            download_location=determine_spdx_value(None),
-            version=determine_spdx_value(self.version),
-            file_name=determine_spdx_value(self.name),
-            supplier=None,
-            originator=Person(
-                determine_spdx_value(self.author),
-                determine_spdx_value(self.author_email),
+            download_location=SpdxNoAssertion(),
+            version=self.version if self.version != UNKNOWN else None,
+            file_name=self.name,
+            originator=Actor(
+                ActorType.PERSON, self.author, self.author_email if self.author_email != UNKNOWN else None
             ),
+            files_analyzed=bool(files),
+            verification_code=spdx_element_utils.calculate_package_verification_code(files) if files else None,
+            copyright_text=SpdxNoAssertion(),
+            homepage=self.url if self.url != UNKNOWN else None,
+            license_declared=parse_spdx_licence(self.main_licence),
+            license_concluded=parse_spdx_licence(self.licence),
+            license_info_from_files=[file.license_concluded for file in files],
+            summary=self.description if self.description != UNKNOWN else None,
         )
-        package.check_sum = Algorithm("SHA1", str(NoAssert()))
-        package.cr_text = NoAssert()
-        package.homepage = determine_spdx_value(self.url)
-        package.license_declared = License.from_identifier(str(determine_spdx_value(self.main_licence)))
-        package.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
-        package.summary = determine_spdx_value(self.description)
-        package.description = NoAssert()
-        files = self.get_spdx_files()
         if files:
-            package.files_analyzed = True
-            for file in files:
-                package.add_file(file.generate_spdx_file())
-                package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(file.licence))))
+            for file in source_files:
                 _set_package_copyright(file, package)
-            package.verif_code = determine_spdx_value(package.calc_verif_code())
-        else:
-            # Has to generate a dummy file because of the following rule in SDK:
-            # - Package must have at least one file
-            dummy_file = SpdxFile(Path(UNKNOWN), self._package_info.root_dir, self.main_licence)
-            package.verif_code = NoAssert()
-            package.add_file(dummy_file.generate_spdx_file())
-            package.add_lics_from_file(License.from_identifier(str(determine_spdx_value(dummy_file.licence))))
         return package

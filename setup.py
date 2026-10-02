@@ -86,8 +86,7 @@ setup(
         "detect-secrets[gibberish]==1.5.0",
         "packaging",
         "licenseheaders<0.8.9",
-        # The SPDX writer uses the legacy `spdx` namespace removed in spdx-tools 0.7.
-        "spdx-tools==0.6.1",
+        "spdx-tools==0.8.5",
         "license-expression",
         "wcmatch",
         "jellyfish",

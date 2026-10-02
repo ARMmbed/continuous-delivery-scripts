@@ -70,7 +70,12 @@ class PackageMetadata:
         classifier = str(data.get("License-Classifier") or "").strip()
         if expression:
             licence, source = expression, LicenceSource.EXPRESSION
-        elif legacy and not legacy.lower().startswith("copyright") and legacy.lower() not in ("unknown", "none"):
+        elif (
+            legacy
+            and not legacy.lower().startswith("copyright")
+            and legacy.lower() not in ("unknown", "none")
+            and ("\n" not in legacy or not classifier)
+        ):
             licence, source = legacy, LicenceSource.LEGACY
         elif classifier:
             licence, source = classifier, LicenceSource.CLASSIFIER
