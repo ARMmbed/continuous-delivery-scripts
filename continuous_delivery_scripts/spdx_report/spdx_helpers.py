@@ -95,6 +95,14 @@ def determine_file_licence(path: Path) -> Optional[str]:
             return None
         licence = match.group(1).strip()
         return str(simplify_licence_expression(licence))
+    except UnicodeDecodeError as e:
+        logger.warning(
+            "Could not screen file [%s] for an embedded SPDX licence identifier because it appears to be binary. "
+            "Binary files cannot be screened for inline licence metadata.",
+            path,
+        )
+        logger.info("Binary screening failure for [%s]: %s", path, e)
+        return None
     except Exception as e:
         logger.error(f"Could not determine the licence of file [{path}] from identifier '{licence}'. Reason: {e}.")
         return None

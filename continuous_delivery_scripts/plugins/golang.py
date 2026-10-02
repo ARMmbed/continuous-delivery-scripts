@@ -10,10 +10,11 @@ import json
 import logging
 import os
 import shutil
+from contextlib import contextmanager
 from pathlib import Path
-from subprocess import check_call, check_output
+from subprocess import check_call, check_output, run, CalledProcessError
 from tempfile import TemporaryDirectory
-from typing import Optional, List, Dict, MutableMapping
+from typing import Optional, List, Dict, MutableMapping, Iterator
 
 from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 from continuous_delivery_scripts.utils.configuration import (
@@ -47,6 +48,7 @@ GO_MOD_ON_VALUE = "on"
 # go-licenses report --template receives Name, Version, LicenseURL and LicenseName for each library.
 # https://github.com/google/go-licenses/blob/master/README.md#reports-with-custom-templates
 GO_LICENSES_TEMPLATE = "{{range .}}{{.Name}}\t{{.Version}}\t{{.LicenseURL}}\t{{.LicenseName}}\n{{end}}"
+LICENCE_FILE_PREFIXES = ("LICENSE", "LICENCE", "COPYING")
 
 
 def _generate_doc2go_command_list(output_directory: Path, module: str) -> List[str]:
@@ -156,6 +158,71 @@ def _parse_go_licences(output: str) -> List[PackageMetadata]:
     return packages
 
 
+def _log_go_licenses_stderr(module_dir: Path, stderr_output: str) -> None:
+    """Report go-licenses diagnostics through CDS logging instead of leaking raw stderr."""
+    diagnostics = stderr_output.strip()
+    if not diagnostics:
+        return
+    logger.warning(
+        "go-licenses emitted diagnostics while scanning [%s]. Re-run with -vv for the captured stderr.",
+        module_dir,
+    )
+    logger.info("go-licenses stderr for [%s]:\n%s", module_dir, diagnostics)
+
+
+def _run_go_licenses_report(
+    executable: str, module_dir: Path, template_path: Path, env: MutableMapping[str, str]
+) -> str:
+    """Run go-licenses with captured stderr so CDS controls when diagnostics are shown."""
+    result = run(
+        [executable, "report", "./...", "--template", str(template_path)],
+        cwd=module_dir,
+        env=env,
+        encoding="utf8",
+        capture_output=True,
+        check=False,
+    )
+    _log_go_licenses_stderr(module_dir, result.stderr)
+    if result.returncode != 0:
+        error_message = result.stderr.strip() or result.stdout.strip() or f"exit code {result.returncode}"
+        raise CalledProcessError(result.returncode, result.args, output=result.stdout, stderr=error_message)
+    return result.stdout
+
+
+def _find_licence_file(directory: Path) -> Optional[Path]:
+    """Return the first recognised licence file in a directory."""
+    for path in sorted(directory.iterdir()):
+        if path.is_file() and path.name.upper().startswith(LICENCE_FILE_PREFIXES):
+            return path
+    return None
+
+
+@contextmanager
+def _stage_root_licence_files_for_modules(module_directories: List[Path]) -> Iterator[None]:
+    """Temporarily copy the root licence into module directories that do not already have one."""
+    root_licence_file = _find_licence_file(ROOT_DIR)
+    if not root_licence_file:
+        yield
+        return
+
+    staged_files: List[Path] = []
+    try:
+        for module_directory in module_directories:
+            if module_directory == ROOT_DIR or _find_licence_file(module_directory):
+                continue
+            # go-licenses only searches for licence files up to the module root, so
+            # nested modules cannot see a repository-level LICENSE on their own.
+            destination = module_directory / root_licence_file.name
+            shutil.copy2(root_licence_file, destination)
+            staged_files.append(destination)
+        yield
+    finally:
+        # Remove only the temporary copies we created so existing module-specific
+        # licence files remain untouched and the worktree stays clean.
+        for staged_file in staged_files:
+            staged_file.unlink(missing_ok=True)
+
+
 class GoProjectMetadataFetcher(ProjectMetadataFetcher):
     """Retrieve Go dependency licences for the shared SPDX and compliance report."""
 
@@ -185,29 +252,25 @@ class GoProjectMetadataFetcher(ProjectMetadataFetcher):
         with TemporaryDirectory() as temporary_dir:
             template_path = Path(temporary_dir) / "go-licenses.tpl"
             template_path.write_text(GO_LICENSES_TEMPLATE, encoding="utf8")
-            for module_dir, _ in modules:
-                output = check_output(
-                    [executable, "report", "./...", "--template", str(template_path)],
-                    cwd=module_dir,
-                    env=env,
-                    encoding="utf8",
-                )
-                for package in _parse_go_licences(output):
-                    if any(package.name == name or package.name.startswith(f"{name}/") for _, name in modules):
-                        continue
-                    existing = dependencies.get(package.name)
-                    if existing and (existing.version, existing.licence) != (package.version, package.licence):
-                        candidates = existing.licence_candidates or [existing.licence]
-                        dependencies[package.name] = PackageMetadata.from_fields(
-                            name=package.name,
-                            version=UNKNOWN if existing.version != package.version else package.version,
-                            licence=UNKNOWN,
-                            licence_source=LicenceSource.UNKNOWN,
-                            licence_candidates=sorted(set(candidates + [package.licence])),
-                            licence_evidence=existing.licence_evidence + package.licence_evidence,
-                        )
-                    elif existing is None:
-                        dependencies[package.name] = package
+            with _stage_root_licence_files_for_modules(module_directories):
+                for module_dir, _ in modules:
+                    output = _run_go_licenses_report(executable, module_dir, template_path, env)
+                    for package in _parse_go_licences(output):
+                        if any(package.name == name or package.name.startswith(f"{name}/") for _, name in modules):
+                            continue
+                        existing = dependencies.get(package.name)
+                        if existing and (existing.version, existing.licence) != (package.version, package.licence):
+                            candidates = existing.licence_candidates or [existing.licence]
+                            dependencies[package.name] = PackageMetadata.from_fields(
+                                name=package.name,
+                                version=UNKNOWN if existing.version != package.version else package.version,
+                                licence=UNKNOWN,
+                                licence_source=LicenceSource.UNKNOWN,
+                                licence_candidates=sorted(set(candidates + [package.licence])),
+                                licence_evidence=existing.licence_evidence + package.licence_evidence,
+                            )
+                        elif existing is None:
+                            dependencies[package.name] = package
         for dependency in dependencies.values():
             project.add_dependency_metadata(dependency)
         return project

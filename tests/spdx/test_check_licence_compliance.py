@@ -57,10 +57,19 @@ class TestCheckLicenceCompliance(TestCase):
         output = StringIO()
         with redirect_stdout(output):
             self.assertEqual(self._run_command(), 0)
+        rendered = output.getvalue()
+        self.assertIn("Dependencies screened: 1", rendered)
+        self.assertIn(
+            "Accepted third-party licences: Apache-2.0, BSD*, CC-BY-*, JSON, MIT, Python-2.0, PSF-2.0, MPL-2.0",
+            rendered,
+        )
+        self.assertIn("Assessment fail-on statuses: DENY", rendered)
+        self.assertIn("Fail on incomplete licence audit: disabled", rendered)
         self.assertIn(
             "Dependency licence assessment: ALLOW: 1, REVIEW: 0, MANUALLY_REVIEWED: 0, DENY: 0, UNKNOWN: 0",
-            output.getvalue(),
+            rendered,
         )
+        self.assertIn("Compliance with configured licence policy: PASS", rendered)
         self.assertEqual(list(self.root.iterdir()), [self.root / "source"])
 
     def test_output_directory_writes_summaries_but_no_spdx_documents(self):
@@ -111,9 +120,35 @@ class TestCheckLicenceCompliance(TestCase):
     def test_noncompliant_dependency_fails_but_still_writes_requested_report(self):
         self.metadata.add_dependency_metadata(PackageMetadata({"Name": "restricted", "License": "GPL-3.0-only"}))
 
-        self.assertEqual(self._run_command("-o", str(self.root)), 1)
+        output = StringIO()
+        with redirect_stdout(output):
+            self.assertEqual(self._run_command("-o", str(self.root)), 1)
         self.assertIn("restricted", (self.root / "third_party_IP_report.txt").read_text(encoding="utf8"))
         self.assertEqual(list(self.root.glob("*.spdx")), [])
+        self.assertIn("Dependencies screened: 1", output.getvalue())
+        self.assertIn("Compliance with configured licence policy: FAIL", output.getvalue())
+
+    def test_verbose_output_lists_dependencies_needing_attention(self):
+        self.metadata.add_dependency_metadata(PackageMetadata({"Name": "unreviewed", "License": "MPL-2.0"}))
+
+        with self.assertLogs("continuous_delivery_scripts.check_licence_compliance", level="WARNING") as logs:
+            self.assertEqual(self._run_command("-v"), 0)
+
+        rendered = "\n".join(logs.output)
+        self.assertIn("Dependencies needing attention:", rendered)
+        self.assertIn("- unreviewed: status=REVIEW", rendered)
+        self.assertIn("assessed_licence=MPL-2.0", rendered)
+        self.assertIn("rule=", rendered)
+        self.assertIn("reason=", rendered)
+
+    def test_non_verbose_output_omits_dependencies_needing_attention(self):
+        self.metadata.add_dependency_metadata(PackageMetadata({"Name": "unreviewed", "License": "MPL-2.0"}))
+
+        warnings = StringIO()
+        with redirect_stderr(warnings):
+            self.assertEqual(self._run_command(), 0)
+
+        self.assertNotIn("Dependencies needing attention:", warnings.getvalue())
 
     def test_unreviewed_weak_copyleft_does_not_fail_deny_only_gate(self):
         self.metadata.add_dependency_metadata(PackageMetadata({"Name": "unreviewed", "License": "MPL-2.0"}))
