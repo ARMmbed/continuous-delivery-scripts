@@ -147,6 +147,14 @@ def _download_go_module_dependencies(module_directories: List[Path], env: Mutabl
         check_call(["go", "mod", "download", "all"], cwd=module_directory, env=env)
 
 
+def _should_download_go_module_dependencies() -> bool:
+    """Return whether Go module dependencies should be prefetched automatically."""
+    configured = configuration.get_value_or_default(ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING, False)
+    if isinstance(configured, str):
+        configured = configured.strip().lower() in ("true", "1", "yes", "on")
+    return not bool(configured)
+
+
 def _parse_go_licences(output: str) -> List[PackageMetadata]:
     """Translate go-licenses template output into shared package metadata."""
     packages = []
@@ -247,7 +255,10 @@ class GoProjectMetadataFetcher(ProjectMetadataFetcher):
         module_directories = _go_licence_module_directories()
         env = os.environ.copy()
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-        _download_go_module_dependencies(module_directories, env)
+        if _should_download_go_module_dependencies():
+            _download_go_module_dependencies(module_directories, env)
+        else:
+            logger.info("Skipping Go module dependency downloads before licence analysis by configuration.")
         executable = _ensure_go_tool_installed(
             tool_name="go-licenses",
             version_command=["go-licenses", "report", "--help"],
