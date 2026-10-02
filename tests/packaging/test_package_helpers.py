@@ -90,6 +90,21 @@ class TestPackaging(unittest.TestCase):
 
         self.assertEqual(metadata.licence, "MIT")
 
+    def test_uses_licence_classifier_when_legacy_field_contains_full_licence_text(self):
+        metadata = parse_package_metadata_lines(
+            [
+                "Name: example",
+                "License: MIT License",
+                " ",
+                " Permission is hereby granted, free of charge, to any person obtaining a copy",
+                "Classifier: License :: OSI Approved :: MIT License",
+            ]
+        )
+
+        self.assertEqual(metadata.licence, "MIT")
+        self.assertEqual(metadata.licence_source, "License-Classifier")
+        self.assertIn("Permission is hereby granted", metadata.declared_licence)
+
     def test_retains_all_licence_classifiers_and_their_source(self):
         metadata = parse_package_metadata_lines(
             [
