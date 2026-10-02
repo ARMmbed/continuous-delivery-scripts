@@ -1,0 +1,1 @@
+:bug: Fix Go workspace licence compliance checks by resolving each module path with `GOWORK=off` so multi-module repositories do not fail JSON parsing.
