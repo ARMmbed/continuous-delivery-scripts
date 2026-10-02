@@ -56,6 +56,7 @@ def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
         project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
         with cd(os.path.dirname(project_config_path)):
             subprocess.check_call(["towncrier", "build", "--yes", "--name", "", "--version", str(version)])
+        # FIXME: Remove this workaround when https://github.com/twisted/towncrier/issues/758 is fixed.
         _normalise_markdown_release_headings(version)
 
 
