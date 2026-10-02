@@ -14,24 +14,17 @@ specification (i.e. with relationships).
 
 import argparse
 import logging
-import os
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
 
 from continuous_delivery_scripts.language_specifics import get_language_specifics
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable
 from continuous_delivery_scripts.utils.logging import set_log_level, log_exception
 
 if TYPE_CHECKING:
     from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
-
-
-def _apply_go_module_download_options(skip_go_module_download: bool) -> None:
-    if skip_go_module_download:
-        os.environ[ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name] = "true"
 
 
 def generate_spdx_project_reports(project: "SpdxProject", output_directory: Path) -> "SpdxProject":
@@ -43,9 +36,11 @@ def generate_spdx_project_reports(project: "SpdxProject", output_directory: Path
     return project
 
 
-def generate_spdx_reports(output_directory: Path, lookup_scancode: bool = False) -> Optional["SpdxProject"]:
+def generate_spdx_reports(
+    output_directory: Path, lookup_scancode: bool = False, skip_go_module_download: bool = False
+) -> Optional["SpdxProject"]:
     """Generates all the SPDX reports for the current project."""
-    project = get_language_specifics().get_current_spdx_project()
+    project = get_language_specifics().get_current_spdx_project(skip_go_module_download=skip_go_module_download)
     if not project:
         return None
     if lookup_scancode:
@@ -88,11 +83,14 @@ def main() -> int:
     )
     args = parser.parse_args()
     set_log_level(args.verbose)
-    _apply_go_module_download_options(args.skip_go_module_download)
 
     try:
         if get_language_specifics().can_get_project_metadata():
-            project = generate_spdx_reports(args.output_dir, lookup_scancode=args.lookup_scancode)
+            project = generate_spdx_reports(
+                args.output_dir,
+                lookup_scancode=args.lookup_scancode,
+                skip_go_module_download=args.skip_go_module_download,
+            )
             if project:
                 project.check_licence_compliance()
                 if args.lookup_scancode:

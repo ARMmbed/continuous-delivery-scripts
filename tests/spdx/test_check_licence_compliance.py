@@ -8,7 +8,6 @@ from contextlib import redirect_stderr, redirect_stdout
 import csv
 from io import BytesIO, StringIO
 import json
-import os
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase
@@ -177,11 +176,5 @@ class TestCheckLicenceCompliance(TestCase):
         self.plugin.get_current_spdx_project.assert_not_called()
 
     def test_skip_go_module_download_flag_sets_configuration_override(self):
-        with patch.dict(os.environ, {}, clear=False):
-            self.assertNotIn(ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name, os.environ)
-            self.assertEqual(self._run_command("--skip-go-module-download"), 0)
-
-            self.assertEqual(
-                os.environ[ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name],
-                "true",
-            )
+        self.assertEqual(self._run_command("--skip-go-module-download"), 0)
+        self.plugin.get_current_spdx_project.assert_called_once_with(skip_go_module_download=True)

@@ -6,7 +6,6 @@
 
 import argparse
 import logging
-import os
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -21,11 +20,6 @@ if TYPE_CHECKING:
     from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
-
-
-def _apply_go_module_download_options(skip_go_module_download: bool) -> None:
-    if skip_go_module_download:
-        os.environ[ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name] = "true"
 
 
 def _log_assessment_details(project: "SpdxProject") -> None:
@@ -104,13 +98,12 @@ def main() -> int:
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase logging verbosity.")
     args = parser.parse_args()
     set_log_level(args.verbose)
-    _apply_go_module_download_options(args.skip_go_module_download)
 
     try:
         plugin = get_language_specifics()
         if not plugin.can_get_project_metadata():
             raise ValueError("The selected language plugin cannot provide metadata for licence compliance checks.")
-        project = plugin.get_current_spdx_project()
+        project = plugin.get_current_spdx_project(skip_go_module_download=args.skip_go_module_download)
         if project is None:
             raise ValueError("The selected language plugin did not return a project for licence compliance checks.")
         if args.lookup_scancode:

@@ -246,16 +246,17 @@ def _stage_root_licence_files_for_modules(module_directories: List[Path]) -> Ite
 class GoProjectMetadataFetcher(ProjectMetadataFetcher):
     """Retrieve Go dependency licences for the shared SPDX and compliance report."""
 
-    def __init__(self) -> None:
+    def __init__(self, skip_go_module_download: bool = False) -> None:
         """Initialise with the configured project name."""
         super().__init__(str(configuration.get_value(ConfigurationVariable.PROJECT_NAME)))
+        self._skip_go_module_download = skip_go_module_download
 
     def fetch_project_metadata(self) -> ProjectMetadata:
         """Collect module dependencies using go-licenses without replacing shared policy checks."""
         module_directories = _go_licence_module_directories()
         env = os.environ.copy()
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-        if _should_download_go_module_dependencies():
+        if not self._skip_go_module_download and _should_download_go_module_dependencies():
             _download_go_module_dependencies(module_directories, env)
         else:
             logger.info("Skipping Go module dependency downloads before licence analysis by configuration.")
@@ -486,9 +487,9 @@ class Go(BaseLanguage):
             (r"^\.github[\\/]workflows[\\/].*"),
         ]
 
-    def get_current_spdx_project(self) -> Optional[SpdxProject]:
+    def get_current_spdx_project(self, skip_go_module_download: bool = False) -> Optional[SpdxProject]:
         """Gets current SPDX description."""
-        return SpdxProject(GoProjectMetadataFetcher())
+        return SpdxProject(GoProjectMetadataFetcher(skip_go_module_download=skip_go_module_download))
 
     def should_clean_before_packaging(self) -> bool:
         """States whether the repository must be cleaned before packaging happens."""

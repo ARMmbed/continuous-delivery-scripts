@@ -198,6 +198,6 @@ class Python(BaseLanguage):
         # FIXME Comment out SPDX package as no longer working
         return False
 
-    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
+    def get_current_spdx_project(self, skip_go_module_download: bool = False) -> Optional["SpdxProject"]:
         """Gets the current SPDX description."""
         return _get_current_spdx_project()

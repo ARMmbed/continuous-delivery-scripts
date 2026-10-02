@@ -121,7 +121,7 @@ class BaseLanguage(ABC):
         pass
 
     @abstractmethod
-    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
+    def get_current_spdx_project(self, skip_go_module_download: bool = False) -> Optional["SpdxProject"]:
         """Gets current project SPDX."""
         pass
 

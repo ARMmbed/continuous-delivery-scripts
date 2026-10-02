@@ -6,13 +6,11 @@
 
 from contextlib import redirect_stderr
 from io import StringIO
-import os
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
 from continuous_delivery_scripts.report_third_party_ip import main
-from continuous_delivery_scripts.utils.configuration import ConfigurationVariable
 
 
 class TestGenerateSpdxCli(TestCase):
@@ -33,7 +31,7 @@ class TestGenerateSpdxCli(TestCase):
         ):
             self.assertEqual(main(), 0)
 
-        generate.assert_called_once_with(Path("reports"), lookup_scancode=True)
+        generate.assert_called_once_with(Path("reports"), lookup_scancode=True, skip_go_module_download=False)
         project.check_licence_compliance.assert_called_once_with()
         self.assertIn("WARNING: dependency: add", output.getvalue())
         self.assertIn("[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]", output.getvalue())
@@ -56,18 +54,16 @@ class TestGenerateSpdxCli(TestCase):
         project.scancode_follow_up_warnings.assert_not_called()
         self.assertNotIn("WARNING: dependency", output.getvalue())
 
-    def test_skip_go_module_download_flag_sets_configuration_override(self):
+    def test_skip_go_module_download_flag_is_forwarded_to_spdx_generation(self):
         project = Mock()
         plugin = Mock()
         plugin.can_get_project_metadata.return_value = True
 
-        with patch.dict(os.environ, {}, clear=False), patch(
-            "sys.argv", ["cd-generate-spdx", "-o", "reports", "--skip-go-module-download"]
-        ), patch(
+        with patch("sys.argv", ["cd-generate-spdx", "-o", "reports", "--skip-go-module-download"]), patch(
             "continuous_delivery_scripts.report_third_party_ip.get_language_specifics", return_value=plugin
         ), patch(
             "continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports", return_value=project
-        ):
-            self.assertNotIn(ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name, os.environ)
+        ) as generate:
             self.assertEqual(main(), 0)
-            self.assertEqual(os.environ[ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name], "true")
+
+        generate.assert_called_once_with(Path("reports"), lookup_scancode=False, skip_go_module_download=True)

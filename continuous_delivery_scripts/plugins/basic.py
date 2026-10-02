@@ -51,6 +51,6 @@ class Basic(BaseLanguage):
         """States whether project metadata can be retrieved."""
         return False
 
-    def get_current_spdx_project(self) -> Optional["SpdxProject"]:
+    def get_current_spdx_project(self, skip_go_module_download: bool = False) -> Optional["SpdxProject"]:
         """Basic."""
         return None
