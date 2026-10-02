@@ -18,7 +18,9 @@ The plugin uses [pdoc](https://pdoc3.github.io/pdoc/) to generate the code refer
 The Python plugin reads metadata from the **installed** project distribution and
 walks its `Requires-Dist` entries to find installed, transitive dependencies.
 Install the dependencies you intend to audit, then run the audit in that
-environment; the plugin does not install packages itself.
+environment; the plugin does not install packages itself. This is deliberate:
+Python projects can define dependencies in many different ways, so CDS cannot
+reliably infer and reproduce the intended audit environment automatically.
 
 > **Warning — platform limitation:** The audit only sees dependencies installed
 > for the current platform and Python version. It does **not** inspect
