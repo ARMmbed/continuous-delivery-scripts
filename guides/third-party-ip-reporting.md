@@ -10,9 +10,9 @@ see [SPDX generation](generating-an-spdx-sbom.md).
 
 ## Inputs and example
 
-Install the dependencies you intend to audit, configure your language plugin
-and set `ACCEPTED_THIRD_PARTY_LICENCES` and any documented manual checks in
-`pyproject.toml`. Choose an existing output directory:
+Configure your language plugin and set `ACCEPTED_THIRD_PARTY_LICENCES` and any
+documented manual checks in `pyproject.toml`. Choose an existing output
+directory:
 
 ```bash
 mkdir -p licensing
@@ -27,6 +27,9 @@ for language-specific prerequisites and support.
 An audit covers the installed environment, so run it for each supported
 platform if dependencies differ by operating system. Review unknown licences
 and packaged notices rather than assuming a missing value means permission.
+For Go projects, CDS downloads module dependencies automatically before the
+scan. Pass `--skip-dependency-download` when those dependencies have already
+been prefetched and you want to skip that extra work.
 
 ## Output
 

@@ -8,9 +8,9 @@ without generating SPDX documents. The command writes no files by default.
 
 ## Inputs and example
 
-Install the dependencies you intend to audit and select a language plugin that
-provides project metadata. Configure `ACCEPTED_THIRD_PARTY_LICENCES` and any
-documented manual reviews in `[ProjectConfig]` in `pyproject.toml`. Then run:
+Select a language plugin that provides project metadata. Configure
+`ACCEPTED_THIRD_PARTY_LICENCES` and any documented manual reviews in
+`[ProjectConfig]` in `pyproject.toml`. Then run:
 
 ```bash
 cd-check-licence-compliance
@@ -27,6 +27,11 @@ cd-check-licence-compliance --output-dir licensing
 The optional `--output-dir` (`-o`) writes `third_party_IP_report.html`, `.csv`,
 `.txt` and `.json`. It does not create `.spdx` files. The reports are written
 before the compliance check, so they remain available if the check fails.
+
+For Go projects, CDS downloads module dependencies automatically before running
+licence analysis so CI does not need a separate `go mod download all` step.
+Pass `--skip-dependency-download` when your environment already prefetches the
+required dependencies and you want to skip that extra work.
 
 ## Result
 

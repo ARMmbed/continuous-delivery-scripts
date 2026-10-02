@@ -20,6 +20,13 @@ usable `go-licenses` binary on `PATH` before installing
 must be available; an installed binary can also be located under `GOBIN` or
 the first `GOPATH` entry's `bin` directory.
 
+For licence and SPDX analysis, the plugin also runs `go mod download all` for
+each detected Go module by default so callers do not need a separate dependency
+prefetch step. If your environment already downloads dependencies and you want
+to skip that work, use `--skip-dependency-download` on
+`cd-check-licence-compliance` or `cd-generate-spdx`, or set
+`SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING = true` in configuration.
+
 Set `PROGRAMMING_LANGUAGE = "golang"`, `PROJECT_NAME`, `PROJECT_ROOT` and
 `SOURCE_DIR` in `[ProjectConfig]`. Put a `go.mod` under the source or project
 root; `go.work` modules and nested Go modules are also considered. Supply
@@ -27,7 +34,7 @@ root; `go.work` modules and nested Go modules are also considered. Supply
 and `[spdx]` namespace fields as explained in the
 [SPDX configuration guide](../../DEVELOPMENT.md#spdx-document-identity).
 
-With the project and its Go dependencies available, run:
+With the project available, run:
 
 ```bash
 mkdir -p licensing
