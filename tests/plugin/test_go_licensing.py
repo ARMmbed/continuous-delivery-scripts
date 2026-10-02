@@ -101,6 +101,20 @@ class TestGoLicenceCollection(TestCase):
             with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(golang, "SRC_DIR", root):
                 self.assertEqual(golang._go_licence_module_directories(), modules)
 
+    @mock.patch.object(golang, "check_output", return_value='{"Path": "example.com/acme"}')
+    def test_go_module_name_disables_go_work_to_scope_metadata_to_one_module(self, check_output):
+        env = {"GO111MODULE": "on", "GOWORK": "auto"}
+
+        name = golang._go_module_name(Path("module"), env)
+
+        self.assertEqual(name, "example.com/acme")
+        check_output.assert_called_once_with(
+            ["go", "list", "-m", "-json"],
+            cwd=Path("module"),
+            env={"GO111MODULE": "on", "GOWORK": "off"},
+            encoding="utf8",
+        )
+
     def test_parses_licences_and_keeps_unknown_for_shared_policy(self):
         packages = golang._parse_go_licences(
             "github.com/acme/dep\tv1.2.3\thttps://github.com/acme/dep/blob/v1.2.3/LICENSE\tMIT\n"
