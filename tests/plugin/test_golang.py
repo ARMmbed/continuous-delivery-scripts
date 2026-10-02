@@ -111,3 +111,32 @@ class TestGoWorkIntegration(TestCase):
             directories = golang._determine_go_work_module_directories_from_json(root.joinpath("go.work"))
 
             self.assertEqual(directories, [root.joinpath("app1")])
+
+
+class TestGoDocumentation(TestCase):
+    @mock.patch.object(golang, "check_call")
+    @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="C:/go/bin/doc2go")
+    def test_call_doc2go_uses_resolved_executable_and_source_dir(self, ensure_installed, check_call):
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            source_dir = root.joinpath("src")
+            source_dir.mkdir()
+            output_dir = root.joinpath("docs")
+
+            with mock.patch.object(golang, "SRC_DIR", source_dir):
+                golang._call_doc2go(output_dir, "example.com/module")
+
+        ensure_installed.assert_called_once()
+        check_call.assert_called_once_with(
+            ["C:/go/bin/doc2go", "-out", str(output_dir), "example.com/module"],
+            cwd=str(source_dir),
+            env=mock.ANY,
+        )
+
+    @mock.patch.object(golang, "_call_doc2go")
+    def test_go_plugin_delegates_documentation_generation_to_doc2go(self, call_doc2go):
+        output_dir = Path("docs")
+
+        golang.Go().generate_code_documentation(output_dir, "example.com/module")
+
+        call_doc2go.assert_called_once_with(output_dir, "example.com/module")

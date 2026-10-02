@@ -51,9 +51,9 @@ GO_LICENSES_TEMPLATE = "{{range .}}{{.Name}}\t{{.Version}}\t{{.LicenseURL}}\t{{.
 LICENCE_FILE_PREFIXES = ("LICENSE", "LICENCE", "COPYING")
 
 
-def _generate_doc2go_command_list(output_directory: Path, module: str) -> List[str]:
+def _generate_doc2go_command_list(executable: str, output_directory: Path, module: str) -> List[str]:
     return [
-        "doc2go",
+        executable,
         "-out",
         str(output_directory),
         f"{module}",
@@ -301,7 +301,7 @@ def _call_doc2go(output_directory: Path, module: str) -> None:
     """Call doc2go for generating the docs."""
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
-    _ensure_go_tool_installed(
+    executable = _ensure_go_tool_installed(
         tool_name="doc2go",
         version_command=["doc2go", "-version"],
         install_command=_install_doc2go_command_list(),
@@ -309,13 +309,11 @@ def _call_doc2go(output_directory: Path, module: str) -> None:
     )
     logger.info("Creating Code documentation.")
     logger.info("Running doc2go over [%s] in [%s].", module, SRC_DIR)
-    # FIXME enable doc2go when fully tested
-    # check_call(
-    #    _generate_doc2go_command_list(output_directory, module),
-    #    cwd=str(SRC_DIR),
-    #    env=env,
-    # )
-    logger.warning("Currently not running doc2go")
+    check_call(
+        _generate_doc2go_command_list(executable, output_directory, module),
+        cwd=str(SRC_DIR),
+        env=env,
+    )
 
 
 def _call_goreleaser_check(version: str) -> None:
