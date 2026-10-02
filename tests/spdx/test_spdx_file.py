@@ -2,7 +2,7 @@
 # Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from unittest import TestCase
+from unittest import TestCase, mock
 
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -10,6 +10,7 @@ from tempfile import TemporaryDirectory
 from continuous_delivery_scripts.spdx_report.spdx_file import determine_file_licence, determine_file_copyright_text
 from continuous_delivery_scripts.spdx_report.spdx_helpers import list_project_files_for_licensing
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
+from continuous_delivery_scripts.spdx_report import spdx_helpers
 
 
 class TestSpdxFile(TestCase):
@@ -40,6 +41,30 @@ class TestSpdxFile(TestCase):
         licence = determine_file_licence(test_file)
         self.assertIsNotNone(licence)
         self.assertEqual(licence, "Apache-2.0 AND EPL-1.0 AND (BSD OR MIT)")
+
+    @mock.patch.object(spdx_helpers.logger, "info")
+    @mock.patch.object(spdx_helpers.logger, "warning")
+    @mock.patch.object(spdx_helpers, "scan_file_for_pattern")
+    def test_binary_file_licence_scanner_logs_verbose_warning(self, scan_file_for_pattern, warning, info):
+        path = Path("binary.gz")
+        scan_file_for_pattern.side_effect = UnicodeDecodeError("utf-8", b"\x8b", 0, 1, "invalid start byte")
+
+        self.assertIsNone(determine_file_licence(path))
+        warning.assert_called_once_with(
+            "Could not screen file [%s] for an embedded SPDX licence identifier because it appears to be binary. "
+            "Binary files cannot be screened for inline licence metadata.",
+            path,
+        )
+        info.assert_called_once()
+
+    @mock.patch.object(spdx_helpers.logger, "error")
+    @mock.patch.object(spdx_helpers, "scan_file_for_pattern")
+    def test_non_binary_file_licence_scanner_keeps_error_logging(self, scan_file_for_pattern, error):
+        path = Path("broken.txt")
+        scan_file_for_pattern.side_effect = RuntimeError("boom")
+
+        self.assertIsNone(determine_file_licence(path))
+        error.assert_called_once()
 
     def test_file_copyright_scanner(self):
         test_file = Path(__file__).parent.joinpath("fixtures", "file_with_patterns.txt")
