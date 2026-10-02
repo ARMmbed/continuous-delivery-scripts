@@ -74,7 +74,7 @@ setup(
     install_requires=[
         "setuptools",
         "gitpython",
-        "towncrier==22.12.0",
+        "towncrier==26.9.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
         "pdoc3==0.11.6",
