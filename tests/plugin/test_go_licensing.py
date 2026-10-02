@@ -169,11 +169,25 @@ class TestGoLicenceCollection(TestCase):
             self.assertFalse((module_without_licence / "LICENSE").exists())
             self.assertEqual(existing_licence.read_text(encoding="utf8"), "module licence")
 
+    @mock.patch.object(golang, "check_call")
+    def test_downloads_go_module_dependencies_for_each_module(self, check_call):
+        modules = [Path("module-a"), Path("module-b")]
+        env = {"GO111MODULE": "on"}
+
+        golang._download_go_module_dependencies(modules, env)
+
+        check_call.assert_any_call(["go", "mod", "download", "all"], cwd=Path("module-a"), env=env)
+        check_call.assert_any_call(["go", "mod", "download", "all"], cwd=Path("module-b"), env=env)
+        self.assertEqual(check_call.call_count, 2)
+
     @mock.patch.object(golang, "_go_licence_module_directories")
+    @mock.patch.object(golang, "_download_go_module_dependencies")
     @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
     @mock.patch.object(golang, "check_output")
     @mock.patch.object(golang, "run")
-    def test_go_project_uses_shared_metadata(self, run_mock, check_output, ensure_installed, module_directories):
+    def test_go_project_uses_shared_metadata(
+        self, run_mock, check_output, ensure_installed, download_dependencies, module_directories
+    ):
         with TemporaryDirectory() as temp_dir:
             module_directories.return_value = [Path(temp_dir)]
 
@@ -223,14 +237,16 @@ class TestGoLicenceCollection(TestCase):
         self.assertEqual(project.dependencies_metadata[0].licence, "MIT")
         self.assertEqual(project.dependencies_metadata[1].licence_source, "unknown")
         self.assertEqual(project.dependencies_metadata[1].licence_candidates, ["Apache-2.0", "BSD-3-Clause", "MIT"])
+        download_dependencies.assert_called_once()
         ensure_installed.assert_called_once()
 
     @mock.patch.object(golang, "_go_licence_module_directories")
+    @mock.patch.object(golang, "_download_go_module_dependencies")
     @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
     @mock.patch.object(golang, "check_output")
     @mock.patch.object(golang, "run")
     def test_go_project_temporarily_stages_root_licence_for_submodules(
-        self, run_mock, check_output, _ensure_installed, module_directories
+        self, run_mock, check_output, _ensure_installed, download_dependencies, module_directories
     ):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -272,6 +288,7 @@ class TestGoLicenceCollection(TestCase):
 
             self.assertEqual([package.name for package in project.dependencies_metadata], ["github.com/acme/dep"])
             self.assertFalse((module / "LICENSE").exists())
+            download_dependencies.assert_called_once()
 
     def test_go_import_paths_have_safe_spdx_filenames_and_ids(self):
         package = SpdxPackage(

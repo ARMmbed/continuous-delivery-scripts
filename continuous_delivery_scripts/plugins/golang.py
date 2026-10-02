@@ -135,6 +135,18 @@ def _go_module_name(module_dir: Path, env: MutableMapping[str, str]) -> str:
     return str(module["Path"])
 
 
+def _download_go_module_dependencies(module_directories: List[Path], env: MutableMapping[str, str]) -> None:
+    """Download Go dependencies for each detected module.
+
+    `go-licenses` expects the module graph to be available locally. Fetching the
+    dependencies here means callers do not need a separate CI step before
+    running `cd-check-licence-compliance` or `cd-generate-spdx`.
+    """
+    for module_directory in module_directories:
+        logger.info("Downloading Go module dependencies in [%s].", module_directory)
+        check_call(["go", "mod", "download", "all"], cwd=module_directory, env=env)
+
+
 def _parse_go_licences(output: str) -> List[PackageMetadata]:
     """Translate go-licenses template output into shared package metadata."""
     packages = []
@@ -235,6 +247,7 @@ class GoProjectMetadataFetcher(ProjectMetadataFetcher):
         module_directories = _go_licence_module_directories()
         env = os.environ.copy()
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+        _download_go_module_dependencies(module_directories, env)
         executable = _ensure_go_tool_installed(
             tool_name="go-licenses",
             version_command=["go-licenses", "report", "--help"],
