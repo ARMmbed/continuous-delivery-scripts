@@ -44,7 +44,9 @@ ROOT_DIR = Path(str(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
 ENVVAR_GORELEASER_GIT_TOKEN = "GITHUB_TOKEN"
 ENVVAR_GORELEASER_CUSTOMISED_TAG = "GORELEASER_CURRENT_TAG"
 ENVVAR_GO_MOD = "GO111MODULE"
+ENVVAR_GO_WORK = "GOWORK"
 GO_MOD_ON_VALUE = "on"
+GO_WORK_OFF_VALUE = "off"
 # go-licenses report --template receives Name, Version, LicenseURL and LicenseName for each library.
 # https://github.com/google/go-licenses/blob/master/README.md#reports-with-custom-templates
 GO_LICENSES_TEMPLATE = "{{range .}}{{.Name}}\t{{.Version}}\t{{.LicenseURL}}\t{{.LicenseName}}\n{{end}}"
@@ -131,7 +133,12 @@ def _go_licence_module_directories() -> List[Path]:
 
 def _go_module_name(module_dir: Path, env: MutableMapping[str, str]) -> str:
     """Read the import path declared by a Go module."""
-    module = json.loads(check_output(["go", "list", "-m", "-json"], cwd=module_dir, env=env, encoding="utf8"))
+    # `go list -m -json` emits one JSON document per main module when a go.work
+    # workspace is active. Disable workspace mode here so CDS always reads the
+    # module declared by `module_dir` rather than the whole workspace.
+    module_env = dict(env)
+    module_env[ENVVAR_GO_WORK] = GO_WORK_OFF_VALUE
+    module = json.loads(check_output(["go", "list", "-m", "-json"], cwd=module_dir, env=module_env, encoding="utf8"))
     return str(module["Path"])
 
 
