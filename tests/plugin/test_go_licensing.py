@@ -197,7 +197,7 @@ class TestGoLicenceCollection(TestCase):
             configuration,
             "get_value",
             side_effect=lambda key: (
-                "true" if key == ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING else get_value(key)
+                "true" if key == ConfigurationVariable.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING else get_value(key)
             ),
         ):
             self.assertFalse(golang._should_download_go_module_dependencies())

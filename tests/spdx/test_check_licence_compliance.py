@@ -175,6 +175,6 @@ class TestCheckLicenceCompliance(TestCase):
         self.assertEqual(self._run_command(), 1)
         self.plugin.get_current_spdx_project.assert_not_called()
 
-    def test_skip_go_module_download_flag_sets_configuration_override(self):
-        self.assertEqual(self._run_command("--skip-go-module-download"), 0)
-        self.plugin.get_current_spdx_project.assert_called_once_with(skip_go_module_download=True)
+    def test_skip_dependency_download_flag_is_forwarded_to_plugin(self):
+        self.assertEqual(self._run_command("--skip-dependency-download"), 0)
+        self.plugin.get_current_spdx_project.assert_called_once_with(skip_dependency_download=True)

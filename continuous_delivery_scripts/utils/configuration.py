@@ -109,8 +109,8 @@ class ConfigurationVariable(enum.Enum):
     """Project-specific records explaining manual reviews of REVIEW assessments."""
     LICENCE_ASSESSMENT_FAIL_ON = 45
     """Optional top-level list of assessment statuses that fail compliance checks."""
-    SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING = 46
-    """Skip automatic `go mod download all` before Go licence and SPDX dependency analysis."""
+    SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING = 46
+    """Skip automatic dependency downloads before licence and SPDX dependency analysis."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -221,7 +221,7 @@ class StaticConfig(GenericConfig):
     LICENCE_ASSESSMENT_FAIL_ON = None
     """When unset, use fail_on from the embedded or project licence assessment rules."""
     GENERATE_LICENSING_SUMMARY_ON_RELEASE = False
-    SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING = False
+    SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
