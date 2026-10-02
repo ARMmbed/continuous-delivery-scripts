@@ -96,7 +96,9 @@ class TestGenerateNews(TestCase):
             with mock.patch.object(
                 configuration,
                 "get_value",
-                side_effect=lambda key: str(changelog) if key == ConfigurationVariable.CHANGELOG_FILE_PATH else get_value(key),
+                side_effect=lambda key: (
+                    str(changelog) if key == ConfigurationVariable.CHANGELOG_FILE_PATH else get_value(key)
+                ),
             ):
                 _normalise_markdown_release_headings("1.2.3")
 
@@ -123,7 +125,9 @@ class TestGenerateNews(TestCase):
             with mock.patch.object(
                 configuration,
                 "get_value",
-                side_effect=lambda key: str(changelog) if key == ConfigurationVariable.CHANGELOG_FILE_PATH else get_value(key),
+                side_effect=lambda key: (
+                    str(changelog) if key == ConfigurationVariable.CHANGELOG_FILE_PATH else get_value(key)
+                ),
             ):
                 _normalise_markdown_release_headings("1.2.3")
 

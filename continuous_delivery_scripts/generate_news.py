@@ -78,11 +78,7 @@ def _normalise_markdown_release_headings(version: Optional[str]) -> None:
     original = changelog_path.read_text(encoding="utf8")
     lines = original.splitlines()
     version_index = next(
-        (
-            index
-            for index, line in enumerate(lines)
-            if line.startswith(f"{version} ") and not line.startswith("#")
-        ),
+        (index for index, line in enumerate(lines) if line.startswith(f"{version} ") and not line.startswith("#")),
         None,
     )
     if version_index is None:
@@ -96,9 +92,7 @@ def _normalise_markdown_release_headings(version: Optional[str]) -> None:
         ),
         len(lines),
     )
-    section_indexes = [
-        index for index in range(version_index + 1, next_release_index) if lines[index].startswith("# ")
-    ]
+    section_indexes = [index for index in range(version_index + 1, next_release_index) if lines[index].startswith("# ")]
     if not section_indexes:
         return
 
