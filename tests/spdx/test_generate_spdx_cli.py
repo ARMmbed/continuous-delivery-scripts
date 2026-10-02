@@ -6,11 +6,13 @@
 
 from contextlib import redirect_stderr
 from io import StringIO
+import os
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
 from continuous_delivery_scripts.report_third_party_ip import main
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable
 
 
 class TestGenerateSpdxCli(TestCase):
@@ -53,3 +55,19 @@ class TestGenerateSpdxCli(TestCase):
 
         project.scancode_follow_up_warnings.assert_not_called()
         self.assertNotIn("WARNING: dependency", output.getvalue())
+
+    def test_skip_go_module_download_flag_sets_configuration_override(self):
+        project = Mock()
+        plugin = Mock()
+        plugin.can_get_project_metadata.return_value = True
+
+        with patch.dict(os.environ, {}, clear=False), patch(
+            "sys.argv", ["cd-generate-spdx", "-o", "reports", "--skip-go-module-download"]
+        ), patch(
+            "continuous_delivery_scripts.report_third_party_ip.get_language_specifics", return_value=plugin
+        ), patch(
+            "continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports", return_value=project
+        ):
+            self.assertNotIn(ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name, os.environ)
+            self.assertEqual(main(), 0)
+            self.assertEqual(os.environ[ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name], "true")

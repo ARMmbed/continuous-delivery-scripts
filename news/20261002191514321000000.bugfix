@@ -1,1 +1,1 @@
-:bug: Automatically run `go mod download all` for detected Go modules before licence and SPDX dependency analysis, with an opt-out flag for CI setups that already prefetch dependencies.
+:bug: Automatically run `go mod download all` for detected Go modules before licence and SPDX dependency analysis, with config and command-line opt-outs for CI setups that already prefetch dependencies.

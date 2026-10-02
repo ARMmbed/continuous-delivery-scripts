@@ -6,6 +6,7 @@
 
 import argparse
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -20,6 +21,11 @@ if TYPE_CHECKING:
     from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
 logger = logging.getLogger(__name__)
+
+
+def _apply_go_module_download_options(skip_go_module_download: bool) -> None:
+    if skip_go_module_download:
+        os.environ[ConfigurationVariable.SKIP_GO_MODULE_DOWNLOAD_FOR_LICENSING.name] = "true"
 
 
 def _log_assessment_details(project: "SpdxProject") -> None:
@@ -90,9 +96,15 @@ def main() -> int:
         action="store_true",
         help="Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.",
     )
+    parser.add_argument(
+        "--skip-go-module-download",
+        action="store_true",
+        help="Skip automatic `go mod download all` before Go licence checks and SPDX dependency analysis.",
+    )
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase logging verbosity.")
     args = parser.parse_args()
     set_log_level(args.verbose)
+    _apply_go_module_download_options(args.skip_go_module_download)
 
     try:
         plugin = get_language_specifics()
