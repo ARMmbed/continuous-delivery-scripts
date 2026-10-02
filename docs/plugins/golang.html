@@ -337,29 +337,25 @@ el.replaceWith(d);
         with TemporaryDirectory() as temporary_dir:
             template_path = Path(temporary_dir) / &#34;go-licenses.tpl&#34;
             template_path.write_text(GO_LICENSES_TEMPLATE, encoding=&#34;utf8&#34;)
-            for module_dir, _ in modules:
-                output = check_output(
-                    [executable, &#34;report&#34;, &#34;./...&#34;, &#34;--template&#34;, str(template_path)],
-                    cwd=module_dir,
-                    env=env,
-                    encoding=&#34;utf8&#34;,
-                )
-                for package in _parse_go_licences(output):
-                    if any(package.name == name or package.name.startswith(f&#34;{name}/&#34;) for _, name in modules):
-                        continue
-                    existing = dependencies.get(package.name)
-                    if existing and (existing.version, existing.licence) != (package.version, package.licence):
-                        candidates = existing.licence_candidates or [existing.licence]
-                        dependencies[package.name] = PackageMetadata.from_fields(
-                            name=package.name,
-                            version=UNKNOWN if existing.version != package.version else package.version,
-                            licence=UNKNOWN,
-                            licence_source=LicenceSource.UNKNOWN,
-                            licence_candidates=sorted(set(candidates + [package.licence])),
-                            licence_evidence=existing.licence_evidence + package.licence_evidence,
-                        )
-                    elif existing is None:
-                        dependencies[package.name] = package
+            with _stage_root_licence_files_for_modules(module_directories):
+                for module_dir, _ in modules:
+                    output = _run_go_licenses_report(executable, module_dir, template_path, env)
+                    for package in _parse_go_licences(output):
+                        if any(package.name == name or package.name.startswith(f&#34;{name}/&#34;) for _, name in modules):
+                            continue
+                        existing = dependencies.get(package.name)
+                        if existing and (existing.version, existing.licence) != (package.version, package.licence):
+                            candidates = existing.licence_candidates or [existing.licence]
+                            dependencies[package.name] = PackageMetadata.from_fields(
+                                name=package.name,
+                                version=UNKNOWN if existing.version != package.version else package.version,
+                                licence=UNKNOWN,
+                                licence_source=LicenceSource.UNKNOWN,
+                                licence_candidates=sorted(set(candidates + [package.licence])),
+                                licence_evidence=existing.licence_evidence + package.licence_evidence,
+                            )
+                        elif existing is None:
+                            dependencies[package.name] = package
         for dependency in dependencies.values():
             project.add_dependency_metadata(dependency)
         return project</code></pre>
@@ -403,29 +399,25 @@ el.replaceWith(d);
     with TemporaryDirectory() as temporary_dir:
         template_path = Path(temporary_dir) / &#34;go-licenses.tpl&#34;
         template_path.write_text(GO_LICENSES_TEMPLATE, encoding=&#34;utf8&#34;)
-        for module_dir, _ in modules:
-            output = check_output(
-                [executable, &#34;report&#34;, &#34;./...&#34;, &#34;--template&#34;, str(template_path)],
-                cwd=module_dir,
-                env=env,
-                encoding=&#34;utf8&#34;,
-            )
-            for package in _parse_go_licences(output):
-                if any(package.name == name or package.name.startswith(f&#34;{name}/&#34;) for _, name in modules):
-                    continue
-                existing = dependencies.get(package.name)
-                if existing and (existing.version, existing.licence) != (package.version, package.licence):
-                    candidates = existing.licence_candidates or [existing.licence]
-                    dependencies[package.name] = PackageMetadata.from_fields(
-                        name=package.name,
-                        version=UNKNOWN if existing.version != package.version else package.version,
-                        licence=UNKNOWN,
-                        licence_source=LicenceSource.UNKNOWN,
-                        licence_candidates=sorted(set(candidates + [package.licence])),
-                        licence_evidence=existing.licence_evidence + package.licence_evidence,
-                    )
-                elif existing is None:
-                    dependencies[package.name] = package
+        with _stage_root_licence_files_for_modules(module_directories):
+            for module_dir, _ in modules:
+                output = _run_go_licenses_report(executable, module_dir, template_path, env)
+                for package in _parse_go_licences(output):
+                    if any(package.name == name or package.name.startswith(f&#34;{name}/&#34;) for _, name in modules):
+                        continue
+                    existing = dependencies.get(package.name)
+                    if existing and (existing.version, existing.licence) != (package.version, package.licence):
+                        candidates = existing.licence_candidates or [existing.licence]
+                        dependencies[package.name] = PackageMetadata.from_fields(
+                            name=package.name,
+                            version=UNKNOWN if existing.version != package.version else package.version,
+                            licence=UNKNOWN,
+                            licence_source=LicenceSource.UNKNOWN,
+                            licence_candidates=sorted(set(candidates + [package.licence])),
+                            licence_evidence=existing.licence_evidence + package.licence_evidence,
+                        )
+                    elif existing is None:
+                        dependencies[package.name] = package
     for dependency in dependencies.values():
         project.add_dependency_metadata(dependency)
     return project</code></pre>

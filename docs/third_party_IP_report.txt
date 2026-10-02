@@ -1,14 +1,14 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-01 16:56:16.439318
+                                         2026-10-02 12:56:18.676180
 
 # Summary:
     Licence compliance: Compliant
     Details: The project is licensed under the Apache-2.0 licence. The project and all assessed dependencies meet the configured licence policy, including any documented manual reviews.
     Missing dependencies: None
-    Unknown licences: click-default-group, docutils, python-dateutil
+    Unknown licences: docutils, python-dateutil
     Undocumented exemptions: None
-    Dependency licence assessment: ALLOW: 63; REVIEW: 0; MANUALLY_REVIEWED: 2; DENY: 0; UNKNOWN: 0
+    Dependency licence assessment: ALLOW: 61; REVIEW: 0; MANUALLY_REVIEWED: 2; DENY: 0; UNKNOWN: 0
     Licence assessment is advisory; allowlist compliance is evaluated separately.
 
 # More details:
@@ -39,7 +39,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.106.dist-info/LICENSE; notice: boto3-1.43.106.dist-info/NOTICE
+    Evidence: licence: boto3-1.43.107.dist-info/LICENSE; notice: boto3-1.43.107.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -57,7 +57,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.106.dist-info/LICENSE.txt; notice: botocore-1.43.106.dist-info/NOTICE
+    Evidence: licence: botocore-1.43.107.dist-info/LICENSE.txt; notice: botocore-1.43.107.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -158,25 +158,6 @@
 
 
 
-- click-default-group:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/click-contrib/click-default-group
-    Licence: Unknown
-    Licence source: unknown
-    Declared licence: Public Domain
-    Licence classifiers: Public Domain
-    Evidence: licence: click_default_group-1.2.4.dist-info/LICENSE
-    Licence compliance: Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.
-    Licence assessment: ALLOW (automatic: ALLOW) — Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.
-    Manually verified assessment licence: BSD-3-Clause (discovered: Unknown)
-
-
-    Project licence compared: Apache-2.0
-    Assessment rule: permissive-dependency (built-in)
-
-
-
 - continuous-delivery-scripts:
     [X] Compliant?
     [] Dependency?
@@ -185,7 +166,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.4.0.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.4.1.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 
@@ -325,24 +306,6 @@
     Declared licence: BSD-3-Clause
     Licence classifiers: None
     Evidence: licence: idna-3.20.dist-info/licenses/LICENSE.md
-    Licence compliance: Automatic licence assessment meets the configured policy.
-    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
-
-
-    Project licence compared: Apache-2.0
-    Assessment rule: permissive-dependency (built-in)
-
-
-
-- Incremental:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/twisted/incremental/blob/trunk/NEWS.rst
-    Licence: MIT
-    Licence source: License-Classifier
-    Declared licence: MIT License
-    Licence classifiers: MIT License
-    Evidence: licence: incremental-24.11.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -1114,12 +1077,12 @@
 - towncrier:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/twisted/towncrier
+    URL: https://pypi.org/project/towncrier
     Licence: MIT
-    Licence source: License
+    Licence source: License-Expression
     Declared licence: MIT
     Licence classifiers: MIT License
-    Evidence: licence: towncrier-22.12.0.dist-info/LICENSE
+    Evidence: licence: towncrier-26.9.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 

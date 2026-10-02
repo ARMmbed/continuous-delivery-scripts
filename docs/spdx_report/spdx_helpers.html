@@ -112,6 +112,14 @@ el.replaceWith(d);
             return None
         licence = match.group(1).strip()
         return str(simplify_licence_expression(licence))
+    except UnicodeDecodeError as e:
+        logger.warning(
+            &#34;Could not screen file [%s] for an embedded SPDX licence identifier because it appears to be binary. &#34;
+            &#34;Binary files cannot be screened for inline licence metadata.&#34;,
+            path,
+        )
+        logger.info(&#34;Binary screening failure for [%s]: %s&#34;, path, e)
+        return None
     except Exception as e:
         logger.error(f&#34;Could not determine the licence of file [{path}] from identifier &#39;{licence}&#39;. Reason: {e}.&#34;)
         return None</code></pre>

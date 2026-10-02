@@ -1,1 +1,0 @@
-Fix Go licence reporting for submodule projects by staging a root LICENSE file into each module before running go-licenses.

@@ -86,16 +86,12 @@ el.replaceWith(d);
             project.enable_scancode_lookup()
         if args.output_dir is not None:
             project.generate_licensing_summary(args.output_dir)
-        counts = {
-            status.value: sum(result.status is status for result in project.licence_assessments.values())
-            for status in LicenceAssessment
-        }
-        print(&#34;Dependency licence assessment: &#34; + &#34;, &#34;.join(f&#34;{name}: {count}&#34; for name, count in counts.items()))
+        _print_policy_summary(project)
+        _log_assessment_details(project)
         if args.lookup_scancode:
             for name, result in project.licence_assessments.items():
                 for info in result.scancode_licences:
                     print(f&#34;{name}: ScanCode LicenseDB: {info.identifier} ({info.category}): {info.url}&#34;)
-        project.check_licence_compliance()
         if args.lookup_scancode:
             for warning in project.scancode_follow_up_warnings():
                 print(f&#34;WARNING: {warning}&#34;, file=sys.stderr)

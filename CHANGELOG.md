@@ -17,6 +17,15 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+4.4.2 (2026-10-02)
+
+# Bugfixes
+
+- Fix Go licence reporting for submodule projects by staging a root LICENSE file into each module before running go-licenses. (#202610020905)
+- Dependency upgrade: towncrier-24.8.0 (#20261002111605673453286)
+- :recycle: `[GO Plugin]` Improve the TPIP, licensing checks for go project so report is clearer (#20261002120906834725100)
+
+
 "4.4.1" (2026-10-01)
 ====================
 
