@@ -36,9 +36,11 @@ def generate_spdx_project_reports(project: "SpdxProject", output_directory: Path
     return project
 
 
-def generate_spdx_reports(output_directory: Path, lookup_scancode: bool = False) -> Optional["SpdxProject"]:
+def generate_spdx_reports(
+    output_directory: Path, lookup_scancode: bool = False, skip_dependency_download: bool = False
+) -> Optional["SpdxProject"]:
     """Generates all the SPDX reports for the current project."""
-    project = get_language_specifics().get_current_spdx_project()
+    project = get_language_specifics().get_current_spdx_project(skip_dependency_download=skip_dependency_download)
     if not project:
         return None
     if lookup_scancode:
@@ -66,6 +68,11 @@ def main() -> int:
         action="store_true",
         help="Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.",
     )
+    parser.add_argument(
+        "--skip-dependency-download",
+        action="store_true",
+        help="Skip automatic dependency downloads before licence checks and SPDX dependency analysis.",
+    )
 
     parser.add_argument(
         "-v",
@@ -79,7 +86,11 @@ def main() -> int:
 
     try:
         if get_language_specifics().can_get_project_metadata():
-            project = generate_spdx_reports(args.output_dir, lookup_scancode=args.lookup_scancode)
+            project = generate_spdx_reports(
+                args.output_dir,
+                lookup_scancode=args.lookup_scancode,
+                skip_dependency_download=args.skip_dependency_download,
+            )
             if project:
                 project.check_licence_compliance()
                 if args.lookup_scancode:

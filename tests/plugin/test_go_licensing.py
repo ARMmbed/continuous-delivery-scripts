@@ -183,11 +183,54 @@ class TestGoLicenceCollection(TestCase):
             self.assertFalse((module_without_licence / "LICENSE").exists())
             self.assertEqual(existing_licence.read_text(encoding="utf8"), "module licence")
 
+    @mock.patch.object(golang, "check_call")
+    def test_downloads_go_module_dependencies_for_each_module(self, check_call):
+        modules = [Path("module-a"), Path("module-b")]
+        env = {"GO111MODULE": "on"}
+
+        golang._download_go_module_dependencies(modules, env)
+
+        check_call.assert_any_call(["go", "mod", "download", "all"], cwd=Path("module-a"), env=env)
+        check_call.assert_any_call(["go", "mod", "download", "all"], cwd=Path("module-b"), env=env)
+        self.assertEqual(check_call.call_count, 2)
+
+    def test_download_go_module_dependencies_enabled_by_default(self):
+        get_value = configuration.get_value
+
+        with mock.patch.object(
+            configuration,
+            "get_value",
+            side_effect=lambda key: get_value(key),
+        ):
+            self.assertTrue(golang._should_download_go_module_dependencies())
+
+    def test_download_go_module_dependencies_can_be_skipped_from_configuration(self):
+        get_value = configuration.get_value
+
+        with mock.patch.object(
+            configuration,
+            "get_value",
+            side_effect=lambda key: (
+                "true" if key == ConfigurationVariable.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING else get_value(key)
+            ),
+        ):
+            self.assertFalse(golang._should_download_go_module_dependencies())
+
     @mock.patch.object(golang, "_go_licence_module_directories")
+    @mock.patch.object(golang, "_should_download_go_module_dependencies", return_value=True)
+    @mock.patch.object(golang, "_download_go_module_dependencies")
     @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
     @mock.patch.object(golang, "check_output")
     @mock.patch.object(golang, "run")
-    def test_go_project_uses_shared_metadata(self, run_mock, check_output, ensure_installed, module_directories):
+    def test_go_project_uses_shared_metadata(
+        self,
+        run_mock,
+        check_output,
+        ensure_installed,
+        download_dependencies,
+        _should_download,
+        module_directories,
+    ):
         with TemporaryDirectory() as temp_dir:
             module_directories.return_value = [Path(temp_dir)]
 
@@ -237,14 +280,23 @@ class TestGoLicenceCollection(TestCase):
         self.assertEqual(project.dependencies_metadata[0].licence, "MIT")
         self.assertEqual(project.dependencies_metadata[1].licence_source, "unknown")
         self.assertEqual(project.dependencies_metadata[1].licence_candidates, ["Apache-2.0", "BSD-3-Clause", "MIT"])
+        download_dependencies.assert_called_once()
         ensure_installed.assert_called_once()
 
     @mock.patch.object(golang, "_go_licence_module_directories")
+    @mock.patch.object(golang, "_should_download_go_module_dependencies", return_value=True)
+    @mock.patch.object(golang, "_download_go_module_dependencies")
     @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
     @mock.patch.object(golang, "check_output")
     @mock.patch.object(golang, "run")
     def test_go_project_temporarily_stages_root_licence_for_submodules(
-        self, run_mock, check_output, _ensure_installed, module_directories
+        self,
+        run_mock,
+        check_output,
+        _ensure_installed,
+        download_dependencies,
+        _should_download,
+        module_directories,
     ):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -286,6 +338,47 @@ class TestGoLicenceCollection(TestCase):
 
             self.assertEqual([package.name for package in project.dependencies_metadata], ["github.com/acme/dep"])
             self.assertFalse((module / "LICENSE").exists())
+            download_dependencies.assert_called_once()
+
+    @mock.patch.object(golang, "_go_licence_module_directories")
+    @mock.patch.object(golang, "_should_download_go_module_dependencies", return_value=False)
+    @mock.patch.object(golang, "_download_go_module_dependencies")
+    @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
+    @mock.patch.object(golang, "check_output", return_value='{"Path": "example.com/acme"}')
+    @mock.patch.object(
+        golang,
+        "run",
+        return_value=subprocess.CompletedProcess(
+            args=["go-licenses"],
+            returncode=0,
+            stdout="github.com/acme/dep\tv1.2.3\thttps://example.com/LICENSE\tMIT\n",
+            stderr="",
+        ),
+    )
+    def test_go_project_can_skip_dependency_prefetch_when_configured(
+        self,
+        _run,
+        _check_output,
+        _ensure_installed,
+        download_dependencies,
+        _should_download,
+        module_directories,
+    ):
+        with TemporaryDirectory() as temp_dir:
+            module_directories.return_value = [Path(temp_dir)]
+            get_value = configuration.get_value
+            with mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: (
+                    "Acme"
+                    if key == ConfigurationVariable.PROJECT_NAME
+                    else "Apache-2.0" if key == ConfigurationVariable.FILE_LICENCE_IDENTIFIER else get_value(key)
+                ),
+            ):
+                golang.GoProjectMetadataFetcher().project_metadata
+
+        download_dependencies.assert_not_called()
 
     def test_go_import_paths_have_safe_spdx_filenames_and_ids(self):
         package = SpdxPackage(

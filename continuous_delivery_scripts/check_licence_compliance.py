@@ -90,6 +90,11 @@ def main() -> int:
         action="store_true",
         help="Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.",
     )
+    parser.add_argument(
+        "--skip-dependency-download",
+        action="store_true",
+        help="Skip automatic dependency downloads before licence checks and SPDX dependency analysis.",
+    )
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase logging verbosity.")
     args = parser.parse_args()
     set_log_level(args.verbose)
@@ -98,7 +103,7 @@ def main() -> int:
         plugin = get_language_specifics()
         if not plugin.can_get_project_metadata():
             raise ValueError("The selected language plugin cannot provide metadata for licence compliance checks.")
-        project = plugin.get_current_spdx_project()
+        project = plugin.get_current_spdx_project(skip_dependency_download=args.skip_dependency_download)
         if project is None:
             raise ValueError("The selected language plugin did not return a project for licence compliance checks.")
         if args.lookup_scancode:
