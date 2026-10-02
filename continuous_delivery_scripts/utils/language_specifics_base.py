@@ -15,6 +15,7 @@ from continuous_delivery_scripts.utils.configuration import (
 )
 from continuous_delivery_scripts.utils.definitions import CommitType
 from continuous_delivery_scripts.utils.git_helpers import GitWrapper
+from continuous_delivery_scripts.utils.third_party_licences import normalise_proprietary_licence
 
 if TYPE_CHECKING:
     from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
@@ -35,7 +36,9 @@ SPDX-License-Identifier: {licence_identifier}
 def _generate_generic_licence_header_template() -> str:
     """Generates the header template which is put at the top of source files."""
     return GENERIC_LICENCE_HEADER_TEMPLATE.format(
-        licence_identifier=configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER),
+        licence_identifier=normalise_proprietary_licence(
+            str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
+        ),
         author="${owner}",
         date="${years}",
     )

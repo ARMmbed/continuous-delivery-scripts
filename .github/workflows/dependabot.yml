@@ -11,10 +11,10 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       # Checkout with full history for to allow compare with base branch
-      - uses: actions/checkout@v6.0.2
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Install CI/CD tools
         run: |
@@ -23,7 +23,7 @@ jobs:
           python -m pip list
       - name: Dependabot metadata
         id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v3.0.0
+        uses: dependabot/fetch-metadata@v3.1.0
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Add a label

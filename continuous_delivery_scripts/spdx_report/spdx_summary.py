@@ -5,6 +5,7 @@
 """Summary generators."""
 
 import datetime
+import json
 import jinja2
 import logging
 from pathlib import Path
@@ -12,8 +13,18 @@ from typing import List, Tuple, Optional, Dict, Any
 
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     get_package_manual_check,
+    get_package_manual_licence,
 )
 from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage
+from continuous_delivery_scripts.spdx_report.licence_assessment import (
+    LicenceAssessment,
+    LicenceAssessmentPolicy,
+    LicenceAssessmentResult,
+    LicenceAssessor,
+)
+from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
+from continuous_delivery_scripts.utils.third_party_licences import UNKNOWN_LICENCE
 
 JINJA_TEMPLATE_SUMMARY_HTML = "third_party_IP_report.html.jinja2"
 JINJA_TEMPLATE_SUMMARY_CSV = "third_party_IP_report.csv.jinja2"
@@ -26,10 +37,44 @@ JINJA_TEMPLATES = [
 logger = logging.getLogger(__name__)
 
 
+def _configured_licence_policy() -> List[str]:
+    """List the accepted licence entries as configured, retaining wildcard patterns."""
+    accepted = configuration.get_value(ConfigurationVariable.ACCEPTED_THIRD_PARTY_LICENCES)
+    if isinstance(accepted, str):
+        entries = accepted.split(",")
+    elif isinstance(accepted, (list, tuple, dict)):
+        entries = [str(entry) for entry in accepted]
+    elif isinstance(accepted, set):
+        entries = sorted(str(entry) for entry in accepted)
+    else:
+        entries = []
+    return [entry.strip() for entry in entries if entry.strip()]
+
+
+def _link_report_from_index(output_dir: Path) -> None:
+    """Link the completed TPIP report from a generated documentation index, when present."""
+    index = output_dir / "index.html"
+    report = output_dir / JINJA_TEMPLATE_SUMMARY_HTML.removesuffix(".jinja2")
+    if not index.is_file() or not report.is_file():
+        return
+    contents = index.read_text(encoding="utf8")
+    report_href = f'href="{report.name}"'
+    if report_href in contents:
+        return
+    link = (
+        '<section id="third-party-ip-report"><h2>Third-party IP and licence report</h2>'
+        f"<p><a {report_href}>View the report</a></p></section>"
+    )
+    for closing_tag in ("</main>", "</body>"):
+        if closing_tag in contents:
+            index.write_text(contents.replace(closing_tag, f"{link}{closing_tag}", 1), encoding="utf8")
+            return
+
+
 def _get_jinja2_env() -> jinja2.Environment:
     return jinja2.Environment(
         loader=jinja2.FileSystemLoader(str(Path(__file__).resolve().parent.joinpath("templates"))),
-        autoescape=jinja2.select_autoescape(["html", "xml"]),
+        autoescape=lambda name: bool(name and name.endswith(".html.jinja2")),
     )
 
 
@@ -62,30 +107,91 @@ def generate_file_based_on_template(
 class SummaryGenerator:
     """Licensing summary generator."""
 
-    def __init__(self, project_package: SpdxPackage, dependencies_documents: List[SpdxPackage]) -> None:
+    def __init__(
+        self,
+        project_package: SpdxPackage,
+        dependencies_documents: List[SpdxPackage],
+        missing_dependencies: Optional[List[str]] = None,
+        licence_assessments: Optional[Dict[str, LicenceAssessmentResult]] = None,
+    ) -> None:
         """Initialiser."""
         self.project = project_package
         self.all_packages = list(dependencies_documents)
         self.all_packages.append(self.project)
+        self.missing_dependencies = sorted(set(missing_dependencies or []))
+        if licence_assessments is None:
+            assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config())
+            licence_assessments = {
+                dependency.name: assessor.assess(
+                    project_package.main_licence,
+                    dependency.licence,
+                    dependency.name,
+                    dependency.version,
+                    project_package.metadata.has_unknown_licence,
+                    dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                    get_package_manual_licence(dependency.name),
+                )
+                for dependency in dependencies_documents
+            }
+        self.licence_assessments = licence_assessments
         self._template_arguments: Optional[dict] = None
 
     def _generate_template_arguments(self) -> Dict[str, Any]:
         arguments: Dict[str, Any] = dict()
 
         global_compliance, description_list = self._generate_packages_description()
+        compliance_points = (
+            [
+                "The project and all assessed dependencies meet the configured licence policy, "
+                "including any documented manual reviews.",
+            ]
+            if global_compliance
+            else [
+                "The project or one or more dependencies do not meet the configured licence policy.",
+                "Review the package results below for details.",
+            ]
+        )
         arguments["project"] = {
             "name": self.project.name,
+            "licence": self.project.main_licence,
+            "accepted_licences": _configured_licence_policy(),
             "compliance": global_compliance,
-            "compliance_details": (
-                (
-                    f"Project [{self.project.name}]'s licence is compliant: {self.project.licence}."
-                    "All its dependencies are also compliant licence-wise."
-                )
-                if global_compliance
-                else f"Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence"
+            "compliance_points": compliance_points,
+            "compliance_details": " ".join(
+                [f"The project is licensed under the {self.project.main_licence} licence.", *compliance_points]
             ),
         }
         arguments["packages"] = description_list
+        arguments["licence_assessment_counts"] = {
+            status.value: sum(result.status is status for result in self.licence_assessments.values())
+            for status in LicenceAssessment
+        }
+        arguments["missing_dependencies"] = self.missing_dependencies
+        arguments["unknown_licences"] = sorted(
+            p.name
+            for p in self.all_packages
+            if p.metadata.has_unknown_licence or p.main_licence == UNKNOWN_LICENCE.identifier
+        )
+        arguments["unreviewed_licences"] = [
+            name for name in arguments["unknown_licences"] if not get_package_manual_check(name)[1]
+        ]
+        arguments["undocumented_exemptions"] = sorted(
+            p.name
+            for p in self.all_packages
+            if get_package_manual_check(p.name)[0] and not get_package_manual_check(p.name)[1]
+        )
+        arguments["project"]["complete"] = not (
+            self.missing_dependencies or arguments["unreviewed_licences"] or arguments["undocumented_exemptions"]
+        )
+        if not arguments["project"]["complete"]:
+            compliance_points = [
+                "The licence audit is incomplete.",
+                "Review missing dependencies, unknown licences and undocumented exemptions before using this report.",
+            ]
+            arguments["project"]["compliance_points"] = compliance_points
+            arguments["project"]["compliance_details"] = " ".join(
+                [f"The project is licensed under the {self.project.main_licence} licence.", *compliance_points]
+            )
         arguments["render_time"] = datetime.datetime.now()
         return arguments
 
@@ -118,23 +224,35 @@ class SummaryGenerator:
         manual_check_details: Optional[str],
         p: SpdxPackage,
     ) -> dict:
-        return {
+        description = {
             "name": p.name,
+            "anchor": f"package-{generate_uuid_based_on_str(p.name)}",
             "is_dependency": p.is_dependency,
             "url": p.url,
             "licence": p.licence,
+            "version": p.version,
+            "licence_source": p.metadata.licence_source,
+            "declared_licence": p.metadata.declared_licence,
+            "licence_classifiers": p.metadata.licence_classifiers,
+            "licence_candidates": p.metadata.licence_candidates,
+            "licence_evidence": p.metadata.licence_evidence,
+            "manual_check": {"checked": package_manually_checked, "reason": manual_check_details or ""},
             "is_compliant": is_compliant,
             "mark_as_problematic": not is_licence_compliant,
             "licence_compliance_details": (
-                "Licence is compliant."
+                "Automatic licence assessment meets the configured policy."
                 if is_licence_compliant
                 else (
-                    f"Package's licence manually checked: {manual_check_details}"
+                    "Automatic licence assessment does not meet the configured policy; "
+                    f"accepted after manual review: {manual_check_details or 'no reason recorded'}."
                     if package_manually_checked
-                    else "Licence is not compliant according to project's configuration."
+                    else "Automatic licence assessment does not meet the configured policy."
                 )
             ),
         }
+        if p.is_dependency:
+            description["licence_assessment"] = self.licence_assessments[p.name].as_report()
+        return description
 
     @property
     def template_arguments(self) -> dict:
@@ -151,3 +269,9 @@ class SummaryGenerator:
         """
         for t in JINJA_TEMPLATES:
             generate_file_based_on_template(dir, t, self.template_arguments)
+        arguments = dict(self.template_arguments)
+        arguments["render_time"] = arguments["render_time"].isoformat()
+        dir.joinpath("third_party_IP_report.json").write_text(
+            json.dumps(arguments, indent=2, sort_keys=True) + "\n", encoding="utf8"
+        )
+        _link_report_from_index(dir)

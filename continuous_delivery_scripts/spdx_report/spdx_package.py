@@ -6,16 +6,21 @@
 
 from dataclasses import dataclass
 from pathlib import Path
+import re
 from typing import TYPE_CHECKING, List, Optional
 
+from license_expression import ExpressionError
+
 from continuous_delivery_scripts.spdx_report.spdx_file import SpdxFile
+from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     determine_spdx_value,
     list_project_files_for_licensing,
 )
 from continuous_delivery_scripts.utils.definitions import UNKNOWN
-from continuous_delivery_scripts.utils.python.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
 from continuous_delivery_scripts.utils.third_party_licences import (
+    LICENSE_REF_PROPRIETARY,
     UNKNOWN_LICENCE,
     cleanse_licence_expression,
     is_licence_accepted,
@@ -28,10 +33,10 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True, order=True)
 class PackageInfo:
-    """Definition of a Python package.
+    """Definition of a project or dependency package.
 
     Attributes:
-        metadata: metadata about a package from files generated from setup.py.
+        metadata: metadata about an installed package.
         root_dir: project root directory.
         source_dir: directory where package's sources are.
         uuid: unique identifier of the package.
@@ -64,6 +69,11 @@ class SpdxPackage:
         self._main_licence: Optional[str] = None
 
     @property
+    def metadata(self) -> PackageMetadata:
+        """Gets the original package metadata and licence evidence."""
+        return self._package_info.metadata
+
+    @property
     def files(self) -> Optional[List[Path]]:
         """Gets package's files.
 
@@ -83,7 +93,9 @@ class SpdxPackage:
         Returns:
             An ID
         """
-        return self.name if self._is_dependency else self._package_info.uuid
+        if not self._is_dependency:
+            return self._package_info.uuid
+        return self.name if re.fullmatch(r"[A-Za-z0-9.-]+", self.name) else str(generate_uuid_based_on_str(self.name))
 
     @property
     def is_dependency(self) -> bool:
@@ -119,15 +131,25 @@ class SpdxPackage:
         """
         if not self._main_licence:
             package_licence = self._package_info.metadata.licence
-            self._main_licence = (
-                cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
-            )
+            try:
+                self._main_licence = (
+                    cleanse_licence_expression(package_licence) if package_licence else UNKNOWN_LICENCE.identifier
+                )
+            except ExpressionError:
+                self._main_licence = UNKNOWN_LICENCE.identifier
         return self._main_licence
 
     @property
     def is_main_licence_accepted(self) -> bool:
         """States whether the main licence of the package is part of the accepted licence list."""
-        return bool(is_licence_accepted(self.main_licence))
+        return bool(is_licence_accepted(self.main_licence, self._project_licence_refs))
+
+    @property
+    def _project_licence_refs(self) -> List[str]:
+        """Allow the project's own proprietary licence without permitting it for dependencies."""
+        if not self._is_dependency and LICENSE_REF_PROPRIETARY in self.main_licence:
+            return [LICENSE_REF_PROPRIETARY]
+        return []
 
     @property
     def licence(self) -> str:
@@ -148,7 +170,7 @@ class SpdxPackage:
     @property
     def is_licence_accepted(self) -> bool:
         """States whether the actual package's licence of the package is part of the accepted licence list."""
-        return bool(is_licence_accepted(self.licence))
+        return bool(is_licence_accepted(self.licence, self._project_licence_refs))
 
     @property
     def author(self) -> str:

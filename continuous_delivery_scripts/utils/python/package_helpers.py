@@ -6,23 +6,22 @@
 
 import importlib.metadata as importlib_metadata
 import logging
-import re
-import subprocess
-import sys
-from typing import Iterable, List, Set, Any, cast
+from email.message import Message
+from email.parser import Parser
+from pathlib import Path
+from typing import Iterable, List, Set, Any, cast, Tuple, Dict, Optional
 
+from license_expression import ExpressionError
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
-from continuous_delivery_scripts.utils.configuration import (
-    ConfigurationVariable,
-    configuration,
-)
+from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 from continuous_delivery_scripts.utils.package_helpers import (
     ProjectMetadataFetcher,
     PackageMetadata,
     ProjectMetadata,
 )
+from continuous_delivery_scripts.utils.third_party_licences import cleanse_licence_expression, OPENSOURCE_LICENCES
 
 logger = logging.getLogger(__name__)
 
@@ -39,9 +38,10 @@ class PythonProjectMetadataFetcher(ProjectMetadataFetcher):
     def fetch_project_metadata(self) -> ProjectMetadata:
         """Parses package metadata."""
         project_metadata = ProjectMetadata(self._package_name)
-        for metadata in get_all_packages_metadata_lines(self._package_name):
-            info = parse_package_metadata_lines(metadata)
-            if info.name == self._package_name:
+        distributions, project_metadata.missing_dependencies = _get_distributions_and_missing(self._package_name)
+        for distribution in distributions:
+            info = parse_package_metadata(cast(Message, distribution.metadata), distribution)
+            if canonicalize_name(info.name) == canonicalize_name(self._package_name):
                 project_metadata.project_metadata = info
             else:
                 project_metadata.add_dependency_metadata(info)
@@ -98,11 +98,14 @@ def _get_distribution(package_name: str) -> importlib_metadata.Distribution:
 
 
 def _iter_dependency_distributions(
-    distribution: importlib_metadata.Distribution, seen_packages: Set[str]
+    distribution: importlib_metadata.Distribution,
+    seen_packages: Set[str],
+    missing_packages: Optional[List[str]] = None,
+    extras: Optional[Set[str]] = None,
 ) -> Iterable[importlib_metadata.Distribution]:
     for requirement_text in distribution.requires or []:
         requirement = Requirement(requirement_text)
-        if requirement.marker and not requirement.marker.evaluate():
+        if requirement.marker and not any(requirement.marker.evaluate({"extra": extra}) for extra in (extras or {""})):
             continue
 
         normalised_name = canonicalize_name(requirement.name)
@@ -113,35 +116,90 @@ def _iter_dependency_distributions(
             dependency_distribution = _get_distribution(requirement.name)
         except importlib_metadata.PackageNotFoundError as e:
             logger.warning(e)
+            if missing_packages is not None:
+                missing_packages.append(requirement.name)
             continue
 
         seen_packages.add(normalised_name)
         yield dependency_distribution
-        yield from _iter_dependency_distributions(dependency_distribution, seen_packages)
+        yield from _iter_dependency_distributions(
+            dependency_distribution, seen_packages, missing_packages, requirement.extras
+        )
+
+
+def _get_distributions_and_missing(package_name: str) -> Tuple[List[importlib_metadata.Distribution], List[str]]:
+    """Gets the installed dependency tree and names of absent dependencies."""
+    distribution = _get_distribution(package_name)
+    missing: List[str] = []
+    seen = {canonicalize_name(_get_distribution_name(distribution))}
+    return [distribution, *_iter_dependency_distributions(distribution, seen, missing)], missing
 
 
 def get_all_packages_metadata_lines(package_name: str) -> List[list]:
     """Determines the metadata lines for the present package as well as for all its dependencies."""
-    distribution = _get_distribution(package_name)
-    seen_packages = {canonicalize_name(_get_distribution_name(distribution))}
-    all_distributions = [
-        distribution,
-        *_iter_dependency_distributions(distribution, seen_packages),
+    distributions, _ = _get_distributions_and_missing(package_name)
+    return [get_package_metadata_lines(package) for package in distributions]
+
+
+def _get_licence_evidence(distribution: importlib_metadata.Distribution, metadata: Message) -> List[Dict[str, str]]:
+    """Read declared licence files and notices shipped with a distribution."""
+    declared = set(metadata.get_all("License-File") or [])
+    evidence = []
+    for entry in distribution.files or []:
+        relative = Path(str(entry)).as_posix()
+        parts = relative.split("/", 1)
+        if len(parts) != 2 or not parts[0].endswith((".dist-info", ".egg-info")):
+            continue
+        filename = parts[1]
+        basename = Path(filename).name.upper()
+        is_notice = basename.startswith("NOTICE")
+        is_declared = filename in declared or filename.removeprefix("licenses/") in declared
+        is_fallback = not declared and basename.startswith(("LICENSE", "LICENCE", "COPYING"))
+        if not (is_declared or is_fallback or is_notice):
+            continue
+        metadata_root = Path(str(distribution.locate_file(Path(parts[0])))).resolve()
+        path = Path(str(distribution.locate_file(entry))).resolve()
+        if path.is_relative_to(metadata_root) and path.is_file():
+            evidence.append(
+                {
+                    "path": relative,
+                    "kind": "notice" if is_notice else "licence",
+                    "text": path.read_text(encoding="utf8", errors="replace"),
+                }
+            )
+    return evidence
+
+
+def parse_package_metadata(
+    metadata: Message, distribution: Optional[importlib_metadata.Distribution] = None
+) -> PackageMetadata:
+    """Parses structured distribution metadata and preserves repeated licence classifiers."""
+    data: Dict[str, Any] = dict(metadata.items())
+    classifiers = [
+        entry.split("::")[-1].strip()
+        for entry in metadata.get_all("Classifier") or []
+        if entry.startswith("License ::") and entry.split("::")[-1].strip() != "OSI Approved"
     ]
-    return [get_package_metadata_lines(package) for package in all_distributions]
+    if classifiers:
+        data["License-Classifiers"] = list(dict.fromkeys(classifiers))
+        identifiers = []
+        for classifier in classifiers:
+            try:
+                identifier = cleanse_licence_expression(classifier)
+            except ExpressionError:
+                break
+            if not OPENSOURCE_LICENCES.get_licence(identifier):
+                break
+            identifiers.append(identifier)
+        else:
+            data["Licence-Candidates"] = list(dict.fromkeys(identifiers))
+            # Multiple classifiers do not establish whether the licences are alternatives or cumulative.
+            if len(data["Licence-Candidates"]) == 1:
+                data["License-Classifier"] = data["Licence-Candidates"][0]
+    evidence = _get_licence_evidence(distribution, metadata) if distribution else []
+    return PackageMetadata(data, evidence)
 
 
 def parse_package_metadata_lines(metadata: list) -> PackageMetadata:
     """Parses package metadata lines and retains relevant information."""
-    metadata_dict = dict()
-    for line in metadata:
-        match = re.search(CurrentPythonProjectMetadataFetcher.ENTRY_PATTERN, line)
-        if match:
-            metadata_dict[match.group(1).strip()] = match.group(2).strip()
-    return PackageMetadata(metadata_dict)
-
-
-def generate_package_info() -> None:
-    """Generates package information (egg)."""
-    command = [sys.executable, "setup.py", "develop", "-v"]
-    subprocess.check_call(command, cwd=configuration.get_value(ConfigurationVariable.PROJECT_ROOT))
+    return parse_package_metadata(Parser().parsestr("\n".join(str(line).rstrip("\r\n") for line in metadata)))

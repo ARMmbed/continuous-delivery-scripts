@@ -6,18 +6,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>continuous_delivery_scripts.utils.package_helpers API documentation</title>
-<meta name="description" content="Utilities for retrieving Python&#39;s package information." />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="Shared package metadata used by language plugins and licence reports.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
 </head>
 <body>
 <main>
@@ -26,165 +40,7 @@
 <h1 class="title">Module <code>continuous_delivery_scripts.utils.package_helpers</code></h1>
 </header>
 <section id="section-intro">
-<p>Utilities for retrieving Python's package information.</p>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">#
-# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-&#34;&#34;&#34;Utilities for retrieving Python&#39;s package information.&#34;&#34;&#34;
-
-import logging
-from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
-
-from continuous_delivery_scripts.utils.configuration import (
-    ConfigurationVariable,
-    configuration,
-)
-from continuous_delivery_scripts.utils.definitions import UNKNOWN
-
-logger = logging.getLogger(__name__)
-
-
-class PackageMetadata:
-    &#34;&#34;&#34;Package&#39;s metadata.
-
-    Retrieves all the information it needs from Python&#39;s metadata dictionary.
-    It is based on https://www.python.org/dev/peps/pep-0314/
-    https://packaging.python.org/specifications/core-metadata/
-    &#34;&#34;&#34;
-
-    def __init__(self, data: dict) -&gt; None:
-        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._data: Dict[str, Any] = data
-
-    @property
-    def name(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s name.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Name&#34;, UNKNOWN))
-
-    @property
-    def version(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s version.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Version&#34;, UNKNOWN))
-
-    @property
-    def author(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s author.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Author&#34;, UNKNOWN))
-
-    @property
-    def author_email(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s author email.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Author-email&#34;, UNKNOWN))
-
-    @property
-    def licence(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return str(self._data.get(&#34;License&#34;, UNKNOWN))
-
-    @property
-    def description(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Summary&#34;, UNKNOWN))
-
-    @property
-    def url(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s URL.&#34;&#34;&#34;
-        home_page = self._data.get(&#34;Home-page&#34;)
-        if home_page:
-            return str(home_page)
-        url = self._data.get(&#34;Project-URL&#34;)
-        if url:
-            return str(url).split(&#34;,&#34;)[1].strip()
-        return str(UNKNOWN)
-
-    def __str__(self) -&gt; str:
-        &#34;&#34;&#34;String representation.&#34;&#34;&#34;
-        relevant_data = [
-            f&#34;{getter}: {getattr(self, getter, None)}&#34; for getter in dir(self) if not getter.startswith(&#34;_&#34;) and getter
-        ]
-        return &#34;, &#34;.join(relevant_data)
-
-
-class ProjectMetadata:
-    &#34;&#34;&#34;Metadata for a project.&#34;&#34;&#34;
-
-    def __init__(self, package_name: str) -&gt; None:
-        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._package_metadata: PackageMetadata = PackageMetadata(dict())
-        self._dependency_packages_metadata: List[PackageMetadata] = list()
-        self._package_name: str = package_name
-
-    @property
-    def dependencies_metadata(self) -&gt; List[PackageMetadata]:
-        &#34;&#34;&#34;Gets all package&#39;s dependencies metadata.&#34;&#34;&#34;
-        return self._dependency_packages_metadata
-
-    def add_dependency_metadata(self, dependency_metadata: PackageMetadata) -&gt; None:
-        &#34;&#34;&#34;Adds metadata about a dependency.&#34;&#34;&#34;
-        self._dependency_packages_metadata.append(dependency_metadata)
-
-    @property
-    def project_metadata(self) -&gt; PackageMetadata:
-        &#34;&#34;&#34;Gets project metadata.&#34;&#34;&#34;
-        return self._package_metadata
-
-    @project_metadata.setter
-    def project_metadata(self, package_metadata: PackageMetadata) -&gt; None:
-        &#34;&#34;&#34;Sets project metadata.&#34;&#34;&#34;
-        self._package_metadata = package_metadata
-
-    @property
-    def package_name(self) -&gt; str:
-        &#34;&#34;&#34;Gets project&#39;s package name.&#34;&#34;&#34;
-        return self._package_name
-
-    def __str__(self) -&gt; str:
-        &#34;&#34;&#34;String representation.
-
-        Prints the project name and its dependencies.
-        &#34;&#34;&#34;
-        dependencies_str = &#34; | &#34;.join([str(t) for t in self._dependency_packages_metadata])
-        project_str = f&#34;Project [{self.package_name}]&#34;
-        metadata_str = str(self._package_metadata)
-        other_str = f&#34;Dependencies: [{dependencies_str}]&#34;
-
-        return f&#34;{project_str}: {metadata_str};  {other_str}&#34;
-
-
-class ProjectMetadataFetcher(ABC):
-    &#34;&#34;&#34;Fetches package metadata e.g. dependencies.&#34;&#34;&#34;
-
-    def __init__(self, package_name: str) -&gt; None:
-        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._project_metadata: Optional[ProjectMetadata] = None
-        self._package_name = package_name
-
-    @property
-    def project_metadata(self) -&gt; ProjectMetadata:
-        &#34;&#34;&#34;Gets project metadata.&#34;&#34;&#34;
-        if not self._project_metadata:
-            self._project_metadata = self.fetch_project_metadata()
-        return self._project_metadata
-
-    @abstractmethod
-    def fetch_project_metadata(self) -&gt; ProjectMetadata:
-        &#34;&#34;&#34;Fetches the project metadata.&#34;&#34;&#34;
-        pass
-
-
-class CurrentProjectMetadataFetcher(ProjectMetadataFetcher):
-    &#34;&#34;&#34;Fetches the current project metadata.&#34;&#34;&#34;
-
-    def __init__(self) -&gt; None:
-        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        super().__init__(configuration.get_value(ConfigurationVariable.PACKAGE_NAME))</code></pre>
-</details>
+<p>Shared package metadata used by language plugins and licence reports.</p>
 </section>
 <section>
 </section>
@@ -199,8 +55,6 @@ class CurrentProjectMetadataFetcher(ProjectMetadataFetcher):
 <span>class <span class="ident">CurrentProjectMetadataFetcher</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Fetches the current project metadata.</p>
-<p>Constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -212,6 +66,8 @@ class CurrentProjectMetadataFetcher(ProjectMetadataFetcher):
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         super().__init__(configuration.get_value(ConfigurationVariable.PACKAGE_NAME))</code></pre>
 </details>
+<div class="desc"><p>Fetches the current project metadata.</p>
+<p>Constructor.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher" href="#continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher">ProjectMetadataFetcher</a></li>
@@ -227,85 +83,241 @@ class CurrentProjectMetadataFetcher(ProjectMetadataFetcher):
 </li>
 </ul>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata"><code class="flex name class">
-<span>class <span class="ident">PackageMetadata</span></span>
-<span>(</span><span>data: dict)</span>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource"><code class="flex name class">
+<span>class <span class="ident">LicenceSource</span></span>
+<span>(</span><span>*values)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Package's metadata.</p>
-<p>Retrieves all the information it needs from Python's metadata dictionary.
-It is based on <a href="https://www.python.org/dev/peps/pep-0314/">https://www.python.org/dev/peps/pep-0314/</a>
-<a href="https://packaging.python.org/specifications/core-metadata/">https://packaging.python.org/specifications/core-metadata/</a></p>
-<p>Constructor.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class LicenceSource(Enum):
+    &#34;&#34;&#34;Where a package&#39;s declared licence was obtained.&#34;&#34;&#34;
+
+    EXPRESSION = &#34;License-Expression&#34;
+    LEGACY = &#34;License&#34;
+    CLASSIFIER = &#34;License-Classifier&#34;
+    CONFIGURATION = &#34;configuration&#34;
+    TOOL = &#34;tool&#34;
+    UNKNOWN = &#34;unknown&#34;</code></pre>
+</details>
+<div class="desc"><p>Where a package's declared licence was obtained.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource.CLASSIFIER"><code class="name">var <span class="ident">CLASSIFIER</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource.CONFIGURATION"><code class="name">var <span class="ident">CONFIGURATION</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource.EXPRESSION"><code class="name">var <span class="ident">EXPRESSION</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource.LEGACY"><code class="name">var <span class="ident">LEGACY</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource.TOOL"><code class="name">var <span class="ident">TOOL</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.LicenceSource.UNKNOWN"><code class="name">var <span class="ident">UNKNOWN</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata"><code class="flex name class">
+<span>class <span class="ident">PackageMetadata</span></span>
+<span>(</span><span>data: Mapping[str, Any] | continuous_delivery_scripts.utils.package_helpers._PackageFields,<br>licence_evidence: List[Dict[str, str]] | None = None)</span>
+</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class PackageMetadata:
-    &#34;&#34;&#34;Package&#39;s metadata.
+    &#34;&#34;&#34;Language-neutral package metadata supplied by a project plugin.
 
-    Retrieves all the information it needs from Python&#39;s metadata dictionary.
+    Metadata keys follow Python Core Metadata where possible so that other
+    languages can use the same SPDX and licence-reporting pipeline.
     It is based on https://www.python.org/dev/peps/pep-0314/
     https://packaging.python.org/specifications/core-metadata/
     &#34;&#34;&#34;
 
-    def __init__(self, data: dict) -&gt; None:
-        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._data: Dict[str, Any] = data
+    def __init__(
+        self, data: Union[Mapping[str, Any], _PackageFields], licence_evidence: Optional[List[Dict[str, str]]] = None
+    ) -&gt; None:
+        &#34;&#34;&#34;Accept named fields or adapt Python Core Metadata at the input boundary.&#34;&#34;&#34;
+        if isinstance(data, _PackageFields):
+            self._fields = data
+            return
+
+        expression = str(data.get(&#34;License-Expression&#34;) or &#34;&#34;).strip()
+        legacy = str(data.get(&#34;License&#34;) or &#34;&#34;).strip()
+        classifier = str(data.get(&#34;License-Classifier&#34;) or &#34;&#34;).strip()
+        if expression:
+            licence, source = expression, LicenceSource.EXPRESSION
+        elif legacy and not legacy.lower().startswith(&#34;copyright&#34;) and legacy.lower() not in (&#34;unknown&#34;, &#34;none&#34;):
+            licence, source = legacy, LicenceSource.LEGACY
+        elif classifier:
+            licence, source = classifier, LicenceSource.CLASSIFIER
+        else:
+            licence, source = UNKNOWN, LicenceSource.UNKNOWN
+
+        project_url = str(data.get(&#34;Project-URL&#34;) or &#34;&#34;)
+        url = str(data.get(&#34;Home-page&#34;) or project_url.partition(&#34;,&#34;)[2].strip() or UNKNOWN)
+        self._fields = _PackageFields(
+            name=str(data.get(&#34;Name&#34;, UNKNOWN)),
+            version=str(data.get(&#34;Version&#34;, UNKNOWN)),
+            author=str(data.get(&#34;Author&#34;, UNKNOWN)),
+            author_email=str(data.get(&#34;Author-email&#34;, UNKNOWN)),
+            licence=licence,
+            licence_source=source,
+            declared_licence=str(expression or legacy or &#34;; &#34;.join(data.get(&#34;License-Classifiers&#34;, []))),
+            description=str(data.get(&#34;Summary&#34;, UNKNOWN)),
+            url=url,
+            licence_classifiers=list(data.get(&#34;License-Classifiers&#34;, [])),
+            licence_candidates=list(data.get(&#34;Licence-Candidates&#34;, [])),
+            licence_evidence=licence_evidence or [],
+        )
+
+    @classmethod
+    def from_fields(
+        cls,
+        *,
+        name: str,
+        licence: str,
+        licence_source: LicenceSource,
+        version: str = UNKNOWN,
+        url: str = UNKNOWN,
+        declared_licence: Optional[str] = None,
+        licence_classifiers: Optional[List[str]] = None,
+        licence_candidates: Optional[List[str]] = None,
+        licence_evidence: Optional[List[Dict[str, str]]] = None,
+        author: str = UNKNOWN,
+        author_email: str = UNKNOWN,
+        description: str = UNKNOWN,
+    ) -&gt; &#34;PackageMetadata&#34;:
+        &#34;&#34;&#34;Build metadata from named fields without relying on Python header keys.&#34;&#34;&#34;
+        return cls(
+            _PackageFields(
+                name=name,
+                version=version,
+                author=author,
+                author_email=author_email,
+                licence=licence,
+                licence_source=licence_source,
+                declared_licence=licence if declared_licence is None else declared_licence,
+                description=description,
+                url=url,
+                licence_classifiers=list(licence_classifiers or []),
+                licence_candidates=list(licence_candidates or []),
+                licence_evidence=list(licence_evidence or []),
+            )
+        )
 
     @property
     def name(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s name.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Name&#34;, UNKNOWN))
+        return self._fields.name
 
     @property
     def version(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s version.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Version&#34;, UNKNOWN))
+        return self._fields.version
 
     @property
     def author(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s author.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Author&#34;, UNKNOWN))
+        return self._fields.author
 
     @property
     def author_email(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s author email.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Author-email&#34;, UNKNOWN))
+        return self._fields.author_email
 
     @property
     def licence(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return str(self._data.get(&#34;License&#34;, UNKNOWN))
+        return self._fields.licence
+
+    @property
+    def licence_source(self) -&gt; str:
+        &#34;&#34;&#34;Gets the metadata field used to determine the licence.&#34;&#34;&#34;
+        return self._fields.licence_source.value
+
+    @property
+    def has_unknown_licence(self) -&gt; bool:
+        &#34;&#34;&#34;Whether no usable licence declaration was found.&#34;&#34;&#34;
+        return self._fields.licence_source is LicenceSource.UNKNOWN
+
+    @property
+    def declared_licence(self) -&gt; str:
+        &#34;&#34;&#34;Gets the licence declaration as provided by the package.&#34;&#34;&#34;
+        return self._fields.declared_licence
+
+    @property
+    def licence_classifiers(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets all licence classifiers as declared by the package.&#34;&#34;&#34;
+        return list(self._fields.licence_classifiers)
+
+    @property
+    def licence_candidates(self) -&gt; List[str]:
+        &#34;&#34;&#34;Gets normalised SPDX licence candidates that require review.&#34;&#34;&#34;
+        return list(self._fields.licence_candidates)
+
+    @property
+    def licence_evidence(self) -&gt; List[Dict[str, str]]:
+        &#34;&#34;&#34;Gets the packaged licence and notice file evidence.&#34;&#34;&#34;
+        return self._fields.licence_evidence
 
     @property
     def description(self) -&gt; str:
-        &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-        return str(self._data.get(&#34;Summary&#34;, UNKNOWN))
+        &#34;&#34;&#34;Gets the package description.&#34;&#34;&#34;
+        return self._fields.description
 
     @property
     def url(self) -&gt; str:
         &#34;&#34;&#34;Gets package&#39;s URL.&#34;&#34;&#34;
-        home_page = self._data.get(&#34;Home-page&#34;)
-        if home_page:
-            return str(home_page)
-        url = self._data.get(&#34;Project-URL&#34;)
-        if url:
-            return str(url).split(&#34;,&#34;)[1].strip()
-        return str(UNKNOWN)
+        return self._fields.url
 
     def __str__(self) -&gt; str:
         &#34;&#34;&#34;String representation.&#34;&#34;&#34;
         relevant_data = [
-            f&#34;{getter}: {getattr(self, getter, None)}&#34; for getter in dir(self) if not getter.startswith(&#34;_&#34;) and getter
+            f&#34;{getter}: {getattr(self, getter, None)}&#34;
+            for getter in dir(self)
+            if not getter.startswith(&#34;_&#34;) and not callable(getattr(self, getter, None))
         ]
         return &#34;, &#34;.join(relevant_data)</code></pre>
 </details>
+<div class="desc"><p>Language-neutral package metadata supplied by a project plugin.</p>
+<p>Metadata keys follow Python Core Metadata where possible so that other
+languages can use the same SPDX and licence-reporting pipeline.
+It is based on <a href="https://www.python.org/dev/peps/pep-0314/">https://www.python.org/dev/peps/pep-0314/</a>
+<a href="https://packaging.python.org/specifications/core-metadata/">https://packaging.python.org/specifications/core-metadata/</a></p>
+<p>Accept named fields or adapt Python Core Metadata at the input boundary.</p></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.from_fields"><code class="name flex">
+<span>def <span class="ident">from_fields</span></span>(<span>*,<br>name: str,<br>licence: str,<br>licence_source: <a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource">LicenceSource</a>,<br>version: str = 'unknown',<br>url: str = 'unknown',<br>declared_licence: str | None = None,<br>licence_classifiers: List[str] | None = None,<br>licence_candidates: List[str] | None = None,<br>licence_evidence: List[Dict[str, str]] | None = None,<br>author: str = 'unknown',<br>author_email: str = 'unknown',<br>description: str = 'unknown') ‑> <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Build metadata from named fields without relying on Python header keys.</p></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author"><code class="name">var <span class="ident">author</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author"><code class="name">prop <span class="ident">author</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Gets package's author.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -313,12 +325,12 @@ It is based on <a href="https://www.python.org/dev/peps/pep-0314/">https://www.p
 <pre><code class="python">@property
 def author(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s author.&#34;&#34;&#34;
-    return str(self._data.get(&#34;Author&#34;, UNKNOWN))</code></pre>
+    return self._fields.author</code></pre>
 </details>
+<div class="desc"><p>Gets package's author.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email"><code class="name">var <span class="ident">author_email</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email"><code class="name">prop <span class="ident">author_email</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Gets package's author email.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -326,25 +338,51 @@ def author(self) -&gt; str:
 <pre><code class="python">@property
 def author_email(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s author email.&#34;&#34;&#34;
-    return str(self._data.get(&#34;Author-email&#34;, UNKNOWN))</code></pre>
+    return self._fields.author_email</code></pre>
 </details>
+<div class="desc"><p>Gets package's author email.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description"><code class="name">var <span class="ident">description</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.declared_licence"><code class="name">prop <span class="ident">declared_licence</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Gets package's licence.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def declared_licence(self) -&gt; str:
+    &#34;&#34;&#34;Gets the licence declaration as provided by the package.&#34;&#34;&#34;
+    return self._fields.declared_licence</code></pre>
+</details>
+<div class="desc"><p>Gets the licence declaration as provided by the package.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description"><code class="name">prop <span class="ident">description</span> : str</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
 def description(self) -&gt; str:
-    &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-    return str(self._data.get(&#34;Summary&#34;, UNKNOWN))</code></pre>
+    &#34;&#34;&#34;Gets the package description.&#34;&#34;&#34;
+    return self._fields.description</code></pre>
 </details>
+<div class="desc"><p>Gets the package description.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence"><code class="name">var <span class="ident">licence</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.has_unknown_licence"><code class="name">prop <span class="ident">has_unknown_licence</span> : bool</code></dt>
 <dd>
-<div class="desc"><p>Gets package's licence.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def has_unknown_licence(self) -&gt; bool:
+    &#34;&#34;&#34;Whether no usable licence declaration was found.&#34;&#34;&#34;
+    return self._fields.licence_source is LicenceSource.UNKNOWN</code></pre>
+</details>
+<div class="desc"><p>Whether no usable licence declaration was found.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence"><code class="name">prop <span class="ident">licence</span> : str</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -352,12 +390,64 @@ def description(self) -&gt; str:
 <pre><code class="python">@property
 def licence(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s licence.&#34;&#34;&#34;
-    return str(self._data.get(&#34;License&#34;, UNKNOWN))</code></pre>
+    return self._fields.licence</code></pre>
 </details>
+<div class="desc"><p>Gets package's licence.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_candidates"><code class="name">prop <span class="ident">licence_candidates</span> : List[str]</code></dt>
 <dd>
-<div class="desc"><p>Gets package's name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_candidates(self) -&gt; List[str]:
+    &#34;&#34;&#34;Gets normalised SPDX licence candidates that require review.&#34;&#34;&#34;
+    return list(self._fields.licence_candidates)</code></pre>
+</details>
+<div class="desc"><p>Gets normalised SPDX licence candidates that require review.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_classifiers"><code class="name">prop <span class="ident">licence_classifiers</span> : List[str]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_classifiers(self) -&gt; List[str]:
+    &#34;&#34;&#34;Gets all licence classifiers as declared by the package.&#34;&#34;&#34;
+    return list(self._fields.licence_classifiers)</code></pre>
+</details>
+<div class="desc"><p>Gets all licence classifiers as declared by the package.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_evidence"><code class="name">prop <span class="ident">licence_evidence</span> : List[Dict[str, str]]</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_evidence(self) -&gt; List[Dict[str, str]]:
+    &#34;&#34;&#34;Gets the packaged licence and notice file evidence.&#34;&#34;&#34;
+    return self._fields.licence_evidence</code></pre>
+</details>
+<div class="desc"><p>Gets the packaged licence and notice file evidence.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_source"><code class="name">prop <span class="ident">licence_source</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def licence_source(self) -&gt; str:
+    &#34;&#34;&#34;Gets the metadata field used to determine the licence.&#34;&#34;&#34;
+    return self._fields.licence_source.value</code></pre>
+</details>
+<div class="desc"><p>Gets the metadata field used to determine the licence.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name"><code class="name">prop <span class="ident">name</span> : str</code></dt>
+<dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -365,12 +455,12 @@ def licence(self) -&gt; str:
 <pre><code class="python">@property
 def name(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s name.&#34;&#34;&#34;
-    return str(self._data.get(&#34;Name&#34;, UNKNOWN))</code></pre>
+    return self._fields.name</code></pre>
 </details>
+<div class="desc"><p>Gets package's name.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url"><code class="name">prop <span class="ident">url</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Gets package's URL.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -378,18 +468,12 @@ def name(self) -&gt; str:
 <pre><code class="python">@property
 def url(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s URL.&#34;&#34;&#34;
-    home_page = self._data.get(&#34;Home-page&#34;)
-    if home_page:
-        return str(home_page)
-    url = self._data.get(&#34;Project-URL&#34;)
-    if url:
-        return str(url).split(&#34;,&#34;)[1].strip()
-    return str(UNKNOWN)</code></pre>
+    return self._fields.url</code></pre>
 </details>
+<div class="desc"><p>Gets package's URL.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version"><code class="name">var <span class="ident">version</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version"><code class="name">prop <span class="ident">version</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Gets package's version.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -397,8 +481,9 @@ def url(self) -&gt; str:
 <pre><code class="python">@property
 def version(self) -&gt; str:
     &#34;&#34;&#34;Gets package&#39;s version.&#34;&#34;&#34;
-    return str(self._data.get(&#34;Version&#34;, UNKNOWN))</code></pre>
+    return self._fields.version</code></pre>
 </details>
+<div class="desc"><p>Gets package's version.</p></div>
 </dd>
 </dl>
 </dd>
@@ -407,8 +492,6 @@ def version(self) -&gt; str:
 <span>(</span><span>package_name: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Metadata for a project.</p>
-<p>Constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -421,6 +504,7 @@ def version(self) -&gt; str:
         self._package_metadata: PackageMetadata = PackageMetadata(dict())
         self._dependency_packages_metadata: List[PackageMetadata] = list()
         self._package_name: str = package_name
+        self.missing_dependencies: List[str] = []
 
     @property
     def dependencies_metadata(self) -&gt; List[PackageMetadata]:
@@ -458,11 +542,12 @@ def version(self) -&gt; str:
 
         return f&#34;{project_str}: {metadata_str};  {other_str}&#34;</code></pre>
 </details>
+<div class="desc"><p>Metadata for a project.</p>
+<p>Constructor.</p></div>
 <h3>Instance variables</h3>
 <dl>
-<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.dependencies_metadata"><code class="name">var <span class="ident">dependencies_metadata</span> : List[<a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>]</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.dependencies_metadata"><code class="name">prop <span class="ident">dependencies_metadata</span> : List[<a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>]</code></dt>
 <dd>
-<div class="desc"><p>Gets all package's dependencies metadata.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -472,10 +557,10 @@ def dependencies_metadata(self) -&gt; List[PackageMetadata]:
     &#34;&#34;&#34;Gets all package&#39;s dependencies metadata.&#34;&#34;&#34;
     return self._dependency_packages_metadata</code></pre>
 </details>
+<div class="desc"><p>Gets all package's dependencies metadata.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.package_name"><code class="name">var <span class="ident">package_name</span> : str</code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.package_name"><code class="name">prop <span class="ident">package_name</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Gets project's package name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -485,10 +570,10 @@ def package_name(self) -&gt; str:
     &#34;&#34;&#34;Gets project&#39;s package name.&#34;&#34;&#34;
     return self._package_name</code></pre>
 </details>
+<div class="desc"><p>Gets project's package name.</p></div>
 </dd>
-<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.project_metadata"><code class="name">var <span class="ident">project_metadata</span> : <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.project_metadata"><code class="name">prop <span class="ident">project_metadata</span> : <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></code></dt>
 <dd>
-<div class="desc"><p>Gets project metadata.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -498,15 +583,15 @@ def project_metadata(self) -&gt; PackageMetadata:
     &#34;&#34;&#34;Gets project metadata.&#34;&#34;&#34;
     return self._package_metadata</code></pre>
 </details>
+<div class="desc"><p>Gets project metadata.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata.add_dependency_metadata"><code class="name flex">
-<span>def <span class="ident">add_dependency_metadata</span></span>(<span>self, dependency_metadata: <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>) ‑> None</span>
+<span>def <span class="ident">add_dependency_metadata</span></span>(<span>self,<br>dependency_metadata: <a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a>) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Adds metadata about a dependency.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -515,6 +600,7 @@ def project_metadata(self) -&gt; PackageMetadata:
     &#34;&#34;&#34;Adds metadata about a dependency.&#34;&#34;&#34;
     self._dependency_packages_metadata.append(dependency_metadata)</code></pre>
 </details>
+<div class="desc"><p>Adds metadata about a dependency.</p></div>
 </dd>
 </dl>
 </dd>
@@ -523,8 +609,6 @@ def project_metadata(self) -&gt; PackageMetadata:
 <span>(</span><span>package_name: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Fetches package metadata e.g. dependencies.</p>
-<p>Constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -549,21 +633,23 @@ def project_metadata(self) -&gt; PackageMetadata:
         &#34;&#34;&#34;Fetches the project metadata.&#34;&#34;&#34;
         pass</code></pre>
 </details>
+<div class="desc"><p>Fetches package metadata e.g. dependencies.</p>
+<p>Constructor.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>abc.ABC</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher" href="../plugins/golang.html#continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher">GoProjectMetadataFetcher</a></li>
 <li><a title="continuous_delivery_scripts.utils.noop.package_helpers.NoOpProjectMetadataFetcher" href="noop/package_helpers.html#continuous_delivery_scripts.utils.noop.package_helpers.NoOpProjectMetadataFetcher">NoOpProjectMetadataFetcher</a></li>
 <li><a title="continuous_delivery_scripts.utils.package_helpers.CurrentProjectMetadataFetcher" href="#continuous_delivery_scripts.utils.package_helpers.CurrentProjectMetadataFetcher">CurrentProjectMetadataFetcher</a></li>
 <li><a title="continuous_delivery_scripts.utils.python.package_helpers.PythonProjectMetadataFetcher" href="python/package_helpers.html#continuous_delivery_scripts.utils.python.package_helpers.PythonProjectMetadataFetcher">PythonProjectMetadataFetcher</a></li>
 </ul>
 <h3>Instance variables</h3>
 <dl>
-<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher.project_metadata"><code class="name">var <span class="ident">project_metadata</span> : <a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata" href="#continuous_delivery_scripts.utils.package_helpers.ProjectMetadata">ProjectMetadata</a></code></dt>
+<dt id="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher.project_metadata"><code class="name">prop <span class="ident">project_metadata</span> : <a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata" href="#continuous_delivery_scripts.utils.package_helpers.ProjectMetadata">ProjectMetadata</a></code></dt>
 <dd>
-<div class="desc"><p>Gets project metadata.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -575,6 +661,7 @@ def project_metadata(self) -&gt; ProjectMetadata:
         self._project_metadata = self.fetch_project_metadata()
     return self._project_metadata</code></pre>
 </details>
+<div class="desc"><p>Gets project metadata.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -583,7 +670,6 @@ def project_metadata(self) -&gt; ProjectMetadata:
 <span>def <span class="ident">fetch_project_metadata</span></span>(<span>self) ‑> <a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata" href="#continuous_delivery_scripts.utils.package_helpers.ProjectMetadata">ProjectMetadata</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Fetches the project metadata.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -593,6 +679,7 @@ def fetch_project_metadata(self) -&gt; ProjectMetadata:
     &#34;&#34;&#34;Fetches the project metadata.&#34;&#34;&#34;
     pass</code></pre>
 </details>
+<div class="desc"><p>Fetches the project metadata.</p></div>
 </dd>
 </dl>
 </dd>
@@ -600,7 +687,6 @@ def fetch_project_metadata(self) -&gt; ProjectMetadata:
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -616,12 +702,30 @@ def fetch_project_metadata(self) -&gt; ProjectMetadata:
 <h4><code><a title="continuous_delivery_scripts.utils.package_helpers.CurrentProjectMetadataFetcher" href="#continuous_delivery_scripts.utils.package_helpers.CurrentProjectMetadataFetcher">CurrentProjectMetadataFetcher</a></code></h4>
 </li>
 <li>
+<h4><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource">LicenceSource</a></code></h4>
+<ul class="two-column">
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource.CLASSIFIER" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource.CLASSIFIER">CLASSIFIER</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource.CONFIGURATION" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource.CONFIGURATION">CONFIGURATION</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource.EXPRESSION" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource.EXPRESSION">EXPRESSION</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource.LEGACY" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource.LEGACY">LEGACY</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource.TOOL" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource.TOOL">TOOL</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.LicenceSource.UNKNOWN" href="#continuous_delivery_scripts.utils.package_helpers.LicenceSource.UNKNOWN">UNKNOWN</a></code></li>
+</ul>
+</li>
+<li>
 <h4><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata">PackageMetadata</a></code></h4>
 <ul class="two-column">
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author">author</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.author_email">author_email</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.declared_licence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.declared_licence">declared_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.description">description</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.from_fields" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.from_fields">from_fields</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.has_unknown_licence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.has_unknown_licence">has_unknown_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence">licence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_candidates" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_candidates">licence_candidates</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_classifiers" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_classifiers">licence_classifiers</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_evidence" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_evidence">licence_evidence</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_source" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.licence_source">licence_source</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.name">name</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.url">url</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version" href="#continuous_delivery_scripts.utils.package_helpers.PackageMetadata.version">version</a></code></li>
@@ -649,7 +753,7 @@ def fetch_project_metadata(self) -&gt; ProjectMetadata:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

@@ -2,6 +2,8 @@
 # Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+# Package description, keywords and project URLs for PyPI are defined in setup.py.
+# ProjectConfig below configures the installed CI/CD commands for this repository.
 [ProjectConfig]
 # Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
 # these tokens are used to identify path variables from other variable types.
@@ -16,9 +18,13 @@ RELEASE_BRANCH_PATTERN = "^release.*$"
 MODULE_TO_DOCUMENT = "continuous_delivery_scripts"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
+DOCUMENTATION_GUIDES_DIR = "guides"
+DOCUMENTATION_GUIDES_OUTPUT_FOLDER = "guides"
 VERSION_FILE_PATH = "continuous_delivery_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 PROGRAMMING_LANGUAGE = "Python"
+GENERATE_LICENSING_SUMMARY_ON_RELEASE = true
+LICENCE_ASSESSMENT_FAIL_ON = ["DENY"]
 TAG_VERSION_SHORTCUTS = true
 TAG_LATEST = true
 
@@ -36,7 +42,7 @@ python-dateutil="All contributions after December 1, 2017 released under dual li
 keyring="MIT"
 setuptools="MIT"
 GitPython="BSD-3-Clause"
-pdoc3="Accepted for this project since not distributed"
+pdoc3="Used separately to generate docs; not bundled or modified."
 python-dotenv="BSD-3-Clause"
 twine="Apache-2.0"
 jellyfish="BSD-2-Clause"
@@ -62,6 +68,14 @@ regex="Apache-2.0"
 cffi="MIT"
 SecretStorage="BSD-3-Clause"
 
+[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.pdoc3]
+licence = "AGPL-3.0-only"
+version = "0.11.6"
+reason = "Used separately to generate docs; not bundled or modified."
+
+[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.certifi]
+licence = "MPL-2.0"
+reason = "Used indirectly for HTTPS; retain its MPL licence and notices."
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

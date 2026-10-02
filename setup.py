@@ -6,7 +6,7 @@
 
 import os
 
-from setuptools import setup
+from setuptools import find_packages, setup
 
 PROJECT_SLUG = "continuous-delivery-scripts"
 SOURCE_DIR = "continuous_delivery_scripts"
@@ -23,20 +23,22 @@ with open(os.path.join(repository_dir, "README.md"), encoding="utf8") as fh:
     long_description = fh.read()
 
 setup(
-    author="CMSIS team",
+    author="Arm",
     author_email="adrien.cabarbaye@arm.com",
     classifiers=[
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Software Development :: Build Tools",
+        "Topic :: Software Development :: Documentation",
+        "Topic :: Software Development :: Version Control :: Git",
     ],
-    description="Continuous Delivery scripts to increase automation",
+    description="Git-based CI/CD tools for releases, changelogs, SPDX SBOMs and licence reporting",
     entry_points={
         "console_scripts": [
             f"cd-assert-news={SOURCE_DIR}.assert_news:main",
@@ -48,20 +50,34 @@ setup(
             f"cd-get-config={SOURCE_DIR}.get_config:main",
             f"cd-license-files={SOURCE_DIR}.license_files:main",
             f"cd-generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
+            f"cd-check-licence-compliance={SOURCE_DIR}.check_licence_compliance:main",
             f"cd-detect-secrets={SOURCE_DIR}.detect_secrets:main",
             f"cd-record-secrets={SOURCE_DIR}.update_secrets_registry:main",
         ]
     },
-    keywords="Arm Tools CI CD Continuous Delivery Scripts Automation",
+    keywords=[
+        "ci-cd",
+        "release-automation",
+        "semantic-versioning",
+        "changelog",
+        "spdx",
+        "sbom",
+        "openchain",
+        "third-party-ip",
+        "tpip",
+        "licence-compliance",
+        "copyright",
+        "python",
+        "git",
+    ],
     include_package_data=True,
     install_requires=[
-        # spdx-tools imports pkg_resources from setuptools at runtime.
         "setuptools",
         "gitpython",
         "towncrier==22.12.0",
         "pyautoversion~=1.2.0",
         # FIXME change when https://github.com/pdoc3/pdoc/issues/299 is fixed
-        "pdoc3==0.10.0",
+        "pdoc3==0.11.6",
         "toml",
         "semver~=2.13.0",
         "python-dotenv",
@@ -70,19 +86,28 @@ setup(
         "detect-secrets[gibberish]==1.5.0",
         "packaging",
         "licenseheaders<0.8.9",
+        # The SPDX writer uses the legacy `spdx` namespace removed in spdx-tools 0.7.
         "spdx-tools==0.6.1",
         "license-expression",
         "wcmatch",
         "jellyfish",
         "jinja2>=3,<4",
+        "Markdown>=3.7,<4",
         "dataclasses; python_version<'3.7'",
     ],
-    license="Apache 2.0",
+    license="Apache-2.0",
     long_description_content_type="text/markdown",
     long_description=long_description,
     name=PROJECT_SLUG,
-    packages=[SOURCE_DIR],
-    python_requires=">=3.8,<4",
+    packages=find_packages(include=[SOURCE_DIR, f"{SOURCE_DIR}.*"]),
+    package_data={f"{SOURCE_DIR}.spdx_report": ["templates/*.jinja2", "data/*.toml"]},
+    python_requires=">=3.10,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
+    project_urls={
+        "Documentation": "https://armmbed.github.io/continuous-delivery-scripts/",
+        "Source": f"https://github.com/ARMmbed/{PROJECT_SLUG}",
+        "Changelog": f"https://github.com/ARMmbed/{PROJECT_SLUG}/blob/main/CHANGELOG.md",
+        "Issues": f"https://github.com/ARMmbed/{PROJECT_SLUG}/issues",
+    },
     version=__version__,
 )

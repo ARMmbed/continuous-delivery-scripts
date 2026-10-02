@@ -17,6 +17,179 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.4.1" (2026-10-01)
+====================
+
+Bugfixes
+--------
+
+- :page_facing_up: Record this project's manual review of certifi's MPL-2.0 licence for indirect HTTPS use, keep the review valid across versions, and fail releases on DENY assessments by default. (#20261001170158648583500)
+
+
+"4.4.0" (2026-10-01)
+====================
+
+Features
+--------
+
+- :page_facing_up: Screen dependency licence compatibility in third-party IP reports with explainable assessments, packaged TOML rules and recorded manual reviews. (#20261001103621711570400)
+- :page_facing_up: Add opt-in ScanCode LicenseDB lookups for unclassified licences and missing rules, with source links and follow-up warnings for reproducible offline checks. (#20261001125051873518700)
+
+
+"4.3.0" (2026-10-01)
+====================
+
+Features
+--------
+
+- Support proprietary projects with LicenseRef-Proprietary in SPDX reports and file headers, including available licence URL references. (#20260930183200522502000)
+- Add cd-check-licence-compliance to check project and dependency licences without generating SPDX documents, with optional third-party IP summaries. (#20260930184410503280900)
+
+
+Improved Documentation
+----------------------
+
+- Document CSV, JSON and text downloads from the HTML third-party IP report and the corresponding reporting guide. (#20260930184811003460000)
+
+
+Misc
+----
+
+- #20260930184902338342600
+
+
+"4.2.0" (2026-09-30)
+====================
+
+Features
+--------
+
+- :sparkles: Generate Go SPDX and third-party IP licence reports using go-licenses and the shared compliance policy. (#20260930100520944059100)
+- :sparkles: Make release-time third-party licence summaries opt-in by default while retaining them for this project. (#20260930134135824831900)
+
+
+Bugfixes
+--------
+
+- :bug: Generate filesystem-safe SPDX filenames and identifiers for packages named with import paths. (#20260930100520944103000)
+- :bug: Include language plugins and SPDX templates in package builds so installed tools can generate reports. (#20260930101509773515900)
+- :bug: Show guide headings rather than leading licence comments as titles on the documentation index. (#20260930142031314098900)
+- :bug: Link a generated third-party IP report from the documentation index and show the configured project licence. (#20260930142031314152400)
+
+
+Improved Documentation
+----------------------
+
+- :book: Make the third-party IP report easier to read with a responsive summary, clearer compliance statuses and collapsible licence evidence. (#20260930144256123961900)
+- :book: Clarify TPIP metrics, audit gaps and manual reviews, and show the project's licence and accepted-licence policy alongside linked dependency results. (#20260930154855098239800)
+
+
+Misc
+----
+
+- #20260930132108079266500, #20260930133028282863400
+
+
+"4.1.0" (2026-09-29)
+====================
+
+Features
+--------
+
+- :sparkles: Publish configurable task guides alongside API documentation and provide a human-readable documentation landing page. (#20260929114345938624600)
+
+
+Bugfixes
+--------
+
+- :bug: Restore the third-party licence report during Python releases by reading installed package metadata without running the deprecated setuptools develop command. (#20260928182110700095100)
+- :bug: Read structured Python distribution metadata and retain every licence classifier and its source so ambiguous declarations are visible. (#20260928183746094617300)
+- :bug: Show missing dependencies and unknown licences in reports and allow incomplete licence audits to fail CI when configured. (#20260928183746094663200)
+- :bug: Include packaged licence and notice evidence and a machine-readable JSON report alongside the existing third-party licence reports. (#20260928183746094670000)
+- :bug: Restore SPDX report generation in CI by using the last spdx-tools release compatible with the legacy SPDX writer. (#20260929104004109405900)
+
+
+Improved Documentation
+----------------------
+
+- :book: Document every packaged tool, its developer or CI use, and the CI-independent workflow in the README while correcting outdated usage, links and project structure details. (#20260929110224804739200)
+- :book: Explain shared pyproject.toml delivery settings, plugin-specific tools and practical SPDX, TPIP, release, licence-header and secret-leak prevention use cases in the README. (#20260929114345938571600)
+- :book: Add command-focused guides, an llms.txt documentation map and clearer package discovery metadata. (#20260929114345938632900)
+
+
+"4.0.0" (2026-09-29)
+====================
+
+Major changes
+-------------
+
+- :gear: Drop Python 3.8 and 3.9 support, and update CI coverage to Python 3.10 through 3.14. (#20260819123000)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: pdoc3-0.11.5 (#20250110080026)
+- Dependency upgrade: spdx-tools-0.8.3 (#20260408145429)
+- Dependency upgrade: coverage-7.6.10 (#20260408145835)
+- Dependency upgrade: upload-sarif-9ee088e13615f8d1eaef4766f9dde95d3356a8f6 (#20260819213312)
+- Dependency upgrade: coverage-7.15.4 (#20260820063608)
+- Dependency upgrade: pdoc3-0.11.6 (#20260820063844)
+- Dependency upgrade: spdx-tools-0.8.5 (#20260820095812)
+- Dependency upgrade: upload-sarif-486fec2a3ea2626afcd8c7e9208b4f515078dd7e (#20260824063632)
+- Dependency upgrade: codeql-action-4.37.8 (#20260824063829)
+- Dependency upgrade: coverage-7.16.0 (#20260901064005)
+- Dependency upgrade: coverage-7.16.1 (#20260928170440)
+- Dependency upgrade: codeql-action-4.38.2 (#20260928170521)
+- :bug: Add nanoseconds to generated news file names to prevent collisions when multiple PRs are created in the same second. (#20260928175215874316500)
+- :bug: Recognise news files already added to Dependabot branches and avoid creating duplicates when validating those PRs. (#20260928175215874361800)
+
+
+"3.5.1" (2026-08-19)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: codecov-action-7 (#20260608063310)
+- Dependency upgrade: cache-6 (#20260624063302)
+- Dependency upgrade: upload-sarif-9cea5827c668a1fe7165dbce6e80c3f9cf3f83ac (#20260626063418)
+- Dependency upgrade: setup-python-7 (#20260720063306)
+- Dependency upgrade: scorecard-action-2.4.4 (#20260724063303)
+- 👷 use `x-access-token` for GitHub HTTPS authentication so workflow-generated tokens can clone and fetch. (#20260819101000)
+- Dependency upgrade: checkout-7.0.0 (#20260819170031)
+- Dependency upgrade: codeql-action-4.36.2 (#20260819170132)
+
+
+"3.5.0" (2026-06-04)
+====================
+
+Features
+--------
+
+- :sparkles: `[GO]` support go workspaces and project with multiple go project defined (#20260604124611)
+
+
+Bugfixes
+--------
+
+- Dependency upgrade: upload-artifact-7.0.1 (#20260413063957)
+- Dependency upgrade: codeql-action-4.35.2 (#20260416063450)
+- Dependency upgrade: checkout-6.0.3 (#20260603224444)
+
+
+"3.4.1" (2026-06-01)
+====================
+
+Bugfixes
+--------
+
+- Dependency upgrade: jinja2-3.0.3 (#202202230717)
+- Dependency upgrade: fetch-metadata-3.1.0 (#20260420065012)
+- Dependency upgrade: dependency-review-action-5 (#20260511075632)
+- :bug: Ensure that if a fetch fails it retries with authentication in the same way as clone (#20260601135433)
+
+
 "3.4.0" (2026-04-07)
 ====================
 

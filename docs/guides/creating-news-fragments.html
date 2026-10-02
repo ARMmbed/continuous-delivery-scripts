@@ -1,0 +1,38 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Create a news fragment for a change</title><meta name="description" content="Create a news fragment for a change — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Create a news fragment for a change</h1>
+<h2>Problem and when to use it</h2>
+<p>When several changes are developed in parallel, editing one shared changelog
+for every pull request is easy to forget and can cause merge conflicts. Commit
+messages record details for developers, but do not necessarily explain a
+change's impact to people using the project. A <strong>news fragment</strong> is a small,
+one-line, user-facing description of a single change, committed alongside the
+change rather than editing the release notes directly.</p>
+<p>Use <code>cd-create-news-file</code> while developing a change so its release note is
+recorded before a pull request. At release time,
+<a href="managing-changelogs.html"><code>cd-generate-news</code></a> collects the fragments into the
+changelog. See the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/CONTRIBUTING.md#news-files">Contributing guide's News Files section</a>
+for the purpose, required format and change-type extensions of fragments.</p>
+<h2>Inputs and example</h2>
+<p>Configure <code>NEWS_DIR</code> and Towncrier in <code>pyproject.toml</code>. Supply one line of text
+and optionally a type (<code>bugfix</code>, <code>feature</code>, <code>doc</code>, <code>major</code>, <code>misc</code> or <code>removal</code>):</p>
+<pre><code class="language-bash">cd-create-news-file &quot;Fix dependency resolution&quot; --type bugfix
+</code></pre>
+<h2>Output</h2>
+<p>A numbered file is created in the configured news directory. Commit the file
+with the change it describes. The default type is <code>feature</code>; use
+<code>--ref-number</code> when a specific numeric reference is required.</p>
+<h2>GitHub Actions example</h2>
+<p>Normally developers create and commit fragments locally. A workflow may
+create one for an automated change after checkout and installation:</p>
+<pre><code class="language-yaml">- run: cd-create-news-file &quot;Update build dependency&quot; --type bugfix
+</code></pre>
+<p>The workflow must commit and push the file if it should appear in a PR.
+Related command: <a href="checking-news-fragments.html"><code>cd-assert-news</code></a>.</p></main></body></html>

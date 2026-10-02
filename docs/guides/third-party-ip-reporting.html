@@ -1,0 +1,55 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Generate a third-party IP (TPIP) and licence report</title><meta name="description" content="Generate a third-party IP (TPIP) and licence report — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Generate a third-party IP (TPIP) and licence report</h1>
+<h2>Problem and when to use it</h2>
+<p>Use <code>cd-generate-spdx</code> to document dependency licences for a third-party IP
+(TPIP) review and to check them against the project's accepted-licence policy.
+It can support an OpenChain compliance workflow; a generated report alone does
+not certify compliance. For the SPDX documents produced by the same command,
+see <a href="generating-an-spdx-sbom.html">SPDX generation</a>.</p>
+<h2>Inputs and example</h2>
+<p>Install the dependencies you intend to audit, configure your language plugin
+and set <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any documented manual checks in
+<code>pyproject.toml</code>. Choose an existing output directory:</p>
+<pre><code class="language-bash">mkdir -p licensing
+cd-generate-spdx --output-dir licensing
+</code></pre>
+<p>The selected plugin must support metadata extraction. It uses tools suited to
+the project's language to obtain dependency and licence information for the
+shared report and accepted-licence policy. Check the
+<a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin documentation</a>
+for language-specific prerequisites and support.
+An audit covers the installed environment, so run it for each supported
+platform if dependencies differ by operating system. Review unknown licences
+and packaged notices rather than assuming a missing value means permission.</p>
+<h2>Output</h2>
+<p>Find <code>third_party_IP_report.html</code>, <code>.csv</code>, <code>.json</code> and <code>.txt</code> in the output directory,
+alongside SPDX documents when generation is enabled. In this repository the
+HTML report is published to GitHub Pages after a release regenerates <code>docs/</code>.
+The HTML report has download links for the accompanying CSV, JSON and text
+reports when these files are kept together in the same directory.
+Each dependency also has an advisory <code>ALLOW</code>, <code>REVIEW</code>, <code>DENY</code> or <code>UNKNOWN</code>
+licence assessment with a reason and rule ID. Documented <code>REVIEW</code> findings
+are shown as <code>MANUALLY_REVIEWED</code> with the review explanation. The assessment is separate from
+the configured accepted-licence check. See
+<a href="assessing-dependency-licences.html">dependency licence assessment</a> for the
+embedded rules, SPDX expression handling, optional project overrides and the
+opt-in <code>--lookup-scancode</code> option for missing licence information.</p>
+<h2>GitHub Actions example</h2>
+<p>Once the project and its dependencies are installed:</p>
+<pre><code class="language-yaml">- run: mkdir -p licensing &amp;&amp; cd-generate-spdx --output-dir licensing
+- uses: actions/upload-artifact@v4
+  with:
+    name: third-party-ip-report
+    path: licensing/
+</code></pre>
+<p>Related commands: <a href="checking-licence-compliance.html"><code>cd-check-licence-compliance</code></a>
+for reports without SPDX documents, <a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a>
+and <a href="licence-header-management.html"><code>cd-license-files</code></a>.</p></main></body></html>

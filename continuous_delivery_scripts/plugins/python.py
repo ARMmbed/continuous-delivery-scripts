@@ -22,10 +22,8 @@ from continuous_delivery_scripts.utils.language_specifics_base import (
     BaseLanguage,
     get_language_from_file_name,
 )
-from continuous_delivery_scripts.utils.logging import log_exception
 from continuous_delivery_scripts.utils.python.package_helpers import (
     CurrentPythonProjectMetadataFetcher,
-    generate_package_info,
 )
 
 if TYPE_CHECKING:
@@ -138,12 +136,7 @@ def _generate_pdoc_in_correct_structure(module_to_document: str, output_director
 
 def _get_current_spdx_project() -> "SpdxProject":
     """Gets information about the current project/package."""
-    logger.info("Generating package information.")
-    try:
-        # Trying to generate the egg for the package but this may fail. If so, continue.
-        generate_package_info()
-    except Exception as e:
-        log_exception(logger, e)
+    logger.info("Reading installed package information.")
     from continuous_delivery_scripts.spdx_report.spdx_project import SpdxProject
 
     return SpdxProject(CurrentPythonProjectMetadataFetcher())
@@ -185,9 +178,7 @@ class Python(BaseLanguage):
 
     def can_get_project_metadata(self) -> bool:
         """States whether project metadata can be retrieved."""
-        # FIXME Comment out retrieving project metadata as deprecated
-        # (SetuptoolsDeprecationWarning: License classifiers are deprecated)
-        return False
+        return True
 
     def get_secret_registry_exclude_files(self) -> List[str]:
         """Gets additional detect-secrets exclude patterns for Python projects."""

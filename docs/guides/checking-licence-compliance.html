@@ -1,0 +1,49 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Check project and dependency licence compliance</title><meta name="description" content="Check project and dependency licence compliance — Continuous Delivery Scripts."><style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style></head><body><nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav><main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Check project and dependency licence compliance</h1>
+<h2>Problem and when to use it</h2>
+<p>Use <code>cd-check-licence-compliance</code> as a CI gate or local check when you need to
+assess the project and its dependencies against the configured licence policy
+without generating SPDX documents. The command writes no files by default.</p>
+<h2>Inputs and example</h2>
+<p>Install the dependencies you intend to audit and select a language plugin that
+provides project metadata. Configure <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any
+documented manual reviews in <code>[ProjectConfig]</code> in <code>pyproject.toml</code>. Then run:</p>
+<pre><code class="language-bash">cd-check-licence-compliance
+</code></pre>
+<p>To keep the third-party IP summaries for review, create an output directory and
+pass it to the command:</p>
+<pre><code class="language-bash">mkdir -p licensing
+cd-check-licence-compliance --output-dir licensing
+</code></pre>
+<p>The optional <code>--output-dir</code> (<code>-o</code>) writes <code>third_party_IP_report.html</code>, <code>.csv</code>,
+<code>.txt</code> and <code>.json</code>. It does not create <code>.spdx</code> files. The reports are written
+before the compliance check, so they remain available if the check fails.</p>
+<h2>Result</h2>
+<p>The command succeeds when the discovered project and dependency licences meet
+the configured policy, including documented manual reviews. It fails if a
+licence does not meet that policy, the selected plugin cannot supply metadata,
+or report generation fails. If <code>FAIL_ON_INCOMPLETE_LICENCE_AUDIT</code> is enabled,
+missing dependencies, unknown licences and undocumented exemptions also fail
+the check. Results depend on the dependencies installed in the audited
+environment.
+The command also prints <code>ALLOW</code>, <code>REVIEW</code>, <code>MANUALLY_REVIEWED</code>, <code>DENY</code> and <code>UNKNOWN</code> dependency
+counts. These advisory results do not change exit codes unless a project
+explicitly opts into <a href="assessing-dependency-licences.html">assessment gating</a>.
+Pass <code>--lookup-scancode</code> to consult
+<a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a> for exact
+identifiers whose category or assessment rule is missing. The lookup is opt-in; see
+<a href="assessing-dependency-licences.html#optional-scancode-licensedb-lookup">dependency licence assessment</a>
+for the limits and report provenance.</p>
+<p>To generate SPDX tag-value documents as well as reports, use
+<a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a>. See
+<a href="third-party-ip-reporting.html">third-party IP reporting</a> for more on reviewing
+the summaries and <a href="reading-project-configuration.html">project configuration</a>
+for the shared settings.</p></main></body></html>

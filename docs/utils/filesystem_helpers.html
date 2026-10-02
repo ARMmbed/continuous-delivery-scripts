@@ -6,18 +6,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
 <title>continuous_delivery_scripts.utils.filesystem_helpers API documentation</title>
-<meta name="description" content="Helpers with regards to actions on the filesystem." />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="Helpers with regards to actions on the filesystem.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
 </head>
 <body>
 <main>
@@ -27,194 +41,6 @@
 </header>
 <section id="section-intro">
 <p>Helpers with regards to actions on the filesystem.</p>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">#
-# Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
-# SPDX-License-Identifier: Apache-2.0
-#
-&#34;&#34;&#34;Helpers with regards to actions on the filesystem.&#34;&#34;&#34;
-
-import os
-import tempfile
-import shutil
-import platform
-import logging
-from wcmatch.pathlib import Path as EnhancedPath, GLOBSTAR
-from pathlib import Path
-from contextlib import contextmanager
-import copy
-
-from typing import Iterator, Generator, Callable, Any, Optional, Pattern, Match, List
-
-logger = logging.getLogger(__name__)
-
-
-@contextmanager
-def cd(new_dir: str) -&gt; Generator:
-    &#34;&#34;&#34;Context manager allowing an operation to be performed inside given directory.
-
-    Args:
-         new_dir: the directory to move into
-
-    &#34;&#34;&#34;
-    prev_dir = os.getcwd()
-    os.chdir(os.path.expanduser(new_dir))
-    try:
-        yield
-    finally:
-        os.chdir(prev_dir)
-
-
-def walk_up_tree_to_root(starting_point: str) -&gt; Iterator[str]:
-    &#34;&#34;&#34;Iterates from path to root.
-
-    Args:
-        starting_point: path from where to start.
-
-    Returns:
-        Iterator walking up the directory tree up to the root.
-    &#34;&#34;&#34;
-    if not os.path.exists(starting_point):
-        raise FileNotFoundError(starting_point)
-
-    current_dir = os.path.realpath(starting_point if os.path.isdir(starting_point) else os.path.dirname(starting_point))
-
-    previous_dir = None
-    while previous_dir != current_dir:
-        yield current_dir
-        previous_dir = current_dir
-        current_dir = os.path.dirname(current_dir)
-
-
-def _get_directory_walk_method(top: bool) -&gt; Callable[[str], Iterator[str]]:
-    def walk_down_tree(start: str) -&gt; Iterator[str]:
-        for root, dirs, files in os.walk(start, followlinks=True):
-            yield root
-
-    return walk_up_tree_to_root if top else walk_down_tree
-
-
-def find_file_in_tree(file_name: str, starting_point: str = os.getcwd(), top: bool = False) -&gt; str:
-    &#34;&#34;&#34;Finds a file in directory tree.
-
-    Args:
-        file_name: name of the file to look for.
-        starting_point: path from where to start the search
-        top: search up the directory tree to root if True; down the tree otherwise.
-
-    Returns:
-            path of the file of interest.
-    &#34;&#34;&#34;
-    if not file_name:
-        raise ValueError(&#34;Undefined file name&#34;)
-
-    iterator = _get_directory_walk_method(top)
-    for directory in iterator(starting_point):
-        file_path = os.path.join(directory, file_name)
-        if os.path.exists(file_path):
-            break
-    else:
-        raise FileNotFoundError(
-            f&#39;File [{file_name}] not found anywhere in directories {&#34;above&#34; if top else &#34;under&#34;} {starting_point}&#39;
-        )
-    return file_path
-
-
-def match_pattern(path: Path, pattern: str) -&gt; bool:
-    &#34;&#34;&#34;Checks whether a path matches a `Unix`-like pattern e.g. `**/*.txt`.&#34;&#34;&#34;
-    enhanced_path = EnhancedPath(str(path))
-    return any([enhanced_path.match(pattern), enhanced_path.globmatch(pattern, flags=GLOBSTAR)])
-
-
-def should_exclude_path(path: Path, excludes: List[str]) -&gt; bool:
-    &#34;&#34;&#34;Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.&#34;&#34;&#34;
-    return any([match_pattern(path, p) for p in excludes])
-
-
-def _browse_files(files: list, root: str, should_exclude_path: Optional[Callable[[Path], bool]]) -&gt; Iterator[Path]:
-    for f in files:
-        p = Path(root).joinpath(f)
-        if not (should_exclude_path and should_exclude_path(p)):
-            yield p
-
-
-def _exclude_browsing_paths(dirs: list, root: str, should_exclude_path: Callable[[Path], bool]) -&gt; None:
-    for d in copy.copy(dirs):
-        if should_exclude_path(Path(root).joinpath(d)):
-            # Excluding paths from the scan (https://docs.python.org/3/library/os.html#os.walk)
-            dirs.remove(d)
-
-
-def list_all_files(root_path: Path, should_exclude_path: Optional[Callable[[Path], bool]] = None) -&gt; Iterator[Path]:
-    &#34;&#34;&#34;Lists all the files in a directory.&#34;&#34;&#34;
-    for root, dirs, files in os.walk(str(root_path)):
-        yield from _browse_files(files, root, should_exclude_path)
-        if should_exclude_path:
-            _exclude_browsing_paths(dirs, root, should_exclude_path)
-
-
-class TemporaryDirectory:
-    &#34;&#34;&#34;Creates and returns a temporary directory.
-
-    This is the same as tempfile.TemporaryDirectory in most cases.
-    However, on CI the temporary folder may not be accessible.
-    Moreover, on Windows TemporaryDirectory will fail cleaning up
-    (https://bugs.python.org/issue22107) and hence, a workaround had to be
-    implemented.
-
-    &#34;&#34;&#34;
-
-    def __init__(self) -&gt; None:
-        &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
-        self._tmp_dir_context_manager = tempfile.TemporaryDirectory()
-        self._tmp_dir_path = Path(self._tmp_dir_context_manager.name).resolve()
-
-    @property
-    def path(self) -&gt; Path:
-        &#34;&#34;&#34;Path to the folder.&#34;&#34;&#34;
-        return self._tmp_dir_path
-
-    def __str__(self) -&gt; str:
-        &#34;&#34;&#34;String representation.&#34;&#34;&#34;
-        return str(self._tmp_dir_path)
-
-    def __enter__(self) -&gt; Path:
-        &#34;&#34;&#34;Context manager entry point.&#34;&#34;&#34;
-        return self.path
-
-    def __exit__(self, exc: Any, value: Any, tb: Any) -&gt; None:
-        &#34;&#34;&#34;Context manager exit point.&#34;&#34;&#34;
-        self.cleanup()
-
-    def _default_cleanup(self) -&gt; None:
-        try:
-            self._tmp_dir_context_manager.cleanup()
-        except FileNotFoundError as e:
-            logger.warning(f&#34;Failed cleaning up {self.path}. Reason: {str(e)}&#34;)
-
-    def _windows_cleanup(self) -&gt; None:
-        if self.path.exists():
-            shutil.rmtree(str(self.path), ignore_errors=True)
-
-    def cleanup(self) -&gt; None:
-        &#34;&#34;&#34;Deletes the temporary directory.&#34;&#34;&#34;
-        if platform.system() == &#34;Windows&#34;:
-            self._windows_cleanup()
-        else:
-            self._default_cleanup()
-
-
-def scan_file_for_pattern(file_path: Path, pattern: Pattern) -&gt; Optional[Match]:
-    &#34;&#34;&#34;Looks for a specific pattern in a file.&#34;&#34;&#34;
-    if not file_path.exists():
-        return None
-    with open(str(file_path), &#34;r&#34;, encoding=&#34;utf8&#34;) as f:
-        text = f.read()
-        return pattern.search(text)</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -227,12 +53,6 @@ def scan_file_for_pattern(file_path: Path, pattern: Pattern) -&gt; Optional[Matc
 <span>def <span class="ident">cd</span></span>(<span>new_dir: str) ‑> Generator</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Context manager allowing an operation to be performed inside given directory.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>new_dir</code></strong></dt>
-<dd>the directory to move into</dd>
-</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -252,23 +72,18 @@ def cd(new_dir: str) -&gt; Generator:
     finally:
         os.chdir(prev_dir)</code></pre>
 </details>
+<div class="desc"><p>Context manager allowing an operation to be performed inside given directory.</p>
+<dl>
+<dt>Args</dt>
+<dt>-----=</dt>
+<dt><strong><code>new_dir</code></strong></dt>
+<dd>the directory to move into</dd>
+</dl></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.filesystem_helpers.find_file_in_tree"><code class="name flex">
-<span>def <span class="ident">find_file_in_tree</span></span>(<span>file_name: str, starting_point: str = '/home/runner/work/continuous-delivery-scripts/continuous-delivery-scripts', top: bool = False) ‑> str</span>
+<span>def <span class="ident">find_file_in_tree</span></span>(<span>file_name: str,<br>starting_point: str = '/home/runner/work/continuous-delivery-scripts/continuous-delivery-scripts',<br>top: bool = False) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Finds a file in directory tree.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>file_name</code></strong></dt>
-<dd>name of the file to look for.</dd>
-<dt><strong><code>starting_point</code></strong></dt>
-<dd>path from where to start the search</dd>
-<dt><strong><code>top</code></strong></dt>
-<dd>search up the directory tree to root if True; down the tree otherwise.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>path of the file of interest.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -298,12 +113,25 @@ def cd(new_dir: str) -&gt; Generator:
         )
     return file_path</code></pre>
 </details>
+<div class="desc"><p>Finds a file in directory tree.</p>
+<dl>
+<dt>Args</dt>
+<dt>-----=</dt>
+<dt><strong><code>file_name</code></strong></dt>
+<dd>name of the file to look for.</dd>
+<dt><strong><code>starting_point</code></strong></dt>
+<dd>path from where to start the search</dd>
+<dt><strong><code>top</code></strong></dt>
+<dd>search up the directory tree to root if True; down the tree otherwise.</dd>
+</dl>
+<p>Returns
+-----=
+path of the file of interest.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.filesystem_helpers.list_all_files"><code class="name flex">
-<span>def <span class="ident">list_all_files</span></span>(<span>root_path: pathlib.Path, should_exclude_path: Optional[Callable[[pathlib.Path], bool]] = None) ‑> Iterator[pathlib.Path]</span>
+<span>def <span class="ident">list_all_files</span></span>(<span>root_path: pathlib.Path,<br>should_exclude_path: Callable[[pathlib.Path], bool] | None = None) ‑> Iterator[pathlib.Path]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Lists all the files in a directory.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -315,12 +143,12 @@ def cd(new_dir: str) -&gt; Generator:
         if should_exclude_path:
             _exclude_browsing_paths(dirs, root, should_exclude_path)</code></pre>
 </details>
+<div class="desc"><p>Lists all the files in a directory.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.filesystem_helpers.match_pattern"><code class="name flex">
 <span>def <span class="ident">match_pattern</span></span>(<span>path: pathlib.Path, pattern: str) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Checks whether a path matches a <code>Unix</code>-like pattern e.g. <code>**/*.txt</code>.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -330,12 +158,12 @@ def cd(new_dir: str) -&gt; Generator:
     enhanced_path = EnhancedPath(str(path))
     return any([enhanced_path.match(pattern), enhanced_path.globmatch(pattern, flags=GLOBSTAR)])</code></pre>
 </details>
+<div class="desc"><p>Checks whether a path matches a <code>Unix</code>-like pattern e.g. <code>**/*.txt</code>.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.filesystem_helpers.scan_file_for_pattern"><code class="name flex">
-<span>def <span class="ident">scan_file_for_pattern</span></span>(<span>file_path: pathlib.Path, pattern: Pattern) ‑> Optional[Match]</span>
+<span>def <span class="ident">scan_file_for_pattern</span></span>(<span>file_path: pathlib.Path, pattern: Pattern) ‑> Match | None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Looks for a specific pattern in a file.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -348,12 +176,12 @@ def cd(new_dir: str) -&gt; Generator:
         text = f.read()
         return pattern.search(text)</code></pre>
 </details>
+<div class="desc"><p>Looks for a specific pattern in a file.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.filesystem_helpers.should_exclude_path"><code class="name flex">
 <span>def <span class="ident">should_exclude_path</span></span>(<span>path: pathlib.Path, excludes: List[str]) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -362,19 +190,12 @@ def cd(new_dir: str) -&gt; Generator:
     &#34;&#34;&#34;Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.&#34;&#34;&#34;
     return any([match_pattern(path, p) for p in excludes])</code></pre>
 </details>
+<div class="desc"><p>Determines if a file should be excluded i.e. its filename follows a pattern defined in excludes list.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.filesystem_helpers.walk_up_tree_to_root"><code class="name flex">
 <span>def <span class="ident">walk_up_tree_to_root</span></span>(<span>starting_point: str) ‑> Iterator[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Iterates from path to root.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>starting_point</code></strong></dt>
-<dd>path from where to start.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>Iterator walking up the directory tree up to the root.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -399,6 +220,16 @@ def cd(new_dir: str) -&gt; Generator:
         previous_dir = current_dir
         current_dir = os.path.dirname(current_dir)</code></pre>
 </details>
+<div class="desc"><p>Iterates from path to root.</p>
+<dl>
+<dt>Args</dt>
+<dt>-----=</dt>
+<dt><strong><code>starting_point</code></strong></dt>
+<dd>path from where to start.</dd>
+</dl>
+<p>Returns
+-----=
+Iterator walking up the directory tree up to the root.</p></div>
 </dd>
 </dl>
 </section>
@@ -409,13 +240,6 @@ def cd(new_dir: str) -&gt; Generator:
 <span>class <span class="ident">TemporaryDirectory</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates and returns a temporary directory.</p>
-<p>This is the same as tempfile.TemporaryDirectory in most cases.
-However, on CI the temporary folder may not be accessible.
-Moreover, on Windows TemporaryDirectory will fail cleaning up
-(<a href="https://bugs.python.org/issue22107">https://bugs.python.org/issue22107</a>) and hence, a workaround had to be
-implemented.</p>
-<p>Constructor.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -470,11 +294,17 @@ implemented.</p>
         else:
             self._default_cleanup()</code></pre>
 </details>
+<div class="desc"><p>Creates and returns a temporary directory.</p>
+<p>This is the same as tempfile.TemporaryDirectory in most cases.
+However, on CI the temporary folder may not be accessible.
+Moreover, on Windows TemporaryDirectory will fail cleaning up
+(<a href="https://bugs.python.org/issue22107">https://bugs.python.org/issue22107</a>) and hence, a workaround had to be
+implemented.</p>
+<p>Constructor.</p></div>
 <h3>Instance variables</h3>
 <dl>
-<dt id="continuous_delivery_scripts.utils.filesystem_helpers.TemporaryDirectory.path"><code class="name">var <span class="ident">path</span> : pathlib.Path</code></dt>
+<dt id="continuous_delivery_scripts.utils.filesystem_helpers.TemporaryDirectory.path"><code class="name">prop <span class="ident">path</span> : pathlib.Path</code></dt>
 <dd>
-<div class="desc"><p>Path to the folder.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -484,6 +314,7 @@ def path(self) -&gt; Path:
     &#34;&#34;&#34;Path to the folder.&#34;&#34;&#34;
     return self._tmp_dir_path</code></pre>
 </details>
+<div class="desc"><p>Path to the folder.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -492,7 +323,6 @@ def path(self) -&gt; Path:
 <span>def <span class="ident">cleanup</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Deletes the temporary directory.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -504,6 +334,7 @@ def path(self) -&gt; Path:
     else:
         self._default_cleanup()</code></pre>
 </details>
+<div class="desc"><p>Deletes the temporary directory.</p></div>
 </dd>
 </dl>
 </dd>
@@ -511,7 +342,6 @@ def path(self) -&gt; Path:
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -547,7 +377,7 @@ def path(self) -&gt; Path:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
 </footer>
 </body>
 </html>

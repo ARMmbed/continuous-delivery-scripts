@@ -93,6 +93,22 @@ class ConfigurationVariable(enum.Enum):
     """States whether the release should be tagged with shortcuts i.e. major, major+minor"""
     SECRETS_BASELINE_FILENAME = 37
     """Filename for the detect-secrets baseline."""
+    DOCUMENTATION_GUIDES_DIR = 38
+    """Optional directory of Markdown guides to publish alongside generated API documentation."""
+    DOCUMENTATION_GUIDES_OUTPUT_FOLDER = 39
+    """Relative folder for rendered guides beneath the documentation output."""
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = 40
+    """Fail the licence audit when dependencies or usable licence declarations are missing."""
+    GENERATE_LICENSING_SUMMARY_ON_RELEASE = 41
+    """Generate third-party licence summaries during a release when the plugin supports metadata."""
+    LICENCE_ASSESSMENT_RULES_PATH = 42
+    """Optional project TOML file overriding the built-in licence assessment policy."""
+    LICENCE_ASSESSMENT_RULES = 43
+    """Optional inline licence assessment rules in the project's pyproject.toml."""
+    REVIEWED_LICENCE_ASSESSMENTS = 44
+    """Project-specific records explaining manual reviews of REVIEW assessments."""
+    LICENCE_ASSESSMENT_FAIL_ON = 45
+    """Optional top-level list of assessment statuses that fail compliance checks."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -199,6 +215,10 @@ class StaticConfig(GenericConfig):
     TAG_LATEST = False
     TAG_VERSION_SHORTCUTS = False
     SECRETS_BASELINE_FILENAME = ".secrets.baseline"
+    FAIL_ON_INCOMPLETE_LICENCE_AUDIT = False
+    LICENCE_ASSESSMENT_FAIL_ON = None
+    """When unset, use fail_on from the embedded or project licence assessment rules."""
+    GENERATE_LICENSING_SUMMARY_ON_RELEASE = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"

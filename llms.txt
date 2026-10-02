@@ -1,0 +1,21 @@
+# continuous-delivery-scripts
+
+> Reusable Git-based CI/CD tools for semantic release automation, changelogs, SPDX SBOMs, third-party IP (TPIP) licence reporting, copyright and licence headers, and secrets checks. Language plugins let teams keep their choice of CI provider.
+
+## Task guides
+
+- [Documentation overview](https://armmbed.github.io/continuous-delivery-scripts/): Find the right tool for a delivery task.
+- [Generate an SPDX SBOM](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html): Prerequisites and SPDX tag-value outputs.
+- [Third-party IP and licence reporting](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html): Generate and review TPIP licence reports.
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html): Calculate, tag and publish a release.
+- [Generate changelogs](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html): Build release notes from news fragments.
+- [Manage source licence headers](https://armmbed.github.io/continuous-delivery-scripts/guides/licence-header-management.html): Update copyright and SPDX notices.
+- [Check for secrets](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-for-secrets.html): Scan Git-tracked files against the registry.
+
+## Reference
+
+- [All task guides](https://armmbed.github.io/continuous-delivery-scripts/guides/index.html): Guides for every packaged command.
+- [API reference](https://armmbed.github.io/continuous-delivery-scripts/api.html): Generated Python interfaces.
+- [Source and README](https://github.com/ARMmbed/continuous-delivery-scripts): Current source, installation and CLI command table.
+
+The GitHub Pages site is regenerated on release, so the repository may contain newer guides than the published pages.

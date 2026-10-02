@@ -1,123 +1,359 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Platform Database Validation Results</title>
-    <style type="text/css">
-      html {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-          "Helvetica Neue", sans-serif;
-        background-color: #16161a;
-        color: #ccc;
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Third-party IP and licence compliance report for {{ project.name }}">
+    <title>{{ project.name }} · Third-party licence and IP report</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --background: #f3f6fa;
+        --surface: #fff;
+        --text: #192638;
+        --muted: #536579;
+        --border: #dce4ed;
+        --accent: #08739a;
+        --success: #156b46;
+        --success-background: #def4e8;
+        --warning: #835616;
+        --warning-background: #fff1d6;
+        --error: #a02932;
+        --error-background: #fce5e7;
       }
-      h1,
-      h2 {
-        background-color: #002b49;
-        padding: 0.5rem;
-        font-weight: 400;
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --background: #101923;
+          --surface: #1a2632;
+          --text: #eef3f8;
+          --muted: #b3c3d3;
+          --border: #3a4b5e;
+          --accent: #80d7f4;
+          --success: #9ae7b8;
+          --success-background: #173b32;
+          --warning: #ffda91;
+          --warning-background: #40321e;
+          --error: #ffc2c6;
+          --error-background: #49292d;
+        }
       }
-      h1 {
-        color: white;
-      }
-      h2 {
-        color: #ddd;
-      }
-      a {
-        color: #00c1de;
-        text-decoration: none;
-      }
-      a:hover {
-        opacity: 0.5;
-      }
-      table {
-        border-collapse: collapse;
-        text-align: center;
-      }
-      td {
-        padding: 0.3rem 1rem 0.3rem 1rem;
-        font-weight: 300;
-      }
-      th {
-        font-weight: 400;
-      }
-      thead {
-        font-size: 1.1rem;
-      }
-      tbody {
-        font-size: 0.9rem;
-      }
-      tbody tr:nth-child(odd) {
-        background-color: #1c1c1c;
-      }
-      ul {
-        list-style-type: circle;
-      }
-      .link_info {
-        color: #666;
-        margin: 0.5rem;
+      *, *::before, *::after { box-sizing: border-box; }
+      body { margin: 0; background: var(--background); color: var(--text); font: 1rem/1.6 system-ui, sans-serif; }
+      a { color: var(--accent); text-underline-offset: .2em; }
+      a:focus-visible, summary:focus-visible, .table-wrap:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+      .container { width: min(100% - 2rem, 90rem); margin-inline: auto; }
+      .hero { padding: 3rem 0 2.5rem; background: linear-gradient(135deg, #102b46, #145d70); color: #fff; }
+      .hero h1 { max-width: 20ch; margin: .35rem 0; font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1.15; }
+      .eyebrow { margin: 0; color: #adf0ed; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; }
+      .hero .meta { margin: .75rem 0 0; color: #e5f2f5; }
+      main { padding-block: 2rem 4rem; }
+      .page-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+      .download-links { display: flex; flex-wrap: wrap; gap: .75rem; }
+      .download-link { display: inline-flex; align-items: center; min-height: 2.75rem; padding: .5rem .9rem; border: 1px solid var(--accent); border-radius: .5rem; background: var(--surface); font-weight: 650; text-decoration: none; }
+      .download-link:hover { background: var(--background); text-decoration: underline; }
+      section { margin-bottom: 2.75rem; }
+      h2 { margin: 0 0 1rem; font-size: 1.5rem; }
+      h3 { margin: 0 0 .5rem; font-size: 1.05rem; }
+      .panel, .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: .9rem; }
+      .panel { padding: 1.4rem; }
+      .panel p:last-child { margin-bottom: 0; }
+      .summary-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); gap: 1rem; }
+      .status { display: inline-block; border-radius: 99rem; padding: .25rem .75rem; font-size: .87rem; font-weight: 700; }
+      .status--good { color: var(--success); background: var(--success-background); }
+      .status--warning { color: var(--warning); background: var(--warning-background); }
+      .status--error { color: var(--error); background: var(--error-background); }
+      .summary-grid .status { margin-bottom: .6rem; }
+      .summary-copy p { margin: .45rem 0; }
+      .policy { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+      .policy-list { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0; margin: .65rem 0; list-style: none; }
+      .policy-list li { padding: .25rem .55rem; border: 1px solid var(--border); border-radius: .45rem; background: var(--background); }
+      .stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+      .stat { padding: .85rem; border-radius: .55rem; background: var(--background); }
+      .stat-title { display: block; color: var(--text); font-size: 1.1rem; font-weight: 700; line-height: 1.3; }
+      .stat strong { display: block; margin-top: .2rem; color: var(--accent); font-size: 1.8rem; line-height: 1.3; }
+      .muted { color: var(--muted); }
+      .stat small { display: block; margin-top: .25rem; color: var(--muted); line-height: 1.35; }
+      .gap-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+      .gap-list ul { margin: .5rem 0 0; padding-left: 1.25rem; overflow-wrap: anywhere; }
+      .gap-list li { margin: .3rem 0; }
+      .dependency-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .6rem; list-style: none; padding: 0; }
+      .dependency-links li { padding: .55rem .75rem; border: 1px solid var(--border); border-radius: .5rem; }
+      .dependency-links a { display: block; font-weight: 600; overflow-wrap: anywhere; }
+      .dependency-links small { display: block; color: var(--muted); overflow-wrap: anywhere; }
+      .table-wrap { overflow-x: auto; }
+      table { width: 100%; min-width: 68rem; border-collapse: collapse; }
+      caption { text-align: left; padding: 1rem 1.25rem; font-weight: 600; }
+      th, td { padding: .9rem 1rem; text-align: left; vertical-align: top; border-top: 1px solid var(--border); }
+      thead th { background: var(--surface); color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+      tbody tr:nth-child(even) { background: var(--background); }
+      tbody tr.row-issue { box-shadow: inset .25rem 0 var(--error); }
+      tbody tr.row-reviewed { box-shadow: inset .25rem 0 var(--warning); }
+      tbody tr:target { outline: 3px solid var(--accent); outline-offset: -3px; }
+      .package-name, .reference, td details { overflow-wrap: anywhere; }
+      .package-name { min-width: 12rem; }
+      .detail-group + .detail-group { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--border); }
+      .detail-group p { margin: .35rem 0; }
+      td code { white-space: nowrap; }
+      details { margin-bottom: .5rem; border: 1px solid var(--border); border-radius: .45rem; padding: .35rem .55rem; }
+      details:last-child { margin-bottom: 0; }
+      summary { cursor: pointer; font-weight: 600; }
+      details p { margin: .5rem 0 0; }
+      pre { max-height: 18rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: .82rem/1.5 ui-monospace, monospace; }
+      footer { padding-bottom: 2rem; color: var(--muted); font-size: .85rem; }
+      @media (max-width: 48rem) {
+        .hero { padding: 2rem 0; }
+        .summary-grid { grid-template-columns: 1fr; }
+        .panel { padding: 1rem; }
       }
     </style>
   </head>
   <body>
-    <h1>Project's 3rd party IP report</h1>
-    <p><i>{{ render_time }}</i></p>
-    <h2>Summary</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Licence compliance</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span style="color: {% if project.compliance %}#00c246{% else %}red{% endif %};">{% if project.compliance %}Compliant{% else %}Not compliant{% endif %}</span></td>
-          <td>{% if project.compliance_details %}{{ project.compliance_details }}{% else %}N/A{% endif %}</td>
-        </tr>
-      </tbody>
-    </table>
-    <h2>Package licences</h2>
-    <table id="third_party_ip">
-      <tr>
-      <th>Compliance</th>
-      <th>Name</th>
-      <th>Is a dependency?</th>
-      <th>URL</th>
-      <th>Licence</th>
-      <th>Details</th>
-      </tr>
-{%- for name,package in packages|dictsort %}
-        <tr>
-        <td style="text-align:center">
-            {%- if package.is_compliant == True -%}
-                ✅
-            {%- else -%}
-                ❌
-            {%- endif -%}
-        </td>
-        <td style="text-align:center">
-           {{ package.name }}
-        </td>
-        <td style="text-align:center">
-            {%- if package.is_dependency == True -%}
-                Y
-            {%- else -%}
-                N
-            {%- endif -%}
-        </td>
-        <td style="text-align:center">
-           {{ package.url }}
-        </td>
-        <td style="text-align:center">
-            <span style="color: {% if package.mark_as_problematic %}{% if package.is_compliant %}#ffdf28{% else %}red{% endif %}{% endif %};">{{ package.licence }}</span>
-
-        </td>
-        <td style="text-align:center">
-           {{ package.licence_compliance_details }}
-        </td>
-      </tr>
-{%- endfor %}
-    </table>
+    <header class="hero">
+      <div class="container">
+        <p class="eyebrow">Licence reporting</p>
+        <h1>Third-party licence and IP report</h1>
+        <p class="meta">{{ project.name }} · Generated <time datetime="{{ render_time.isoformat() }}">{{ render_time.strftime('%d %B %Y at %H:%M') }}</time></p>
+      </div>
+    </header>
+    <main class="container">
+      <nav class="page-nav" aria-label="Report sections">
+        <a href="#summary">Summary</a>
+        <a href="#audit-gaps">Audit gaps</a>
+        <a href="#licence-assessment">Licence assessment</a>
+        <a href="#dependency-summary">Dependency summary</a>
+        <a href="#package-licences">Package licences</a>
+      </nav>
+      <section class="panel" aria-labelledby="downloads-heading">
+        <h2 id="downloads-heading">Download this report</h2>
+        <p>Choose a format for further analysis or sharing.</p>
+        <div class="download-links">
+          <a class="download-link" href="third_party_IP_report.csv" download="third_party_IP_report.csv">Download CSV</a>
+          <a class="download-link" href="third_party_IP_report.json" download="third_party_IP_report.json">Download JSON</a>
+          <a class="download-link" href="third_party_IP_report.txt" download="third_party_IP_report.txt">Download text</a>
+        </div>
+      </section>
+      <section id="summary" aria-labelledby="summary-heading">
+        <h2 id="summary-heading">Summary</h2>
+        <div class="summary-grid">
+          <div class="panel">
+            {% if not project.complete %}
+            <span class="status status--warning">Incomplete audit</span>
+            {% elif project.compliance %}
+            <span class="status status--good">Compliant</span>
+            {% else %}
+            <span class="status status--error">Not compliant</span>
+            {% endif %}
+            <div class="summary-copy">
+              <p>The project is licensed under the <strong>{{ project.licence }}</strong> licence.</p>
+              {% for point in project.compliance_points %}
+              <p>{{ point }}</p>
+              {% else %}
+              <p>No compliance details available.</p>
+              {% endfor %}
+            </div>
+            <div class="policy">
+              <h3>Configured licence policy</h3>
+              <p>Accepted third-party licences:</p>
+              {% if project.accepted_licences %}
+              <ul class="policy-list">
+                {% for licence in project.accepted_licences %}<li><code>{{ licence }}</code></li>{% endfor %}
+              </ul>
+              <p class="muted">An asterisk includes matching licence identifiers. Documented manual reviews may approve exceptions.</p>
+              {% else %}
+              <p class="muted">No accepted third-party licences are configured.</p>
+              {% endif %}
+            </div>
+          </div>
+          <div class="panel stats" aria-label="Report totals">
+            <div class="stat"><span class="stat-title">Packages reviewed</span><strong>{{ packages|length }}</strong><small>The project and each discovered dependency included in this report.</small></div>
+            <div class="stat"><span class="stat-title">Missing dependencies</span><strong>{{ missing_dependencies|length }}</strong><small>Dependencies expected but not found in the audited environment.</small></div>
+            <div class="stat"><span class="stat-title">Unknown licences</span><strong>{{ unknown_licences|length }}</strong><small>Packages without a usable licence declaration, including those manually reviewed.</small></div>
+            <div class="stat"><span class="stat-title">Undocumented exemptions</span><strong>{{ undocumented_exemptions|length }}</strong><small>Manual licence exceptions without a recorded reason.</small></div>
+          </div>
+        </div>
+      </section>
+      <section id="audit-gaps" aria-labelledby="gaps-heading">
+        <h2 id="gaps-heading">Audit gaps</h2>
+        <p class="muted">Audit gaps highlight missing or uncertain dependency licence information that needs attention. An unknown licence can still appear here after a documented manual review, even when the overall policy status is compliant.</p>
+        {% if missing_dependencies or unknown_licences or undocumented_exemptions %}
+        <div class="gap-list">
+          {% if missing_dependencies %}
+          <div class="panel"><h3>Missing dependencies</h3>
+            <ul>{% for dependency in missing_dependencies %}<li>{{ dependency }}</li>{% endfor %}</ul>
+            <p class="muted">Missing dependencies have no detailed row because they were not found in the audited environment.</p>
+          </div>
+          {% endif %}
+          {% if unknown_licences %}
+          <div class="panel"><h3>Unknown licences (including manually reviewed)</h3>
+            <ul>{% for name in unknown_licences %}<li><a href="#{{ packages[name].anchor }}">{{ name }}</a></li>{% endfor %}</ul>
+          </div>
+          {% endif %}
+          {% if undocumented_exemptions %}
+          <div class="panel"><h3>Undocumented exemptions</h3>
+            <ul>{% for name in undocumented_exemptions %}<li><a href="#{{ packages[name].anchor }}">{{ name }}</a></li>{% endfor %}</ul>
+          </div>
+          {% endif %}
+        </div>
+        {% else %}
+        <p class="panel">No audit gaps were recorded.</p>
+        {% endif %}
+      </section>
+      <section id="licence-assessment" aria-labelledby="assessment-heading">
+        <h2 id="assessment-heading">Dependency licence assessment</h2>
+        <p class="muted">Directional screening against the project's declared licence. Results indicate potential risks, not legal conclusions. The configured allowlist compliance check remains separate.</p>
+        <div class="stats" aria-label="Dependency licence assessment totals">
+          {% set assessment_descriptions = {
+            'ALLOW': 'No obvious issue under the screening rules; licence notices and conditions still apply.',
+            'REVIEW': 'Needs human review of obligations that may depend on linking, modification or distribution.',
+            'MANUALLY_REVIEWED': 'An automatic REVIEW has a documented human assessment; see the dependency details.',
+            'DENY': 'A specific rule or project policy identifies a conflict or prohibition.',
+            'UNKNOWN': 'Missing licence details or no reliable assessment rule; a package may still declare a licence.'
+          } %}
+          {% for status, count in licence_assessment_counts.items() %}
+          <div class="stat"><span class="stat-title">{{ status }}</span><strong>{{ count }}</strong><small>{{ assessment_descriptions[status] }}</small></div>
+          {% endfor %}
+        </div>
+        <div class="panel">
+          <h3>Dependencies needing attention</h3>
+          <ul>
+            {% for name, package in packages|dictsort if package.is_dependency and package.licence_assessment.status not in ('ALLOW', 'MANUALLY_REVIEWED') %}
+            <li><a href="#{{ package.anchor }}">{{ name }}</a>: {{ package.licence_assessment.status }} — {{ package.licence_assessment.reason }}</li>
+            {% else %}
+            <li>No dependencies need further licence assessment.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+      <section id="dependency-summary" aria-labelledby="dependency-summary-heading">
+        <h2 id="dependency-summary-heading">Dependency summary</h2>
+        <p class="muted">Choose a package to jump to its licence and evidence in the detailed results.</p>
+        <div class="panel">
+          {% for name, package in packages|dictsort if not package.is_dependency %}
+          <p><strong>Project:</strong> <a href="#{{ package.anchor }}">{{ package.name }}</a></p>
+          {% endfor %}
+          {% if packages|length > 1 %}
+          <details>
+            <summary>Browse {{ packages|length - 1 }} dependencies</summary>
+            <ul class="dependency-links">
+              {% for name, package in packages|dictsort if package.is_dependency %}
+              <li><a href="#{{ package.anchor }}">{{ package.name }}</a><small>{{ package.licence }}</small></li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% else %}
+          <p class="muted">No dependencies were included in this report.</p>
+          {% endif %}
+        </div>
+      </section>
+      <section id="package-licences" aria-labelledby="packages-heading">
+        <h2 id="packages-heading">Package licences</h2>
+        <p class="muted">Review the project's declared licence and the licences of its dependencies. Open the evidence panels to see original declarations and packaged notices.</p>
+        <p class="muted">Licence identification, configured-policy compliance and dependency compatibility are separate steps. A manual licence record can approve a package for the configured policy and, when it contains a valid SPDX expression, supply an assessment licence without changing what discovery found.</p>
+        <div class="table-wrap" role="region" aria-label="Package licence results" tabindex="0">
+          <table id="third_party_ip">
+            <caption>Licence declarations and compliance by package</caption>
+            <thead>
+              <tr>
+                <th scope="col">Status</th><th scope="col">Assessment</th><th scope="col">Package</th><th scope="col">Version</th>
+                <th scope="col">Scope</th><th scope="col">Reference</th><th scope="col">Licence</th>
+                <th scope="col">Source</th><th scope="col">Packaged evidence</th><th scope="col">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for name, package in packages|dictsort %}
+              <tr id="{{ package.anchor }}" class="{% if not package.is_compliant %}row-issue{% elif package.mark_as_problematic %}row-reviewed{% endif %}">
+                <td>
+                  {% if not package.is_compliant %}
+                  <span class="status status--error">Needs review</span>
+                  {% elif package.mark_as_problematic %}
+                  <span class="status status--warning">Reviewed</span>
+                  {% else %}
+                  <span class="status status--good">Compliant</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if package.licence_assessment %}
+                  <span class="status status--{{ 'good' if package.licence_assessment.status == 'ALLOW' else 'error' if package.licence_assessment.status == 'DENY' else 'warning' }}">{{ package.licence_assessment.status }}</span>
+                  {% else %}<span class="muted">—</span>{% endif %}
+                </td>
+                <td class="package-name"><strong>{{ package.name }}</strong></td>
+                <td><code>{{ package.version }}</code></td>
+                <td>{{ 'Dependency' if package.is_dependency else 'Project' }}</td>
+                <td class="reference">
+                  {% if package.url.startswith('https://') or package.url.startswith('http://') %}
+                  <a href="{{ package.url }}">View link</a>
+                  {% else %}
+                  <span class="muted">{{ package.url or 'Not provided' }}</span>
+                  {% endif %}
+                </td>
+                <td><strong>{{ package.licence }}</strong></td>
+                <td><code>{{ package.licence_source }}</code></td>
+                <td>
+                  {% if package.licence_classifiers %}
+                  <details><summary>Declared classifiers</summary><p>{{ package.licence_classifiers|join('; ') }}</p></details>
+                  {% endif %}
+                  {% if package.licence_candidates %}
+                  <details><summary>Licence candidates (review required)</summary><p>{{ package.licence_candidates|join('; ') }}</p></details>
+                  {% endif %}
+                  {% if package.declared_licence %}
+                  <details><summary>Original declaration</summary><pre>{{ package.declared_licence }}</pre></details>
+                  {% endif %}
+                  {% for evidence in package.licence_evidence %}
+                  <details>
+                    <summary>{{ evidence.kind|capitalize }}: {{ evidence.path }}</summary>
+                    {% if evidence.text %}
+                    <pre>{{ evidence.text }}</pre>
+                    {% elif evidence.path.startswith('https://') or evidence.path.startswith('http://') %}
+                    <p><a href="{{ evidence.path }}">View licence file</a></p>
+                    {% else %}
+                    <p class="muted">No packaged text available.</p>
+                    {% endif %}
+                  </details>
+                  {% endfor %}
+                  {% if not package.licence_classifiers and not package.licence_candidates and not package.declared_licence and not package.licence_evidence %}
+                  <span class="muted">No evidence recorded</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="detail-group">
+                    <p><strong>Licence identification</strong></p>
+                    <p>Discovered licence: <code>{{ package.licence }}</code>.</p>
+                    {% if package.licence_assessment and package.licence_assessment.assessed_licence_source == 'manual licence review' %}
+                    <p>Manually verified licence for assessment: <code>{{ package.licence_assessment.dependency_licence }}</code>.</p>
+                    {% endif %}
+                  </div>
+                  <div class="detail-group">
+                    <p><strong>Configured licence policy</strong></p>
+                    <p><strong>Automatic policy check:</strong>
+                      {{ 'Does not meet the configured licence policy.' if package.mark_as_problematic else 'Meets the configured licence policy.' }}
+                    </p>
+                    {% if package.manual_check.checked %}
+                    <p class="muted"><strong>Manual policy review:</strong> {{ package.manual_check.reason or 'No reason recorded.' }}</p>
+                    {% endif %}
+                  </div>
+                  {% if package.licence_assessment %}
+                  <div class="detail-group">
+                    <p><strong>Dependency licence compatibility</strong></p>
+                    <p><strong>Assessment:</strong> {{ package.licence_assessment.automatic_status }} — {{ package.licence_assessment.reason }}</p>
+                    {% if package.licence_assessment.manual_review.reviewed %}
+                    <p><strong>Manual compatibility review:</strong> {{ package.licence_assessment.manual_review.reason }}</p>
+                    {% endif %}
+                    <p class="muted">Compared with project licence <code>{{ package.licence_assessment.project_licence }}</code>.</p>
+                    <p class="muted">Rule: <code>{{ package.licence_assessment.rule }}</code> ({{ package.licence_assessment.source }}){% if package.licence_assessment.selected_licence %}; choice: <code>{{ package.licence_assessment.selected_licence }}</code>{% endif %}.</p>
+                    {% for info in package.licence_assessment.scancode_licences %}
+                    <p class="muted">ScanCode LicenseDB describes <code>{{ info.identifier }}</code> as {{ info.category }}: <a href="{{ info.url }}">View licence metadata</a>. This is not a compatibility decision.</p>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <footer class="container">Automatically generated from project metadata and configured licence policy. Review unknown results before relying on this report.</footer>
   </body>
 </html>
