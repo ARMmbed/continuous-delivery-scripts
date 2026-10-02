@@ -86,8 +86,15 @@ el.replaceWith(d);
     A licence expression can be a combination of licences and in a lot of cases is free-form text.
     The idea is to return an equivalent expression but using SPDX identifiers when possible.
     &#34;&#34;&#34;
-    simplified_expression = _parse_licence_expression(Licensing(), licence_expression).simplify()
+    simplified_expression = _parse_licence_expression(
+        Licensing(), normalise_proprietary_licence(licence_expression)
+    ).simplify()
     for s in simplified_expression.symbols:
+        if isinstance(s, LicenseWithExceptionSymbol):
+            # An exception changes the obligations: do not treat it as the base licence.
+            continue
+        if s.key.startswith(&#34;LicenseRef-&#34;):
+            continue
         corresponding_licence = OPENSOURCE_LICENCES.get_licence(s.key)
         if corresponding_licence:
             s.key = corresponding_licence.identifier
@@ -184,16 +191,17 @@ The idea is to return an equivalent expression but using SPDX identifiers when p
 <div class="desc"><p>Determines all the third party licences allowed for a given project.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.is_licence_accepted"><code class="name flex">
-<span>def <span class="ident">is_licence_accepted</span></span>(<span>licence_expression: str) ‑> bool</span>
+<span>def <span class="ident">is_licence_accepted</span></span>(<span>licence_expression: str, additional_identifiers: Iterable[str] = ()) ‑> bool</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def is_licence_accepted(licence_expression: str) -&gt; bool:
+<pre><code class="python">def is_licence_accepted(licence_expression: str, additional_identifiers: Iterable[str] = ()) -&gt; bool:
     &#34;&#34;&#34;Determines whether the licence expressed is valid with regards to project&#39;s accepted licences.&#34;&#34;&#34;
     authorised_licences = [licence.identifier for licence in get_allowed_opensource_licences()]
+    authorised_licences.extend(additional_identifiers)
     is_or = _is_expression_or(licence_expression)
     if bool([licence for licence in determine_licences_not_in_list(licence_expression, iter(authorised_licences))]):
         return (
@@ -220,6 +228,25 @@ The idea is to return an equivalent expression but using SPDX identifiers when p
         yield parse_licence(licence_info)</code></pre>
 </details>
 <div class="desc"><p>Gets a generator over all the licences present in licenses.json.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.third_party_licences.normalise_proprietary_licence"><code class="name flex">
+<span>def <span class="ident">normalise_proprietary_licence</span></span>(<span>licence_expression: str) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def normalise_proprietary_licence(licence_expression: str) -&gt; str:
+    &#34;&#34;&#34;Use a stable SPDX licence reference for proprietary declarations.&#34;&#34;&#34;
+    return re.sub(
+        r&#34;(?&lt;![\w-])(?:LicenseRef-)?Proprietary(?:\s+Licen[cs]e)?(?![\w-])&#34;,
+        LICENSE_REF_PROPRIETARY,
+        licence_expression,
+        flags=re.IGNORECASE,
+    )</code></pre>
+</details>
+<div class="desc"><p>Use a stable SPDX licence reference for proprietary declarations.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.parse_licence"><code class="name flex">
 <span>def <span class="ident">parse_licence</span></span>(<span>licence_info: dict) ‑> <a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a></span>
@@ -253,7 +280,7 @@ The idea is to return an equivalent expression but using SPDX identifiers when p
 </summary>
 <pre><code class="python">def simplify_licence_expression(licence_expression: str) -&gt; str:
     &#34;&#34;&#34;Simplifies a licence expression.&#34;&#34;&#34;
-    return str(_parse_licence_expression(Licensing(), licence_expression).simplify())</code></pre>
+    return str(_parse_licence_expression(Licensing(), normalise_proprietary_licence(licence_expression)).simplify())</code></pre>
 </details>
 <div class="desc"><p>Simplifies a licence expression.</p></div>
 </dd>
@@ -377,8 +404,12 @@ class Licence:
             else None
         )
 
-    def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
-        &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+    def get_licence(self, licence_descriptor: Optional[str], allow_fuzzy: bool = True) -&gt; Optional[Licence]:
+        &#34;&#34;&#34;Determines a licence from its identifier or name, optionally without approximate matching.&#34;&#34;&#34;
+        if licence_descriptor and normalise_proprietary_licence(licence_descriptor) == LICENSE_REF_PROPRIETARY:
+            return PROPRIETARY_LICENCE
+        if licence_descriptor and licence_descriptor.lower().startswith(&#34;licenseref-&#34;):
+            return None
         self.load()
         if not self._licence_store or not self._licence_list or not licence_descriptor:
             return None
@@ -398,6 +429,8 @@ class Licence:
         if normalised_exact_match:
             return normalised_exact_match
 
+        if not allow_fuzzy:
+            return None
         likelihood, matched_key = determine_similar_string_from_list(normalised_descriptor, normalised_map.keys())
         return normalised_map.get(matched_key) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None</code></pre>
 </details>
@@ -406,15 +439,19 @@ class Licence:
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.OpenSourceLicences.get_licence"><code class="name flex">
-<span>def <span class="ident">get_licence</span></span>(<span>self, licence_descriptor: str | None) ‑> <a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a> | None</span>
+<span>def <span class="ident">get_licence</span></span>(<span>self, licence_descriptor: str | None, allow_fuzzy: bool = True) ‑> <a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a> | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_licence(self, licence_descriptor: Optional[str]) -&gt; Optional[Licence]:
-    &#34;&#34;&#34;Determines the licence based on a string descriptor e.g. Apache 2.&#34;&#34;&#34;
+<pre><code class="python">def get_licence(self, licence_descriptor: Optional[str], allow_fuzzy: bool = True) -&gt; Optional[Licence]:
+    &#34;&#34;&#34;Determines a licence from its identifier or name, optionally without approximate matching.&#34;&#34;&#34;
+    if licence_descriptor and normalise_proprietary_licence(licence_descriptor) == LICENSE_REF_PROPRIETARY:
+        return PROPRIETARY_LICENCE
+    if licence_descriptor and licence_descriptor.lower().startswith(&#34;licenseref-&#34;):
+        return None
     self.load()
     if not self._licence_store or not self._licence_list or not licence_descriptor:
         return None
@@ -434,10 +471,12 @@ class Licence:
     if normalised_exact_match:
         return normalised_exact_match
 
+    if not allow_fuzzy:
+        return None
     likelihood, matched_key = determine_similar_string_from_list(normalised_descriptor, normalised_map.keys())
     return normalised_map.get(matched_key) if likelihood &gt; LICENCE_LIKELIHOOD_THRESHOLD else None</code></pre>
 </details>
-<div class="desc"><p>Determines the licence based on a string descriptor e.g. Apache 2.</p></div>
+<div class="desc"><p>Determines a licence from its identifier or name, optionally without approximate matching.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.OpenSourceLicences.get_licences_from_pattern"><code class="name flex">
 <span>def <span class="ident">get_licences_from_pattern</span></span>(<span>self, licence_descriptor_pattern: Pattern) ‑> List[<a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a>] | None</span>
@@ -514,6 +553,7 @@ class Licence:
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.get_allowed_opensource_licences" href="#continuous_delivery_scripts.utils.third_party_licences.get_allowed_opensource_licences">get_allowed_opensource_licences</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.is_licence_accepted" href="#continuous_delivery_scripts.utils.third_party_licences.is_licence_accepted">is_licence_accepted</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.iter_licenses" href="#continuous_delivery_scripts.utils.third_party_licences.iter_licenses">iter_licenses</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.third_party_licences.normalise_proprietary_licence" href="#continuous_delivery_scripts.utils.third_party_licences.normalise_proprietary_licence">normalise_proprietary_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.parse_licence" href="#continuous_delivery_scripts.utils.third_party_licences.parse_licence">parse_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.simplify_licence_expression" href="#continuous_delivery_scripts.utils.third_party_licences.simplify_licence_expression">simplify_licence_expression</a></code></li>
 </ul>

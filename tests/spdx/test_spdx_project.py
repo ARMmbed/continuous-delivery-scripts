@@ -4,7 +4,6 @@
 #
 import json
 from unittest import TestCase
-
 from unittest.mock import Mock, PropertyMock, patch
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -27,6 +26,7 @@ class TestSpdxFile(TestCase):
             {"Name": "example", "Version": "1.0", "License-Expression": "MIT", "Author": "Contributor"}
         )
         metadata.add_dependency_metadata(PackageMetadata({"Name": "dependency", "Version": "2.0"}))
+
         parser = Mock()
         parser.project_metadata = metadata
         get_value = configuration.get_value
@@ -74,6 +74,61 @@ class TestSpdxFile(TestCase):
                 [relationship.related_spdx_element_id for relationship in main.relationships],
             )
 
+    def test_proprietary_project_and_file_generate_referenced_licence(self):
+        metadata = ProjectMetadata("example")
+        metadata.project_metadata = PackageMetadata(
+            {"Name": "example", "License": "Proprietary"},
+            [
+                {"kind": "licence", "path": "https://example.org/licences/proprietary", "text": ""},
+                {"kind": "licence", "path": "LICENSE", "text": ""},
+                {"kind": "notice", "path": "https://example.org/notice", "text": ""},
+            ],
+        )
+        metadata.add_dependency_metadata(PackageMetadata({"Name": "vendor", "License": "MIT"}))
+        parser = Mock()
+        parser.project_metadata = metadata
+        get_value = configuration.get_value
+
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source"
+            source.mkdir()
+            (source / "main.go").write_text("// SPDX-License-Identifier: proprietary\npackage main\n", encoding="utf8")
+            project_config = root / "pyproject.toml"
+            project_config.write_text(
+                '[spdx]\nCreatorWebsite = "example.org"\nPathToSpdx = "spdx"\nUUID = "test"\n', encoding="utf8"
+            )
+            overrides = {
+                ConfigurationVariable.PROJECT_ROOT: root,
+                ConfigurationVariable.PROJECT_CONFIG: project_config,
+                ConfigurationVariable.SOURCE_DIR: "source",
+                ConfigurationVariable.PROJECT_UUID: "test",
+            }
+            with patch.object(configuration, "get_value", side_effect=lambda key: overrides.get(key, get_value(key))):
+                project = SpdxProject(parser)
+                project.check_licence_compliance()
+                project.generate_tag_value_files(root)
+                spdx = (root / "example.spdx").read_text(encoding="utf8")
+
+                self.assertIn("PackageLicenseDeclared: LicenseRef-Proprietary", spdx)
+                self.assertIn("LicenseInfoInFile: LicenseRef-Proprietary", spdx)
+                self.assertIn("LicenseID: LicenseRef-Proprietary", spdx)
+                self.assertEqual(spdx.count("LicenseID: LicenseRef-Proprietary"), 1)
+                self.assertIn("https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/", spdx)
+                self.assertIn("LicenseCrossReference: https://example.org/licences/proprietary", spdx)
+                self.assertNotIn("LicenseCrossReference: LICENSE", spdx)
+                self.assertNotIn("LicenseCrossReference: https://example.org/notice", spdx)
+
+                metadata.add_dependency_metadata(
+                    PackageMetadata({"Name": "proprietary-vendor", "License": "Proprietary"})
+                )
+                SpdxProject(parser).generate_tag_value_files(root)
+                dependency_spdx = (root / "proprietary-vendor.spdx").read_text(encoding="utf8")
+                self.assertIn("PackageLicenseDeclared: LicenseRef-Proprietary", dependency_spdx)
+                self.assertIn("LicenseID: LicenseRef-Proprietary", dependency_spdx)
+                with self.assertRaisesRegex(ValueError, "proprietary-vendor"):
+                    SpdxProject(parser).check_licence_compliance()
+
     def test_summary_shows_configured_licence_policy(self):
         metadata = ProjectMetadata("test_package")
         metadata.project_metadata = PackageMetadata({"Name": "test_package", "License": "MIT"})
@@ -116,22 +171,39 @@ class TestSpdxFile(TestCase):
             html = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
             report = json.loads(Path(output_dir, "third_party_IP_report.json").read_text(encoding="utf8"))
 
-        self.assertIn("A manual review record contains a separately verified licence or an exemption reason", html)
+        self.assertIn(
+            "Licence identification, configured-policy compliance and dependency compatibility are separate steps.",
+            html,
+        )
         manual_anchor = f"package-{generate_uuid_based_on_str('manual-package')}"
         manual_row = html.split(f'id="{manual_anchor}"', 1)[1].split("</tr>", 1)[0]
-        self.assertIn("<strong>Automatic assessment:</strong>", manual_row)
+        self.assertIn("<strong>Licence identification</strong>", manual_row)
+        self.assertIn("<strong>Configured licence policy</strong>", manual_row)
+        self.assertIn("<strong>Dependency licence compatibility</strong>", manual_row)
+        self.assertIn("<strong>Automatic policy check:</strong>", manual_row)
         self.assertIn("Does not meet the configured licence policy.", manual_row)
-        self.assertIn("<strong>Manual review record:</strong> BSD-3-Clause", manual_row)
-        self.assertEqual(manual_row.count("BSD-3-Clause"), 1)
+        self.assertIn("<strong>Manual policy review:</strong> BSD-3-Clause", manual_row)
+        self.assertIn("<td><strong>Unknown</strong></td>", manual_row)
+        self.assertIn("Manually verified licence for assessment: <code>BSD-3-Clause</code>", manual_row)
+        self.assertLess(manual_row.index("Licence identification"), manual_row.index("Configured licence policy"))
+        self.assertLess(
+            manual_row.index("Configured licence policy"), manual_row.index("Dependency licence compatibility")
+        )
 
         reviewed_anchor = f"package-{generate_uuid_based_on_str('reviewed-package')}"
         reviewed_row = html.split(f'id="{reviewed_anchor}"', 1)[1].split("</tr>", 1)[0]
         self.assertIn("Meets the configured licence policy.", reviewed_row)
-        self.assertIn("<strong>Manual review record:</strong> BSD-3-Clause", reviewed_row)
+        self.assertIn("<strong>Manual policy review:</strong> BSD-3-Clause", reviewed_row)
         self.assertIn(
             "accepted after manual review: BSD-3-Clause",
             report["packages"]["manual-package"]["licence_compliance_details"],
         )
+        assessment = report["packages"]["manual-package"]["licence_assessment"]
+        self.assertEqual(assessment["status"], "ALLOW")
+        self.assertEqual(assessment["dependency_licence"], "BSD-3-Clause")
+        self.assertEqual(assessment["discovered_licence"], "Unknown")
+        self.assertEqual(assessment["assessed_licence_source"], "manual licence review")
+        self.assertIn("Manually verified licence for assessment:", html)
 
     def test_html_report_highlights_compliance_and_safe_references(self):
         metadata = ProjectMetadata("example")
@@ -149,8 +221,13 @@ class TestSpdxFile(TestCase):
         with TemporaryDirectory() as output_dir:
             SpdxProject(parser).generate_licensing_summary(Path(output_dir))
             html = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
+            for extension, label in (("csv", "CSV"), ("json", "JSON"), ("txt", "text")):
+                filename = f"third_party_IP_report.{extension}"
+                self.assertTrue(Path(output_dir, filename).is_file())
+                self.assertIn(f'href="{filename}" download="{filename}">Download {label}</a>', html)
 
         self.assertIn('<html lang="en">', html)
+        self.assertIn('<h2 id="downloads-heading">Download this report</h2>', html)
         self.assertIn('<meta name="viewport"', html)
         self.assertIn('<a href="#package-licences">Package licences</a>', html)
         self.assertIn('<table id="third_party_ip">', html)

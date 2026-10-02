@@ -30,10 +30,18 @@ and packaged notices rather than assuming a missing value means permission.
 
 ## Output
 
-Find `third_party_IP_report.html`, `.csv` and `.txt` in the output directory,
+Find `third_party_IP_report.html`, `.csv`, `.json` and `.txt` in the output directory,
 alongside SPDX documents when generation is enabled. In this repository the
 HTML report is published to GitHub Pages after a release regenerates `docs/`.
-Additional formats, such as JSON, depend on the installed package version.
+The HTML report has download links for the accompanying CSV, JSON and text
+reports when these files are kept together in the same directory.
+Each dependency also has an advisory `ALLOW`, `REVIEW`, `DENY` or `UNKNOWN`
+licence assessment with a reason and rule ID. Documented `REVIEW` findings
+are shown as `MANUALLY_REVIEWED` with the review explanation. The assessment is separate from
+the configured accepted-licence check. See
+[dependency licence assessment](assessing-dependency-licences.md) for the
+embedded rules, SPDX expression handling, optional project overrides and the
+opt-in `--lookup-scancode` option for missing licence information.
 
 ## GitHub Actions example
 
@@ -47,5 +55,6 @@ Once the project and its dependencies are installed:
     path: licensing/
 ```
 
-Related commands: [`cd-generate-spdx`](generating-an-spdx-sbom.md) and
-[`cd-license-files`](licence-header-management.md).
+Related commands: [`cd-check-licence-compliance`](checking-licence-compliance.md)
+for reports without SPDX documents, [`cd-generate-spdx`](generating-an-spdx-sbom.md)
+and [`cd-license-files`](licence-header-management.md).

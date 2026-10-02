@@ -7,6 +7,7 @@
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, List, Optional
+from urllib.parse import urlsplit
 
 from continuous_delivery_scripts.spdx_report.spdx_dependency import (
     DependencySpdxDocumentRef,
@@ -24,6 +25,7 @@ from continuous_delivery_scripts.utils.configuration import (
 )
 from continuous_delivery_scripts.utils.hash_helpers import generate_uuid_based_on_str
 from continuous_delivery_scripts.utils.package_helpers import PackageMetadata
+from continuous_delivery_scripts.utils.third_party_licences import LICENSE_REF_PROPRIETARY
 
 if TYPE_CHECKING:
     from spdx_tools.spdx.model.document import Document
@@ -233,6 +235,7 @@ class SpdxDocument:
         from spdx_tools.spdx.model.actor import Actor, ActorType
         from spdx_tools.spdx.model.annotation import Annotation, AnnotationType
         from spdx_tools.spdx.model.document import CreationInfo, Document
+        from spdx_tools.spdx.model.extracted_licensing_info import ExtractedLicensingInfo
         from spdx_tools.spdx.model.relationship import Relationship, RelationshipType
 
         creators = [Actor(ActorType.PERSON, self.author, self.author_email or None)]
@@ -273,10 +276,46 @@ class SpdxDocument:
                     annotation_comment="Reviewed by the configured project reviewer.",
                 )
             )
+        extracted_licensing_info = []
+        if LICENSE_REF_PROPRIETARY in spdx_package.main_licence or LICENSE_REF_PROPRIETARY in spdx_package.licence:
+            licence_urls = []
+            if LICENSE_REF_PROPRIETARY in spdx_package.main_licence:
+                for url in sorted(
+                    {
+                        evidence.get("path", "")
+                        for evidence in self._package_metadata.licence_evidence
+                        if evidence.get("kind") == "licence"
+                    }
+                ):
+                    try:
+                        parsed_url = urlsplit(url)
+                    except ValueError:
+                        continue
+                    if (
+                        parsed_url.scheme in ("http", "https")
+                        and parsed_url.netloc
+                        and not any(c.isspace() for c in url)
+                    ):
+                        licence_urls.append(url)
+            extracted_licensing_info.append(
+                ExtractedLicensingInfo(
+                    license_id=LICENSE_REF_PROPRIETARY,
+                    extracted_text="Proprietary licence terms are not included in this SPDX document.",
+                    license_name="Proprietary licence",
+                    cross_references=licence_urls,
+                    comment=(
+                        "This is a locally defined licence reference, not an SPDX License List identifier. "
+                        "See https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/ "
+                        "for the LicenseRef format; consult the rights holder for the licence terms."
+                    ),
+                )
+            )
+
         return Document(
             creation_info=creation_info,
             packages=[package],
             files=files,
             relationships=relationships,
             annotations=annotations,
+            extracted_licensing_info=extracted_licensing_info,
         )

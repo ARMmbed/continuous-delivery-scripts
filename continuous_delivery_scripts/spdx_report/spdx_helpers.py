@@ -18,6 +18,7 @@ import re
 
 import logging
 import toml
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Union, Optional, Iterator, Any, Tuple, TYPE_CHECKING, cast
 
@@ -99,6 +100,14 @@ def determine_file_licence(path: Path) -> Optional[str]:
             return None
         licence = match.group(1).strip()
         return str(simplify_licence_expression(licence))
+    except UnicodeDecodeError as e:
+        logger.warning(
+            "Could not screen file [%s] for an embedded SPDX licence identifier because it appears to be binary. "
+            "Binary files cannot be screened for inline licence metadata.",
+            path,
+        )
+        logger.info("Binary screening failure for [%s]: %s", path, e)
+        return None
     except Exception as e:
         logger.error(f"Could not determine the licence of file [{path}] from identifier '{licence}'. Reason: {e}.")
         return None
@@ -191,13 +200,66 @@ def get_packages_with_checked_licence() -> dict:
     )
 
 
-def get_package_manual_check(package_name: str) -> Tuple[bool, Optional[str]]:
-    """Gets information about package licence manual check."""
+@dataclass
+class ManualLicenceCheck:
+    """A project's manually checked licence and its separate explanation."""
+
+    checked: bool = False
+    _licence: Optional[str] = None
+    _reason: Optional[str] = None
+
+    @property
+    def licence(self) -> Optional[str]:
+        """Get the licence proposed for assessment, if supplied."""
+        return self._licence
+
+    @licence.setter
+    def licence(self, value: Optional[str]) -> None:
+        """Set the manually verified licence candidate."""
+        if value is not None and not isinstance(value, str):
+            raise ValueError("A manually checked licence must be text")
+        self._licence = value
+
+    @property
+    def reason(self) -> Optional[str]:
+        """Get the recorded explanation for the licence-policy check."""
+        return self._reason
+
+    @reason.setter
+    def reason(self, value: Optional[str]) -> None:
+        """Set the manually recorded review explanation."""
+        if value is not None and not isinstance(value, str):
+            raise ValueError("A manual licence review reason must be text")
+        self._reason = value
+
+
+def get_package_manual_record(package_name: str) -> ManualLicenceCheck:
+    """Parse a flat or structured manual licence entry once into a model."""
     checked_packages = get_packages_with_checked_licence()
     name = package_name.strip()
     if name not in checked_packages:
         name = name.replace(".", "-")
-    return bool(name in checked_packages), checked_packages.get(name)
+    checked = name in checked_packages
+    entry = checked_packages.get(name)
+    record = ManualLicenceCheck(checked=checked)
+    if isinstance(entry, dict):
+        record.licence = entry.get("licence")
+        record.reason = entry.get("reason") or record.licence
+    elif isinstance(entry, str):
+        record.licence = entry
+        record.reason = entry
+    return record
+
+
+def get_package_manual_check(package_name: str) -> Tuple[bool, Optional[str]]:
+    """Return whether a licence was checked and the recorded explanation."""
+    record = get_package_manual_record(package_name)
+    return record.checked, record.reason
+
+
+def get_package_manual_licence(package_name: str) -> Optional[str]:
+    """Return the manually verified licence candidate, distinct from prose."""
+    return get_package_manual_record(package_name).licence
 
 
 def is_package_licence_manually_checked(package_name: str) -> bool:

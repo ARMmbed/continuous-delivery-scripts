@@ -97,7 +97,7 @@ el.replaceWith(d);
 
     def can_get_project_metadata(self) -&gt; bool:
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
-        return False
+        return True
 
     def get_secret_registry_exclude_files(self) -&gt; List[str]:
         &#34;&#34;&#34;Gets additional detect-secrets exclude patterns for Go projects.&#34;&#34;&#34;
@@ -108,10 +108,9 @@ el.replaceWith(d);
             (r&#34;^\.github[\\/]workflows[\\/].*&#34;),
         ]
 
-    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
+    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
         &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
-        # TODO
-        return None
+        return SpdxProject(GoProjectMetadataFetcher())
 
     def should_clean_before_packaging(self) -&gt; bool:
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
@@ -195,17 +194,16 @@ el.replaceWith(d);
 <div class="desc"><p>Checks any credentials.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> SpdxProject | None</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a> | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
+<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
     &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
-    # TODO
-    return None</code></pre>
+    return SpdxProject(GoProjectMetadataFetcher())</code></pre>
 </details>
 <div class="desc"><p>Gets current SPDX description.</p></div>
 </dd>
@@ -302,6 +300,148 @@ el.replaceWith(d);
 </li>
 </ul>
 </dd>
+<dt id="continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher"><code class="flex name class">
+<span>class <span class="ident">GoProjectMetadataFetcher</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class GoProjectMetadataFetcher(ProjectMetadataFetcher):
+    &#34;&#34;&#34;Retrieve Go dependency licences for the shared SPDX and compliance report.&#34;&#34;&#34;
+
+    def __init__(self) -&gt; None:
+        &#34;&#34;&#34;Initialise with the configured project name.&#34;&#34;&#34;
+        super().__init__(str(configuration.get_value(ConfigurationVariable.PROJECT_NAME)))
+
+    def fetch_project_metadata(self) -&gt; ProjectMetadata:
+        &#34;&#34;&#34;Collect module dependencies using go-licenses without replacing shared policy checks.&#34;&#34;&#34;
+        module_directories = _go_licence_module_directories()
+        env = os.environ.copy()
+        env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+        executable = _ensure_go_tool_installed(
+            tool_name=&#34;go-licenses&#34;,
+            version_command=[&#34;go-licenses&#34;, &#34;report&#34;, &#34;--help&#34;],
+            install_command=_install_go_licenses_command_list(),
+            env=env,
+        )
+        project = ProjectMetadata(self._package_name)
+        project.project_metadata = PackageMetadata.from_fields(
+            name=self._package_name,
+            licence=str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER)),
+            licence_source=LicenceSource.CONFIGURATION,
+        )
+        dependencies: Dict[str, PackageMetadata] = {}
+        modules = [(module_dir, _go_module_name(module_dir, env)) for module_dir in module_directories]
+        with TemporaryDirectory() as temporary_dir:
+            template_path = Path(temporary_dir) / &#34;go-licenses.tpl&#34;
+            template_path.write_text(GO_LICENSES_TEMPLATE, encoding=&#34;utf8&#34;)
+            for module_dir, _ in modules:
+                output = check_output(
+                    [executable, &#34;report&#34;, &#34;./...&#34;, &#34;--template&#34;, str(template_path)],
+                    cwd=module_dir,
+                    env=env,
+                    encoding=&#34;utf8&#34;,
+                )
+                for package in _parse_go_licences(output):
+                    if any(package.name == name or package.name.startswith(f&#34;{name}/&#34;) for _, name in modules):
+                        continue
+                    existing = dependencies.get(package.name)
+                    if existing and (existing.version, existing.licence) != (package.version, package.licence):
+                        candidates = existing.licence_candidates or [existing.licence]
+                        dependencies[package.name] = PackageMetadata.from_fields(
+                            name=package.name,
+                            version=UNKNOWN if existing.version != package.version else package.version,
+                            licence=UNKNOWN,
+                            licence_source=LicenceSource.UNKNOWN,
+                            licence_candidates=sorted(set(candidates + [package.licence])),
+                            licence_evidence=existing.licence_evidence + package.licence_evidence,
+                        )
+                    elif existing is None:
+                        dependencies[package.name] = package
+        for dependency in dependencies.values():
+            project.add_dependency_metadata(dependency)
+        return project</code></pre>
+</details>
+<div class="desc"><p>Retrieve Go dependency licences for the shared SPDX and compliance report.</p>
+<p>Initialise with the configured project name.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher">ProjectMetadataFetcher</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher.fetch_project_metadata"><code class="name flex">
+<span>def <span class="ident">fetch_project_metadata</span></span>(<span>self) ‑> <a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadata" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.ProjectMetadata">ProjectMetadata</a></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_project_metadata(self) -&gt; ProjectMetadata:
+    &#34;&#34;&#34;Collect module dependencies using go-licenses without replacing shared policy checks.&#34;&#34;&#34;
+    module_directories = _go_licence_module_directories()
+    env = os.environ.copy()
+    env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+    executable = _ensure_go_tool_installed(
+        tool_name=&#34;go-licenses&#34;,
+        version_command=[&#34;go-licenses&#34;, &#34;report&#34;, &#34;--help&#34;],
+        install_command=_install_go_licenses_command_list(),
+        env=env,
+    )
+    project = ProjectMetadata(self._package_name)
+    project.project_metadata = PackageMetadata.from_fields(
+        name=self._package_name,
+        licence=str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER)),
+        licence_source=LicenceSource.CONFIGURATION,
+    )
+    dependencies: Dict[str, PackageMetadata] = {}
+    modules = [(module_dir, _go_module_name(module_dir, env)) for module_dir in module_directories]
+    with TemporaryDirectory() as temporary_dir:
+        template_path = Path(temporary_dir) / &#34;go-licenses.tpl&#34;
+        template_path.write_text(GO_LICENSES_TEMPLATE, encoding=&#34;utf8&#34;)
+        for module_dir, _ in modules:
+            output = check_output(
+                [executable, &#34;report&#34;, &#34;./...&#34;, &#34;--template&#34;, str(template_path)],
+                cwd=module_dir,
+                env=env,
+                encoding=&#34;utf8&#34;,
+            )
+            for package in _parse_go_licences(output):
+                if any(package.name == name or package.name.startswith(f&#34;{name}/&#34;) for _, name in modules):
+                    continue
+                existing = dependencies.get(package.name)
+                if existing and (existing.version, existing.licence) != (package.version, package.licence):
+                    candidates = existing.licence_candidates or [existing.licence]
+                    dependencies[package.name] = PackageMetadata.from_fields(
+                        name=package.name,
+                        version=UNKNOWN if existing.version != package.version else package.version,
+                        licence=UNKNOWN,
+                        licence_source=LicenceSource.UNKNOWN,
+                        licence_candidates=sorted(set(candidates + [package.licence])),
+                        licence_evidence=existing.licence_evidence + package.licence_evidence,
+                    )
+                elif existing is None:
+                    dependencies[package.name] = package
+    for dependency in dependencies.values():
+        project.add_dependency_metadata(dependency)
+    return project</code></pre>
+</details>
+<div class="desc"><p>Collect module dependencies using go-licenses without replacing shared policy checks.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher">ProjectMetadataFetcher</a></b></code>:
+<ul class="hlist">
+<li><code><a title="continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher.project_metadata" href="../utils/package_helpers.html#continuous_delivery_scripts.utils.package_helpers.ProjectMetadataFetcher.project_metadata">project_metadata</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 </dl>
 </section>
 </article>
@@ -328,6 +468,12 @@ el.replaceWith(d);
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.get_version_tag" href="#continuous_delivery_scripts.plugins.golang.Go.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.package_software" href="#continuous_delivery_scripts.plugins.golang.Go.package_software">package_software</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository" href="#continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository">release_package_to_repository</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher" href="#continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher">GoProjectMetadataFetcher</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher.fetch_project_metadata" href="#continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher.fetch_project_metadata">fetch_project_metadata</a></code></li>
 </ul>
 </li>
 </ul>

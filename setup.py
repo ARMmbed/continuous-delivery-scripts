@@ -50,6 +50,7 @@ setup(
             f"cd-get-config={SOURCE_DIR}.get_config:main",
             f"cd-license-files={SOURCE_DIR}.license_files:main",
             f"cd-generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
+            f"cd-check-licence-compliance={SOURCE_DIR}.check_licence_compliance:main",
             f"cd-detect-secrets={SOURCE_DIR}.detect_secrets:main",
             f"cd-record-secrets={SOURCE_DIR}.update_secrets_registry:main",
         ]
@@ -98,7 +99,7 @@ setup(
     long_description=long_description,
     name=PROJECT_SLUG,
     packages=find_packages(include=[SOURCE_DIR, f"{SOURCE_DIR}.*"]),
-    package_data={f"{SOURCE_DIR}.spdx_report": ["templates/*.jinja2"]},
+    package_data={f"{SOURCE_DIR}.spdx_report": ["templates/*.jinja2", "data/*.toml"]},
     python_requires=">=3.10,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     project_urls={

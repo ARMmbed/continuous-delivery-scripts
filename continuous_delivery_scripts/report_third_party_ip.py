@@ -36,11 +36,13 @@ def generate_spdx_project_reports(project: "SpdxProject", output_directory: Path
     return project
 
 
-def generate_spdx_reports(output_directory: Path) -> Optional["SpdxProject"]:
+def generate_spdx_reports(output_directory: Path, lookup_scancode: bool = False) -> Optional["SpdxProject"]:
     """Generates all the SPDX reports for the current project."""
     project = get_language_specifics().get_current_spdx_project()
     if not project:
         return None
+    if lookup_scancode:
+        project.enable_scancode_lookup()
     return generate_spdx_project_reports(project, output_directory)
 
 
@@ -59,6 +61,11 @@ def main() -> int:
         required=True,
         type=convert_to_path,
     )
+    parser.add_argument(
+        "--lookup-scancode",
+        action="store_true",
+        help="Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.",
+    )
 
     parser.add_argument(
         "-v",
@@ -72,9 +79,12 @@ def main() -> int:
 
     try:
         if get_language_specifics().can_get_project_metadata():
-            project = generate_spdx_reports(args.output_dir)
+            project = generate_spdx_reports(args.output_dir, lookup_scancode=args.lookup_scancode)
             if project:
                 project.check_licence_compliance()
+                if args.lookup_scancode:
+                    for warning in project.scancode_follow_up_warnings():
+                        print(f"WARNING: {warning}", file=sys.stderr)
         return 0
     except Exception as e:
         log_exception(logger, e)

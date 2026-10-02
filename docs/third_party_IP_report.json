@@ -1,23 +1,48 @@
 {
+  "licence_assessment_counts": {
+    "ALLOW": 63,
+    "DENY": 0,
+    "MANUALLY_REVIEWED": 2,
+    "REVIEW": 0,
+    "UNKNOWN": 0
+  },
   "missing_dependencies": [],
   "packages": {
     "GitPython": {
+      "anchor": "package-36252195-07a2-175a-7cc4-3dda379ec90a",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "gitpython-3.1.62.dist-info/licenses/AUTHORS",
+          "path": "gitpython-3.2.0.dist-info/licenses/AUTHORS",
           "text": "GitPython was originally written by Michael Trier.\nGitPython 0.2 was partially (re)written by Sebastian Thiel, based on 0.1.6 and git-dulwich.\n\nContributors are:\n\n-Michael Trier <mtrier _at_ gmail.com>\n-Alan Briolat\n-Florian Apolloner <florian _at_ apolloner.eu>\n-David Aguilar <davvid _at_ gmail.com>\n-Jelmer Vernooij <jelmer _at_ samba.org>\n-Steve Fr\u00e9cinaux <code _at_ istique.net>\n-Kai Lautaportti <kai _at_ lautaportti.fi>\n-Paul Sowden <paul _at_ idontsmoke.co.uk>\n-Sebastian Thiel <byronimo _at_ gmail.com>\n-Jonathan Chu <jonathan.chu _at_ me.com>\n-Vincent Driessen <me _at_ nvie.com>\n-Phil Elson <pelson _dot_ pub _at_ gmail.com>\n-Bernard `Guyzmo` Pratz <guyzmo+gitpython+pub@m0g.net>\n-Timothy B. Hartman <tbhartman _at_ gmail.com>\n-Konstantin Popov <konstantin.popov.89 _at_ yandex.ru>\n-Peter Jones <pjones _at_ redhat.com>\n-Anson Mansfield <anson.mansfield _at_ gmail.com>\n-Ken Odegard <ken.odegard _at_ gmail.com>\n-Alexis Horgix Chotard\n-Piotr Babij <piotr.babij _at_ gmail.com>\n-Mikul\u00e1\u0161 Poul <mikulaspoul _at_ gmail.com>\n-Charles Bouchard-L\u00e9gar\u00e9 <cblegare.atl _at_ ntis.ca>\n-Yaroslav Halchenko <debian _at_ onerussian.com>\n-Tim Swast <swast _at_ google.com>\n-William Luc Ritchie\n-David Host <hostdm _at_ outlook.com>\n-A. Jesse Jiryu Davis <jesse _at_ emptysquare.net>\n-Steven Whitman <ninloot _at_ gmail.com>\n-Stefan Stancu <stefan.stancu _at_ gmail.com>\n-C\u00e9sar Izurieta <cesar _at_ caih.org>\n-Arthur Milchior <arthur _at_ milchior.fr>\n-Anil Khatri <anil.soccer.khatri _at_ gmail.com>\n-JJ Graham <thetwoj _at_ gmail.com>\n-Ben Thayer <ben _at_ benthayer.com>\n-Dries Kennes <admin _at_ dries007.net>\n-Pratik Anurag <panurag247365 _at_ gmail.com>\n-Harmon <harmon.public _at_ gmail.com>\n-Liam Beguin <liambeguin _at_ gmail.com>\n-Ram Rachum <ram _at_ rachum.com>\n-Alba Mendez <me _at_ alba.sh>\n-Robert Westman <robert _at_ byteflux.io>\n-Hugo van Kemenade\n-Hiroki Tokunaga <tokusan441 _at_ gmail.com>\n-Julien Mauroy <pro.julien.mauroy _at_ gmail.com>\n-Patrick Gerard\n-Luke Twist <itsluketwist@gmail.com>\n-Joseph Hale <me _at_ jhale.dev>\n-Santos Gallegos <stsewd _at_ proton.me>\n-Wenhan Zhu <wzhu.cosmos _at_ gmail.com>\n-Eliah Kagan <eliah.kagan _at_ gmail.com>\n-Ethan Lin <et.repositories _at_ gmail.com>\n-Jonas Scharpf <jonas.scharpf _at_ checkmk.com>\n-Gordon Marx\n-Enji Cooper\n-Harshita Yadav <harshitayadav504 _at_ gmail.com>\n\nPortions derived from other open source works and are clearly marked.\n"
         },
         {
           "kind": "licence",
-          "path": "gitpython-3.1.62.dist-info/licenses/LICENSE",
+          "path": "gitpython-3.2.0.dist-info/licenses/LICENSE",
           "text": "Copyright (C) 2008, 2009 Michael Trier and contributors\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions\nare met:\n\n* Redistributions of source code must retain the above copyright\nnotice, this list of conditions and the following disclaimer.\n\n* Redistributions in binary form must reproduce the above copyright\nnotice, this list of conditions and the following disclaimer in the\ndocumentation and/or other materials provided with the distribution.\n\n* Neither the name of the GitPython project nor the names of\nits contributors may be used to endorse or promote products derived\nfrom this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\nLIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR\nA PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT\nOWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,\nSPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED\nTO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR\nPROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF\nLIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING\nNEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
         }
       ],
@@ -28,21 +53,39 @@
       },
       "mark_as_problematic": false,
       "name": "GitPython",
-      "url": "https://github.com/gitpython-developers/GitPython",
-      "version": "3.1.62"
+      "url": "https://gitpython.readthedocs.io/en/stable/",
+      "version": "3.2.0"
     },
     "Incremental": {
+      "anchor": "package-482be0da-5798-aaae-cbf7-416714e6607f",
       "declared_licence": "MIT License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -61,17 +104,35 @@
       "version": "24.11.0"
     },
     "Jinja2": {
+      "anchor": "package-f3d8cfa3-4ead-a4bf-3674-37d57fa14f0f",
       "declared_licence": "BSD License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "0BSD",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "0BSD",
+        "discovered_licence": "0BSD",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "0BSD",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "0BSD"
       ],
       "licence_classifiers": [
         "BSD License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -90,13 +151,31 @@
       "version": "3.1.6"
     },
     "Mako": {
+      "anchor": "package-3e5162a3-ee56-ebb1-6780-0d9a68796d40",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -115,13 +194,31 @@
       "version": "1.4.3"
     },
     "Markdown": {
+      "anchor": "package-2182a74b-ab71-88d9-59e7-95d9301e87ff",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -140,13 +237,31 @@
       "version": "3.11"
     },
     "MarkupSafe": {
+      "anchor": "package-af190dfa-3d15-539a-6adf-fb997741a159",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -165,17 +280,35 @@
       "version": "3.0.3"
     },
     "PyYAML": {
+      "anchor": "package-1a340fb4-af27-5e0b-38f8-4803daced2c0",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -194,13 +327,31 @@
       "version": "6.0.3"
     },
     "Pygments": {
+      "anchor": "package-d2880600-66ed-fe2b-ace1-b2b111ab6872",
       "declared_licence": "BSD-2-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-2-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-2-Clause",
+        "discovered_licence": "BSD-2-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-2-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -224,13 +375,31 @@
       "version": "2.21.0"
     },
     "SecretStorage": {
+      "anchor": "package-3893428c-dc3e-33e3-16b4-96731d82beed",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -249,13 +418,31 @@
       "version": "3.5.0"
     },
     "boolean.py": {
+      "anchor": "package-2df298e6-e826-8889-d388-4fdbfab456fe",
       "declared_licence": "BSD-2-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-2-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-2-Clause",
+        "discovered_licence": "BSD-2-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-2-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -284,22 +471,40 @@
       "version": "5.0"
     },
     "boto3": {
+      "anchor": "package-6686853d-a349-1a56-c989-17cc5c4ddea2",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "boto3-1.43.104.dist-info/LICENSE",
+          "path": "boto3-1.43.106.dist-info/LICENSE",
           "text": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n"
         },
         {
           "kind": "notice",
-          "path": "boto3-1.43.104.dist-info/NOTICE",
+          "path": "boto3-1.43.106.dist-info/NOTICE",
           "text": "boto3\nCopyright 2013-2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.\n"
         }
       ],
@@ -311,25 +516,43 @@
       "mark_as_problematic": false,
       "name": "boto3",
       "url": "https://github.com/boto/boto3",
-      "version": "1.43.104"
+      "version": "1.43.106"
     },
     "botocore": {
+      "anchor": "package-38dcc51f-ed08-8d80-4cc6-31412e5d218a",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "botocore-1.43.104.dist-info/LICENSE.txt",
+          "path": "botocore-1.43.106.dist-info/LICENSE.txt",
           "text": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n"
         },
         {
           "kind": "notice",
-          "path": "botocore-1.43.104.dist-info/NOTICE",
+          "path": "botocore-1.43.106.dist-info/NOTICE",
           "text": "Botocore\nCopyright 2012-2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.\n\n----\n\nBotocore includes vendorized parts of the requests python library for backwards compatibility.\n\nRequests License\n================\n\nCopyright 2013 Kenneth Reitz\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.\n\nBotocore includes vendorized parts of the urllib3 library for backwards compatibility.\n\nUrllib3 License\n===============\n\nThis is the MIT license: http://www.opensource.org/licenses/mit-license.php\n\nCopyright 2008-2011 Andrey Petrov and contributors (see CONTRIBUTORS.txt),\nModifications copyright 2012 Kenneth Reitz.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this\nsoftware and associated documentation files (the \"Software\"), to deal in the Software\nwithout restriction, including without limitation the rights to use, copy, modify, merge,\npublish, distribute, sublicense, and/or sell copies of the Software, and to permit persons\nto whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,\nINCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR\nPURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE\nFOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR\nOTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER\nDEALINGS IN THE SOFTWARE.\n\nBundle of CA Root Certificates\n==============================\n\n***** BEGIN LICENSE BLOCK *****\nThis Source Code Form is subject to the terms of the\nMozilla Public License, v. 2.0. If a copy of the MPL\nwas not distributed with this file, You can obtain\none at http://mozilla.org/MPL/2.0/.\n\n***** END LICENSE BLOCK *****\n"
         }
       ],
@@ -341,20 +564,38 @@
       "mark_as_problematic": false,
       "name": "botocore",
       "url": "https://github.com/boto/botocore",
-      "version": "1.43.104"
+      "version": "1.43.106"
     },
     "bracex": {
+      "anchor": "package-4beb4cb1-90b6-c8dc-7bdc-fb9b75e16e88",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -373,15 +614,33 @@
       "version": "3.0.1"
     },
     "certifi": {
+      "anchor": "package-d7d0abc9-0667-15a8-d02b-9f61cd64a871",
       "declared_licence": "MPL-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MPL-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "REVIEW",
+        "dependency_licence": "MPL-2.0",
+        "discovered_licence": "MPL-2.0",
+        "manual_review": {
+          "reason": "Used indirectly for HTTPS; retain its MPL licence and notices.",
+          "reviewed": true
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "Weak copyleft obligations depend on modification, linking and how the work is distributed.",
+        "rule": "weak-copyleft-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MPL-2.0",
+        "source": "built-in",
+        "status": "MANUALLY_REVIEWED"
+      },
       "licence_candidates": [],
       "licence_classifiers": [
         "Mozilla Public License 2.0 (MPL 2.0)"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -400,13 +659,31 @@
       "version": "2026.7.22"
     },
     "cffi": {
+      "anchor": "package-94fe855d-f0e5-f2cc-1bd3-fefb24d767f1",
       "declared_licence": "MIT-0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT-0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT-0",
+        "discovered_licence": "MIT-0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT-0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Package's licence manually checked: MIT",
+      "licence_compliance_details": "Automatic licence assessment does not meet the configured policy; accepted after manual review: MIT.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -425,17 +702,35 @@
       "version": "2.1.1"
     },
     "charset-normalizer": {
+      "anchor": "package-10ae954d-3d46-225f-e6d6-e0ab56275f6d",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "charset_normalizer-3.5.1.dist-info/licenses/LICENSE",
+          "path": "charset_normalizer-3.5.2.dist-info/licenses/LICENSE",
           "text": "MIT License\n\nCopyright (c) 2025 TAHRI Ahmed R.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n"
         }
       ],
@@ -447,16 +742,34 @@
       "mark_as_problematic": false,
       "name": "charset-normalizer",
       "url": "https://github.com/jawah/charset_normalizer/issues",
-      "version": "3.5.1"
+      "version": "3.5.2"
     },
     "click": {
+      "anchor": "package-a8affc08-8cbc-a89f-a20d-bd98c91362e4",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -475,15 +788,33 @@
       "version": "8.5.0"
     },
     "click-default-group": {
+      "anchor": "package-0777996f-0f68-b1b1-62d8-9e6c47f6f560",
       "declared_licence": "Public Domain",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Unknown",
+      "licence_assessment": {
+        "assessed_licence_source": "manual licence review",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "Unknown",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [
         "Public Domain"
       ],
-      "licence_compliance_details": "Package's licence manually checked: BSD-3-Clause",
+      "licence_compliance_details": "Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -502,17 +833,18 @@
       "version": "1.2.4"
     },
     "continuous-delivery-scripts": {
+      "anchor": "package-225ff486-7b16-9826-85d7-b7c08db37dce",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": false,
       "licence": "Apache-2.0",
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "continuous_delivery_scripts-4.0.0.dist-info/licenses/LICENSE",
+          "path": "continuous_delivery_scripts-4.4.0.dist-info/licenses/LICENSE",
           "text": "                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n"
         }
       ],
@@ -524,30 +856,48 @@
       "mark_as_problematic": false,
       "name": "continuous-delivery-scripts",
       "url": "https://github.com/ARMmbed/continuous-delivery-scripts",
-      "version": "4.0.0"
+      "version": "4.4.0"
     },
     "cryptography": {
+      "anchor": "package-e0d00b9f-337d-357c-6faa-2f8ceae4a60d",
       "declared_licence": "Apache-2.0 OR BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0 OR BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0 OR BSD-3-Clause",
+        "discovered_licence": "Apache-2.0 OR BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "expression-or",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "cryptography-50.0.1.dist-info/licenses/LICENSE",
+          "path": "cryptography-50.0.2.dist-info/licenses/LICENSE",
           "text": "This software is made available under the terms of *either* of the licenses\nfound in LICENSE.APACHE or LICENSE.BSD. Contributions to cryptography are made\nunder the terms of *both* these licenses.\n"
         },
         {
           "kind": "licence",
-          "path": "cryptography-50.0.1.dist-info/licenses/LICENSE.APACHE",
+          "path": "cryptography-50.0.2.dist-info/licenses/LICENSE.APACHE",
           "text": "\n                                 Apache License\n                           Version 2.0, January 2004\n                        https://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright [yyyy] [name of copyright owner]\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       https://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License.\n"
         },
         {
           "kind": "licence",
-          "path": "cryptography-50.0.1.dist-info/licenses/LICENSE.BSD",
+          "path": "cryptography-50.0.2.dist-info/licenses/LICENSE.BSD",
           "text": "Copyright (c) Individual contributors.\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n    1. Redistributions of source code must retain the above copyright notice,\n       this list of conditions and the following disclaimer.\n\n    2. Redistributions in binary form must reproduce the above copyright\n       notice, this list of conditions and the following disclaimer in the\n       documentation and/or other materials provided with the distribution.\n\n    3. Neither the name of PyCA Cryptography nor the names of its contributors\n       may be used to endorse or promote products derived from this software\n       without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\nANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\nWARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\nANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\nLOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON\nANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
         }
       ],
@@ -559,20 +909,38 @@
       "mark_as_problematic": false,
       "name": "cryptography",
       "url": "https://github.com/pyca/cryptography/",
-      "version": "50.0.1"
+      "version": "50.0.2"
     },
     "detect-secrets": {
+      "anchor": "package-d8cbec6b-033c-7bc8-ad52-a9103f539f25",
       "declared_licence": "UNKNOWN",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -591,17 +959,35 @@
       "version": "1.5.0"
     },
     "docutils": {
+      "anchor": "package-6445973c-5575-f35b-a7cf-ae9fb654e081",
       "declared_licence": "Public Domain; BSD License; GNU General Public License (GPL)",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Unknown",
+      "licence_assessment": {
+        "assessed_licence_source": "manual licence review",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "Unknown",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "Assessed using manually verified BSD-3-Clause because the discovered licence was unknown. A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [
         "Public Domain",
         "BSD License",
         "GNU General Public License (GPL)"
       ],
-      "licence_compliance_details": "Package's licence manually checked: BSD-3-Clause",
+      "licence_compliance_details": "Automatic licence assessment does not meet the configured policy; accepted after manual review: BSD-3-Clause.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -635,17 +1021,35 @@
       "version": "0.23"
     },
     "gibberish-detector": {
+      "anchor": "package-483c5c7f-03aa-0d71-2e61-6342ed3be61c",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -664,17 +1068,35 @@
       "version": "0.1.1"
     },
     "gitdb": {
+      "anchor": "package-48660618-cd20-576b-5376-dd869fe16589",
       "declared_licence": "BSD License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "0BSD",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "0BSD",
+        "discovered_licence": "0BSD",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "0BSD",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "0BSD"
       ],
       "licence_classifiers": [
         "BSD License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -698,17 +1120,35 @@
       "version": "4.0.12"
     },
     "id": {
+      "anchor": "package-b80bb774-0288-fda1-f201-890375a60c8f",
       "declared_licence": "Apache Software License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -727,13 +1167,31 @@
       "version": "1.6.1"
     },
     "idna": {
+      "anchor": "package-8d119300-841e-c1ab-cf34-b2e8ce8d656e",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -752,17 +1210,35 @@
       "version": "3.20"
     },
     "jaraco.classes": {
+      "anchor": "package-0203f71a-e44c-59b4-db78-c68d1699c653",
       "declared_licence": "MIT License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -781,13 +1257,31 @@
       "version": "3.4.0"
     },
     "jaraco.context": {
+      "anchor": "package-05507821-4361-9d68-a314-3e00107c5b7a",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -806,13 +1300,31 @@
       "version": "6.1.2"
     },
     "jaraco.functools": {
+      "anchor": "package-f5524804-9152-9c08-c7b4-6eed2232f0fc",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -831,13 +1343,31 @@
       "version": "4.6.0"
     },
     "jeepney": {
+      "anchor": "package-35ccc40b-7131-2f7d-166e-0bbac1040da2",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -856,17 +1386,35 @@
       "version": "0.9.0"
     },
     "jellyfish": {
+      "anchor": "package-9787922f-286a-4349-a009-237d0b2ffd73",
       "declared_licence": "MIT License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -885,17 +1433,35 @@
       "version": "1.2.1"
     },
     "jmespath": {
+      "anchor": "package-a2db54c9-c03f-b5a9-ae2f-284ec6593581",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -914,13 +1480,31 @@
       "version": "1.1.0"
     },
     "keyring": {
+      "anchor": "package-db979476-8058-3bc7-a41a-7dbed02b2790",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -939,13 +1523,31 @@
       "version": "25.7.0"
     },
     "license-expression": {
+      "anchor": "package-fc1d5983-4774-2e44-6971-3084bd56b3de",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -989,17 +1591,35 @@
       "version": "30.4.4"
     },
     "licenseheaders": {
+      "anchor": "package-bcf73145-227a-bb17-ffd0-e33c98c8d115",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1018,17 +1638,35 @@
       "version": "0.8.8"
     },
     "markdown-it-py": {
+      "anchor": "package-cc51c677-1f9d-be06-4486-605ba54e06dc",
       "declared_licence": "MIT License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1052,17 +1690,35 @@
       "version": "4.2.0"
     },
     "mdurl": {
+      "anchor": "package-8934fdf7-e2dc-4b50-9561-9a5229ea9de8",
       "declared_licence": "MIT License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1081,13 +1737,31 @@
       "version": "0.1.2"
     },
     "more-itertools": {
+      "anchor": "package-f2cc501c-e132-b0a9-94b3-3c0d6dd225c9",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1106,13 +1780,31 @@
       "version": "11.1.0"
     },
     "nh3": {
+      "anchor": "package-dc697eb9-6aef-bf85-2dba-1e0e440d8aa6",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1131,13 +1823,31 @@
       "version": "0.3.7"
     },
     "packaging": {
+      "anchor": "package-869b2993-75ba-b3ba-9331-a5ce61517631",
       "declared_licence": "Apache-2.0 OR BSD-2-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0 OR BSD-2-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0 OR BSD-2-Clause",
+        "discovered_licence": "Apache-2.0 OR BSD-2-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "expression-or",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1166,15 +1876,33 @@
       "version": "26.3"
     },
     "pdoc3": {
+      "anchor": "package-c84eb921-d4f2-7450-8881-f558915a6468",
       "declared_licence": "AGPL-3.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "AGPL-3.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "REVIEW",
+        "dependency_licence": "AGPL-3.0",
+        "discovered_licence": "AGPL-3.0",
+        "manual_review": {
+          "reason": "Used separately to generate docs; not bundled or modified.",
+          "reviewed": true
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "Network copyleft obligations may apply to network use as well as distribution; review the usage.",
+        "rule": "network-copyleft-dependency",
+        "scancode_licences": [],
+        "selected_licence": "AGPL-3.0-only",
+        "source": "built-in",
+        "status": "MANUALLY_REVIEWED"
+      },
       "licence_candidates": [],
       "licence_classifiers": [
         "GNU Affero General Public License v3 or later (AGPLv3+)"
       ],
-      "licence_compliance_details": "Package's licence manually checked: Accepted for this project since not distributed",
+      "licence_compliance_details": "Automatic licence assessment does not meet the configured policy; accepted after manual review: Used separately to generate docs; not bundled or modified..",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1185,7 +1913,7 @@
       "licence_source": "License",
       "manual_check": {
         "checked": true,
-        "reason": "Accepted for this project since not distributed"
+        "reason": "Used separately to generate docs; not bundled or modified."
       },
       "mark_as_problematic": true,
       "name": "pdoc3",
@@ -1193,13 +1921,31 @@
       "version": "0.11.6"
     },
     "ply": {
+      "anchor": "package-19ff467e-4707-b6c7-0f89-f2d7396bc5e4",
       "declared_licence": "BSD",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "0BSD",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "0BSD",
+        "discovered_licence": "0BSD",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "0BSD",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [],
       "licence_source": "License",
       "manual_check": {
@@ -1212,13 +1958,31 @@
       "version": "3.11"
     },
     "pyautoversion": {
+      "anchor": "package-1dbcc83a-a2e8-44b5-9cd2-4fc1d129c7a9",
       "declared_licence": "Apache 2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1237,13 +2001,31 @@
       "version": "1.2.0"
     },
     "pycparser": {
+      "anchor": "package-a4eee6c4-6420-cc2c-3c53-58f31bc989f8",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1262,13 +2044,31 @@
       "version": "3.0"
     },
     "pyparsing": {
+      "anchor": "package-cbfaceb2-022c-9b5c-3832-62cbd870ece1",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1287,10 +2087,28 @@
       "version": "3.3.3"
     },
     "python-dateutil": {
+      "anchor": "package-57b8af23-20a1-7448-f9b4-b058dc404683",
       "declared_licence": "Dual License",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Unknown",
+      "licence_assessment": {
+        "assessed_licence_source": "manual licence review",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0 OR BSD-3-Clause",
+        "discovered_licence": "Unknown",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "Assessed using manually verified Apache-2.0 OR BSD-3-Clause because the discovered licence was unknown. An OR choice of Apache-2.0 is ALLOW: A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "expression-or",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "0BSD",
         "Apache-2.0"
@@ -1299,7 +2117,7 @@
         "BSD License",
         "Apache Software License"
       ],
-      "licence_compliance_details": "Package's licence manually checked: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License.",
+      "licence_compliance_details": "Automatic licence assessment does not meet the configured policy; accepted after manual review: All contributions after December 1, 2017 released under dual license - either Apache 2.0 License or the BSD 3-Clause License..",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1318,17 +2136,35 @@
       "version": "2.9.0.post0"
     },
     "python-dotenv": {
+      "anchor": "package-4c2c3c21-c8f7-0af9-1418-a98326dcda48",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
-          "path": "python_dotenv-1.2.3.dist-info/licenses/LICENSE",
+          "path": "python_dotenv-1.2.4.dist-info/licenses/LICENSE",
           "text": "Copyright (c) 2014, Saurabh Kumar (python-dotenv), 2013, Ted Tieken (django-dotenv-rw), 2013, Jacob Kaplan-Moss (django-dotenv)\n\nRedistribution and use in source and binary forms, with or without modification,\nare permitted provided that the following conditions are met:\n\n- Redistributions of source code must retain the above copyright notice,\n  this list of conditions and the following disclaimer.\n\n- Redistributions in binary form must reproduce the above copyright notice,\n  this list of conditions and the following disclaimer in the documentation\n  and/or other materials provided with the distribution.\n\n- Neither the name of django-dotenv nor the names of its contributors\n  may be used to endorse or promote products derived from this software\n  without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\nLIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR\nA PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR\nCONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,\nEXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,\nPROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR\nPROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF\nLIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING\nNEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\nSOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n"
         }
       ],
@@ -1340,20 +2176,38 @@
       "mark_as_problematic": false,
       "name": "python-dotenv",
       "url": "https://github.com/theskumar/python-dotenv",
-      "version": "1.2.3"
+      "version": "1.2.4"
     },
     "rdflib": {
+      "anchor": "package-3b5e0fec-617d-190d-f1c4-156a674488f5",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "0BSD"
       ],
       "licence_classifiers": [
         "BSD License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1372,13 +2226,31 @@
       "version": "7.6.0"
     },
     "readme_renderer": {
+      "anchor": "package-ba9fc0bd-69af-eab2-58fe-a34914a7d0bc",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1397,13 +2269,31 @@
       "version": "46.0"
     },
     "regex": {
+      "anchor": "package-44c5b763-d21e-9a3e-d8ca-d56977bfd75c",
       "declared_licence": "Apache-2.0 AND CNRI-Python",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0 AND CNRI-Python",
+      "licence_assessment": {
+        "assessed_licence_source": "manual licence review",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0 AND CNRI-Python",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "Assessed using manually verified Apache-2.0 because the discovered licence could not be assessed reliably; verify any obligations omitted by the manual value. A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Package's licence manually checked: Apache-2.0",
+      "licence_compliance_details": "Automatic licence assessment does not meet the configured policy; accepted after manual review: Apache-2.0.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1422,17 +2312,35 @@
       "version": "2026.9.29"
     },
     "requests": {
+      "anchor": "package-3298f130-49d1-9cff-aa37-ca931dd4d421",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1456,17 +2364,35 @@
       "version": "2.34.2"
     },
     "requests-toolbelt": {
+      "anchor": "package-4f118659-7067-1ba7-b86c-9b6eda8a46ed",
       "declared_licence": "Apache 2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1490,17 +2416,35 @@
       "version": "1.0.0"
     },
     "rfc3986": {
+      "anchor": "package-330ed9cf-8d38-f5bc-a28b-e666a7b244f7",
       "declared_licence": "Apache 2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1519,17 +2463,35 @@
       "version": "2.0.0"
     },
     "rich": {
+      "anchor": "package-e7f4f8bd-246c-2354-1828-0d1f124e14f0",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1548,17 +2510,35 @@
       "version": "15.0.0"
     },
     "s3transfer": {
+      "anchor": "package-4c28eb55-f02f-4b68-d941-a776224875a3",
       "declared_licence": "Apache License 2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1582,17 +2562,35 @@
       "version": "0.19.2"
     },
     "semver": {
+      "anchor": "package-9b4a1b95-7c67-220d-9000-d92734279b4c",
       "declared_licence": "BSD",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "0BSD",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "0BSD",
+        "discovered_licence": "0BSD",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "0BSD",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "0BSD"
       ],
       "licence_classifiers": [
         "BSD License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1611,13 +2609,31 @@
       "version": "2.13.0"
     },
     "setuptools": {
+      "anchor": "package-bbe1fc13-71c9-c81f-ebe9-d24d3c4b6f25",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1636,17 +2652,35 @@
       "version": "80.10.2"
     },
     "six": {
+      "anchor": "package-f52b5e44-9a23-03c0-31a0-c3a1109360bf",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1665,17 +2699,35 @@
       "version": "1.17.0"
     },
     "smmap": {
+      "anchor": "package-71bdf1b9-2065-df9f-3215-a55492f71730",
       "declared_licence": "BSD-3-Clause",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "BSD-3-Clause",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "BSD-3-Clause",
+        "discovered_licence": "BSD-3-Clause",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "BSD-3-Clause",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "0BSD"
       ],
       "licence_classifiers": [
         "BSD License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1694,17 +2746,35 @@
       "version": "5.0.3"
     },
     "spdx-tools": {
+      "anchor": "package-9a1e547a-a44f-d060-701a-6074b16a64f4",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "Apache-2.0"
       ],
       "licence_classifiers": [
         "Apache Software License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1723,17 +2793,35 @@
       "version": "0.6.1"
     },
     "toml": {
+      "anchor": "package-ec18ad9a-83c3-1238-0533-fa93ac6fc61c",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1752,17 +2840,35 @@
       "version": "0.10.2"
     },
     "towncrier": {
+      "anchor": "package-6f7f7d66-e9f7-5aa1-14fd-94e214245312",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1781,13 +2887,31 @@
       "version": "22.12.0"
     },
     "twine": {
+      "anchor": "package-3054ce7c-d236-ecb5-2383-fb14f68b999e",
       "declared_licence": "Apache-2.0",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "Apache-2.0",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "Apache-2.0",
+        "discovered_licence": "Apache-2.0",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "Apache-2.0",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1806,13 +2930,31 @@
       "version": "7.0.0"
     },
     "urllib3": {
+      "anchor": "package-e2dcb7b7-2d4e-7942-6d27-b13a8a78d503",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1831,17 +2973,35 @@
       "version": "2.8.0"
     },
     "wcmatch": {
+      "anchor": "package-29e2a5d2-cfd8-dba2-68c6-1ca5ee49d98c",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [
         "MIT"
       ],
       "licence_classifiers": [
         "MIT License"
       ],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1860,13 +3020,31 @@
       "version": "11.0.1"
     },
     "xmltodict": {
+      "anchor": "package-146854e0-c7d2-1e3f-82a2-96e7285293b9",
       "declared_licence": "MIT",
       "is_compliant": true,
       "is_dependency": true,
       "licence": "MIT",
+      "licence_assessment": {
+        "assessed_licence_source": "discovered metadata",
+        "automatic_status": "ALLOW",
+        "dependency_licence": "MIT",
+        "discovered_licence": "MIT",
+        "manual_review": {
+          "reason": "",
+          "reviewed": false
+        },
+        "project_licence": "Apache-2.0",
+        "reason": "A permissive dependency generally permits redistribution; retain its notices and conditions.",
+        "rule": "permissive-dependency",
+        "scancode_licences": [],
+        "selected_licence": "MIT",
+        "source": "built-in",
+        "status": "ALLOW"
+      },
       "licence_candidates": [],
       "licence_classifiers": [],
-      "licence_compliance_details": "Licence is compliant.",
+      "licence_compliance_details": "Automatic licence assessment meets the configured policy.",
       "licence_evidence": [
         {
           "kind": "licence",
@@ -1886,12 +3064,26 @@
     }
   },
   "project": {
+    "accepted_licences": [
+      "Apache-2.0",
+      "BSD*",
+      "CC-BY-*",
+      "JSON",
+      "MIT",
+      "Python-2.0",
+      "PSF-2.0",
+      "MPL-2.0"
+    ],
     "complete": true,
     "compliance": true,
-    "compliance_details": "Project [continuous-delivery-scripts]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.",
+    "compliance_details": "The project is licensed under the Apache-2.0 licence. The project and all assessed dependencies meet the configured licence policy, including any documented manual reviews.",
+    "compliance_points": [
+      "The project and all assessed dependencies meet the configured licence policy, including any documented manual reviews."
+    ],
+    "licence": "Apache-2.0",
     "name": "continuous-delivery-scripts"
   },
-  "render_time": "2026-09-29T17:30:03.140678",
+  "render_time": "2026-10-01T16:56:16.439318",
   "undocumented_exemptions": [],
   "unknown_licences": [
     "click-default-group",

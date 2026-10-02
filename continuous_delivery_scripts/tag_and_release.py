@@ -98,12 +98,16 @@ def _update_licensing_summary() -> Optional["SpdxProject"]:
     if not get_language_specifics().can_get_project_metadata():
         return None
 
-    project = get_language_specifics().get_current_spdx_project()
+    project: Optional["SpdxProject"] = get_language_specifics().get_current_spdx_project()
     if project:
         project.generate_licensing_summary(
             Path(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
         )
-        if configuration.get_value(ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT):
+        if (
+            configuration.get_value(ConfigurationVariable.FAIL_ON_INCOMPLETE_LICENCE_AUDIT)
+            or configuration.get_value(ConfigurationVariable.LICENCE_ASSESSMENT_FAIL_ON)
+            or project.has_assessment_gate()
+        ):
             project.check_licence_compliance()
     return project
 

@@ -8,6 +8,8 @@
     Missing dependencies: {{ missing_dependencies|join(', ') if missing_dependencies else 'None' }}
     Unknown licences: {{ unknown_licences|join(', ') if unknown_licences else 'None' }}
     Undocumented exemptions: {{ undocumented_exemptions|join(', ') if undocumented_exemptions else 'None' }}
+    Dependency licence assessment: {% for status, count in licence_assessment_counts.items() %}{{ status }}: {{ count }}{% if not loop.last %}; {% endif %}{% endfor %}
+    Licence assessment is advisory; allowlist compliance is evaluated separately.
 
 # More details:
 {% for name,package in packages|dictsort %}
@@ -21,4 +23,14 @@
     Licence classifiers: {{ package.licence_classifiers|join('; ') if package.licence_classifiers else 'None' }}
     Evidence: {% for evidence in package.licence_evidence %}{{ evidence.kind }}: {{ evidence.path }}{% if not loop.last %}; {% endif %}{% else %}None{% endfor %}
     Licence compliance: {{ package.licence_compliance_details }}
+{% if package.licence_assessment %}    Licence assessment: {{ package.licence_assessment.status }} (automatic: {{ package.licence_assessment.automatic_status }}) — {{ package.licence_assessment.reason }}
+{% if package.licence_assessment.assessed_licence_source == 'manual licence review' %}    Manually verified assessment licence: {{ package.licence_assessment.dependency_licence }} (discovered: {{ package.licence_assessment.discovered_licence }})
+{% endif %}
+{% if package.licence_assessment.manual_review.reviewed %}    Manual assessment review: {{ package.licence_assessment.manual_review.reason }}
+{% endif %}
+    Project licence compared: {{ package.licence_assessment.project_licence }}
+    Assessment rule: {{ package.licence_assessment.rule }} ({{ package.licence_assessment.source }})
+{% for info in package.licence_assessment.scancode_licences %}    ScanCode LicenseDB: {{ info.identifier }} ({{ info.category }}): {{ info.url }}
+{% endfor %}
+{% endif %}
 {% endfor %}

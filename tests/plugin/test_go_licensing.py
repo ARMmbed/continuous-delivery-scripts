@@ -4,6 +4,7 @@
 #
 import os
 import shutil
+import subprocess
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase, mock, skipUnless
@@ -116,28 +117,90 @@ class TestGoLicenceCollection(TestCase):
         with self.assertRaisesRegex(ValueError, "Unexpected go-licenses report row"):
             golang._parse_go_licences("missing\tcolumns\n")
 
+    @mock.patch.object(golang.logger, "info")
+    @mock.patch.object(golang.logger, "warning")
+    def test_logs_go_licenses_stderr_through_cds_logging(self, warning, info):
+        golang._log_go_licenses_stderr(Path("module"), "warning one\nwarning two\n")
+
+        warning.assert_called_once()
+        info.assert_called_once_with("go-licenses stderr for [%s]:\n%s", Path("module"), "warning one\nwarning two")
+
+    @mock.patch.object(golang, "run")
+    def test_run_go_licenses_report_captures_stderr_and_returns_stdout(self, run_mock):
+        run_mock.return_value = subprocess.CompletedProcess(
+            args=["go-licenses"], returncode=0, stdout="package\tversion\turl\tlicence\n", stderr="stderr line\n"
+        )
+        with mock.patch.object(golang, "_log_go_licenses_stderr") as log_stderr:
+            output = golang._run_go_licenses_report(
+                "go-licenses", Path("module"), Path("template"), {"GO111MODULE": "on"}
+            )
+
+        self.assertEqual(output, "package\tversion\turl\tlicence\n")
+        log_stderr.assert_called_once_with(Path("module"), "stderr line\n")
+
+    @mock.patch.object(golang, "run")
+    def test_run_go_licenses_report_raises_with_captured_output_on_failure(self, run_mock):
+        run_mock.return_value = subprocess.CompletedProcess(
+            args=["go-licenses"], returncode=1, stdout="", stderr="fatal stderr\n"
+        )
+
+        with self.assertRaises(subprocess.CalledProcessError) as error:
+            golang._run_go_licenses_report("go-licenses", Path("module"), Path("template"), {})
+
+        self.assertEqual(error.exception.stderr, "fatal stderr")
+
+    def test_stages_root_licence_for_modules_without_one_and_cleans_up(self):
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            module_without_licence = root / "service-a"
+            module_without_licence.mkdir()
+            module_with_licence = root / "service-b"
+            module_with_licence.mkdir()
+            root_licence = root / "LICENSE"
+            root_licence.write_text("root licence", encoding="utf8")
+            existing_licence = module_with_licence / "LICENSE"
+            existing_licence.write_text("module licence", encoding="utf8")
+
+            with mock.patch.object(golang, "ROOT_DIR", root):
+                with golang._stage_root_licence_files_for_modules([module_without_licence, module_with_licence]):
+                    self.assertEqual((module_without_licence / "LICENSE").read_text(encoding="utf8"), "root licence")
+                    self.assertEqual(existing_licence.read_text(encoding="utf8"), "module licence")
+
+            self.assertFalse((module_without_licence / "LICENSE").exists())
+            self.assertEqual(existing_licence.read_text(encoding="utf8"), "module licence")
+
     @mock.patch.object(golang, "_go_licence_module_directories")
     @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
     @mock.patch.object(golang, "check_output")
-    def test_go_project_uses_shared_metadata(self, check_output, ensure_installed, module_directories):
+    @mock.patch.object(golang, "run")
+    def test_go_project_uses_shared_metadata(self, run_mock, check_output, ensure_installed, module_directories):
         with TemporaryDirectory() as temp_dir:
             module_directories.return_value = [Path(temp_dir)]
 
             def output(command, **kwargs):
                 if command[:4] == ["go", "list", "-m", "-json"]:
                     return '{"Path": "example.com/acme"}'
-                template_path = Path(command[-1])
-                self.assertIn("{{.Version}}", template_path.read_text(encoding="utf8"))
-                return (
-                    "example.com/acme\t\tUnknown\tApache-2.0\n"
-                    "example.com/acme/internal/tool\t\tUnknown\tApache-2.0\n"
-                    "github.com/acme/dep\tv1.2.3\thttps://example.com/LICENSE\tMIT\n"
-                    "github.com/acme/ambiguous\tv1.0.0\thttps://example.com/MIT\tMIT\n"
-                    "github.com/acme/ambiguous\tv1.0.0\thttps://example.com/BSD\tBSD-3-Clause\n"
-                    "github.com/acme/ambiguous\tv1.0.0\thttps://example.com/Apache\tApache-2.0\n"
-                )
 
             check_output.side_effect = output
+
+            def run_side_effect(command, **kwargs):
+                template_path = Path(command[-1])
+                self.assertIn("{{.Version}}", template_path.read_text(encoding="utf8"))
+                return subprocess.CompletedProcess(
+                    args=command,
+                    returncode=0,
+                    stdout=(
+                        "example.com/acme\t\tUnknown\tApache-2.0\n"
+                        "example.com/acme/internal/tool\t\tUnknown\tApache-2.0\n"
+                        "github.com/acme/dep\tv1.2.3\thttps://example.com/LICENSE\tMIT\n"
+                        "github.com/acme/ambiguous\tv1.0.0\thttps://example.com/MIT\tMIT\n"
+                        "github.com/acme/ambiguous\tv1.0.0\thttps://example.com/BSD\tBSD-3-Clause\n"
+                        "github.com/acme/ambiguous\tv1.0.0\thttps://example.com/Apache\tApache-2.0\n"
+                    ),
+                    stderr="",
+                )
+
+            run_mock.side_effect = run_side_effect
             get_value = configuration.get_value
             with mock.patch.object(
                 configuration,
@@ -161,6 +224,54 @@ class TestGoLicenceCollection(TestCase):
         self.assertEqual(project.dependencies_metadata[1].licence_source, "unknown")
         self.assertEqual(project.dependencies_metadata[1].licence_candidates, ["Apache-2.0", "BSD-3-Clause", "MIT"])
         ensure_installed.assert_called_once()
+
+    @mock.patch.object(golang, "_go_licence_module_directories")
+    @mock.patch.object(golang, "_ensure_go_tool_installed", return_value="go-licenses")
+    @mock.patch.object(golang, "check_output")
+    @mock.patch.object(golang, "run")
+    def test_go_project_temporarily_stages_root_licence_for_submodules(
+        self, run_mock, check_output, _ensure_installed, module_directories
+    ):
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            module = root / "utils"
+            module.mkdir()
+            module_directories.return_value = [module]
+            (root / "LICENSE").write_text("root licence", encoding="utf8")
+
+            def output(command, **kwargs):
+                cwd = Path(kwargs["cwd"])
+                if command[:4] == ["go", "list", "-m", "-json"]:
+                    self.assertFalse((cwd / "LICENSE").exists())
+                    return '{"Path": "example.com/acme"}'
+
+            check_output.side_effect = output
+
+            def run_side_effect(command, **kwargs):
+                cwd = Path(kwargs["cwd"])
+                self.assertEqual((cwd / "LICENSE").read_text(encoding="utf8"), "root licence")
+                return subprocess.CompletedProcess(
+                    args=command,
+                    returncode=0,
+                    stdout="github.com/acme/dep\tv1.2.3\thttps://example.com/LICENSE\tMIT\n",
+                    stderr="",
+                )
+
+            run_mock.side_effect = run_side_effect
+            get_value = configuration.get_value
+            with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: (
+                    "Acme"
+                    if key == ConfigurationVariable.PROJECT_NAME
+                    else "Apache-2.0" if key == ConfigurationVariable.FILE_LICENCE_IDENTIFIER else get_value(key)
+                ),
+            ):
+                project = golang.GoProjectMetadataFetcher().project_metadata
+
+            self.assertEqual([package.name for package in project.dependencies_metadata], ["github.com/acme/dep"])
+            self.assertFalse((module / "LICENSE").exists())
 
     def test_go_import_paths_have_safe_spdx_filenames_and_ids(self):
         package = SpdxPackage(
@@ -334,3 +445,47 @@ class TestGoLicencesIntegration(TestCase):
         self.assertEqual(metadata.project_metadata.licence, "Apache-2.0")
         self.assertEqual([package.name for package in metadata.dependencies_metadata], ["example.com/dependency"])
         self.assertEqual(metadata.dependencies_metadata[0].licence, "Apache-2.0")
+
+    def test_real_go_licenses_report_stages_root_licence_for_submodule(self):
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir, "project")
+            root.mkdir()
+            module_dir = root / "src"
+            module_dir.mkdir()
+            (module_dir / "go.mod").write_text(
+                "module example.com/fixture\n\ngo 1.22\n\nrequire example.com/dependency v0.0.0\n"
+                "replace example.com/dependency => ../dependency\n",
+                encoding="utf8",
+            )
+            (module_dir / "fixture.go").write_text(
+                'package fixture\nimport _ "example.com/dependency"\n', encoding="utf8"
+            )
+            dependency = root / "dependency"
+            dependency.mkdir()
+            (dependency / "go.mod").write_text("module example.com/dependency\n\ngo 1.22\n", encoding="utf8")
+            (dependency / "dependency.go").write_text("package dependency\n", encoding="utf8")
+            repository_root = Path(__file__).resolve().parents[2]
+            licence_text = (repository_root / "LICENSE").read_text(encoding="utf8")
+            (root / "LICENSE").write_text(licence_text, encoding="utf8")
+            (dependency / "LICENSE").write_text(licence_text, encoding="utf8")
+
+            get_value = configuration.get_value
+            values = {
+                ConfigurationVariable.PROJECT_NAME: "Fixture",
+                ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "Apache-2.0",
+                ConfigurationVariable.PROJECT_ROOT: str(root),
+                ConfigurationVariable.SOURCE_DIR: "src",
+                ConfigurationVariable.PROJECT_UUID: "go-test-project-id",
+            }
+            with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(
+                golang, "SRC_DIR", module_dir
+            ), mock.patch.object(
+                configuration, "get_value", side_effect=lambda key: values[key] if key in values else get_value(key)
+            ):
+                metadata = golang.GoProjectMetadataFetcher().project_metadata
+
+            self.assertFalse((module_dir / "LICENSE").exists())
+            self.assertEqual(metadata.project_metadata.name, "Fixture")
+            self.assertEqual(metadata.project_metadata.licence, "Apache-2.0")
+            self.assertEqual([package.name for package in metadata.dependencies_metadata], ["example.com/dependency"])
+            self.assertEqual(metadata.dependencies_metadata[0].licence, "Apache-2.0")

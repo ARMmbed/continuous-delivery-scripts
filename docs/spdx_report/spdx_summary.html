@@ -91,7 +91,7 @@ el.replaceWith(d);
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_summary.SummaryGenerator"><code class="flex name class">
 <span>class <span class="ident">SummaryGenerator</span></span>
-<span>(</span><span>project_package: <a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>,<br>dependencies_documents: List[<a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>],<br>missing_dependencies: List[str] | None = None)</span>
+<span>(</span><span>project_package: <a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>,<br>dependencies_documents: List[<a title="continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage" href="spdx_package.html#continuous_delivery_scripts.spdx_report.spdx_package.SpdxPackage">SpdxPackage</a>],<br>missing_dependencies: List[str] | None = None,<br>licence_assessments: Dict[str, <a title="continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult" href="licence_assessment.html#continuous_delivery_scripts.spdx_report.licence_assessment.LicenceAssessmentResult">LicenceAssessmentResult</a>] | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -106,36 +106,65 @@ el.replaceWith(d);
         project_package: SpdxPackage,
         dependencies_documents: List[SpdxPackage],
         missing_dependencies: Optional[List[str]] = None,
+        licence_assessments: Optional[Dict[str, LicenceAssessmentResult]] = None,
     ) -&gt; None:
         &#34;&#34;&#34;Initialiser.&#34;&#34;&#34;
         self.project = project_package
         self.all_packages = list(dependencies_documents)
         self.all_packages.append(self.project)
         self.missing_dependencies = sorted(set(missing_dependencies or []))
+        if licence_assessments is None:
+            assessor = LicenceAssessor(LicenceAssessmentPolicy.from_config())
+            licence_assessments = {
+                dependency.name: assessor.assess(
+                    project_package.main_licence,
+                    dependency.licence,
+                    dependency.name,
+                    dependency.version,
+                    project_package.metadata.has_unknown_licence,
+                    dependency.metadata.has_unknown_licence or dependency.main_licence == UNKNOWN_LICENCE.identifier,
+                    get_package_manual_licence(dependency.name),
+                )
+                for dependency in dependencies_documents
+            }
+        self.licence_assessments = licence_assessments
         self._template_arguments: Optional[dict] = None
 
     def _generate_template_arguments(self) -&gt; Dict[str, Any]:
         arguments: Dict[str, Any] = dict()
 
         global_compliance, description_list = self._generate_packages_description()
+        compliance_points = (
+            [
+                &#34;The project and all assessed dependencies meet the configured licence policy, &#34;
+                &#34;including any documented manual reviews.&#34;,
+            ]
+            if global_compliance
+            else [
+                &#34;The project or one or more dependencies do not meet the configured licence policy.&#34;,
+                &#34;Review the package results below for details.&#34;,
+            ]
+        )
         arguments[&#34;project&#34;] = {
             &#34;name&#34;: self.project.name,
+            &#34;licence&#34;: self.project.main_licence,
+            &#34;accepted_licences&#34;: _configured_licence_policy(),
             &#34;compliance&#34;: global_compliance,
-            &#34;compliance_details&#34;: (
-                (
-                    f&#34;Project [{self.project.name}]&#39;s licence is compliant: {self.project.licence}.&#34;
-                    &#34;All its dependencies are also compliant licence-wise.&#34;
-                )
-                if global_compliance
-                else f&#34;Project [{self.project.name}] or one, at least, of its dependencies has a non compliant licence&#34;
+            &#34;compliance_points&#34;: compliance_points,
+            &#34;compliance_details&#34;: &#34; &#34;.join(
+                [f&#34;The project is licensed under the {self.project.main_licence} licence.&#34;, *compliance_points]
             ),
         }
         arguments[&#34;packages&#34;] = description_list
+        arguments[&#34;licence_assessment_counts&#34;] = {
+            status.value: sum(result.status is status for result in self.licence_assessments.values())
+            for status in LicenceAssessment
+        }
         arguments[&#34;missing_dependencies&#34;] = self.missing_dependencies
         arguments[&#34;unknown_licences&#34;] = sorted(
             p.name
             for p in self.all_packages
-            if p.metadata.licence_source == &#34;unknown&#34; or p.main_licence == UNKNOWN_LICENCE.identifier
+            if p.metadata.has_unknown_licence or p.main_licence == UNKNOWN_LICENCE.identifier
         )
         arguments[&#34;unreviewed_licences&#34;] = [
             name for name in arguments[&#34;unknown_licences&#34;] if not get_package_manual_check(name)[1]
@@ -149,8 +178,14 @@ el.replaceWith(d);
             self.missing_dependencies or arguments[&#34;unreviewed_licences&#34;] or arguments[&#34;undocumented_exemptions&#34;]
         )
         if not arguments[&#34;project&#34;][&#34;complete&#34;]:
-            details = &#34;Incomplete audit: review missing dependencies, unknown licences and undocumented exemptions.&#34;
-            arguments[&#34;project&#34;][&#34;compliance_details&#34;] = details
+            compliance_points = [
+                &#34;The licence audit is incomplete.&#34;,
+                &#34;Review missing dependencies, unknown licences and undocumented exemptions before using this report.&#34;,
+            ]
+            arguments[&#34;project&#34;][&#34;compliance_points&#34;] = compliance_points
+            arguments[&#34;project&#34;][&#34;compliance_details&#34;] = &#34; &#34;.join(
+                [f&#34;The project is licensed under the {self.project.main_licence} licence.&#34;, *compliance_points]
+            )
         arguments[&#34;render_time&#34;] = datetime.datetime.now()
         return arguments
 
@@ -183,8 +218,9 @@ el.replaceWith(d);
         manual_check_details: Optional[str],
         p: SpdxPackage,
     ) -&gt; dict:
-        return {
+        description = {
             &#34;name&#34;: p.name,
+            &#34;anchor&#34;: f&#34;package-{generate_uuid_based_on_str(p.name)}&#34;,
             &#34;is_dependency&#34;: p.is_dependency,
             &#34;url&#34;: p.url,
             &#34;licence&#34;: p.licence,
@@ -198,15 +234,19 @@ el.replaceWith(d);
             &#34;is_compliant&#34;: is_compliant,
             &#34;mark_as_problematic&#34;: not is_licence_compliant,
             &#34;licence_compliance_details&#34;: (
-                &#34;Licence is compliant.&#34;
+                &#34;Automatic licence assessment meets the configured policy.&#34;
                 if is_licence_compliant
                 else (
-                    f&#34;Package&#39;s licence manually checked: {manual_check_details}&#34;
+                    &#34;Automatic licence assessment does not meet the configured policy; &#34;
+                    f&#34;accepted after manual review: {manual_check_details or &#39;no reason recorded&#39;}.&#34;
                     if package_manually_checked
-                    else &#34;Licence is not compliant according to project&#39;s configuration.&#34;
+                    else &#34;Automatic licence assessment does not meet the configured policy.&#34;
                 )
             ),
         }
+        if p.is_dependency:
+            description[&#34;licence_assessment&#34;] = self.licence_assessments[p.name].as_report()
+        return description
 
     @property
     def template_arguments(self) -&gt; dict:
@@ -227,7 +267,8 @@ el.replaceWith(d);
         arguments[&#34;render_time&#34;] = arguments[&#34;render_time&#34;].isoformat()
         dir.joinpath(&#34;third_party_IP_report.json&#34;).write_text(
             json.dumps(arguments, indent=2, sort_keys=True) + &#34;\n&#34;, encoding=&#34;utf8&#34;
-        )</code></pre>
+        )
+        _link_report_from_index(dir)</code></pre>
 </details>
 <div class="desc"><p>Licensing summary generator.</p>
 <p>Initialiser.</p></div>
@@ -271,7 +312,8 @@ def template_arguments(self) -&gt; dict:
     arguments[&#34;render_time&#34;] = arguments[&#34;render_time&#34;].isoformat()
     dir.joinpath(&#34;third_party_IP_report.json&#34;).write_text(
         json.dumps(arguments, indent=2, sort_keys=True) + &#34;\n&#34;, encoding=&#34;utf8&#34;
-    )</code></pre>
+    )
+    _link_report_from_index(dir)</code></pre>
 </details>
 <div class="desc"><p>Generates a licensing summary into the specified directory.</p>
 <dl>

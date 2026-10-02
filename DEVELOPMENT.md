@@ -78,6 +78,9 @@ corresponding workflows; you only need to configure workflows you use.
 | `DOCUMENTATION_GUIDES_DIR`, `DOCUMENTATION_GUIDES_OUTPUT_FOLDER` | Optional Markdown guide source and its relative output folder; add an `index.md` in the source directory to publish guides with the API documentation. |
 | `ORGANISATION`, `COPYRIGHT_START_DATE`, `FILE_LICENCE_IDENTIFIER` | Creating source copyright and licence headers. Replace the built-in organisation default for your project. |
 | `ACCEPTED_THIRD_PARTY_LICENCES`, `PACKAGES_WITH_CHECKED_LICENCE` | Adjusting the accepted-licence policy and recording reviewed dependency licences where reporting is supported. |
+| `LICENCE_ASSESSMENT_RULES`, `LICENCE_ASSESSMENT_RULES_PATH` | Optionally overriding the [embedded dependency licence screening policy](./guides/assessing-dependency-licences.md) inline in `pyproject.toml`, in a project TOML file, or both. |
+| `LICENCE_ASSESSMENT_FAIL_ON` | Optional list of assessment statuses that fail checks and release reporting; takes precedence over `fail_on` inside the assessment policy. |
+| `REVIEWED_LICENCE_ASSESSMENTS` | Recording a dependency-specific [manual assessment review](./guides/assessing-dependency-licences.md#record-a-manual-assessment-review) with a reason and, preferably, its reviewed licence and version. |
 | `GENERATE_LICENSING_SUMMARY_ON_RELEASE` | Opting into third-party licence summaries during release after documentation generation. Defaults to `false`; this repository sets it to `true`. |
 
 Settings such as `DEPENDENCY_UPDATE_BRANCH_PATTERN` and
@@ -89,6 +92,20 @@ and use specialised tools, such as GoReleaser for Go. See the
 [plugin guides](./continuous_delivery_scripts/plugins) for their requirements.
 Provide tokens and publication credentials through your CI environment or
 secret store, rather than committing them to `pyproject.toml`.
+
+### Proprietary licences
+
+For proprietary projects, set `FILE_LICENCE_IDENTIFIER = "Proprietary"` in
+`[ProjectConfig]` and declare `Proprietary` in the project's package metadata.
+Generated headers and SPDX documents use `LicenseRef-Proprietary`. This is a
+**locally defined reference**, not an identifier with standard licence terms on
+the [SPDX License List](https://spdx.org/licenses/). See the SPDX specification
+for [how `LicenseRef-` identifiers work](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/#101-license-identifier-field)
+and [how to link to the actual terms](https://spdx.github.io/spdx-spec/v2.3/other-licensing-information-detected/#104-license-cross-reference-field).
+When package licence evidence includes an HTTP(S) licence URL, the SPDX licence
+entry includes it as a `LicenseCrossReference`; otherwise, consult the rights
+holder for the terms, which are not supplied in the SPDX document. Proprietary
+dependencies still need explicit policy approval or manual review.
 
 ### SPDX document identity
 

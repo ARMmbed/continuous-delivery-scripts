@@ -24,6 +24,7 @@ VERSION_FILE_PATH = "continuous_delivery_scripts/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 PROGRAMMING_LANGUAGE = "Python"
 GENERATE_LICENSING_SUMMARY_ON_RELEASE = true
+LICENCE_ASSESSMENT_FAIL_ON = ["DENY"]
 TAG_VERSION_SHORTCUTS = true
 TAG_LATEST = true
 
@@ -41,7 +42,7 @@ python-dateutil="All contributions after December 1, 2017 released under dual li
 keyring="MIT"
 setuptools="MIT"
 GitPython="BSD-3-Clause"
-pdoc3="Accepted for this project since not distributed"
+pdoc3="Used separately to generate docs; not bundled or modified."
 python-dotenv="BSD-3-Clause"
 twine="Apache-2.0"
 jellyfish="BSD-2-Clause"
@@ -67,6 +68,14 @@ regex="Apache-2.0"
 cffi="MIT"
 SecretStorage="BSD-3-Clause"
 
+[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.pdoc3]
+licence = "AGPL-3.0-only"
+version = "0.11.6"
+reason = "Used separately to generate docs; not bundled or modified."
+
+[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.certifi]
+licence = "MPL-2.0"
+reason = "Used indirectly for HTTPS; retain its MPL licence and notices."
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"

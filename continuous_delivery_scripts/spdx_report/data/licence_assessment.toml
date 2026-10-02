@@ -1,0 +1,100 @@
+# Default screening policy. These are review priorities, not legal conclusions.
+# Project overrides are merged by licence ID and rule ID.
+schema_version = 1
+
+[settings]
+# By default, only explicit DENY assessments fail. Projects may override this.
+fail_on = ["DENY"]
+
+[classifications]
+MIT = "PERMISSIVE"
+"MIT-0" = "PERMISSIVE"
+"0BSD" = "PERMISSIVE"
+"BSD-2-Clause" = "PERMISSIVE"
+"BSD-3-Clause" = "PERMISSIVE"
+ISC = "PERMISSIVE"
+"Apache-2.0" = "PERMISSIVE"
+"Python-2.0" = "PERMISSIVE"
+"PSF-2.0" = "PERMISSIVE"
+"MPL-2.0" = "WEAK_COPYLEFT"
+"LGPL-2.1-only" = "WEAK_COPYLEFT"
+"LGPL-2.1-or-later" = "WEAK_COPYLEFT"
+"LGPL-3.0-only" = "WEAK_COPYLEFT"
+"LGPL-3.0-or-later" = "WEAK_COPYLEFT"
+"GPL-2.0-only" = "STRONG_COPYLEFT"
+"GPL-2.0-or-later" = "STRONG_COPYLEFT"
+"GPL-3.0-only" = "STRONG_COPYLEFT"
+"GPL-3.0-or-later" = "STRONG_COPYLEFT"
+"AGPL-3.0-only" = "NETWORK_COPYLEFT"
+"AGPL-3.0-or-later" = "NETWORK_COPYLEFT"
+"CC0-1.0" = "PUBLIC_DOMAIN"
+Unlicense = "PUBLIC_DOMAIN"
+"LicenseRef-Proprietary" = "PROPRIETARY"
+
+# Map LicenseDB's own vocabulary to screening categories. Unmapped categories
+# remain review-only; these are not legal compatibility decisions.
+[scancode_categories]
+Permissive = "PERMISSIVE"
+"Copyleft Limited" = "WEAK_COPYLEFT"
+Copyleft = "STRONG_COPYLEFT"
+"Public Domain" = "PUBLIC_DOMAIN"
+"Proprietary Free" = "PROPRIETARY"
+Commercial = "PROPRIETARY"
+"Free Restricted" = "PROPRIETARY"
+"Non-Commercial" = "PROPRIETARY"
+
+[[rules]]
+id = "permissive-dependency"
+project_category = "*"
+dependency_category = "PERMISSIVE"
+status = "ALLOW"
+reason = "A permissive dependency generally permits redistribution; retain its notices and conditions."
+
+[[rules]]
+id = "public-domain-dependency"
+project_category = "*"
+dependency_category = "PUBLIC_DOMAIN"
+status = "ALLOW"
+reason = "No copyleft obligation is identified for this public-domain dependency; check its notices."
+
+[[rules]]
+id = "apache-2-to-gpl-2-only"
+project_licence = "GPL-2.0-only"
+dependency_licence = "Apache-2.0"
+status = "REVIEW"
+reason = "Apache-2.0 and GPL-2.0-only have a known directional compatibility concern for combined works."
+
+[[rules]]
+id = "apache-2-to-gpl-2-or-later"
+project_licence = "GPL-2.0-or-later"
+dependency_licence = "Apache-2.0"
+status = "REVIEW"
+reason = "Review the GPL version selected for a combined work before incorporating Apache-2.0 code."
+
+[[rules]]
+id = "weak-copyleft-dependency"
+project_category = "*"
+dependency_category = "WEAK_COPYLEFT"
+status = "REVIEW"
+reason = "Weak copyleft obligations depend on modification, linking and how the work is distributed."
+
+[[rules]]
+id = "strong-copyleft-dependency"
+project_category = "*"
+dependency_category = "STRONG_COPYLEFT"
+status = "REVIEW"
+reason = "Strong copyleft obligations may affect a combined or redistributed work; review the usage."
+
+[[rules]]
+id = "network-copyleft-dependency"
+project_category = "*"
+dependency_category = "NETWORK_COPYLEFT"
+status = "REVIEW"
+reason = "Network copyleft obligations may apply to network use as well as distribution; review the usage."
+
+[[rules]]
+id = "proprietary-dependency"
+project_category = "*"
+dependency_category = "PROPRIETARY"
+status = "REVIEW"
+reason = "A proprietary licence reference does not reveal its terms; consult the rights holder."

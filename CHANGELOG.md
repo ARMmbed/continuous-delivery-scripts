@@ -17,6 +17,79 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+"4.4.1" (2026-10-01)
+====================
+
+Bugfixes
+--------
+
+- :page_facing_up: Record this project's manual review of certifi's MPL-2.0 licence for indirect HTTPS use, keep the review valid across versions, and fail releases on DENY assessments by default. (#20261001170158648583500)
+
+
+"4.4.0" (2026-10-01)
+====================
+
+Features
+--------
+
+- :page_facing_up: Screen dependency licence compatibility in third-party IP reports with explainable assessments, packaged TOML rules and recorded manual reviews. (#20261001103621711570400)
+- :page_facing_up: Add opt-in ScanCode LicenseDB lookups for unclassified licences and missing rules, with source links and follow-up warnings for reproducible offline checks. (#20261001125051873518700)
+
+
+"4.3.0" (2026-10-01)
+====================
+
+Features
+--------
+
+- Support proprietary projects with LicenseRef-Proprietary in SPDX reports and file headers, including available licence URL references. (#20260930183200522502000)
+- Add cd-check-licence-compliance to check project and dependency licences without generating SPDX documents, with optional third-party IP summaries. (#20260930184410503280900)
+
+
+Improved Documentation
+----------------------
+
+- Document CSV, JSON and text downloads from the HTML third-party IP report and the corresponding reporting guide. (#20260930184811003460000)
+
+
+Misc
+----
+
+- #20260930184902338342600
+
+
+"4.2.0" (2026-09-30)
+====================
+
+Features
+--------
+
+- :sparkles: Generate Go SPDX and third-party IP licence reports using go-licenses and the shared compliance policy. (#20260930100520944059100)
+- :sparkles: Make release-time third-party licence summaries opt-in by default while retaining them for this project. (#20260930134135824831900)
+
+
+Bugfixes
+--------
+
+- :bug: Generate filesystem-safe SPDX filenames and identifiers for packages named with import paths. (#20260930100520944103000)
+- :bug: Include language plugins and SPDX templates in package builds so installed tools can generate reports. (#20260930101509773515900)
+- :bug: Show guide headings rather than leading licence comments as titles on the documentation index. (#20260930142031314098900)
+- :bug: Link a generated third-party IP report from the documentation index and show the configured project licence. (#20260930142031314152400)
+
+
+Improved Documentation
+----------------------
+
+- :book: Make the third-party IP report easier to read with a responsive summary, clearer compliance statuses and collapsible licence evidence. (#20260930144256123961900)
+- :book: Clarify TPIP metrics, audit gaps and manual reviews, and show the project's licence and accepted-licence policy alongside linked dependency results. (#20260930154855098239800)
+
+
+Misc
+----
+
+- #20260930132108079266500, #20260930133028282863400
+
+
 "4.1.0" (2026-09-29)
 ====================
 
