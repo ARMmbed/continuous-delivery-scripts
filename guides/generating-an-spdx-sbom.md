@@ -9,7 +9,6 @@ see [TPIP reporting](third-party-ip-reporting.md).
 
 ## Inputs and example
 
-Install the project and its dependencies in the environment being audited.
 Configure `pyproject.toml` with `PROJECT_ROOT`, `SOURCE_DIR`,
 `PROGRAMMING_LANGUAGE`, your licence policy and any values required by the
 selected language plugin. Provide
@@ -27,6 +26,10 @@ the command returns without a report. The selected plugin uses language-specific
 tools to obtain dependency and licence information; consult the
 [plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
 for its prerequisites and metadata support.
+For Go projects, CDS downloads module dependencies automatically before
+running the dependency scan. Pass `--skip-dependency-download` when the
+environment already prefetches those dependencies and you want to skip that
+extra step.
 SPDX tag-value generation also requires an SDK compatible with this project's
 writer. Check the output files before treating an audit as complete. Installed
 packages and platform-specific dependency markers determine what is covered;
