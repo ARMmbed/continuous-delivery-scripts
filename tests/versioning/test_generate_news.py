@@ -8,6 +8,8 @@ from shutil import which
 from tempfile import TemporaryDirectory
 from unittest import TestCase, mock, skipUnless
 
+import toml
+
 from continuous_delivery_scripts.generate_news import _generate_changelog, _normalise_markdown_release_headings
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 
@@ -31,6 +33,60 @@ class TestGenerateNews(TestCase):
                 _generate_changelog("1.2.3", True)
 
         check_call.assert_called_once_with(["towncrier", "build", "--yes", "--name", "", "--version", "1.2.3"])
+        normalise.assert_called_once_with("1.2.3")
+
+    @mock.patch("continuous_delivery_scripts.generate_news._normalise_markdown_release_headings")
+    @mock.patch("continuous_delivery_scripts.generate_news.subprocess.check_call")
+    def test_generate_changelog_does_not_duplicate_existing_markdown_heading(self, check_call, normalise):
+        with TemporaryDirectory() as temp_dir:
+            project_config = Path(temp_dir) / "pyproject.toml"
+            project_config.write_text(
+                "[tool.towncrier]\n" 'title_format = "# {version} ({project_date})"\n', encoding="utf8"
+            )
+            get_value = configuration.get_value
+
+            with mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: (
+                    str(project_config) if key == ConfigurationVariable.PROJECT_CONFIG else get_value(key)
+                ),
+            ):
+                _generate_changelog("1.2.3", True)
+
+        check_call.assert_called_once_with(["towncrier", "build", "--yes", "--name", "", "--version", "1.2.3"])
+        normalise.assert_called_once_with("1.2.3")
+
+    @mock.patch("continuous_delivery_scripts.generate_news._normalise_markdown_release_headings")
+    @mock.patch("continuous_delivery_scripts.generate_news.subprocess.check_call")
+    def test_generate_changelog_adds_markdown_heading_workaround_when_missing(self, check_call, normalise):
+        with TemporaryDirectory() as temp_dir:
+            project_config = Path(temp_dir) / "pyproject.toml"
+            project_config.write_text(
+                "[tool.towncrier]\n" 'title_format = "{version} ({project_date})"\n', encoding="utf8"
+            )
+            get_value = configuration.get_value
+            temp_config_path = None
+
+            def inspect_call(command):
+                nonlocal temp_config_path
+                temp_config_path = Path(command[command.index("--config") + 1])
+                config = toml.load(temp_config_path)
+                self.assertEqual(config["tool"]["towncrier"]["title_format"], "# {version} ({project_date})")
+
+            check_call.side_effect = inspect_call
+
+            with mock.patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: (
+                    str(project_config) if key == ConfigurationVariable.PROJECT_CONFIG else get_value(key)
+                ),
+            ):
+                _generate_changelog("1.2.3", True)
+
+        self.assertIsNotNone(temp_config_path)
+        self.assertFalse(temp_config_path.exists())
         normalise.assert_called_once_with("1.2.3")
 
     @skipUnless(which("towncrier"), "towncrier executable required")
@@ -71,7 +127,7 @@ class TestGenerateNews(TestCase):
 
             rendered = changelog.read_text(encoding="utf8")
 
-        self.assertIn("1.2.3", rendered)
+        self.assertIn("# 1.2.3", rendered)
         self.assertIn("Bugfixes", rendered)
         self.assertIn("Fixed example bug.", rendered)
 
