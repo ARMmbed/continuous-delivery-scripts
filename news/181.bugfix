@@ -1,1 +1,1 @@
-Improve Towncrier Markdown changelog handling and document the required configuration.
+:bug: Improve Towncrier Markdown changelog handling (https://github.com/twisted/towncrier/issues/758) and document the required configuration.
