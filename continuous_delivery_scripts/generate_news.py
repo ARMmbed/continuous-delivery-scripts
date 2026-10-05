@@ -8,22 +8,14 @@ import sys
 
 import argparse
 import logging
-import os
-import re
-import subprocess
-from pathlib import Path
 from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
 from typing import Optional, Tuple, Dict
 
-from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.changelog import generate_changelog
 from continuous_delivery_scripts.utils.definitions import CommitType
-from continuous_delivery_scripts.utils.filesystem_helpers import cd
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
 
 logger = logging.getLogger(__name__)
-
-_MARKDOWN_CHANGELOG_SUFFIXES = {".md", ".markdown"}
-_RELEASE_TITLE_PATTERN = re.compile(r'^"?[vV]?\d+\.\d+\.\d+[^\n]*$')
 
 
 def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str], Dict[str, str]]:
@@ -53,56 +45,7 @@ def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
     """
     if use_news_files:
         logger.info(":: Generating a new changelog")
-        project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
-        with cd(os.path.dirname(project_config_path)):
-            subprocess.check_call(["towncrier", "build", "--yes", "--name", "", "--version", str(version)])
-        # FIXME: Remove this workaround when https://github.com/twisted/towncrier/issues/758 is fixed.
-        _normalise_markdown_release_headings(version)
-
-
-def _normalise_markdown_release_headings(version: Optional[str]) -> None:
-    """Promote the latest markdown release title to a heading when Towncrier omits it.
-
-    Recent Towncrier markdown output renders the release title as plain text but
-    still emits section headings with leading `#`. Promote the newest release
-    title to a markdown heading and demote its section headings by one level so
-    GitHub renders the release block hierarchy correctly.
-    """
-    if not version:
-        return
-
-    changelog_path = Path(str(configuration.get_value(ConfigurationVariable.CHANGELOG_FILE_PATH)))
-    if changelog_path.suffix.lower() not in _MARKDOWN_CHANGELOG_SUFFIXES or not changelog_path.exists():
-        return
-
-    original = changelog_path.read_text(encoding="utf8")
-    lines = original.splitlines()
-    version_index = next(
-        (index for index, line in enumerate(lines) if line.startswith(f"{version} ") and not line.startswith("#")),
-        None,
-    )
-    if version_index is None:
-        return
-
-    next_release_index = next(
-        (
-            index
-            for index in range(version_index + 1, len(lines))
-            if _RELEASE_TITLE_PATTERN.match(lines[index]) and not lines[index].startswith("#")
-        ),
-        len(lines),
-    )
-    section_indexes = [index for index in range(version_index + 1, next_release_index) if lines[index].startswith("# ")]
-    if not section_indexes:
-        return
-
-    lines[version_index] = f"# {lines[version_index]}"
-    for index in section_indexes:
-        lines[index] = f"#{lines[index]}"
-
-    rendered = "\n".join(lines) + ("\n" if original.endswith("\n") else "")
-    if rendered != original:
-        changelog_path.write_text(rendered, encoding="utf8")
+        generate_changelog(version)
 
 
 def main() -> None:

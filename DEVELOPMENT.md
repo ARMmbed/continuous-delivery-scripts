@@ -70,7 +70,7 @@ corresponding workflows; you only need to configure workflows you use.
 | `PROGRAMMING_LANGUAGE` | Selecting the plugin that provides language-specific build, documentation and release operations (for example, `"Python"` or `"Golang"`). |
 | `MASTER_BRANCH` | Comparing pull-request branches with the main development branch; set this explicitly if your branch is `main` rather than the built-in `master` default. |
 | `NEWS_DIR` | Creating and checking news fragments and triggering changelog updates. |
-| `VERSION_FILE_PATH`, `CHANGELOG_FILE_PATH` | Updating version and release-note files during a release. Also configure `[AutoVersionConfig]` and `[tool.towncrier]` for version and changelog generation. |
+| `VERSION_FILE_PATH`, `CHANGELOG_FILE_PATH` | Updating version and release-note files during a release. Also configure `[AutoVersionConfig]`; release-note generation additionally needs Towncrier configuration, documented below. |
 | `SOURCE_DIR` | Locating source files for plugins and SPDX file scanning where supported. |
 | `PACKAGE_NAME` | Identifying the installed distribution for the Python metadata fetcher when SPDX reporting is supported. |
 | `PROJECT_UUID` | Identifying the project's package within generated SPDX documents; also define the separate `[spdx]` namespace settings below. |
@@ -92,6 +92,55 @@ and use specialised tools, such as GoReleaser for Go. See the
 [plugin guides](./continuous_delivery_scripts/plugins) for their requirements.
 Provide tokens and publication credentials through your CI environment or
 secret store, rather than committing them to `pyproject.toml`.
+
+### Changelog configuration
+
+Release-note generation uses [Towncrier](https://towncrier.readthedocs.io/en/stable/)
+and reads its settings from `[tool.towncrier]` in `pyproject.toml`. See the
+Towncrier [configuration reference](https://towncrier.readthedocs.io/en/stable/configuration.html)
+for the full set of options.
+
+The commands in this repository expect the following Towncrier configuration:
+
+| Setting | Needed for |
+| --- | --- |
+| `[tool.towncrier].directory` | Locating the news fragments used to build release notes. This should match `NEWS_DIR` from `[ProjectConfig]`. |
+| `[tool.towncrier].filename` | Choosing which changelog file Towncrier updates. This should match `CHANGELOG_FILE_PATH` from `[ProjectConfig]`. |
+| `[tool.towncrier].package` | Resolving project metadata used by Towncrier when building release notes. |
+| `[tool.towncrier].title_format` | Rendering the release title. For Markdown changelogs, use an explicit heading such as `# {version} ({project_date})`; see the Towncrier [`title_format` documentation](https://towncrier.readthedocs.io/en/stable/configuration.html#title-format). |
+| `[tool.towncrier].start_string` | Marking where generated release notes begin inside the changelog file. |
+| `[[tool.towncrier.type]]` with `directory`, `name`, `showcontent` | Defining the fragment categories that contributors can create and that releases render. |
+
+This repository also carries a Towncrier Markdown workaround for
+[towncrier issue #758](https://github.com/twisted/towncrier/issues/758): if
+`title_format` does not already contain a Markdown heading, the release command
+adds `# ` in a temporary Towncrier config before running `towncrier build`; see
+the Towncrier [`build` command reference](https://towncrier.readthedocs.io/en/stable/cli.html#build).
+If your `title_format` already starts with `#`, or otherwise already defines a
+Markdown heading, the workaround leaves it unchanged.
+
+Example:
+
+```toml
+[tool.towncrier]
+directory = "news"
+filename = "CHANGELOG.md"
+package = "example_package"
+title_format = "# {version} ({project_date})"
+start_string = """
+[//]: # (begin_release_notes)
+"""
+
+[[tool.towncrier.type]]
+directory = "feature"
+name = "Features"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "bugfix"
+name = "Bugfixes"
+showcontent = true
+```
 
 ### Proprietary licences
 
