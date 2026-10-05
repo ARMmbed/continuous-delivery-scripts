@@ -10,33 +10,20 @@ from unittest import TestCase, mock, skipUnless
 
 import toml
 
-from continuous_delivery_scripts.generate_news import _generate_changelog, _normalise_markdown_release_headings
+from continuous_delivery_scripts.generate_news import _generate_changelog
+from continuous_delivery_scripts.utils.changelog import normalise_markdown_release_headings
 from continuous_delivery_scripts.utils.configuration import ConfigurationVariable, configuration
 
 
 class TestGenerateNews(TestCase):
-    @mock.patch("continuous_delivery_scripts.generate_news._normalise_markdown_release_headings")
-    @mock.patch("continuous_delivery_scripts.generate_news.subprocess.check_call")
-    def test_generate_changelog_invokes_towncrier_with_separate_option_values(self, check_call, normalise):
-        with TemporaryDirectory() as temp_dir:
-            project_config = Path(temp_dir) / "pyproject.toml"
-            project_config.write_text("[tool.towncrier]\n", encoding="utf8")
-            get_value = configuration.get_value
+    @mock.patch("continuous_delivery_scripts.generate_news.generate_changelog")
+    def test_generate_changelog_invokes_changelog_utility(self, generate):
+        _generate_changelog("1.2.3", True)
 
-            with mock.patch.object(
-                configuration,
-                "get_value",
-                side_effect=lambda key: (
-                    str(project_config) if key == ConfigurationVariable.PROJECT_CONFIG else get_value(key)
-                ),
-            ):
-                _generate_changelog("1.2.3", True)
+        generate.assert_called_once_with("1.2.3")
 
-        check_call.assert_called_once_with(["towncrier", "build", "--yes", "--name", "", "--version", "1.2.3"])
-        normalise.assert_called_once_with("1.2.3")
-
-    @mock.patch("continuous_delivery_scripts.generate_news._normalise_markdown_release_headings")
-    @mock.patch("continuous_delivery_scripts.generate_news.subprocess.check_call")
+    @mock.patch("continuous_delivery_scripts.utils.changelog.normalise_markdown_release_headings")
+    @mock.patch("continuous_delivery_scripts.utils.changelog.subprocess.check_call")
     def test_generate_changelog_does_not_duplicate_existing_markdown_heading(self, check_call, normalise):
         with TemporaryDirectory() as temp_dir:
             project_config = Path(temp_dir) / "pyproject.toml"
@@ -57,8 +44,8 @@ class TestGenerateNews(TestCase):
         check_call.assert_called_once_with(["towncrier", "build", "--yes", "--name", "", "--version", "1.2.3"])
         normalise.assert_called_once_with("1.2.3")
 
-    @mock.patch("continuous_delivery_scripts.generate_news._normalise_markdown_release_headings")
-    @mock.patch("continuous_delivery_scripts.generate_news.subprocess.check_call")
+    @mock.patch("continuous_delivery_scripts.utils.changelog.normalise_markdown_release_headings")
+    @mock.patch("continuous_delivery_scripts.utils.changelog.subprocess.check_call")
     def test_generate_changelog_adds_markdown_heading_workaround_when_missing(self, check_call, normalise):
         with TemporaryDirectory() as temp_dir:
             project_config = Path(temp_dir) / "pyproject.toml"
@@ -131,6 +118,12 @@ class TestGenerateNews(TestCase):
         self.assertIn("Bugfixes", rendered)
         self.assertIn("Fixed example bug.", rendered)
 
+    def test_generate_changelog_does_nothing_when_news_files_are_disabled(self):
+        with mock.patch("continuous_delivery_scripts.generate_news.generate_changelog") as generate:
+            _generate_changelog("1.2.3", False)
+
+        generate.assert_not_called()
+
     def test_normalise_markdown_release_headings_promotes_latest_release_title(self):
         with TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
@@ -156,7 +149,7 @@ class TestGenerateNews(TestCase):
                     str(changelog) if key == ConfigurationVariable.CHANGELOG_FILE_PATH else get_value(key)
                 ),
             ):
-                _normalise_markdown_release_headings("1.2.3")
+                normalise_markdown_release_headings("1.2.3")
 
             rendered = changelog.read_text(encoding="utf8")
 
@@ -185,7 +178,7 @@ class TestGenerateNews(TestCase):
                     str(changelog) if key == ConfigurationVariable.CHANGELOG_FILE_PATH else get_value(key)
                 ),
             ):
-                _normalise_markdown_release_headings("1.2.3")
+                normalise_markdown_release_headings("1.2.3")
 
             rendered = changelog.read_text(encoding="utf8")
 

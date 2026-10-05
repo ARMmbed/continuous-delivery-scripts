@@ -107,13 +107,15 @@ The commands in this repository expect the following Towncrier configuration:
 | `[tool.towncrier].directory` | Locating the news fragments used to build release notes. This should match `NEWS_DIR` from `[ProjectConfig]`. |
 | `[tool.towncrier].filename` | Choosing which changelog file Towncrier updates. This should match `CHANGELOG_FILE_PATH` from `[ProjectConfig]`. |
 | `[tool.towncrier].package` | Resolving project metadata used by Towncrier when building release notes. |
-| `[tool.towncrier].title_format` | Rendering the release title. For Markdown changelogs, use an explicit heading such as `# {version} ({project_date})`. |
+| `[tool.towncrier].title_format` | Rendering the release title. For Markdown changelogs, use an explicit heading such as `# {version} ({project_date})`; see the Towncrier [`title_format` documentation](https://towncrier.readthedocs.io/en/stable/configuration.html#title-format). |
 | `[tool.towncrier].start_string` | Marking where generated release notes begin inside the changelog file. |
 | `[[tool.towncrier.type]]` with `directory`, `name`, `showcontent` | Defining the fragment categories that contributors can create and that releases render. |
 
-This repository also carries a Towncrier Markdown workaround: if
+This repository also carries a Towncrier Markdown workaround for
+[towncrier issue #758](https://github.com/twisted/towncrier/issues/758): if
 `title_format` does not already contain a Markdown heading, the release command
-adds `# ` in a temporary Towncrier config before running `towncrier build`.
+adds `# ` in a temporary Towncrier config before running `towncrier build`; see
+the Towncrier [`build` command reference](https://towncrier.readthedocs.io/en/stable/cli.html#build).
 If your `title_format` already starts with `#`, or otherwise already defines a
 Markdown heading, the workaround leaves it unchanged.
 
