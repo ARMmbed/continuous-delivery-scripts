@@ -17,6 +17,13 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.4.4 (2026-10-05)
+
+## Bugfixes
+
+- :bug: Improve Towncrier Markdown changelog handling (https://github.com/twisted/towncrier/issues/758) and document the required configuration. (#181)
+
+
 # 4.4.3 (2026-10-05)
 
 ## Bugfixes

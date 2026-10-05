@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-05 10:49:00.572720
+                                         2026-10-05 14:07:17.873736
 
 # Summary:
     Licence compliance: Compliant
@@ -204,7 +204,7 @@ SOFTWARE.
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.4.2.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.4.3.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 
