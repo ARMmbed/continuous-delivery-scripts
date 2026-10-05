@@ -17,6 +17,17 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.4.3 (2026-10-05)
+
+## Bugfixes
+
+- Dependency upgrade: spdx-tools-0.8.5 (#20260930063346309096734)
+- :book: `[GO Plugin]` Enable code documentation generation (#20261002163549750144200)
+- :bug: Preserve markdown changelog headings by promoting the latest Towncrier release title to a heading and demoting its section headings so GitHub renders release notes correctly. (#20261002184519412000000)
+- :bug: Fix Go workspace licence compliance checks by resolving each module path with `GOWORK=off` so multi-module repositories do not fail JSON parsing. (#20261002184611823000000)
+- :bug: Automatically run `go mod download all` for detected Go modules before licence and SPDX dependency analysis, with config and command-line opt-outs for CI setups that already prefetch dependencies. (#20261002191514321000000)
+
+
 4.4.2 (2026-10-02)
 
 # Bugfixes

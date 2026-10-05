@@ -14,8 +14,7 @@ project and its third-party dependencies, for example as an input to an
 OpenChain or licence-compliance process. The tool also creates licence reports;
 see <a href="third-party-ip-reporting.html">TPIP reporting</a>.</p>
 <h2>Inputs and example</h2>
-<p>Install the project and its dependencies in the environment being audited.
-Configure <code>pyproject.toml</code> with <code>PROJECT_ROOT</code>, <code>SOURCE_DIR</code>,
+<p>Configure <code>pyproject.toml</code> with <code>PROJECT_ROOT</code>, <code>SOURCE_DIR</code>,
 <code>PROGRAMMING_LANGUAGE</code>, your licence policy and any values required by the
 selected language plugin. Provide
 <code>PROJECT_UUID</code> and an <code>[spdx]</code> section for the document namespace; see
@@ -29,6 +28,10 @@ the command returns without a report. The selected plugin uses language-specific
 tools to obtain dependency and licence information; consult the
 <a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin documentation</a>
 for its prerequisites and metadata support.
+For Go projects, CDS downloads module dependencies automatically before
+running the dependency scan. Pass <code>--skip-dependency-download</code> when the
+environment already prefetches those dependencies and you want to skip that
+extra step.
 SPDX tag-value generation also requires an SDK compatible with this project's
 writer. Check the output files before treating an audit as complete. Installed
 packages and platform-specific dependency markers determine what is covered;

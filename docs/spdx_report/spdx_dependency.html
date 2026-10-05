@@ -53,7 +53,7 @@ el.replaceWith(d);
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef"><code class="flex name class">
 <span>class <span class="ident">DependencySpdxDocumentRef</span></span>
-<span>(</span><span>name: str, namespace: str, checksum: str)</span>
+<span>(</span><span>name: str, namespace: str, checksum: str, package_id: str)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -63,18 +63,32 @@ el.replaceWith(d);
 <pre><code class="python">class DependencySpdxDocumentRef:
     &#34;&#34;&#34;SPDX external document describing dependency.
 
-    The specification in use as well as the current SPDX SDK do not currently
-    allow  having more than one package described in a single SPDX document.
-    Therefore, it has been decided to use the ExternalDocumentRef field and
-    describe each third-party dependency in a separate file.
+    Keep each third-party dependency in a separate SPDX file and link its
+    package to the project through an external document reference.
     See https://spdx.org/spdx-specification-21-web-version#h.h430e9ypa0j9
     &#34;&#34;&#34;
 
-    def __init__(self, name: str, namespace: str, checksum: str) -&gt; None:
+    def __init__(self, name: str, namespace: str, checksum: str, package_id: str) -&gt; None:
         &#34;&#34;&#34;Constructor.&#34;&#34;&#34;
         self._document_name = name
         self._document_namespace = namespace
         self._document_checksum = checksum
+        self._package_id = package_id
+
+    @property
+    def document_ref_id(self) -&gt; str:
+        &#34;&#34;&#34;Return a stable SPDX-safe external document identifier.&#34;&#34;&#34;
+        safe_name = (
+            self._document_name
+            if re.fullmatch(r&#34;[A-Za-z0-9.-]+&#34;, self._document_name)
+            else str(generate_uuid_based_on_str(self._document_name))
+        )
+        return f&#34;DocumentRef-{safe_name}&#34;
+
+    @property
+    def package_spdx_id(self) -&gt; str:
+        &#34;&#34;&#34;Return the referenced package identifier in the external document.&#34;&#34;&#34;
+        return f&#34;{self.document_ref_id}:SPDXRef-{self._package_id}&#34;
 
     def generate_external_reference(self) -&gt; &#34;ExternalDocumentRef&#34;:
         &#34;&#34;&#34;Generates the external SPDX reference.
@@ -86,23 +100,54 @@ el.replaceWith(d);
         Returns:
             corresponding reference
         &#34;&#34;&#34;
-        from spdx.checksum import Algorithm
-        from spdx.document import ExternalDocumentRef
+        from spdx_tools.spdx.model.checksum import Checksum, ChecksumAlgorithm
+        from spdx_tools.spdx.model.external_document_ref import ExternalDocumentRef
 
         return ExternalDocumentRef(
-            external_document_id=self._document_name,
-            spdx_document_uri=self._document_namespace,
-            check_sum=Algorithm(&#34;SHA1&#34;, self._document_checksum),
+            document_ref_id=self.document_ref_id,
+            document_uri=self._document_namespace,
+            checksum=Checksum(ChecksumAlgorithm.SHA1, self._document_checksum),
         )</code></pre>
 </details>
 <div class="desc"><p>SPDX external document describing dependency.</p>
-<p>The specification in use as well as the current SPDX SDK do not currently
-allow
-having more than one package described in a single SPDX document.
-Therefore, it has been decided to use the ExternalDocumentRef field and
-describe each third-party dependency in a separate file.
+<p>Keep each third-party dependency in a separate SPDX file and link its
+package to the project through an external document reference.
 See <a href="https://spdx.org/spdx-specification-21-web-version#h.h430e9ypa0j9">https://spdx.org/spdx-specification-21-web-version#h.h430e9ypa0j9</a></p>
 <p>Constructor.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.document_ref_id"><code class="name">prop <span class="ident">document_ref_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def document_ref_id(self) -&gt; str:
+    &#34;&#34;&#34;Return a stable SPDX-safe external document identifier.&#34;&#34;&#34;
+    safe_name = (
+        self._document_name
+        if re.fullmatch(r&#34;[A-Za-z0-9.-]+&#34;, self._document_name)
+        else str(generate_uuid_based_on_str(self._document_name))
+    )
+    return f&#34;DocumentRef-{safe_name}&#34;</code></pre>
+</details>
+<div class="desc"><p>Return a stable SPDX-safe external document identifier.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.package_spdx_id"><code class="name">prop <span class="ident">package_spdx_id</span> : str</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def package_spdx_id(self) -&gt; str:
+    &#34;&#34;&#34;Return the referenced package identifier in the external document.&#34;&#34;&#34;
+    return f&#34;{self.document_ref_id}:SPDXRef-{self._package_id}&#34;</code></pre>
+</details>
+<div class="desc"><p>Return the referenced package identifier in the external document.</p></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.generate_external_reference"><code class="name flex">
@@ -123,13 +168,13 @@ See <a href="https://spdx.org/spdx-specification-21-web-version#h.h430e9ypa0j9">
     Returns:
         corresponding reference
     &#34;&#34;&#34;
-    from spdx.checksum import Algorithm
-    from spdx.document import ExternalDocumentRef
+    from spdx_tools.spdx.model.checksum import Checksum, ChecksumAlgorithm
+    from spdx_tools.spdx.model.external_document_ref import ExternalDocumentRef
 
     return ExternalDocumentRef(
-        external_document_id=self._document_name,
-        spdx_document_uri=self._document_namespace,
-        check_sum=Algorithm(&#34;SHA1&#34;, self._document_checksum),
+        document_ref_id=self.document_ref_id,
+        document_uri=self._document_namespace,
+        checksum=Checksum(ChecksumAlgorithm.SHA1, self._document_checksum),
     )</code></pre>
 </details>
 <div class="desc"><p>Generates the external SPDX reference.</p>
@@ -161,7 +206,9 @@ corresponding reference</p></div>
 <li>
 <h4><code><a title="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef" href="#continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef">DependencySpdxDocumentRef</a></code></h4>
 <ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.document_ref_id" href="#continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.document_ref_id">document_ref_id</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.generate_external_reference" href="#continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.generate_external_reference">generate_external_reference</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.package_spdx_id" href="#continuous_delivery_scripts.spdx_report.spdx_dependency.DependencySpdxDocumentRef.package_spdx_id">package_spdx_id</a></code></li>
 </ul>
 </li>
 </ul>

@@ -154,20 +154,20 @@ el.replaceWith(d);
         Returns:
             the corresponding file
         &#34;&#34;&#34;
-        from spdx.checksum import Algorithm
-        from spdx.document import License
-        from spdx.file import File, FileType
-        from spdx.utils import SPDXNone
+        from spdx_tools.spdx.model.checksum import Checksum, ChecksumAlgorithm
+        from spdx_tools.spdx.model.file import File, FileType
+        from spdx_tools.spdx.model.spdx_none import SpdxNone
 
-        source_file = File(determine_spdx_value(self.unix_relative_path))
-        source_file.type = FileType.SOURCE
-        source_file.comment = determine_spdx_value(None)
-        source_file.chk_sum = Algorithm(&#34;SHA1&#34;, self.sha1_check_sum)
-        source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
-        source_file.spdx_id = f&#34;SPDXRef-{self.id}&#34;
-        source_file.copyright = self.copyright if self.copyright else SPDXNone()
-        source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
-        return source_file</code></pre>
+        licence = parse_spdx_licence(self.licence)
+        return File(
+            name=self.unix_relative_path,
+            spdx_id=f&#34;SPDXRef-{self.id}&#34;,
+            checksums=[Checksum(ChecksumAlgorithm.SHA1, self.sha1_check_sum)],
+            file_types=[FileType.SOURCE],
+            license_concluded=licence,
+            license_info_in_file=[licence],
+            copyright_text=self.copyright or SpdxNone(),
+        )</code></pre>
 </details>
 <div class="desc"><p>SPDX File.</p>
 <p>See <a href="https://spdx.org/spdx-specification-21-web-version#h.nmf14n">https://spdx.org/spdx-specification-21-web-version#h.nmf14n</a></p>
@@ -344,20 +344,20 @@ the file path</p></div>
     Returns:
         the corresponding file
     &#34;&#34;&#34;
-    from spdx.checksum import Algorithm
-    from spdx.document import License
-    from spdx.file import File, FileType
-    from spdx.utils import SPDXNone
+    from spdx_tools.spdx.model.checksum import Checksum, ChecksumAlgorithm
+    from spdx_tools.spdx.model.file import File, FileType
+    from spdx_tools.spdx.model.spdx_none import SpdxNone
 
-    source_file = File(determine_spdx_value(self.unix_relative_path))
-    source_file.type = FileType.SOURCE
-    source_file.comment = determine_spdx_value(None)
-    source_file.chk_sum = Algorithm(&#34;SHA1&#34;, self.sha1_check_sum)
-    source_file.conc_lics = License.from_identifier(str(determine_spdx_value(self.licence)))
-    source_file.spdx_id = f&#34;SPDXRef-{self.id}&#34;
-    source_file.copyright = self.copyright if self.copyright else SPDXNone()
-    source_file.add_lics(License.from_identifier(str(determine_spdx_value(self.licence))))
-    return source_file</code></pre>
+    licence = parse_spdx_licence(self.licence)
+    return File(
+        name=self.unix_relative_path,
+        spdx_id=f&#34;SPDXRef-{self.id}&#34;,
+        checksums=[Checksum(ChecksumAlgorithm.SHA1, self.sha1_check_sum)],
+        file_types=[FileType.SOURCE],
+        license_concluded=licence,
+        license_info_in_file=[licence],
+        copyright_text=self.copyright or SpdxNone(),
+    )</code></pre>
 </details>
 <div class="desc"><p>Generates the SPDX file.</p>
 <p>SPDX File example:

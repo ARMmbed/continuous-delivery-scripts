@@ -74,16 +74,18 @@ specification (i.e. with relationships).</p>
 <div class="desc"><p>Generates all the SPDX reports for a given project.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.report_third_party_ip.generate_spdx_reports"><code class="name flex">
-<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path, lookup_scancode: bool = False) ‑> SpdxProject | None</span>
+<span>def <span class="ident">generate_spdx_reports</span></span>(<span>output_directory: pathlib.Path,<br>lookup_scancode: bool = False,<br>skip_dependency_download: bool = False) ‑> SpdxProject | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_spdx_reports(output_directory: Path, lookup_scancode: bool = False) -&gt; Optional[&#34;SpdxProject&#34;]:
+<pre><code class="python">def generate_spdx_reports(
+    output_directory: Path, lookup_scancode: bool = False, skip_dependency_download: bool = False
+) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Generates all the SPDX reports for the current project.&#34;&#34;&#34;
-    project = get_language_specifics().get_current_spdx_project()
+    project = get_language_specifics().get_current_spdx_project(skip_dependency_download=skip_dependency_download)
     if not project:
         return None
     if lookup_scancode:
@@ -120,6 +122,11 @@ specification (i.e. with relationships).</p>
         action=&#34;store_true&#34;,
         help=&#34;Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.&#34;,
     )
+    parser.add_argument(
+        &#34;--skip-dependency-download&#34;,
+        action=&#34;store_true&#34;,
+        help=&#34;Skip automatic dependency downloads before licence checks and SPDX dependency analysis.&#34;,
+    )
 
     parser.add_argument(
         &#34;-v&#34;,
@@ -133,7 +140,11 @@ specification (i.e. with relationships).</p>
 
     try:
         if get_language_specifics().can_get_project_metadata():
-            project = generate_spdx_reports(args.output_dir, lookup_scancode=args.lookup_scancode)
+            project = generate_spdx_reports(
+                args.output_dir,
+                lookup_scancode=args.lookup_scancode,
+                skip_dependency_download=args.skip_dependency_download,
+            )
             if project:
                 project.check_licence_compliance()
                 if args.lookup_scancode:

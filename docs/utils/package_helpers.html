@@ -166,7 +166,12 @@ el.replaceWith(d);
         classifier = str(data.get(&#34;License-Classifier&#34;) or &#34;&#34;).strip()
         if expression:
             licence, source = expression, LicenceSource.EXPRESSION
-        elif legacy and not legacy.lower().startswith(&#34;copyright&#34;) and legacy.lower() not in (&#34;unknown&#34;, &#34;none&#34;):
+        elif (
+            legacy
+            and not legacy.lower().startswith(&#34;copyright&#34;)
+            and legacy.lower() not in (&#34;unknown&#34;, &#34;none&#34;)
+            and (&#34;\n&#34; not in legacy or not classifier)
+        ):
             licence, source = legacy, LicenceSource.LEGACY
         elif classifier:
             licence, source = classifier, LicenceSource.CLASSIFIER

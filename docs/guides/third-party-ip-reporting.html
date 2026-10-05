@@ -15,9 +15,9 @@ It can support an OpenChain compliance workflow; a generated report alone does
 not certify compliance. For the SPDX documents produced by the same command,
 see <a href="generating-an-spdx-sbom.html">SPDX generation</a>.</p>
 <h2>Inputs and example</h2>
-<p>Install the dependencies you intend to audit, configure your language plugin
-and set <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any documented manual checks in
-<code>pyproject.toml</code>. Choose an existing output directory:</p>
+<p>Configure your language plugin and set <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any
+documented manual checks in <code>pyproject.toml</code>. Choose an existing output
+directory:</p>
 <pre><code class="language-bash">mkdir -p licensing
 cd-generate-spdx --output-dir licensing
 </code></pre>
@@ -28,7 +28,10 @@ shared report and accepted-licence policy. Check the
 for language-specific prerequisites and support.
 An audit covers the installed environment, so run it for each supported
 platform if dependencies differ by operating system. Review unknown licences
-and packaged notices rather than assuming a missing value means permission.</p>
+and packaged notices rather than assuming a missing value means permission.
+For Go projects, CDS downloads module dependencies automatically before the
+scan. Pass <code>--skip-dependency-download</code> when those dependencies have already
+been prefetched and you want to skip that extra work.</p>
 <h2>Output</h2>
 <p>Find <code>third_party_IP_report.html</code>, <code>.csv</code>, <code>.json</code> and <code>.txt</code> in the output directory,
 alongside SPDX documents when generation is enabled. In this repository the

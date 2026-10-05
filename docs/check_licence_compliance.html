@@ -71,6 +71,11 @@ el.replaceWith(d);
         action=&#34;store_true&#34;,
         help=&#34;Consult ScanCode LicenseDB for unclassified licences or missing assessment rules.&#34;,
     )
+    parser.add_argument(
+        &#34;--skip-dependency-download&#34;,
+        action=&#34;store_true&#34;,
+        help=&#34;Skip automatic dependency downloads before licence checks and SPDX dependency analysis.&#34;,
+    )
     parser.add_argument(&#34;-v&#34;, &#34;--verbose&#34;, action=&#34;count&#34;, default=0, help=&#34;Increase logging verbosity.&#34;)
     args = parser.parse_args()
     set_log_level(args.verbose)
@@ -79,7 +84,7 @@ el.replaceWith(d);
         plugin = get_language_specifics()
         if not plugin.can_get_project_metadata():
             raise ValueError(&#34;The selected language plugin cannot provide metadata for licence compliance checks.&#34;)
-        project = plugin.get_current_spdx_project()
+        project = plugin.get_current_spdx_project(skip_dependency_download=args.skip_dependency_download)
         if project is None:
             raise ValueError(&#34;The selected language plugin did not return a project for licence compliance checks.&#34;)
         if args.lookup_scancode:

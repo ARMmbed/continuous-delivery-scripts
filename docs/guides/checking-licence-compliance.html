@@ -13,9 +13,9 @@ SPDX-License-Identifier: Apache-2.0
 assess the project and its dependencies against the configured licence policy
 without generating SPDX documents. The command writes no files by default.</p>
 <h2>Inputs and example</h2>
-<p>Install the dependencies you intend to audit and select a language plugin that
-provides project metadata. Configure <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any
-documented manual reviews in <code>[ProjectConfig]</code> in <code>pyproject.toml</code>. Then run:</p>
+<p>Select a language plugin that provides project metadata. Configure
+<code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any documented manual reviews in
+<code>[ProjectConfig]</code> in <code>pyproject.toml</code>. Then run:</p>
 <pre><code class="language-bash">cd-check-licence-compliance
 </code></pre>
 <p>To keep the third-party IP summaries for review, create an output directory and
@@ -26,6 +26,10 @@ cd-check-licence-compliance --output-dir licensing
 <p>The optional <code>--output-dir</code> (<code>-o</code>) writes <code>third_party_IP_report.html</code>, <code>.csv</code>,
 <code>.txt</code> and <code>.json</code>. It does not create <code>.spdx</code> files. The reports are written
 before the compliance check, so they remain available if the check fails.</p>
+<p>For Go projects, CDS downloads module dependencies automatically before running
+licence analysis so CI does not need a separate <code>go mod download all</code> step.
+Pass <code>--skip-dependency-download</code> when your environment already prefetches the
+required dependencies and you want to skip that extra work.</p>
 <h2>Result</h2>
 <p>The command succeeds when the discovered project and dependency licences meet
 the configured policy, including documented manual reviews. It fails if a

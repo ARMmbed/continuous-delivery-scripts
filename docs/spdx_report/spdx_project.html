@@ -186,10 +186,10 @@ el.replaceWith(d);
             raise NotADirectoryError(str(dir))
 
         path = dir.joinpath(filename)
-        from spdx.writers.tagvalue import write_document
+        from spdx_tools.spdx.writer.tagvalue.tagvalue_writer import write_document_to_stream
 
         with open(str(path), mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
-            write_document(spdx_doc.generate_spdx_document(), out)
+            write_document_to_stream(spdx_doc.generate_spdx_document(), out)
         return str(determine_sha1_hash_of_file(path))
 
     def generate_licensing_summary(self, dir: Path) -&gt; None:
@@ -239,6 +239,7 @@ el.replaceWith(d);
                     name=spdx_dependency.document_name,
                     namespace=spdx_dependency.document_namespace,
                     checksum=checksum,
+                    package_id=spdx_dependency.generate_spdx_package().id,
                 )
             )
         self.main_document.external_refs = externalRefs
@@ -339,10 +340,10 @@ def generate_tag_value_file(dir: Path, spdx_doc: SpdxDocument, filename: str = &
         raise NotADirectoryError(str(dir))
 
     path = dir.joinpath(filename)
-    from spdx.writers.tagvalue import write_document
+    from spdx_tools.spdx.writer.tagvalue.tagvalue_writer import write_document_to_stream
 
     with open(str(path), mode=&#34;w&#34;, encoding=&#34;utf-8&#34;) as out:
-        write_document(spdx_doc.generate_spdx_document(), out)
+        write_document_to_stream(spdx_doc.generate_spdx_document(), out)
     return str(determine_sha1_hash_of_file(path))</code></pre>
 </details>
 <div class="desc"><p>Generates the Tag file into the directory.</p>
@@ -565,6 +566,7 @@ def main_document(self) -&gt; SpdxDocument:
                 name=spdx_dependency.document_name,
                 namespace=spdx_dependency.document_namespace,
                 checksum=checksum,
+                package_id=spdx_dependency.generate_spdx_package().id,
             )
         )
     self.main_document.external_refs = externalRefs

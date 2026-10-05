@@ -108,9 +108,9 @@ el.replaceWith(d);
             (r&#34;^\.github[\\/]workflows[\\/].*&#34;),
         ]
 
-    def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+    def get_current_spdx_project(self, skip_dependency_download: bool = False) -&gt; Optional[SpdxProject]:
         &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
-        return SpdxProject(GoProjectMetadataFetcher())
+        return SpdxProject(GoProjectMetadataFetcher(skip_dependency_download=skip_dependency_download))
 
     def should_clean_before_packaging(self) -&gt; bool:
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
@@ -194,16 +194,16 @@ el.replaceWith(d);
 <div class="desc"><p>Checks any credentials.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a> | None</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self, skip_dependency_download: bool = False) ‑> <a title="continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject" href="../spdx_report/spdx_project.html#continuous_delivery_scripts.spdx_report.spdx_project.SpdxProject">SpdxProject</a> | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[SpdxProject]:
+<pre><code class="python">def get_current_spdx_project(self, skip_dependency_download: bool = False) -&gt; Optional[SpdxProject]:
     &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
-    return SpdxProject(GoProjectMetadataFetcher())</code></pre>
+    return SpdxProject(GoProjectMetadataFetcher(skip_dependency_download=skip_dependency_download))</code></pre>
 </details>
 <div class="desc"><p>Gets current SPDX description.</p></div>
 </dd>
@@ -302,6 +302,7 @@ el.replaceWith(d);
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.GoProjectMetadataFetcher"><code class="flex name class">
 <span>class <span class="ident">GoProjectMetadataFetcher</span></span>
+<span>(</span><span>skip_dependency_download: bool = False)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -311,15 +312,20 @@ el.replaceWith(d);
 <pre><code class="python">class GoProjectMetadataFetcher(ProjectMetadataFetcher):
     &#34;&#34;&#34;Retrieve Go dependency licences for the shared SPDX and compliance report.&#34;&#34;&#34;
 
-    def __init__(self) -&gt; None:
+    def __init__(self, skip_dependency_download: bool = False) -&gt; None:
         &#34;&#34;&#34;Initialise with the configured project name.&#34;&#34;&#34;
         super().__init__(str(configuration.get_value(ConfigurationVariable.PROJECT_NAME)))
+        self._skip_dependency_download = skip_dependency_download
 
     def fetch_project_metadata(self) -&gt; ProjectMetadata:
         &#34;&#34;&#34;Collect module dependencies using go-licenses without replacing shared policy checks.&#34;&#34;&#34;
         module_directories = _go_licence_module_directories()
         env = os.environ.copy()
         env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+        if not self._skip_dependency_download and _should_download_go_module_dependencies():
+            _download_go_module_dependencies(module_directories, env)
+        else:
+            logger.info(&#34;Skipping Go module dependency downloads before licence analysis by configuration.&#34;)
         executable = _ensure_go_tool_installed(
             tool_name=&#34;go-licenses&#34;,
             version_command=[&#34;go-licenses&#34;, &#34;report&#34;, &#34;--help&#34;],
@@ -382,6 +388,10 @@ el.replaceWith(d);
     module_directories = _go_licence_module_directories()
     env = os.environ.copy()
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
+    if not self._skip_dependency_download and _should_download_go_module_dependencies():
+        _download_go_module_dependencies(module_directories, env)
+    else:
+        logger.info(&#34;Skipping Go module dependency downloads before licence analysis by configuration.&#34;)
     executable = _ensure_go_tool_installed(
         tool_name=&#34;go-licenses&#34;,
         version_command=[&#34;go-licenses&#34;, &#34;report&#34;, &#34;--help&#34;],

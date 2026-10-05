@@ -153,7 +153,7 @@ el.replaceWith(d);
         pass
 
     @abstractmethod
-    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
+    def get_current_spdx_project(self, skip_dependency_download: bool = False) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets current project SPDX.&#34;&#34;&#34;
         pass
 
@@ -253,7 +253,7 @@ def generate_code_documentation(self, output_directory: Path, module_to_document
 <div class="desc"><p>Generates the template of the licence header which is put at the top of source files.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> SpdxProject | None</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self, skip_dependency_download: bool = False) ‑> SpdxProject | None</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -261,7 +261,7 @@ def generate_code_documentation(self, output_directory: Path, module_to_document
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@abstractmethod
-def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
+def get_current_spdx_project(self, skip_dependency_download: bool = False) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Gets current project SPDX.&#34;&#34;&#34;
     pass</code></pre>
 </details>

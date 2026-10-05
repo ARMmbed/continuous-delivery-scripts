@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-02 12:56:18.676180
+                                         2026-10-05 10:49:00.572720
 
 # Summary:
     Licence compliance: Compliant
@@ -8,10 +8,48 @@
     Missing dependencies: None
     Unknown licences: docutils, python-dateutil
     Undocumented exemptions: None
-    Dependency licence assessment: ALLOW: 61; REVIEW: 0; MANUALLY_REVIEWED: 2; DENY: 0; UNKNOWN: 0
+    Dependency licence assessment: ALLOW: 64; REVIEW: 0; MANUALLY_REVIEWED: 2; DENY: 0; UNKNOWN: 0
     Licence assessment is advisory; allowlist compliance is evaluated separately.
 
 # More details:
+
+- beartype:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/beartype/beartype/releases
+    Licence: MIT
+    Licence source: License-Classifier
+    Declared licence: MIT License
+
+Copyright (c) 2014-2025 Beartype authors.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+    Licence classifiers: MIT License
+    Evidence: licence: beartype-0.22.9.dist-info/licenses/LICENSE
+    Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
 
 - boolean.py:
     [X] Compliant?
@@ -39,7 +77,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.107.dist-info/LICENSE; notice: boto3-1.43.107.dist-info/NOTICE
+    Evidence: licence: boto3-1.43.108.dist-info/LICENSE; notice: boto3-1.43.108.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -57,7 +95,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.107.dist-info/LICENSE.txt; notice: botocore-1.43.107.dist-info/NOTICE
+    Evidence: licence: botocore-1.43.108.dist-info/LICENSE.txt; notice: botocore-1.43.108.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -166,7 +204,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.4.1.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.4.2.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 
@@ -557,7 +595,7 @@
     Licence source: License-Expression
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: markupsafe-3.0.3.dist-info/licenses/LICENSE.txt
+    Evidence: licence: markupsafe-3.0.4.dist-info/licenses/LICENSE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -643,7 +681,7 @@
     [X] Compliant?
     [X] Dependency?
     URL: https://pdoc3.github.io/pdoc/
-    Licence: AGPL-3.0
+    Licence: AGPL-3.0-only
     Licence source: License
     Declared licence: AGPL-3.0
     Licence classifiers: GNU Affero General Public License v3 or later (AGPLv3+)
@@ -966,6 +1004,24 @@
 
 
 
+- semantic-version:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/rbarrois/python-semanticversion
+    Licence: 0BSD
+    Licence source: License
+    Declared licence: BSD
+    Licence classifiers: BSD License
+    Evidence: licence: semantic_version-2.10.0.dist-info/LICENSE
+    Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
+
 - semver:
     [X] Compliant?
     [X] Dependency?
@@ -1041,12 +1097,12 @@
 - spdx-tools:
     [X] Compliant?
     [X] Dependency?
-    URL: https://github.com/spdx/tools-python
+    URL: https://github.com/spdx/tools-python/blob/main/CHANGELOG.md
     Licence: Apache-2.0
-    Licence source: License
+    Licence source: License-Expression
     Declared licence: Apache-2.0
-    Licence classifiers: Apache Software License
-    Evidence: licence: spdx_tools-0.6.1.dist-info/LICENSE
+    Licence classifiers: None
+    Evidence: licence: spdx_tools-0.8.5.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -1101,6 +1157,24 @@
     Declared licence: Apache-2.0
     Licence classifiers: None
     Evidence: licence: twine-7.0.0.dist-info/licenses/LICENSE
+    Licence compliance: Automatic licence assessment meets the configured policy.
+    Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
+
+
+    Project licence compared: Apache-2.0
+    Assessment rule: permissive-dependency (built-in)
+
+
+
+- uritools:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/tkem/uritools/blob/master/CHANGELOG.rst
+    Licence: MIT
+    Licence source: License-Expression
+    Declared licence: MIT
+    Licence classifiers: None
+    Evidence: licence: uritools-6.1.3.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 

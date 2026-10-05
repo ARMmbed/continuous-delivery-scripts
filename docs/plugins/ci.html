@@ -96,7 +96,7 @@ el.replaceWith(d);
         &#34;&#34;&#34;States whether project metadata can be retrieved.&#34;&#34;&#34;
         return False
 
-    def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
+    def get_current_spdx_project(self, skip_dependency_download: bool = False) -&gt; Optional[&#34;SpdxProject&#34;]:
         &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
         # TODO
         return None
@@ -147,14 +147,14 @@ el.replaceWith(d);
 <div class="desc"><p>Checks any credentials.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.ci.CI.get_current_spdx_project"><code class="name flex">
-<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self) ‑> SpdxProject | None</span>
+<span>def <span class="ident">get_current_spdx_project</span></span>(<span>self, skip_dependency_download: bool = False) ‑> SpdxProject | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_current_spdx_project(self) -&gt; Optional[&#34;SpdxProject&#34;]:
+<pre><code class="python">def get_current_spdx_project(self, skip_dependency_download: bool = False) -&gt; Optional[&#34;SpdxProject&#34;]:
     &#34;&#34;&#34;Gets current SPDX description.&#34;&#34;&#34;
     # TODO
     return None</code></pre>

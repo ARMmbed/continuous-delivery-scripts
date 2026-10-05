@@ -150,6 +150,8 @@ el.replaceWith(d);
     &#34;&#34;&#34;Project-specific records explaining manual reviews of REVIEW assessments.&#34;&#34;&#34;
     LICENCE_ASSESSMENT_FAIL_ON = 45
     &#34;&#34;&#34;Optional top-level list of assessment statuses that fail compliance checks.&#34;&#34;&#34;
+    SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING = 46
+    &#34;&#34;&#34;Skip automatic dependency downloads before licence and SPDX dependency analysis.&#34;&#34;&#34;
 
     @staticmethod
     def choices() -&gt; List[str]:
@@ -341,6 +343,10 @@ el.replaceWith(d);
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME"><code class="name">var <span class="ident">SECRETS_BASELINE_FILENAME</span></code></dt>
 <dd>
 <div class="desc"><p>Filename for the detect-secrets baseline.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING"><code class="name">var <span class="ident">SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING</span></code></dt>
+<dd>
+<div class="desc"><p>Skip automatic dependency downloads before licence and SPDX dependency analysis.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR"><code class="name">var <span class="ident">SOURCE_DIR</span></code></dt>
 <dd>
@@ -861,6 +867,7 @@ default value if the variable is not defined.</p></div>
     LICENCE_ASSESSMENT_FAIL_ON = None
     &#34;&#34;&#34;When unset, use fail_on from the embedded or project licence assessment rules.&#34;&#34;&#34;
     GENERATE_LICENSING_SUMMARY_ON_RELEASE = False
+    SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING = False
     DEPENDENCY_UPDATE_NEWS_MESSAGE = &#34;Dependency upgrade: {message}&#34;
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r&#34;^\s*[Dd]ependabot\/.+\/(?P&lt;DEPENDENCY&gt;.+)&#34;
@@ -986,6 +993,10 @@ defined in toml.</p></div>
 <dd>
 <div class="desc"><p>The type of the None singleton.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING"><code class="name">var <span class="ident">SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING</span></code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST"><code class="name">var <span class="ident">TAG_LATEST</span></code></dt>
 <dd>
 <div class="desc"><p>The type of the None singleton.</p></div>
@@ -1084,6 +1095,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REVIEWED_LICENCE_ASSESSMENTS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.REVIEWED_LICENCE_ASSESSMENTS">REVIEWED_LICENCE_ASSESSMENTS</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SECRETS_BASELINE_FILENAME">SECRETS_BASELINE_FILENAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING">SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.SOURCE_DIR">SOURCE_DIR</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_LATEST">TAG_LATEST</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_VERSION_SHORTCUTS" href="#continuous_delivery_scripts.utils.configuration.ConfigurationVariable.TAG_VERSION_SHORTCUTS">TAG_VERSION_SHORTCUTS</a></code></li>
@@ -1140,6 +1152,7 @@ defined in toml.</p></div>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.RELEASE_BRANCH_PATTERN">RELEASE_BRANCH_PATTERN</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.REMOTE_ALIAS">REMOTE_ALIAS</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.SECRETS_BASELINE_FILENAME" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.SECRETS_BASELINE_FILENAME">SECRETS_BASELINE_FILENAME</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING">SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_LATEST">TAG_LATEST</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_VERSION_SHORTCUTS" href="#continuous_delivery_scripts.utils.configuration.StaticConfig.TAG_VERSION_SHORTCUTS">TAG_VERSION_SHORTCUTS</a></code></li>
 </ul>

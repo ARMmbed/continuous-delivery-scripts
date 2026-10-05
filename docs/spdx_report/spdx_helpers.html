@@ -287,6 +287,34 @@ correct SPDX value a string, UnKnown or SPDXNone</p></div>
 </details>
 <div class="desc"><p>Gets a generator over all the project's files needing licensing.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.spdx_report.spdx_helpers.parse_spdx_licence"><code class="name flex">
+<span>def <span class="ident">parse_spdx_licence</span></span>(<span>licence: str) ‑> Expression | SpdxNoAssertion | ModelSpdxNone</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_spdx_licence(licence: str) -&gt; Union[&#34;Expression&#34;, &#34;SpdxNoAssertion&#34;, &#34;ModelSpdxNone&#34;]:
+    &#34;&#34;&#34;Convert a project licence expression to the SPDX SDK&#39;s model.
+
+    An unknown licence in the audit is not an SPDX licence identifier. It is
+    represented as NOASSERTION in the SPDX document instead.
+    &#34;&#34;&#34;
+    from license_expression import get_spdx_licensing
+    from spdx_tools.spdx.model.spdx_no_assertion import SpdxNoAssertion
+    from spdx_tools.spdx.model.spdx_none import SpdxNone
+
+    if not licence or licence.upper() in (&#34;UNKNOWN&#34;, &#34;NOASSERTION&#34;):
+        return SpdxNoAssertion()
+    if licence.upper() == &#34;NONE&#34;:
+        return SpdxNone()
+    return cast(&#34;Expression&#34;, get_spdx_licensing().parse(licence))</code></pre>
+</details>
+<div class="desc"><p>Convert a project licence expression to the SPDX SDK's model.</p>
+<p>An unknown licence in the audit is not an SPDX licence identifier. It is
+represented as NOASSERTION in the SPDX document instead.</p></div>
+</dd>
 </dl>
 </section>
 <section>
@@ -470,6 +498,7 @@ def reason(self) -&gt; Optional[str]:
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.get_project_namespace" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.get_project_namespace">get_project_namespace</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.is_package_licence_manually_checked">is_package_licence_manually_checked</a></code></li>
 <li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.list_project_files_for_licensing">list_project_files_for_licensing</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.spdx_helpers.parse_spdx_licence" href="#continuous_delivery_scripts.spdx_report.spdx_helpers.parse_spdx_licence">parse_spdx_licence</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

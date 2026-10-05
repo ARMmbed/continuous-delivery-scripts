@@ -1,1 +1,0 @@
-:bug: Preserve markdown changelog headings by promoting the latest Towncrier release title to a heading and demoting its section headings so GitHub renders release notes correctly.
