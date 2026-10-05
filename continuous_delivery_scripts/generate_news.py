@@ -7,6 +7,7 @@
 import sys
 
 import argparse
+from contextlib import contextmanager
 import logging
 import os
 import re
@@ -14,7 +15,7 @@ import subprocess
 from pathlib import Path
 import tempfile
 from continuous_delivery_scripts.utils.versioning import calculate_version, determine_version_string
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, Iterator
 
 import toml
 
@@ -34,13 +35,16 @@ def _title_format_has_markdown_heading(title_format: str) -> bool:
     return any(line.lstrip().startswith("#") for line in title_format.splitlines() if line.strip())
 
 
-def _create_towncrier_workaround_config(project_config_path: str) -> Optional[str]:
-    """Creates a temporary Towncrier config with a Markdown title heading if needed."""
+@contextmanager
+def _create_towncrier_workaround_config(project_config_path: str) -> Iterator[Optional[str]]:
+    """Yields a temporary Towncrier config with a Markdown title heading if needed."""
+    # FIXME: Remove this workaround when https://github.com/twisted/towncrier/issues/758 is fixed.
     config = toml.load(project_config_path)
     towncrier_config = config.get("tool", {}).get("towncrier", {})
     title_format = towncrier_config.get("title_format")
     if not isinstance(title_format, str) or _title_format_has_markdown_heading(title_format):
-        return None
+        yield None
+        return
 
     config["tool"]["towncrier"]["title_format"] = f"# {title_format}"
     config_dir = os.path.dirname(project_config_path)
@@ -48,7 +52,11 @@ def _create_towncrier_workaround_config(project_config_path: str) -> Optional[st
         mode="w", encoding="utf8", suffix=".toml", prefix="towncrier-", dir=config_dir, delete=False
     ) as temp_config:
         toml.dump(config, temp_config)
-        return temp_config.name
+
+    try:
+        yield temp_config.name
+    finally:
+        os.remove(temp_config.name)
 
 
 def version_project(commit_type: CommitType) -> Tuple[bool, Optional[str], Dict[str, str]]:
@@ -79,17 +87,13 @@ def _generate_changelog(version: Optional[str], use_news_files: bool) -> None:
     if use_news_files:
         logger.info(":: Generating a new changelog")
         project_config_path = configuration.get_value(ConfigurationVariable.PROJECT_CONFIG)
-        workaround_config_path = _create_towncrier_workaround_config(project_config_path)
-        command = ["towncrier", "build", "--yes", "--name", "", "--version", str(version)]
-        if workaround_config_path:
-            command.extend(["--config", workaround_config_path])
+        with _create_towncrier_workaround_config(project_config_path) as workaround_config_path:
+            command = ["towncrier", "build", "--yes", "--name", "", "--version", str(version)]
+            if workaround_config_path:
+                command.extend(["--config", workaround_config_path])
 
-        try:
             with cd(os.path.dirname(project_config_path)):
                 subprocess.check_call(command)
-        finally:
-            if workaround_config_path:
-                os.remove(workaround_config_path)
 
         # FIXME: Remove this workaround when https://github.com/twisted/towncrier/issues/758 is fixed.
         _normalise_markdown_release_headings(version)
