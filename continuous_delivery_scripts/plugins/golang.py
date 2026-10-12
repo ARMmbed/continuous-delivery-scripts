@@ -53,12 +53,12 @@ GO_LICENSES_TEMPLATE = "{{range .}}{{.Name}}\t{{.Version}}\t{{.LicenseURL}}\t{{.
 LICENCE_FILE_PREFIXES = ("LICENSE", "LICENCE", "COPYING")
 
 
-def _generate_doc2go_command_list(executable: str, output_directory: Path, module: str) -> List[str]:
+def _generate_doc2go_command_list(executable: str, output_directory: Path, patterns: List[str]) -> List[str]:
     return [
         executable,
         "-out",
         str(output_directory),
-        f"{module}",
+        *patterns,
     ]
 
 
@@ -329,8 +329,87 @@ def _ensure_go_tool_installed(
     return _installed_go_tool_path(tool_name, env)
 
 
+def _doc2go_target(module: str) -> tuple[Path, List[str]]:
+    """Resolve MODULE_TO_DOCUMENT to a Go module, package or explicit pattern."""
+    requested = module.strip()
+    if not requested:
+        raise ValueError("MODULE_TO_DOCUMENT must identify the Go module or package to document")
+
+    root = ROOT_DIR.resolve()
+    source = SRC_DIR.resolve()
+    modules = list(
+        dict.fromkeys(
+            directory.resolve()
+            for directory in _candidate_go_module_directories(include_project_root=True)
+            if (directory / "go.mod").is_file()
+        )
+    )
+
+    if requested == ".":
+        workspace_modules = list(
+            dict.fromkeys(
+                directory.resolve()
+                for directory in _determine_go_work_module_directories()
+                if (directory / "go.mod").is_file() and directory.resolve().is_relative_to(root)
+            )
+        )
+        if workspace_modules:
+            return root, [
+                "./..." if directory == root else f"./{directory.relative_to(root).as_posix()}/..."
+                for directory in workspace_modules
+            ]
+        if (root / "go.mod").is_file():
+            return root, ["./..."]
+        raise FileNotFoundError(f"No Go module or workspace found at {ROOT_DIR}")
+
+    matches = []
+    for directory in modules:
+        relative = directory.relative_to(root).as_posix() if directory.is_relative_to(root) else None
+        if requested in {directory.name, str(directory), relative, f"./{relative}"}:
+            matches.append(directory)
+    project_module = (root / requested).resolve()
+    if project_module.is_relative_to(root) and (project_module / "go.mod").is_file() and project_module not in matches:
+        matches.append(project_module)
+    if len(matches) > 1:
+        raise ValueError(f"MODULE_TO_DOCUMENT={requested!r} matches several Go modules; use a project-relative path")
+    if matches:
+        return matches[0], ["./..."]
+
+    # Package directories can be named relative to the project or source root.
+    package_matches = []
+    for candidate in ((root / requested).resolve(), (source / requested).resolve()):
+        if candidate.is_dir():
+            containing_modules = [directory for directory in modules if candidate.is_relative_to(directory)]
+            if containing_modules:
+                directory = max(containing_modules, key=lambda path: len(path.parts))
+                relative = candidate.relative_to(directory).as_posix()
+                result = directory, [f"./{relative}/..."]
+                if result not in package_matches:
+                    package_matches.append(result)
+    if len(package_matches) > 1:
+        raise ValueError(f"MODULE_TO_DOCUMENT={requested!r} matches several Go packages; use a project-relative path")
+    if package_matches:
+        return package_matches[0]
+
+    # A source subdirectory of a module can also be selected by its short name.
+    if requested == source.name and any((parent / "go.mod").is_file() for parent in (source, *source.parents)):
+        return source, ["./..."]
+
+    # Recognise a full module path without requiring the caller to append /....
+    if "." in requested and not requested.startswith("./"):
+        env = os.environ.copy()
+        for directory in modules:
+            import_path = _go_module_name(directory, env)
+            if requested in {import_path, f"{import_path}/..."}:
+                return directory, ["./..."]
+
+    # An explicit package import path or Go package pattern is used as supplied.
+    return source, [requested]
+
+
 def _call_doc2go(output_directory: Path, module: str) -> None:
     """Call doc2go for generating the docs."""
+    working_dir, patterns = _doc2go_target(module)
     env = os.environ
     env[ENVVAR_GO_MOD] = GO_MOD_ON_VALUE
     executable = _ensure_go_tool_installed(
@@ -340,10 +419,10 @@ def _call_doc2go(output_directory: Path, module: str) -> None:
         env=env,
     )
     logger.info("Creating Code documentation.")
-    logger.info("Running doc2go over [%s] in [%s].", module, SRC_DIR)
+    logger.info("Running doc2go over [%s] in [%s].", patterns, working_dir)
     check_call(
-        _generate_doc2go_command_list(executable, output_directory, module),
-        cwd=str(SRC_DIR),
+        _generate_doc2go_command_list(executable, output_directory.resolve(), patterns),
+        cwd=str(working_dir),
         env=env,
     )
 
@@ -475,7 +554,7 @@ class Go(BaseLanguage):
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -> None:
         """Generates the code documentation."""
         super().generate_code_documentation(output_directory, module_to_document)
-        _call_doc2go(output_directory, module_to_document if module_to_document else "./...")
+        _call_doc2go(output_directory, module_to_document)
 
     def can_add_licence_headers(self) -> bool:
         """States that licence headers can be added."""
