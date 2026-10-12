@@ -1,0 +1,1 @@
+:bug: [GO plugin] Honour relative documentation output paths when running doc2go from a module directory.
