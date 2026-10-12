@@ -11,6 +11,33 @@ Therefore, a `.goreleaser.yml` file must be present in the go source directory i
 ## Documentation
 The plugin uses [doc2go](https://abhinav.github.io/doc2go) to generate the code reference documentation.
 
+Set `MODULE_TO_DOCUMENT` to the Go module or package you want documented.
+CDS uses `go.mod` and `go.work` to find the module and select the working
+directory and package pattern for [doc2go](https://abhinav.github.io/doc2go).
+`SOURCE_DIR` locates the project's Go source; it does not choose the
+documentation target. For example:
+
+```toml
+[ProjectConfig]
+PROJECT_ROOT = "."
+SOURCE_DIR = "generator"
+PROGRAMMING_LANGUAGE = "Golang"
+MODULE_TO_DOCUMENT = "generator"
+DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
+DOCUMENTATION_GUIDES_DIR = "guides"
+```
+
+`MODULE_TO_DOCUMENT = "generator"` documents that module and its packages;
+`"cli"` selects the CLI module instead, even when `SOURCE_DIR` is `generator`.
+For duplicate module names, use a project-relative path such as `"tools/cli"`.
+To document all modules in the project workspace, use `"."`. A full module
+import path also selects all its packages. To target a package directory, use
+its name or project-relative path, such as `"config"` or `"generator/config"`;
+a package import path or an explicit Go package pattern also works.
+
+Run `cd-generate-docs` to build the API pages alongside optional task guides;
+see [the documentation guide](../../guides/generating-code-documentation.md).
+
 ## SPDX and third-party IP reporting
 
 The Go plugin uses [go-licenses v2](https://github.com/google/go-licenses) to

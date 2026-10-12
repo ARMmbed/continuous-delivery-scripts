@@ -5,6 +5,7 @@
 """Generates documentation."""
 
 import argparse
+from html import escape
 import logging
 import os
 import re
@@ -56,8 +57,8 @@ def _html_page(
     )
 
 
-def _preserve_api_navigation(output_directory: Path, guide_output: Path) -> None:
-    """Keep links to the original API index working after it becomes api.html."""
+def _update_api_navigation(output_directory: Path, guide_output: Path) -> None:
+    """Preserve API index links and provide a route back to task guides."""
     original_index = output_directory / "index.html"
     if not original_index.is_file():
         return
@@ -76,6 +77,27 @@ def _preserve_api_navigation(output_directory: Path, guide_output: Path) -> None
 
         contents = page.read_text(encoding="utf8")
         updated = re.sub(r'href="((?:\.\./|\./)*index\.html(?:#[^"]*)?)"', retarget, contents)
+        guide_href = (
+            "../" * len(page.parent.relative_to(output_directory).parts)
+            + (guide_output.relative_to(output_directory) / "index.html").as_posix()
+        )
+        guide_link = f'<a href="{escape(guide_href, quote=True)}">Task guides</a>'
+        if re.search(r"<nav\b[^>]*>", updated, flags=re.IGNORECASE):
+            updated = re.sub(
+                r"(<nav\b[^>]*>)",
+                lambda match: f"{match.group(1)}{guide_link} · ",
+                updated,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        else:
+            updated = re.sub(
+                r"(<body\b[^>]*>)",
+                lambda match: f"{match.group(1)}<nav>{guide_link}</nav>",
+                updated,
+                count=1,
+                flags=re.IGNORECASE,
+            )
         if updated != contents:
             page.write_text(updated, encoding="utf8")
 
@@ -175,7 +197,7 @@ def _publish_project_guides(output_directory: Path) -> None:
     guide_output = output_directory / guide_folder
     has_api_index = (output_directory / "index.html").is_file()
     links = _render_guides(guide_sources, guide_output, guide_folder, project_name, has_api_index)
-    _preserve_api_navigation(output_directory, guide_output)
+    _update_api_navigation(output_directory, guide_output)
     _write_guide_index(output_directory, project_name, guide_folder, has_api_index, links)
 
 

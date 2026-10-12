@@ -115,13 +115,20 @@ class TestGenerateDocs(TestCase):
             output = pathlib.Path(temporary_root, "site")
 
             def generate_api(output_directory, _module):
-                (output_directory / "index.html").write_text("API reference", encoding="utf8")
-                (output_directory / "module.html").write_text('<a href="index.html">Package API</a>', encoding="utf8")
+                (output_directory / "index.html").write_text(
+                    "<html><body><h1>API reference</h1></body></html>", encoding="utf8"
+                )
+                (output_directory / "module.html").write_text(
+                    '<html><body><nav><a href="index.html">Package API</a></nav></body></html>', encoding="utf8"
+                )
                 subpackage = output_directory / "subpackage"
                 subpackage.mkdir()
-                (subpackage / "index.html").write_text("Subpackage API", encoding="utf8")
+                (subpackage / "index.html").write_text(
+                    '<html><body><nav><a href="../index.html">Root API</a></nav></body></html>', encoding="utf8"
+                )
                 (subpackage / "module.html").write_text(
-                    '<a href="../index.html">Package API</a><a href="index.html">Subpackage API</a>',
+                    '<html><body><nav><a href="../index.html">Package API</a>'
+                    '<a href="index.html">Subpackage API</a></nav></body></html>',
                     encoding="utf8",
                 )
 
@@ -129,7 +136,10 @@ class TestGenerateDocs(TestCase):
 
             generate_documentation(output, "continuous_delivery_scripts")
 
-            self.assertEqual((output / "api.html").read_text(encoding="utf8"), "API reference")
+            self.assertIn(
+                '<nav><a href="reference/guides/index.html">Task guides</a></nav>',
+                (output / "api.html").read_text(encoding="utf8"),
+            )
             self.assertIn("<h1>Another Project</h1>", (output / "index.html").read_text(encoding="utf8"))
             self.assertIn("<p>Project licence: MIT</p>", (output / "index.html").read_text(encoding="utf8"))
             self.assertIn(">Generate an SPDX SBOM</a>", (output / "index.html").read_text(encoding="utf8"))
@@ -150,6 +160,18 @@ class TestGenerateDocs(TestCase):
             self.assertIn('href="api.html"', (output / "module.html").read_text(encoding="utf8"))
             self.assertIn('href="../api.html"', (output / "subpackage" / "module.html").read_text(encoding="utf8"))
             self.assertIn('href="index.html"', (output / "subpackage" / "module.html").read_text(encoding="utf8"))
+            self.assertIn(
+                '<nav><a href="reference/guides/index.html">Task guides</a> · ',
+                (output / "module.html").read_text(encoding="utf8"),
+            )
+            self.assertIn(
+                'href="../reference/guides/index.html">Task guides</a>',
+                (output / "subpackage" / "index.html").read_text(encoding="utf8"),
+            )
+            self.assertIn(
+                'href="../reference/guides/index.html">Task guides</a>',
+                (output / "subpackage" / "module.html").read_text(encoding="utf8"),
+            )
             self.assertIn(
                 "reference/guides/generating-an-spdx-sbom.html", (output / "index.html").read_text(encoding="utf8")
             )

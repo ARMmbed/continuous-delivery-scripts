@@ -1,1 +1,1 @@
-:sparkles: Verify a public GitHub Pages URL for documentation discovery when no documentation site URL is configured.
+:sparkles: [GO plugin] Resolve Go documentation targets from MODULE_TO_DOCUMENT without requiring Go package patterns.
