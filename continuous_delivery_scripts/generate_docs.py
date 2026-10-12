@@ -43,7 +43,7 @@ def _html_page(
     schema_type: str = "TechArticle",
 ) -> str:
     """Wrap a task guide in a standalone, readable HTML page."""
-    return (
+    return str(
         documentation_templates()
         .get_template("documentation_page.html.jinja2")
         .render(

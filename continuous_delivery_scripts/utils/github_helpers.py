@@ -14,7 +14,7 @@ from urllib.request import Request, urlopen
 def _github_repository_path(remote: str) -> str | None:
     """Extract the repository path from a GitHub HTTPS or SSH remote."""
     if remote.startswith("git@github.com:"):
-        location = remote[len("git@github.com:") :]
+        location = remote.removeprefix("git@github.com:")
     else:
         parsed = urlsplit(remote)
         if parsed.hostname != "github.com" or parsed.scheme not in {"https", "http", "ssh"}:
@@ -60,7 +60,7 @@ def _verified_pages_url(candidate: str) -> str | None:
         with urlopen(request, timeout=3) as response:
             if response.status != 200 or "text/html" not in response.headers.get("Content-Type", ""):
                 return None
-            final_url = response.geturl()
+            final_url = str(response.geturl())
     except (HTTPError, URLError, TimeoutError, OSError):
         return None
     parts = urlsplit(final_url)

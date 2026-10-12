@@ -124,7 +124,10 @@ class TestDocumentationDiscovery(TestCase):
             output = root / "published"
             rendered = output / "guides"
             rendered.mkdir(parents=True)
-            html = '<html><head><title>Task guides</title><meta name="description" content="Task guides."></head><body></body></html>'
+            html = (
+                "<html><head><title>Task guides</title>"
+                '<meta name="description" content="Task guides."></head><body></body></html>'
+            )
             (output / "index.html").write_text(html, encoding="utf8")
             (rendered / "index.html").write_text(html, encoding="utf8")
             get_config.side_effect = lambda key, default: (

@@ -103,13 +103,12 @@ def _render_llms_index(
     output: Path, site_url: str, name: str, guides: list[tuple[Path, str]], folder: Path | None
 ) -> str:
     """Render the concise index from pages that were actually published."""
-    return (
+    rendered = str(
         documentation_templates()
         .get_template("llms.txt.jinja2")
         .render(name=name, site_url=site_url, guides=guides, folder=folder, has_api=(output / "api.html").is_file())
-        .rstrip()
-        + "\n"
     )
+    return rendered.rstrip() + "\n"
 
 
 def _render_llms_full(output: Path, site_url: str, name: str, guides: list[tuple[Path, str]], folder: Path) -> str:
@@ -135,13 +134,12 @@ def _render_llms_full(output: Path, site_url: str, name: str, guides: list[tuple
             body.append(line)
         sections.append((title, "\n".join(body)))
     api_url = f"{site_url}api.html" if (output / "api.html").is_file() else None
-    return (
+    rendered = str(
         documentation_templates()
         .get_template("llms-full.txt.jinja2")
         .render(name=name, sections=sections, api_url=api_url)
-        .rstrip()
-        + "\n"
     )
+    return rendered.rstrip() + "\n"
 
 
 def _authored_directories(root: Path, guides: Path | None, module_to_document: str | None) -> list[Path]:
