@@ -1,0 +1,13 @@
+# {{ name }}
+
+> Documentation for {{ name }}.
+
+## Documentation
+
+- [Overview]({{ site_url }})
+{% for source, title in guides if folder -%}
+- [{{ title }}]({{ site_url }}{{ folder.as_posix() }}/{{ source.stem }}.html)
+{% endfor -%}
+{% if has_api -%}
+- [API reference]({{ site_url }}api.html)
+{% endif -%}

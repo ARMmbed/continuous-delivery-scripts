@@ -15,10 +15,11 @@ from continuous_delivery_scripts.plugins.python import Python
 
 
 class TestAddNewDocumentation(TestCase):
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default", return_value=None)
     @mock.patch("continuous_delivery_scripts.plugins.python._call_pdoc")
     @mock.patch("continuous_delivery_scripts.tag_and_release._get_documentation_config")
     @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
-    def test_update_docs(self, get_language_specifics, _get_documentation_config, _call_pdoc):
+    def test_update_docs(self, get_language_specifics, _get_documentation_config, _call_pdoc, _get_value_or_default):
         get_language_specifics.return_value = Python()
         with Patcher() as patcher:
             module_name = "module_name"

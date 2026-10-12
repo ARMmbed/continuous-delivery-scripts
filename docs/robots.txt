@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://armmbed.github.io/continuous-delivery-scripts/sitemap.xml

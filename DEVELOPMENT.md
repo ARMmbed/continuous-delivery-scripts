@@ -289,6 +289,17 @@ configured in `[ProjectConfig]` in `pyproject.toml`; this repository uses
 plugin moves to `api.html`, the site index becomes a guide landing page, and a root
 `llms.txt`, if present, is copied to the output. The publishing path also
 works with other language plugins that generate an API index.
+When `DOCUMENTATION_SITE_URL` is configured with the public website's base URL,
+generation also publishes a sitemap, permissive `robots.txt`, an `llms.txt`
+index and a consolidated `llms-full.txt` of the rendered guides. For each
+file, an authored version in the root, guides, or documented module takes
+precedence in that order. The generated landing
+and guide pages include Schema.org metadata. Without the URL, CDS does not
+guess publicly accessible documentation links: for a GitHub repository, it
+verifies the public GitHub Pages URL before using it as a fallback. The HTML
+pages and generated `robots.txt` and LLM text layouts live in
+`continuous_delivery_scripts/templates/`; edit those Jinja2 templates rather
+than the generated output.
 The landing page links to the third-party IP report only after one is
 generated in the same output directory; no report link is shown otherwise.
 

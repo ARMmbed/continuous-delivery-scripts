@@ -17,6 +17,12 @@ import markdown
 
 from continuous_delivery_scripts.language_specifics import get_language_specifics
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
+from continuous_delivery_scripts.utils.documentation_discovery import (
+    documentation_site_url,
+    publish_discovery_files,
+    structured_data_script,
+)
+from continuous_delivery_scripts.utils.documentation_templates import documentation_templates
 from continuous_delivery_scripts.utils.logging import log_exception
 
 logger = logging.getLogger(__name__)
@@ -27,18 +33,27 @@ def _html_guide_link(match: re.Match[str]) -> str:
     return f'href="{match.group(1)}.html{match.group(2) or ""}"'
 
 
-def _html_page(title: str, description: str, body: str, nav_prefix: str = "..", has_api_index: bool = True) -> str:
+def _html_page(
+    title: str,
+    description: str,
+    body: str,
+    nav_prefix: str = "..",
+    has_api_index: bool = True,
+    page_url: str | None = None,
+    schema_type: str = "TechArticle",
+) -> str:
     """Wrap a task guide in a standalone, readable HTML page."""
-    api_link = f' · <a href="{nav_prefix}/api.html">API reference</a>' if has_api_index else ""
-    return (
-        '<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
-        '<meta name="viewport" content="width=device-width, initial-scale=1">'
-        f'<title>{escape(title)}</title><meta name="description" content="{escape(description, quote=True)}">'
-        "<style>body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}"
-        "a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}"
-        "nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}</style>"
-        f'</head><body><nav><a href="{nav_prefix}/index.html">Overview</a>{api_link}</nav>'
-        f"<main>{body}</main></body></html>\n"
+    return str(
+        documentation_templates()
+        .get_template("documentation_page.html.jinja2")
+        .render(
+            title=title,
+            description=description,
+            body=body,
+            nav_prefix=nav_prefix,
+            has_api_index=has_api_index,
+            structured_data=structured_data_script(title, description, page_url, schema_type) if page_url else None,
+        )
     )
 
 
@@ -111,55 +126,64 @@ def _guide_settings() -> tuple[Path, Path, Path, str] | None:
     return project_root, guide_sources, guide_folder, project_name
 
 
-def _render_guide(source: Path, destination: Path, project_name: str, nav_prefix: str, has_api_index: bool) -> str:
+def _render_guide(
+    source: Path, destination: Path, project_name: str, nav_prefix: str, has_api_index: bool, page_url: str | None
+) -> str:
     """Render one Markdown guide to an HTML page and return its title."""
     text = source.read_text(encoding="utf8")
     title = next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), source.stem)
     body: str = markdown.markdown(text, extensions=["fenced_code", "tables"])
     body = re.sub(r'href="([a-z0-9-]+)\.md(#[^"]*)?"', _html_guide_link, body)
     description = f"{title} — {project_name}."
-    destination.write_text(_html_page(title, description, body, nav_prefix, has_api_index), encoding="utf8")
+    destination.write_text(_html_page(title, description, body, nav_prefix, has_api_index, page_url), encoding="utf8")
     return title
 
 
 def _render_guides(
     guide_sources: Path, guide_output: Path, guide_folder: Path, project_name: str, has_api_index: bool
-) -> list[str]:
+) -> list[tuple[str, str]]:
     """Render all guides and return links for the documentation landing page."""
     guide_output.mkdir(parents=True, exist_ok=True)
     navigation_prefix = "/".join(".." for _ in guide_folder.parts)
+    site_url = documentation_site_url()
     links = []
     for source in sorted(guide_sources.glob("*.md")):
+        page_url = f"{site_url}{guide_folder.as_posix()}/{source.stem}.html" if site_url else None
         title = _render_guide(
-            source, guide_output / f"{source.stem}.html", project_name, navigation_prefix, has_api_index
+            source, guide_output / f"{source.stem}.html", project_name, navigation_prefix, has_api_index, page_url
         )
         if source.stem != "index":
-            links.append(
-                f'<li><a href="{escape(guide_folder.as_posix())}/{escape(source.stem)}.html">{escape(title)}</a></li>'
-            )
+            links.append((title, source.stem))
     return links
 
 
 def _write_guide_index(
-    output_directory: Path, project_name: str, guide_folder: Path, has_api_index: bool, links: list[str]
+    output_directory: Path, project_name: str, guide_folder: Path, has_api_index: bool, links: list[tuple[str, str]]
 ) -> None:
     """Write the project-specific landing page for the published guides."""
-    guide_prefix = guide_folder.as_posix()
     licence = configuration.get_value_or_default(ConfigurationVariable.FILE_LICENCE_IDENTIFIER, None)
-    licence_details = f"<p>Project licence: {escape(str(licence))}</p>" if licence else ""
     overview = (
-        f"<h1>{escape(project_name)}</h1>"
-        f"<p>Task guides for {escape(project_name)}, with setup, examples and project workflows.</p>"
-        + licence_details
-        + f'<p><a href="{escape(guide_prefix)}/index.html">All task guides</a>'
-        + (' · <a href="api.html">API reference</a>' if has_api_index else "")
-        + "</p><ul>"
-        + "".join(links)
-        + "</ul>"
+        documentation_templates()
+        .get_template("documentation_landing.html.jinja2")
+        .render(
+            project_name=project_name,
+            guide_folder=guide_folder.as_posix(),
+            licence=licence,
+            has_api_index=has_api_index,
+            links=links,
+        )
     )
     site_description = f"Task guides{' and API reference' if has_api_index else ''} for {project_name}."
     (output_directory / "index.html").write_text(
-        _html_page(f"{project_name} documentation", site_description, overview, ".", has_api_index),
+        _html_page(
+            f"{project_name} documentation",
+            site_description,
+            overview,
+            ".",
+            has_api_index,
+            documentation_site_url(),
+            "WebSite",
+        ),
         encoding="utf8",
     )
 
@@ -175,9 +199,6 @@ def _publish_project_guides(output_directory: Path) -> None:
     links = _render_guides(guide_sources, guide_output, guide_folder, project_name, has_api_index)
     _update_api_navigation(output_directory, guide_output)
     _write_guide_index(output_directory, project_name, guide_folder, has_api_index, links)
-    agent_index = project_root / "llms.txt"
-    if agent_index.is_file():
-        shutil.copyfile(agent_index, output_directory / "llms.txt")
 
 
 def _clear_previous_docs(output_directory: Path) -> None:
@@ -192,6 +213,21 @@ def generate_documentation(output_directory: Path, module_to_document: str) -> N
     os.makedirs(str(output_directory), exist_ok=True)
     get_language_specifics().generate_code_documentation(output_directory, module_to_document)
     _publish_project_guides(output_directory)
+    root = configuration.get_value_or_default(ConfigurationVariable.PROJECT_ROOT, None)
+    if root:
+        settings = _guide_settings()
+        publish_discovery_files(
+            output_directory,
+            Path(root),
+            settings[1] if settings else None,
+            settings[2] if settings else None,
+            (
+                settings[3]
+                if settings
+                else str(configuration.get_value_or_default(ConfigurationVariable.PROJECT_NAME, Path(root).name))
+            ),
+            module_to_document,
+        )
 
 
 def generate_docs(output_directory: Path, module: str) -> int:

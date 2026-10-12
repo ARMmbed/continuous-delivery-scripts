@@ -4,7 +4,8 @@
 #
 from unittest import TestCase, mock
 
-from git import GitCommandError
+from git import GitCommandError, Repo
+from tempfile import TemporaryDirectory
 
 from continuous_delivery_scripts.utils.configuration import (
     configuration,
@@ -15,6 +16,7 @@ from continuous_delivery_scripts.utils.git_helpers import (
     GitTempClone,
     GitWrapper,
     ProjectGitWrapper,
+    get_project_remote_url,
 )
 from uuid import uuid4
 from pathlib import Path
@@ -40,17 +42,17 @@ class TestGitWrapper(TestCase):
         self.assertIn("setup.py", tracked_files)
 
     @mock.patch.object(GitWrapper, "set_remote_url")
-    @mock.patch.object(
-        GitWrapper,
-        "_git_url_ssh_to_https",
+    @mock.patch(
+        "continuous_delivery_scripts.utils.git_helpers.authenticated_github_url",
         return_value="https://x-access-token:test-token@github.com/example/repository.git",
     )
+    @mock.patch.object(configuration, "get_value", return_value="test-token")
     @mock.patch.object(
         GitWrapper,
         "get_remote_url",
         return_value="https://github.com/example/repository.git",
     )
-    def test_fetch_retries_with_authentication(self, _get_remote_url, _git_url_ssh_to_https, set_remote_url):
+    def test_fetch_retries_with_authentication(self, _get_remote_url, _get_value, authenticated_url, set_remote_url):
         """Ensures fetch retries with authentication when needed."""
         repo = mock.Mock(spec_set=["git"])
         repo.git = mock.Mock(spec_set=["fetch"])
@@ -61,17 +63,16 @@ class TestGitWrapper(TestCase):
         git.fetch()
 
         self.assertEqual(2, repo.git.fetch.call_count)
+        authenticated_url.assert_called_once_with("https://github.com/example/repository.git", "test-token")
         set_remote_url.assert_called_once_with("https://x-access-token:test-token@github.com/example/repository.git")
 
-    @mock.patch.object(configuration, "get_value", return_value="test-token")
-    def test_git_url_ssh_to_https_uses_x_access_token(self, _get_value):
-        """Ensures the HTTPS fallback uses GitHub token authentication."""
-        repo = mock.Mock()
-        git = GitWrapper(path=Path("."), repo=repo)
-
-        rewritten_url = git._git_url_ssh_to_https("git@github.com:example/repository.git")
-
-        self.assertEqual("https://x-access-token:test-token@github.com/example/repository.git", rewritten_url)
+    def test_project_remote_url_is_read_only_from_git_projects(self):
+        with TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            self.assertIsNone(get_project_remote_url(root))
+            repo = Repo.init(root)
+            repo.create_remote("origin", url="https://github.com/example/repository.git")
+            self.assertEqual(get_project_remote_url(root), "https://github.com/example/repository.git")
 
 
 class TestGitTempClone(TestCase):
