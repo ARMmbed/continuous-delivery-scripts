@@ -59,9 +59,12 @@ class TestGenerateDocs(TestCase):
             self.assertEqual((output / "index.html").read_text(encoding="utf8"), "API reference")
             self.assertFalse((output / "api.html").exists())
 
+    @mock.patch("continuous_delivery_scripts.utils.documentation_discovery.github_pages_url", return_value=None)
     @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
     @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
-    def test_published_project_guides_have_valid_local_links(self, get_value_or_default, get_language_specifics):
+    def test_published_project_guides_have_valid_local_links(
+        self, get_value_or_default, get_language_specifics, _github_pages_url
+    ):
         project_root = pathlib.Path(__file__).resolve().parents[2]
         get_value_or_default.side_effect = lambda key, default: {
             ConfigurationVariable.PROJECT_ROOT: str(project_root),
@@ -222,10 +225,11 @@ class TestGenerateDocs(TestCase):
             check_call.assert_called_once_with(_generate_pdoc_command_list(temp_dir, fake_module))
             log_exception.assert_called_once()
 
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default", return_value=None)
     @mock.patch("continuous_delivery_scripts.plugins.python.TemporaryDirectory")
     @mock.patch("continuous_delivery_scripts.plugins.python._call_pdoc")
     @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
-    def test_update_docs(self, get_language_specifics, _call_pdoc, TemporaryDictionary):
+    def test_update_docs(self, get_language_specifics, _call_pdoc, TemporaryDictionary, _get_value_or_default):
         with Patcher() as patcher:
             temp_dir = pathlib.Path("temp")
             TemporaryDictionary.return_value = temp_dir

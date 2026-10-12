@@ -111,6 +111,8 @@ class ConfigurationVariable(enum.Enum):
     """Optional top-level list of assessment statuses that fail compliance checks."""
     SKIP_DEPENDENCY_DOWNLOAD_FOR_LICENSING = 46
     """Skip automatic dependency downloads before licence and SPDX dependency analysis."""
+    DOCUMENTATION_SITE_URL = 47
+    """Optional public base URL of the generated documentation website."""
 
     @staticmethod
     def choices() -> List[str]:

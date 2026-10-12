@@ -9,12 +9,14 @@ import os
 import re
 import shutil
 from git import Repo, Actor, GitCommandError
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from packaging import version
 from pathlib import Path
 from typing import Optional, List, Union, Any, Tuple
 
 from .configuration import configuration, ConfigurationVariable
 from .filesystem_helpers import TemporaryDirectory
+from .github_helpers import authenticated_github_url
 
 logger = logging.getLogger(__name__)
 
@@ -36,23 +38,6 @@ class GitWrapper:
             configuration.get_value(ConfigurationVariable.BOT_EMAIL),
         )
 
-    def _git_url_ssh_to_https(self, url: str) -> str:
-        """Changes repository URL to use authorisation token.
-
-        Converts the git url to use GitHub's token-based HTTPS authentication
-        format so workflow-generated tokens can be used for git operations.
-
-        Reference:
-        https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#githubs-token-formats
-
-        Returns:
-            new URL
-        """
-        path = url.split("github.com", 1)[1][1:].strip()
-        new = "https://x-access-token:{GITHUB_TOKEN}@github.com/%s" % path
-        logger.info("rewriting git url to: %s" % new)
-        return new.format(GITHUB_TOKEN=configuration.get_value(ConfigurationVariable.GIT_TOKEN))
-
     def clone(self, path: Path) -> "GitWrapper":
         """Clones this repository to the path.
 
@@ -72,7 +57,9 @@ class GitWrapper:
             logger.info("failed cloning repository: %s" % e)
             logger.info("trying with authentication")
             git_clone = self.repo.clone_from(
-                url=self._git_url_ssh_to_https(self.get_remote_url()),
+                url=authenticated_github_url(
+                    self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+                ),
                 to_path=str(path),
                 multi_options=["--recurse-submodules"],
             )
@@ -204,7 +191,11 @@ class GitWrapper:
         except GitCommandError as e:
             logger.info("failed fetching repository: %s" % e)
             logger.info("Retrying a different way")
-            self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+            self.set_remote_url(
+                authenticated_github_url(
+                    self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+                )
+            )
             self.repo.git.fetch(all=True, tags=True, force=True)
 
     def get_branch(self, branch_name: str) -> Any:
@@ -541,7 +532,9 @@ class GitWrapper:
         Configures the repository so that we can commit back to GitHub
         """
         self.configure_author()
-        self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+        self.set_remote_url(
+            authenticated_github_url(self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN))
+        )
 
     def create_tag(self, tag_name: str, message: Optional[str] = None) -> Any:
         """Creates a new tag.
@@ -714,6 +707,14 @@ class ProjectGitWrapper(GitWrapper):
             path=Path(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
             repo=Repo(configuration.get_value(ConfigurationVariable.PROJECT_ROOT)),
         )
+
+
+def get_project_remote_url(root: Path) -> Optional[str]:
+    """Read the configured remote of a local project, if it is a Git repository."""
+    try:
+        return GitWrapper(root, Repo(root)).get_remote_url()
+    except (InvalidGitRepositoryError, NoSuchPathError, ValueError, OSError):
+        return None
 
 
 class LocalProjectRepository:

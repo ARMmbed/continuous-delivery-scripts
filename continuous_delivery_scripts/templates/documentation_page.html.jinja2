@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  {% if structured_data %}{{ structured_data | safe }}{% endif %}
+</head>
+<body>
+  <nav><a href="{{ nav_prefix }}/index.html">Overview</a>{% if has_api_index %} · <a href="{{ nav_prefix }}/api.html">API reference</a>{% endif %}</nav>
+  <main>{{ body | safe }}</main>
+</body>
+</html>

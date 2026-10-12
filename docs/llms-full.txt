@@ -1,0 +1,1010 @@
+# Continuous Delivery Scripts
+
+> Published task guides for Continuous Delivery Scripts.
+
+
+## Continuous Delivery Scripts: task guides
+
+Use these guides to choose a command for a delivery task. All commands read
+the shared project delivery definition from `[ProjectConfig]` in
+`pyproject.toml`, regardless of language or CI system. Language plugins select
+the ecosystem tools used for project-specific steps. The tools run in a Git
+checkout with a Python environment; they are not tied to one CI provider.
+The [API reference](https://armmbed.github.io/continuous-delivery-scripts/api.html) covers
+the implementation, while these pages focus on inputs, outputs and examples.
+For language-specific packaging, credentials and metadata support, consult
+the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins).
+
+### Dependency licences and OpenChain workflows
+
+- [Assess dependency licence risks](https://armmbed.github.io/continuous-delivery-scripts/guides/assessing-dependency-licences.html): Review directional, explainable licence screening and optional project policy overrides.
+- [Check licence compliance](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html): Gate a project without generating SPDX files; optionally write reports.
+- [Generate an SPDX SBOM](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html): Produce project and dependency SPDX tag-value documents.
+- [Generate a third-party IP / TPIP report](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html): Review dependency licences and compliance summaries.
+- [Manage licence headers](https://armmbed.github.io/continuous-delivery-scripts/guides/licence-header-management.html): Apply copyright and SPDX headers to source files.
+
+### Versioning and releases
+
+- [Create a news fragment](https://armmbed.github.io/continuous-delivery-scripts/guides/creating-news-fragments.html): Describe one change before a release.
+- [Check news fragments](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-news-fragments.html): Require a valid fragment on a branch.
+- [Preview a version](https://armmbed.github.io/continuous-delivery-scripts/guides/previewing-versions.html): Calculate a proposed project version.
+- [Generate a changelog](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html): Build release notes from news fragments.
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html): Tag and publish with a language plugin.
+
+### Other project checks
+
+- [Generate code documentation](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-code-documentation.html): Build the API reference.
+- [Read project configuration](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html): Reuse values in scripts and CI.
+- [Record accepted secret findings](https://armmbed.github.io/continuous-delivery-scripts/guides/recording-secrets.html): Maintain the detect-secrets baseline.
+- [Check for new secrets](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-for-secrets.html): Scan Git-tracked files in CI.
+
+
+## Assess dependency licence risks
+
+### What this assessment does
+
+The existing third-party IP report screens each discovered dependency against
+the **project's declared licence**, as provided by the selected language
+plugin. No second dependency scan or extra project-licence setting is needed.
+This directional screening highlights possible obligations; it cannot decide
+whether a particular use, linking arrangement or distribution is legally
+permitted. The existing accepted-licence policy and manual reviews remain a
+separate compliance check.
+
+The automatic screen produces one of four results for each dependency. A
+documented manual review moves an automatic `REVIEW` to `MANUALLY_REVIEWED`:
+
+| Assessment | Meaning |
+| --- | --- |
+| `ALLOW` | An identified, low-risk combination under the screening rules. Licence notices and conditions still apply. |
+| `REVIEW` | Additional facts or obligations need human review; this is not a finding of infringement. |
+| `MANUALLY_REVIEWED` | A `REVIEW` has a matching project review record and explanation. The automatic `REVIEW`, reason and rule remain visible. |
+| `DENY` | An explicit project prohibition or narrowly specified directional rule applies. |
+| `UNKNOWN` | A licence or usable project declaration is missing or cannot be classified reliably. |
+
+Every result includes a reason, the rule ID, and whether the rule came from the
+embedded policy or a project override. HTML and text reports show counts for
+each outcome; JSON and CSV expose per-dependency values. Missing dependencies
+are listed separately as audit gaps because no licence was discovered for them.
+No screening decision is written into the SPDX documents.
+
+### Default rules and expressions
+
+The [embedded TOML policy](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/spdx_report/data/licence_assessment.toml)
+is loaded automatically. Its explicit SPDX classifications draw on the
+approach used by [OSS Review Toolkit](https://www.oss-review-toolkit.org/ort/docs/configuration/license-classifications)
+and [ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/). They are
+screening categories, not legal conclusions. For a BSD-3-Clause project, MIT,
+BSD-3-Clause and Apache-2.0 dependencies normally receive `ALLOW`, while
+LGPL, GPL and AGPL dependencies receive `REVIEW` with a reason. A proprietary
+project declared as `LicenseRef-Proprietary` gets the same conservative
+screening; unclassified custom `LicenseRef-*` terms require review.
+
+Expressions use the installed SPDX expression parser, not string splitting:
+
+- `MIT OR GPL-3.0-only` can select MIT and records the selected choice.
+- `MIT AND GPL-3.0-only` considers both sets of obligations and is marked `REVIEW`.
+- A `WITH` exception needs an explicit rule for the full expression; otherwise
+  it receives `REVIEW`. `-only` and `-or-later` are distinct identifiers.
+- An unknown project or dependency licence receives `UNKNOWN`; an unclassified
+  project licence needs `REVIEW` rather than an assumed permissive category.
+
+If discovery reports an **unknown dependency licence**, or finds an expression
+that results in an `UNKNOWN` assessment, the project can provide a verified
+SPDX expression in its existing `PACKAGES_WITH_CHECKED_LICENCE` table. Risk
+screening uses the verified value only when the original assessment is
+`UNKNOWN`:
+
+```toml
+[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
+click-default-group = "BSD-3-Clause"
+```
+
+Suppose `click-default-group` is installed but its package metadata reports
+`Unknown`, and the project declares `Apache-2.0`. With the entry above, the
+report makes the two sources of information distinct:
+
+| Report field | Value | Meaning |
+| --- | --- | --- |
+| Discovered licence | `Unknown` | No usable licence was found in the package metadata. The package row and SPDX output are not rewritten to claim discovery found BSD-3-Clause. |
+| Assessed dependency licence | `BSD-3-Clause` | The human-verified value from `PACKAGES_WITH_CHECKED_LICENCE`, labelled **manual licence review** in the assessment. |
+| Risk assessment | `ALLOW` | The existing `permissive-dependency` rule screens BSD-3-Clause against the project's Apache-2.0 licence. This does not waive BSD notice obligations. |
+| Unknown-licence audit gap | Still listed | Metadata discovery remains incomplete even though the manually verified licence was usable for assessment. |
+
+An entry such as `click-default-group = "Accepted because it is not distributed"`
+is an exemption explanation, **not** an SPDX licence expression. It may still
+serve as a manual allowlist record, but the risk assessment remains `UNKNOWN`.
+Only a recognised SPDX expression (or a valid `LicenseRef-*`) is used as a
+manually verified assessment input.
+
+Legacy flat entries with an explicit choice are also recognised. For example,
+`packaging = "either Apache-2.0 or BSD-2-Clause"` assesses the dependency under
+`Apache-2.0 OR BSD-2-Clause`. The recorded explanation for `python-dateutil`,
+`All contributions after December 1, 2017 released under dual license - either
+Apache 2.0 License or the BSD 3-Clause License.`, becomes `Apache-2.0 OR
+BSD-3-Clause`. Each named alternative must match an SPDX licence exactly after
+normalising standard names; unrelated prose or a fuzzy match is rejected.
+The prose fallback recognises a leading `either` or an explicit `dual licence`
+or `licensed under` introduction. Negations, illustrative examples and extra
+conditions are not inferred as licence choices; use the structured form below
+when the wording is more complex.
+
+For new entries, put the verified expression and its review rationale in
+separate fields instead of embedding an expression inside prose:
+
+```toml
+[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE.packaging]
+licence = "Apache-2.0 OR BSD-2-Clause"
+reason = "Verified against the packaged Apache and BSD licence files."
+```
+
+For `regex`, the project currently records `Apache-2.0`, but package metadata
+declares `Apache-2.0 AND CNRI-Python`, which has no complete screening rule.
+The manual value can be assessed, while the original expression remains visible
+in the report and SPDX output. An `ALLOW` for the manually entered Apache
+licence **does not establish that the CNRI-Python obligations disappeared**:
+review any terms left out of the manual value before relying on the result.
+
+### Optional ScanCode LicenseDB lookup
+
+If an SPDX identifier is not classified locally or a directional assessment
+rule is missing, opt in to a bounded lookup of the public
+[ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/) index:
+
+```bash
+cd-check-licence-compliance --lookup-scancode --output-dir licensing
+cd-generate-spdx --lookup-scancode --output-dir licensing
+```
+
+Create the output directory first, or omit `--output-dir` from the check-only
+command if no report files are needed. Lookups are **off by default**; when
+enabled, the index is fetched at most once per command run,
+with a timeout. Only exact SPDX licence identifiers are matched: it cannot
+infer a missing licence from a dependency name or decipher an arbitrary
+`LicenseRef-*`. Project and embedded classifications always take precedence.
+
+[ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/) supplies licence
+categories and links to licence records, **not project/dependency compatibility
+verdicts**. The mapping from its categories
+to assessment categories is in the embedded policy's `scancode_categories`
+table and can be overridden in either project policy format. A previously
+unclassified permissive licence may therefore follow an existing screening
+rule, but an absent directional rule still yields `REVIEW`, not an invented
+decision. Unrecognised categories, unavailable network access and missing
+identifiers retain the conservative assessment; use `-v` to see lookup
+warnings. Consulted categories and URLs are recorded in the reports and
+printed by the check-only command. SPDX output and the accepted-licence policy
+are unchanged by this option.
+
+After a **successful** lookup-assisted command, warnings on standard error
+identify each consulted licence, its
+[ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/) source URL and
+the local action needed to make future runs reproducible without the flag. For
+example, after
+checking the terms at the supplied URL, add a verified SPDX classification to
+`[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]` (or to the project
+policy file). If a category is already defined but no directional rule applies,
+the warning instead asks for a rule under
+`[[ProjectConfig.LICENCE_ASSESSMENT_RULES.rules]]` with a documented reason.
+Run the command without `--lookup-scancode` to verify the local policy works.
+Warnings are not printed as successful remediation advice when the compliance
+check fails. External categories are evidence for review, not a substitute for
+reviewing licence terms or the separate accepted-licence policy.
+
+### Record a manual assessment review
+
+After reviewing a dependency with an automatic `REVIEW` result, add a reason
+under `[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS]` in `pyproject.toml`:
+
+```toml
+[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS.bar]
+licence = "LGPL-2.1-only"
+version = "2.0"
+reason = "Reviewed linking and distribution obligations (LEGAL-42)."
+```
+
+The package name must match the discovered dependency. Matching its licence
+and version prevents the record applying after its terms or version change.
+Omit `version` only if the review is deliberately valid across versions with
+the same licence; a changed licence still requires a new review.
+For an unscoped review, `bar = "Review reason"` can instead be written directly
+under `[ProjectConfig.REVIEWED_LICENCE_ASSESSMENTS]`; the scoped form is
+recommended. A blank reason is invalid. A matching record changes the reported
+status and counts to `MANUALLY_REVIEWED` but preserves the automatic `REVIEW`
+and its rule. It does not turn `DENY` or `UNKNOWN` into reviewed outcomes.
+
+If `fail_on = ["REVIEW"]` was configured, the matching review clears **that**
+assessment gate. The existing accepted-licence check remains independent: for
+an LGPL dependency not on the accepted list, also record its approval under
+`[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]` (or explicitly accept the
+licence). The report keeps both explanations separately.
+
+### Override the embedded policy when necessary
+
+Projects **do not need to supply any policy**: embedded rules are applied
+automatically. For a small override, put the same policy tables directly in
+the project's `pyproject.toml`:
+
+```toml
+[ProjectConfig]
+LICENCE_ASSESSMENT_FAIL_ON = ["REVIEW"]
+
+[ProjectConfig.LICENCE_ASSESSMENT_RULES]
+schema_version = 1
+
+[ProjectConfig.LICENCE_ASSESSMENT_RULES.classifications]
+LicenseRef-Internal = "PROPRIETARY"
+
+[[ProjectConfig.LICENCE_ASSESSMENT_RULES.rules]]
+id = "review-internal-vendor"
+project_licence = "LicenseRef-Proprietary"
+dependency_licence = "LicenseRef-Internal"
+status = "REVIEW"
+reason = "Check the agreement for this licence before distribution."
+
+[[ProjectConfig.LICENCE_ASSESSMENT_RULES.packages]]
+id = "vendor-1.2-agreement"
+name = "vendor"
+version = "1.2"
+status = "ALLOW"
+reason = "Reviewed the vendor agreement for version 1.2."
+```
+
+For a larger policy, alternatively set a path under `[ProjectConfig]` in
+`pyproject.toml`. The path is resolved relative to that file:
+
+```toml
+[ProjectConfig]
+LICENCE_ASSESSMENT_RULES_PATH = "policy/licence-assessment.toml"
+```
+
+For example, the project file could contain:
+
+```toml
+schema_version = 1
+
+[settings]
+fail_on = ["DENY", "UNKNOWN"]
+
+[classifications]
+LicenseRef-Internal = "PROPRIETARY"
+
+[[rules]]
+id = "strong-copyleft-dependency"
+project_category = "*"
+dependency_category = "STRONG_COPYLEFT"
+status = "DENY"
+reason = "Our organisation does not distribute combined works under these terms."
+
+[[rules]]
+id = "review-internal-vendor"
+project_licence = "LicenseRef-Proprietary"
+dependency_licence = "LicenseRef-Internal"
+status = "REVIEW"
+reason = "Check the agreement for this licence before distribution."
+
+[[packages]]
+id = "vendor-1.2-agreement"
+name = "vendor"
+version = "1.2"
+status = "ALLOW"
+reason = "Reviewed the vendor agreement for version 1.2."
+```
+
+The order is **embedded defaults → project policy file → inline tables →
+top-level `LICENCE_ASSESSMENT_FAIL_ON`**. If both project rule options are
+present, the inline values win; the top-level failure list takes precedence
+over `fail_on` in either policy file. Classifications
+override by licence ID; rules override by stable `id`, and unmentioned defaults
+remain in effect. Use the same `schema_version`, `settings`,
+`classifications`, `rules` and `packages` keys with either project option.
+Package exceptions match a dependency name and optional exact version before
+general rules, including when its licence is otherwise unknown. For rules,
+an exact directional licence match takes precedence over a category match;
+conflicting rules of equal specificity fail validation. A `*` project category
+matches only classified project licences. Invalid or missing override files
+and invalid inline tables cause a clear error rather than silently reverting to
+defaults.
+
+The embedded `fail_on = ["DENY"]` fails explicit `DENY` findings by default;
+`REVIEW` remains advisory. Set `LICENCE_ASSESSMENT_FAIL_ON = ["REVIEW"]` under
+`[ProjectConfig]` to fail on unreviewed `REVIEW` assessments instead, including
+when generating release summaries. Set an empty list to disable assessment
+gating explicitly.
+The optional policy-file or inline `fail_on` list remains supported when the
+top-level setting is absent. The pre-existing accepted-licence check can still
+fail independently of these
+assessments. See [third-party IP reporting](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html) and
+the [check-only command](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html) for generating and
+reviewing the results.
+
+
+## Automate semantic versioning, Git tags and releases
+
+### Problem and when to use it
+
+Use `cd-tag-and-release` to orchestrate a configured release instead of
+repeating versioning, documentation, Git tagging, packaging and publication
+steps in each CI system. The shared release definition comes from
+`[ProjectConfig]` in `pyproject.toml`. A language plugin supplies
+project-specific actions using the tools best suited to its language.
+Publication destinations also depend on the plugin. See
+[changelog management](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html) for the
+news fragments used to calculate release versions.
+
+### Inputs and example
+
+Run from a configured Git checkout with installed dependencies, a writable
+remote and the credentials required by the selected language plugin. The
+[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+describes packaging, publication and credential requirements for each language.
+Use a release type of `development`, `beta` or `release`:
+
+```bash
+cd-determine-version --release-type release
+cd-tag-and-release --release-type release --current-branch main
+```
+
+The first command previews the proposed version. The second can commit, tag,
+push and publish; run it only in an authorised release workflow. `development`
+does not publish a production release.
+
+### Output
+
+A production release updates release notes, documentation and tags, and the
+plugin publishes its package or other configured output. The exact output
+varies by plugin; see the [release workflow](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/release.yml).
+
+### GitHub Actions example
+
+After checkout and installing the project's release dependencies:
+
+```yaml
+- run: cd-tag-and-release --release-type release --current-branch "$GITHUB_REF_NAME"
+  env:
+    GIT_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+```
+
+Configure the Git token for GitHub-hosted repositories and add the credentials
+required by the selected plugin; see its documentation for details.
+Related commands: [`cd-determine-version`](https://armmbed.github.io/continuous-delivery-scripts/guides/previewing-versions.html) and
+[`cd-generate-news`](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html).
+
+
+## Check Git-tracked files for new secrets
+
+### Problem and when to use it
+
+Passwords, API tokens and other credentials can be committed to Git by
+mistake. Once pushed, they may be exposed to anyone with repository access
+and can remain in Git history even after the file is changed or deleted.
+Reviewing every file manually before merging is unreliable.
+
+Run `cd-detect-secrets` locally or in CI to check Git-tracked files against a
+reviewed detect-secrets registry. It fails the check for new, unrecorded
+findings so they can be investigated before a change is merged. It scans the
+current checkout, not historical commits or untracked files. Use
+[`cd-record-secrets`](https://armmbed.github.io/continuous-delivery-scripts/guides/recording-secrets.html) only for findings reviewed and
+accepted by the team.
+
+### Inputs and example
+
+Install the project and its detect-secrets dependency, and keep the reviewed
+registry under version control:
+
+```bash
+cd-detect-secrets --registry-file .secrets.baseline
+```
+
+The configured language plugin supplies exclusion patterns. Use
+[`cd-record-secrets`](https://armmbed.github.io/continuous-delivery-scripts/guides/recording-secrets.html) only after reviewing an accepted
+finding.
+
+### Output
+
+Exit status zero when tracked files match the registry; otherwise a failing
+status with the detected findings.
+
+### GitHub Actions example
+
+After checkout and installation:
+
+```yaml
+- run: cd-detect-secrets
+```
+
+See [the repository's CI workflow](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/ci.yml)
+for an example of a separate secrets check.
+
+
+## Check project and dependency licence compliance
+
+### Problem and when to use it
+
+Use `cd-check-licence-compliance` as a CI gate or local check when you need to
+assess the project and its dependencies against the configured licence policy
+without generating SPDX documents. The command writes no files by default.
+
+### Inputs and example
+
+Select a language plugin that provides project metadata. Configure
+`ACCEPTED_THIRD_PARTY_LICENCES` and any documented manual reviews in
+`[ProjectConfig]` in `pyproject.toml`. Then run:
+
+```bash
+cd-check-licence-compliance
+```
+
+To keep the third-party IP summaries for review, create an output directory and
+pass it to the command:
+
+```bash
+mkdir -p licensing
+cd-check-licence-compliance --output-dir licensing
+```
+
+The optional `--output-dir` (`-o`) writes `third_party_IP_report.html`, `.csv`,
+`.txt` and `.json`. It does not create `.spdx` files. The reports are written
+before the compliance check, so they remain available if the check fails.
+
+For Go projects, CDS downloads module dependencies automatically before running
+licence analysis so CI does not need a separate `go mod download all` step.
+Pass `--skip-dependency-download` when your environment already prefetches the
+required dependencies and you want to skip that extra work.
+
+### Result
+
+The command succeeds when the discovered project and dependency licences meet
+the configured policy, including documented manual reviews. It fails if a
+licence does not meet that policy, the selected plugin cannot supply metadata,
+or report generation fails. If `FAIL_ON_INCOMPLETE_LICENCE_AUDIT` is enabled,
+missing dependencies, unknown licences and undocumented exemptions also fail
+the check. Results depend on the dependencies installed in the audited
+environment.
+The command also prints `ALLOW`, `REVIEW`, `MANUALLY_REVIEWED`, `DENY` and `UNKNOWN` dependency
+counts. These advisory results do not change exit codes unless a project
+explicitly opts into [assessment gating](https://armmbed.github.io/continuous-delivery-scripts/guides/assessing-dependency-licences.html).
+Pass `--lookup-scancode` to consult
+[ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/) for exact
+identifiers whose category or assessment rule is missing. The lookup is opt-in; see
+[dependency licence assessment](https://armmbed.github.io/continuous-delivery-scripts/guides/assessing-dependency-licences.html#optional-scancode-licensedb-lookup)
+for the limits and report provenance.
+
+To generate SPDX tag-value documents as well as reports, use
+[`cd-generate-spdx`](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html). See
+[third-party IP reporting](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html) for more on reviewing
+the summaries and [project configuration](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html)
+for the shared settings.
+
+
+## Require a valid news fragment on a branch
+
+### Problem and when to use it
+
+Use `cd-assert-news` as a PR gate when every change needs a release note. It
+checks for a news fragment added on the branch and validates its filename and
+one-line content. A configured dependency-update branch may receive an
+automatically generated fragment when none exists.
+
+### Inputs and example
+
+Use a Git checkout containing the branch and its base history, with `NEWS_DIR`
+configured in `pyproject.toml`. Developers can check their current checkout:
+
+```bash
+cd-assert-news --local
+```
+
+In CI, pass the PR head branch using `--current-branch` so the tool checks the
+correct branch. Non-local mode may clone, commit and push a missing fragment;
+configure credentials for that automation.
+
+### Automatically generate fragments for dependency upgrades
+
+Dependency-update branches, such as Dependabot PRs, can be given a news
+fragment automatically when one is **missing**. Configure the behaviour in
+`[ProjectConfig]` in `pyproject.toml`:
+
+```toml
+NEWS_DIR = "news/"
+AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = true
+DEPENDENCY_UPDATE_BRANCH_PATTERN = '^dependabot/[^/]+/(?P<DEPENDENCY>.+)$'
+DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
+DEPENDENCY_UPDATE_NEWS_TYPE = "bugfix"
+```
+
+The regex identifies eligible branches and captures the dependency name. For
+example, `dependabot/pip/requests-2.32.3` produces a `bugfix` fragment with
+the text `Dependency upgrade: requests-2.32.3`. The `{message}` placeholder
+receives the captured group values, joined by commas if there is more than
+one. Set `AUTOGENERATE_NEWS_FILE_ON_DEPENDENCY_UPDATE = false` to require
+manually added fragments even on those branches.
+
+On each run, `cd-assert-news` checks for a fragment added in the latest commit
+and, if none is found there, checks the whole branch. Existing fragments are
+validated rather than duplicated. **Only when no fragment exists** does it
+check the branch pattern and the automatic-generation setting. An invalid
+existing fragment fails validation; it is not replaced by another file.
+
+If eligible, the command creates a timestamped fragment, commits it to the
+branch and, outside `--local` mode, pushes it back to the remote. The run
+still exits with a failing status so CI can recheck the updated branch on the
+next run. The remote workflow therefore needs credentials that permit a push;
+Dependabot-triggered workflows may not receive repository secrets on their
+initial run. Other branches with no fragment continue to fail the check.
+
+### Output
+
+Success when the branch has a valid fragment; a failing exit status for a
+missing or invalid one. Use [`cd-create-news-file`](https://armmbed.github.io/continuous-delivery-scripts/guides/creating-news-fragments.html)
+to write a fragment before running the check.
+
+### GitHub Actions example
+
+After fetching the full Git history and installing the tool:
+
+```yaml
+- uses: actions/checkout@v4
+  with:
+    fetch-depth: 0
+- run: cd-assert-news --current-branch "$HEAD_BRANCH"
+  env:
+    HEAD_BRANCH: ${{ github.head_ref }}
+    GIT_TOKEN: ${{ secrets.GIT_SECRET }}
+```
+
+Configure a token with the permissions needed to push automatic fragments.
+See the repository's [CI example](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/ci.yml)
+for the branch argument and token configuration.
+
+
+## Create a news fragment for a change
+
+### Problem and when to use it
+
+When several changes are developed in parallel, editing one shared changelog
+for every pull request is easy to forget and can cause merge conflicts. Commit
+messages record details for developers, but do not necessarily explain a
+change's impact to people using the project. A **news fragment** is a small,
+one-line, user-facing description of a single change, committed alongside the
+change rather than editing the release notes directly.
+
+Use `cd-create-news-file` while developing a change so its release note is
+recorded before a pull request. At release time,
+[`cd-generate-news`](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html) collects the fragments into the
+changelog. See the [Contributing guide's News Files section](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/CONTRIBUTING.md#news-files)
+for the purpose, required format and change-type extensions of fragments.
+
+### Inputs and example
+
+Configure `NEWS_DIR` and Towncrier in `pyproject.toml`. Supply one line of text
+and optionally a type (`bugfix`, `feature`, `doc`, `major`, `misc` or `removal`):
+
+```bash
+cd-create-news-file "Fix dependency resolution" --type bugfix
+```
+
+### Output
+
+A numbered file is created in the configured news directory. Commit the file
+with the change it describes. The default type is `feature`; use
+`--ref-number` when a specific numeric reference is required.
+
+### GitHub Actions example
+
+Normally developers create and commit fragments locally. A workflow may
+create one for an automated change after checkout and installation:
+
+```yaml
+- run: cd-create-news-file "Update build dependency" --type bugfix
+```
+
+The workflow must commit and push the file if it should appear in a PR.
+Related command: [`cd-assert-news`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-news-fragments.html).
+
+
+## Generate an SPDX SBOM for a software project
+
+### Problem and when to use it
+
+Use `cd-generate-spdx` when you need SPDX tag-value documents describing the
+project and its third-party dependencies, for example as an input to an
+OpenChain or licence-compliance process. The tool also creates licence reports;
+see [TPIP reporting](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html).
+
+### Inputs and example
+
+Configure `pyproject.toml` with `PROJECT_ROOT`, `SOURCE_DIR`,
+`PROGRAMMING_LANGUAGE`, your licence policy and any values required by the
+selected language plugin. Provide
+`PROJECT_UUID` and an `[spdx]` section for the document namespace; see
+[SPDX document identity](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/DEVELOPMENT.md#spdx-document-identity).
+Then provide an **existing** output directory:
+
+```bash
+mkdir -p spdx-output
+cd-generate-spdx --output-dir spdx-output
+```
+
+The selected language plugin must return project metadata; if it does not,
+the command returns without a report. The selected plugin uses language-specific
+tools to obtain dependency and licence information; consult the
+[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+for its prerequisites and metadata support.
+For Go projects, CDS downloads module dependencies automatically before
+running the dependency scan. Pass `--skip-dependency-download` when the
+environment already prefetches those dependencies and you want to skip that
+extra step.
+SPDX tag-value generation also requires an SDK compatible with this project's
+writer. Check the output files before treating an audit as complete. Installed
+packages and platform-specific dependency markers determine what is covered;
+a Linux run does not audit Windows- or macOS-only dependencies.
+
+### Output
+
+The directory contains a `.spdx` document for the project and each discovered
+dependency, plus `third_party_IP_report.html`, `.csv` and `.txt` summaries
+when metadata reporting is available. Documents are separate tag-value files,
+not a single merged dependency graph.
+
+### GitHub Actions example
+
+After checking out the project and installing its dependencies:
+
+```yaml
+- run: mkdir -p spdx-output && cd-generate-spdx --output-dir spdx-output
+- uses: actions/upload-artifact@v4
+  with:
+    name: spdx-report
+    path: spdx-output/
+```
+
+See [`cd-generate-spdx`'s API](https://armmbed.github.io/continuous-delivery-scripts/report_third_party_ip.html)
+for the common reporting interface.
+
+
+## Generate code documentation for a project
+
+### Problem and when to use it
+
+Use `cd-generate-docs` to rebuild a project's API documentation through its
+language plugin. Preview locally before committing or publishing a release.
+
+### Inputs and example
+
+Set `MODULE_TO_DOCUMENT`, `PROGRAMMING_LANGUAGE` and the documentation paths
+in `pyproject.toml`. To publish task guides with the API pages, set the
+optional `DOCUMENTATION_GUIDES_DIR` to a directory containing `index.md` and
+other Markdown guides. `DOCUMENTATION_GUIDES_OUTPUT_FOLDER` selects where
+rendered guides appear beneath the documentation output (default: `guides`).
+If the project publishes documentation at a known public URL, set
+`DOCUMENTATION_SITE_URL` to that base URL (including a project path, if any).
+CDS then adds a sitemap, a permissive `robots.txt`, an `llms.txt` index and a
+consolidated `llms-full.txt` of the rendered task guides when applicable.
+For each file, `cd-generate-docs` first looks for an authored version in the
+repository root, then `DOCUMENTATION_GUIDES_DIR`, then the directory selected
+by `MODULE_TO_DOCUMENT`. It copies the first one found to the documentation
+output and generates a missing file when possible. Without a
+configured URL, CDS checks the Git remote for GitHub Pages and uses the site
+URL only when it can verify that the website is publicly reachable. Set
+`DOCUMENTATION_SITE_URL` explicitly for custom domains or offline builds.
+The generated guide pages and landing page include Schema.org JSON-LD when
+the URL is configured.
+**GitHub Pages project sites:** If the documentation is served under
+`/<repository>/`, CDS publishes `robots.txt` at
+`/<repository>/robots.txt`. Search crawlers check only `/robots.txt` at the
+domain root for crawl rules. The project-path file therefore cannot allow or
+block crawling of the project's pages; only the owner of the domain root can
+set those rules. The project's `sitemap.xml` is still accessible under its
+project path and can be submitted directly to a search engine.
+The default output is the configured preview directory:
+
+```bash
+cd-generate-docs
+```
+
+To choose another output directory, use `--output_directory` (with an
+underscore). The tool clears the destination before generating documentation;
+do not point it at a directory containing unrelated files.
+
+### Output
+
+Documentation in the format produced by the selected plugin. Where a plugin
+generates an HTML API index, the guide landing page links to it as `api.html`.
+This repository publishes task-oriented guides alongside generated documentation
+when it regenerates `docs/`. See the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+for language-specific documentation tooling.
+
+### GitHub Actions example
+
+After installing the project and its documentation dependencies:
+
+```yaml
+- run: cd-generate-docs --output_directory docs
+```
+
+Related configuration: [`cd-get-config`](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html).
+
+
+## Apply copyright and source licence headers
+
+### Problem and when to use it
+
+Use `cd-license-files` to add or update licence and copyright notices on
+project source files according to the configured organisation and language
+plugin. Run it when creating files or before release so source notices remain
+consistent. It is distinct from auditing the licences of *dependencies*.
+
+### Inputs and example
+
+Set `PROGRAMMING_LANGUAGE`, `ORGANISATION`, `COPYRIGHT_START_DATE` and the
+licence identifier in `pyproject.toml`. The plugin must support source header
+generation:
+
+```bash
+cd-license-files
+```
+
+Review the resulting source-file changes before committing. The command
+skips a project whose language plugin does not support licence headers. See
+the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+for language-specific templates and support.
+
+### Output
+
+Source-file copyright and SPDX notices are applied or refreshed in the Git
+checkout. For dependency licence reporting instead, see
+[the TPIP guide](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html).
+
+### GitHub Actions example
+
+After checkout and installation:
+
+```yaml
+- run: cd-license-files
+- run: git diff --check
+```
+
+Related command: [`cd-generate-spdx`](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html).
+
+
+## Generate changelogs from news fragments
+
+### Problem and when to use it
+
+Use `cd-generate-news` to turn one-line news fragments into release notes and
+update the project version. This avoids manually editing a long changelog for
+each pull request. Create fragments with
+[`cd-create-news-file`](https://armmbed.github.io/continuous-delivery-scripts/guides/creating-news-fragments.html) and check them with
+[`cd-assert-news`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-news-fragments.html).
+
+### Inputs and example
+
+Configure the Towncrier and versioning sections of `pyproject.toml`. Add a
+fragment under `NEWS_DIR` for each change before building release notes:
+
+```bash
+cd-create-news-file "Fix dependency resolution" --type bugfix
+cd-generate-news --release-type release
+```
+
+`--release-type` accepts `development`, `beta` or `release`. Beta and release
+builds use news fragments; the command modifies version and changelog files,
+so review the result before committing it.
+
+### Output
+
+The command prints the calculated version and, for beta or release builds,
+updates the configured `CHANGELOG_FILE_PATH` from news fragments. See
+[`cd-tag-and-release`](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) for the full publication flow.
+
+### GitHub Actions example
+
+After checkout with Git history and installing the project's dependencies:
+
+```yaml
+- run: cd-generate-news --release-type release
+```
+
+In a release pipeline, give subsequent steps access to the modified files
+and push only with the team's chosen release permissions.
+
+
+## Preview a semantic release version
+
+### Problem and when to use it
+
+Use `cd-determine-version` to see the project version a release type would
+produce before running steps that modify the changelog, Git tags or packages.
+It calculates a project version, not the installed tool's version.
+
+### Inputs and example
+
+In a configured Git checkout with version and news-file settings:
+
+```bash
+cd-determine-version --release-type release
+```
+
+Choose `development`, `beta` or `release` according to the intended flow.
+
+### Output
+
+The proposed version is printed to standard output; the command does not
+generate a changelog. Use [`cd-generate-news`](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html) when
+the release files should be updated.
+
+### GitHub Actions example
+
+After checkout with history and installation:
+
+```yaml
+- run: cd-determine-version --release-type release
+```
+
+Related command: [`cd-tag-and-release`](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html).
+
+
+## Read project configuration in scripts and CI
+
+### Problem and when to use it
+
+Workflows and command-line scripts often need project names, paths or release
+settings from `pyproject.toml`. Parsing the file in each script adds duplicate
+logic and makes workflows harder to write and maintain. Use `cd-get-config` to
+retrieve the same resolved values the other delivery commands use, without
+writing TOML-parsing code or copying project paths into CI YAML. This makes it
+easier to compose workflows and CLI commands around one project definition.
+
+`[ProjectConfig]` is the shared delivery definition across languages: it sets
+paths, versioning rules and `PROGRAMMING_LANGUAGE`. The selected plugin can
+additionally use the ecosystem's native manifests and tools; see the
+[plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins).
+
+### Inputs and example
+
+Choose a known configuration key with `--key`, or a custom string value with
+`--config-variable`:
+
+```bash
+cd-get-config --key NEWS_DIR
+cd-get-config --config-variable PROJECT_NAME
+NEWS_DIR="$(cd-get-config --key NEWS_DIR)"
+```
+
+Run within a project with `[ProjectConfig]` in `pyproject.toml`.
+The [project configuration guide](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/DEVELOPMENT.md#project-configuration)
+lists the fields needed by each workflow.
+
+### Output
+
+The resolved value is printed to standard output. Missing keys produce a
+failing exit status. See the [sample configuration](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/pyproject.toml)
+for the values used by this project.
+
+### GitHub Actions example
+
+After checkout and installation:
+
+```yaml
+- run: echo "News fragments live in $(cd-get-config --key NEWS_DIR)"
+```
+
+Related command: [`cd-generate-docs`](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-code-documentation.html).
+
+
+## Record accepted secret-scan findings
+
+### Problem and when to use it
+
+Accidentally committing passwords, API keys or tokens to a Git repository can
+expose them to anyone with access to the repository and its history. Even if
+the file is later deleted, the secret may already have leaked. Use
+[`cd-detect-secrets`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-for-secrets.html) to catch new findings before
+they are committed or merged.
+
+`cd-record-secrets` maintains the detect-secrets baseline used by that check.
+Run it **only after reviewing findings** to record known, acceptable values
+that would otherwise be reported again. Do not add a real secret to the
+baseline to silence the check; if one was committed, remove it and rotate the
+credential.
+
+### Inputs and example
+
+Run from a configured project with `detect-secrets` installed. The registry
+path defaults to `SECRETS_BASELINE_FILENAME` and can be overridden:
+
+```bash
+cd-record-secrets --registry-file .secrets.baseline
+```
+
+The project plugin supplies exclusion patterns for generated or unsuitable
+files. Review the diff before committing the registry.
+
+### Output
+
+An updated secret-registry file in the project checkout. Use
+[`cd-detect-secrets`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-for-secrets.html) to check tracked files against
+it in CI.
+
+### GitHub Actions example
+
+For a reviewed baseline refresh, after checkout and installation:
+
+```yaml
+- run: cd-record-secrets --registry-file .secrets.baseline
+- run: git diff -- .secrets.baseline
+```
+
+Commit the change only after reviewing accepted findings.
+
+
+## Generate a third-party IP (TPIP) and licence report
+
+### Problem and when to use it
+
+Use `cd-generate-spdx` to document dependency licences for a third-party IP
+(TPIP) review and to check them against the project's accepted-licence policy.
+It can support an OpenChain compliance workflow; a generated report alone does
+not certify compliance. For the SPDX documents produced by the same command,
+see [SPDX generation](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html).
+
+### Inputs and example
+
+Configure your language plugin and set `ACCEPTED_THIRD_PARTY_LICENCES` and any
+documented manual checks in `pyproject.toml`. Choose an existing output
+directory:
+
+```bash
+mkdir -p licensing
+cd-generate-spdx --output-dir licensing
+```
+
+The selected plugin must support metadata extraction. It uses tools suited to
+the project's language to obtain dependency and licence information for the
+shared report and accepted-licence policy. Check the
+[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+for language-specific prerequisites and support.
+An audit covers the installed environment, so run it for each supported
+platform if dependencies differ by operating system. Review unknown licences
+and packaged notices rather than assuming a missing value means permission.
+For Go projects, CDS downloads module dependencies automatically before the
+scan. Pass `--skip-dependency-download` when those dependencies have already
+been prefetched and you want to skip that extra work.
+
+### Output
+
+Find `third_party_IP_report.html`, `.csv`, `.json` and `.txt` in the output directory,
+alongside SPDX documents when generation is enabled. In this repository the
+HTML report is published to GitHub Pages after a release regenerates `docs/`.
+The HTML report has download links for the accompanying CSV, JSON and text
+reports when these files are kept together in the same directory.
+Each dependency also has an advisory `ALLOW`, `REVIEW`, `DENY` or `UNKNOWN`
+licence assessment with a reason and rule ID. Documented `REVIEW` findings
+are shown as `MANUALLY_REVIEWED` with the review explanation. The assessment is separate from
+the configured accepted-licence check. See
+[dependency licence assessment](https://armmbed.github.io/continuous-delivery-scripts/guides/assessing-dependency-licences.html) for the
+embedded rules, SPDX expression handling, optional project overrides and the
+opt-in `--lookup-scancode` option for missing licence information.
+
+### GitHub Actions example
+
+Once the project and its dependencies are installed:
+
+```yaml
+- run: mkdir -p licensing && cd-generate-spdx --output-dir licensing
+- uses: actions/upload-artifact@v4
+  with:
+    name: third-party-ip-report
+    path: licensing/
+```
+
+Related commands: [`cd-check-licence-compliance`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html)
+for reports without SPDX documents, [`cd-generate-spdx`](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html)
+and [`cd-license-files`](https://armmbed.github.io/continuous-delivery-scripts/guides/licence-header-management.html).
+
+
+
+## API reference
+
+- [Generated API reference](https://armmbed.github.io/continuous-delivery-scripts/api.html)

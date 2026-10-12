@@ -1,0 +1,7 @@
+<h1>{{ project_name }}</h1>
+<p>Task guides for {{ project_name }}, with setup, examples and project workflows.</p>
+{% if licence %}<p>Project licence: {{ licence }}</p>{% endif %}
+<p><a href="{{ guide_folder }}/index.html">All task guides</a>{% if has_api_index %} · <a href="api.html">API reference</a>{% endif %}</p>
+<ul>
+{% for title, filename in links %}<li><a href="{{ guide_folder }}/{{ filename }}.html">{{ title }}</a></li>
+{% endfor %}</ul>

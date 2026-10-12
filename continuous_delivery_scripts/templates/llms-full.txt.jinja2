@@ -1,0 +1,15 @@
+# {{ name }}
+
+> Published task guides for {{ name }}.
+{% for title, body in sections %}
+
+## {{ title }}
+
+{{ body }}
+{% endfor %}
+{% if api_url %}
+
+## API reference
+
+- [Generated API reference]({{ api_url }})
+{% endif %}
