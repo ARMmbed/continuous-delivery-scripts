@@ -89,7 +89,7 @@ el.replaceWith(d);
     def generate_code_documentation(self, output_directory: Path, module_to_document: str) -&gt; None:
         &#34;&#34;&#34;Generates the code documentation.&#34;&#34;&#34;
         super().generate_code_documentation(output_directory, module_to_document)
-        _call_doc2go(output_directory, module_to_document if module_to_document else &#34;./...&#34;)
+        _call_doc2go(output_directory, module_to_document)
 
     def can_add_licence_headers(self) -&gt; bool:
         &#34;&#34;&#34;States that licence headers can be added.&#34;&#34;&#34;
@@ -447,7 +447,7 @@ el.replaceWith(d);
 </dl>
 </section>
 </article>
-<nav id="sidebar">
+<nav id="sidebar"><a href="../guides/index.html">Task guides</a> · 
 <div class="toc">
 <ul></ul>
 </div>

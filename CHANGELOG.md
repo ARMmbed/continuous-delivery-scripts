@@ -17,6 +17,25 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.5.0 (2026-10-12)
+
+## Features
+
+- :sparkles: [GO plugin] Link generated API pages back to task guides, including nested Go packages. (#20261012)
+- :sparkles: [GO plugin] Resolve Go documentation targets from MODULE_TO_DOCUMENT without requiring Go package patterns. (#2026101201)
+- :sparkles: Reuse discovery files from a project's root, guides or documented module before generating missing files. (#2026101202)
+- :sparkles: Add Schema.org JSON-LD to documentation landing and guide pages so their purpose and published URLs are clear to search engines. (#2026101203)
+- :sparkles: Render documentation landing and guide pages from packaged Jinja2 templates to make their HTML layout easier to maintain. (#2026101204)
+- :sparkles: Render generated `robots.txt`, `llms.txt` and `llms-full.txt` from Jinja2 templates to make discovery-file layouts easier to maintain. (#2026101205)
+- :sparkles: Generate `robots.txt`, `sitemap.xml`, `llms.txt` and `llms-full.txt` so search engines and AI assistants can discover published documentation. (#2026101206)
+- :sparkles: Verify a public GitHub Pages URL for documentation discovery when no documentation site URL is configured. (#2026101207)
+
+## Bugfixes
+
+- :bug: [GO plugin] Honour relative documentation output paths when running doc2go from a module directory. (#20261012)
+- :recycle: Separate GitHub-specific URL helpers from generic Git repository and documentation code. (#2026101201)
+
+
 # 4.4.4 (2026-10-05)
 
 ## Bugfixes

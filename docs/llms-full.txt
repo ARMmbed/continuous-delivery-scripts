@@ -5,6 +5,11 @@
 
 ## Continuous Delivery Scripts: task guides
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 Use these guides to choose a command for a delivery task. All commands read
 the shared project delivery definition from `[ProjectConfig]` in
 `pyproject.toml`, regardless of language or CI system. Language plugins select
@@ -40,6 +45,11 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 
 
 ## Assess dependency licence risks
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### What this assessment does
 
@@ -321,6 +331,11 @@ reviewing the results.
 
 ## Automate semantic versioning, Git tags and releases
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 Use `cd-tag-and-release` to orchestrate a configured release instead of
@@ -373,6 +388,11 @@ Related commands: [`cd-determine-version`](https://armmbed.github.io/continuous-
 
 ## Check Git-tracked files for new secrets
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 Passwords, API tokens and other credentials can be committed to Git by
@@ -418,6 +438,11 @@ for an example of a separate secrets check.
 
 
 ## Check project and dependency licence compliance
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### Problem and when to use it
 
@@ -478,6 +503,11 @@ for the shared settings.
 
 
 ## Require a valid news fragment on a branch
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### Problem and when to use it
 
@@ -560,6 +590,11 @@ for the branch argument and token configuration.
 
 ## Create a news fragment for a change
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 When several changes are developed in parallel, editing one shared changelog
@@ -604,6 +639,11 @@ Related command: [`cd-assert-news`](https://armmbed.github.io/continuous-deliver
 
 
 ## Generate an SPDX SBOM for a software project
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### Problem and when to use it
 
@@ -665,6 +705,11 @@ for the common reporting interface.
 
 ## Generate code documentation for a project
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 Use `cd-generate-docs` to rebuild a project's API documentation through its
@@ -673,7 +718,9 @@ language plugin. Preview locally before committing or publishing a release.
 ### Inputs and example
 
 Set `MODULE_TO_DOCUMENT`, `PROGRAMMING_LANGUAGE` and the documentation paths
-in `pyproject.toml`. To publish task guides with the API pages, set the
+in `pyproject.toml`. For Go, `MODULE_TO_DOCUMENT` names the module or package
+to document; CDS derives the working directory and Go package pattern.
+To publish task guides with the API pages, set the
 optional `DOCUMENTATION_GUIDES_DIR` to a directory containing `index.md` and
 other Markdown guides. `DOCUMENTATION_GUIDES_OUTPUT_FOLDER` selects where
 rendered guides appear beneath the documentation output (default: `guides`).
@@ -711,9 +758,12 @@ do not point it at a directory containing unrelated files.
 
 Documentation in the format produced by the selected plugin. Where a plugin
 generates an HTML API index, the guide landing page links to it as `api.html`.
+The API pages link back to the guide index, including from nested packages.
 This repository publishes task-oriented guides alongside generated documentation
 when it regenerates `docs/`. See the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
 for language-specific documentation tooling.
+See the [Golang plugin guide](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/GOLAND.MD#documentation)
+for Go module and package selection without having to specify `./...`.
 
 ### GitHub Actions example
 
@@ -727,6 +777,11 @@ Related configuration: [`cd-get-config`](https://armmbed.github.io/continuous-de
 
 
 ## Apply copyright and source licence headers
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### Problem and when to use it
 
@@ -770,6 +825,11 @@ Related command: [`cd-generate-spdx`](https://armmbed.github.io/continuous-deliv
 
 ## Generate changelogs from news fragments
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 Use `cd-generate-news` to turn one-line news fragments into release notes and
@@ -812,6 +872,11 @@ and push only with the team's chosen release permissions.
 
 ## Preview a semantic release version
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 Use `cd-determine-version` to see the project version a release type would
@@ -846,6 +911,11 @@ Related command: [`cd-tag-and-release`](https://armmbed.github.io/continuous-del
 
 
 ## Read project configuration in scripts and CI
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### Problem and when to use it
 
@@ -895,6 +965,11 @@ Related command: [`cd-generate-docs`](https://armmbed.github.io/continuous-deliv
 
 ## Record accepted secret-scan findings
 
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
 ### Problem and when to use it
 
 Accidentally committing passwords, API keys or tokens to a Git repository can
@@ -940,6 +1015,11 @@ Commit the change only after reviewing accepted findings.
 
 
 ## Generate a third-party IP (TPIP) and licence report
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
 
 ### Problem and when to use it
 

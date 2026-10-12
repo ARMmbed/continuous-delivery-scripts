@@ -47,6 +47,26 @@ el.replaceWith(d);
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="continuous_delivery_scripts.utils.git_helpers.get_project_remote_url"><code class="name flex">
+<span>def <span class="ident">get_project_remote_url</span></span>(<span>root: pathlib.Path) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_project_remote_url(root: Path) -&gt; Optional[str]:
+    &#34;&#34;&#34;Read the configured remote of a local project, if it is a Git repository.&#34;&#34;&#34;
+    try:
+        return GitWrapper(root, Repo(root)).get_remote_url()
+    except (InvalidGitRepositoryError, NoSuchPathError, ValueError, OSError):
+        return None</code></pre>
+</details>
+<div class="desc"><p>Read the configured remote of a local project, if it is a Git repository.</p></div>
+</dd>
+</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
@@ -341,23 +361,6 @@ corresponding path.</p></div>
             configuration.get_value(ConfigurationVariable.BOT_EMAIL),
         )
 
-    def _git_url_ssh_to_https(self, url: str) -&gt; str:
-        &#34;&#34;&#34;Changes repository URL to use authorisation token.
-
-        Converts the git url to use GitHub&#39;s token-based HTTPS authentication
-        format so workflow-generated tokens can be used for git operations.
-
-        Reference:
-        https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github#githubs-token-formats
-
-        Returns:
-            new URL
-        &#34;&#34;&#34;
-        path = url.split(&#34;github.com&#34;, 1)[1][1:].strip()
-        new = &#34;https://x-access-token:{GITHUB_TOKEN}@github.com/%s&#34; % path
-        logger.info(&#34;rewriting git url to: %s&#34; % new)
-        return new.format(GITHUB_TOKEN=configuration.get_value(ConfigurationVariable.GIT_TOKEN))
-
     def clone(self, path: Path) -&gt; &#34;GitWrapper&#34;:
         &#34;&#34;&#34;Clones this repository to the path.
 
@@ -377,7 +380,9 @@ corresponding path.</p></div>
             logger.info(&#34;failed cloning repository: %s&#34; % e)
             logger.info(&#34;trying with authentication&#34;)
             git_clone = self.repo.clone_from(
-                url=self._git_url_ssh_to_https(self.get_remote_url()),
+                url=authenticated_github_url(
+                    self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+                ),
                 to_path=str(path),
                 multi_options=[&#34;--recurse-submodules&#34;],
             )
@@ -509,7 +514,11 @@ corresponding path.</p></div>
         except GitCommandError as e:
             logger.info(&#34;failed fetching repository: %s&#34; % e)
             logger.info(&#34;Retrying a different way&#34;)
-            self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+            self.set_remote_url(
+                authenticated_github_url(
+                    self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+                )
+            )
             self.repo.git.fetch(all=True, tags=True, force=True)
 
     def get_branch(self, branch_name: str) -&gt; Any:
@@ -846,7 +855,9 @@ corresponding path.</p></div>
         Configures the repository so that we can commit back to GitHub
         &#34;&#34;&#34;
         self.configure_author()
-        self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+        self.set_remote_url(
+            authenticated_github_url(self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN))
+        )
 
     def create_tag(self, tag_name: str, message: Optional[str] = None) -&gt; Any:
         &#34;&#34;&#34;Creates a new tag.
@@ -1316,7 +1327,9 @@ corresponding branch if found; None otherwise.</p></div>
         logger.info(&#34;failed cloning repository: %s&#34; % e)
         logger.info(&#34;trying with authentication&#34;)
         git_clone = self.repo.clone_from(
-            url=self._git_url_ssh_to_https(self.get_remote_url()),
+            url=authenticated_github_url(
+                self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+            ),
             to_path=str(path),
             multi_options=[&#34;--recurse-submodules&#34;],
         )
@@ -1394,7 +1407,9 @@ a wrapper over the cloned repository</p></div>
     Configures the repository so that we can commit back to GitHub
     &#34;&#34;&#34;
     self.configure_author()
-    self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))</code></pre>
+    self.set_remote_url(
+        authenticated_github_url(self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN))
+    )</code></pre>
 </details>
 <div class="desc"><p>Reconfigures the repository.</p>
 <p>Configures the repository so that we can commit back to GitHub</p></div>
@@ -1502,7 +1517,11 @@ corresponding tag</p></div>
     except GitCommandError as e:
         logger.info(&#34;failed fetching repository: %s&#34; % e)
         logger.info(&#34;Retrying a different way&#34;)
-        self.set_remote_url(self._git_url_ssh_to_https(self.get_remote_url()))
+        self.set_remote_url(
+            authenticated_github_url(
+                self.get_remote_url(), configuration.get_value(ConfigurationVariable.GIT_TOKEN)
+            )
+        )
         self.repo.git.fetch(all=True, tags=True, force=True)</code></pre>
 </details>
 <div class="desc"><p>Fetches latest changes.</p></div>
@@ -2484,7 +2503,7 @@ will work in most cases but probably not on CI.</p></div>
 </dl>
 </section>
 </article>
-<nav id="sidebar">
+<nav id="sidebar"><a href="../guides/index.html">Task guides</a> · 
 <div class="toc">
 <ul></ul>
 </div>
@@ -2492,6 +2511,11 @@ will work in most cases but probably not on CI.</p></div>
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="continuous_delivery_scripts.utils" href="index.html">continuous_delivery_scripts.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.utils.git_helpers.get_project_remote_url" href="#continuous_delivery_scripts.utils.git_helpers.get_project_remote_url">get_project_remote_url</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

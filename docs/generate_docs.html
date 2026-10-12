@@ -81,7 +81,22 @@ el.replaceWith(d);
     _clear_previous_docs(output_directory)
     os.makedirs(str(output_directory), exist_ok=True)
     get_language_specifics().generate_code_documentation(output_directory, module_to_document)
-    _publish_project_guides(output_directory)</code></pre>
+    _publish_project_guides(output_directory)
+    root = configuration.get_value_or_default(ConfigurationVariable.PROJECT_ROOT, None)
+    if root:
+        settings = _guide_settings()
+        publish_discovery_files(
+            output_directory,
+            Path(root),
+            settings[1] if settings else None,
+            settings[2] if settings else None,
+            (
+                settings[3]
+                if settings
+                else str(configuration.get_value_or_default(ConfigurationVariable.PROJECT_NAME, Path(root).name))
+            ),
+            module_to_document,
+        )</code></pre>
 </details>
 <div class="desc"><p>Generates the documentation.</p></div>
 </dd>
@@ -113,7 +128,7 @@ el.replaceWith(d);
 <section>
 </section>
 </article>
-<nav id="sidebar">
+<nav id="sidebar"><a href="guides/index.html">Task guides</a> · 
 <div class="toc">
 <ul></ul>
 </div>

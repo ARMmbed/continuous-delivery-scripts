@@ -1,4 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+  -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/api.html</loc>
@@ -142,9 +146,6 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/tag_and_release.html</loc>
   </url>
   <url>
-    <loc>https://armmbed.github.io/continuous-delivery-scripts/third_party_IP_report.html</loc>
-  </url>
-  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/update_secrets_registry.html</loc>
   </url>
   <url>
@@ -160,10 +161,19 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/definitions.html</loc>
   </url>
   <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/documentation_discovery.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/documentation_templates.html</loc>
+  </url>
+  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/filesystem_helpers.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/git_helpers.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/github_helpers.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/hash_helpers.html</loc>
