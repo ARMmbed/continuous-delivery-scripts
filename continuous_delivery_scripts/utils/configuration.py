@@ -113,6 +113,8 @@ class ConfigurationVariable(enum.Enum):
     """Skip automatic dependency downloads before licence and SPDX dependency analysis."""
     DOCUMENTATION_SITE_URL = 47
     """Optional public base URL of the generated documentation website."""
+    LICENCE_FILE_PATH = 48
+    """Relative or absolute path to the project's top-level licence file."""
 
     @staticmethod
     def choices() -> List[str]:
@@ -227,6 +229,7 @@ class StaticConfig(GenericConfig):
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
+    LICENCE_FILE_PATH = "LICENSE"
     ACCEPTED_THIRD_PARTY_LICENCES = [
         "Apache-2.0",
         "BSD*",

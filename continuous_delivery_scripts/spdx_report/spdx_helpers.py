@@ -14,9 +14,8 @@ Examples:
     - https://github.com/spdx/tools/blob/master/Examples/SPDXTagExample-v2.1.spdx
 """
 
-import re
-
 import logging
+import re
 import toml
 from dataclasses import dataclass
 from pathlib import Path
