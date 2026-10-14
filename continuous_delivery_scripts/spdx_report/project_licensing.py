@@ -22,7 +22,7 @@ import re
 from difflib import unified_diff
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Optional
+from typing import Dict, Iterable, Optional, cast
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -89,13 +89,14 @@ def get_project_licence_identifier(identifier: Optional[str] = None) -> str:
     - https://spdx.org/licenses/
     - https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
     """
-    raw_identifier = identifier or str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
-    normalised_identifier = normalise_proprietary_licence(raw_identifier.strip())
+    raw_identifier: str = identifier or str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
+    normalised_identifier: str = normalise_proprietary_licence(raw_identifier.strip())
     if is_proprietary_licence(raw_identifier):
         return normalised_identifier
     if not has_single_project_licence_identifier(raw_identifier):
         raise ValueError(
-            "This command only covers one exact SPDX licence identifier and does not cover compound licence expressions such as AND, OR, or WITH."
+            "This command only covers one exact SPDX licence identifier and does not cover "
+            "compound licence expressions such as AND, OR, or WITH."
         )
     licence = OPENSOURCE_LICENCES.get_licence(normalised_identifier, allow_fuzzy=False)
     if not licence or licence.identifier != normalised_identifier:
@@ -110,8 +111,8 @@ def has_single_project_licence_identifier(identifier: Optional[str] = None) -> b
     ``WITH`` because the project-level licence-file and obligations workflows
     in this module only cover one canonical licence at a time.
     """
-    raw_identifier = identifier or str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
-    normalised_identifier = normalise_proprietary_licence(raw_identifier.strip())
+    raw_identifier: str = identifier or str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
+    normalised_identifier: str = normalise_proprietary_licence(raw_identifier.strip())
     if is_proprietary_licence(raw_identifier):
         return True
     return not any(token in normalised_identifier for token in (" AND ", " OR ", " WITH ", "(", ")"))
@@ -120,7 +121,7 @@ def has_single_project_licence_identifier(identifier: Optional[str] = None) -> b
 def get_project_licence_file_path() -> Path:
     """Resolve the configured path of the project licence file.
 
-    The default configuration is ``License.txt`` at the project root.
+    The default configuration is ``LICENSE`` at the project root.
     """
     configured_path = Path(str(configuration.get_value(ConfigurationVariable.LICENCE_FILE_PATH)).strip())
     if configured_path.is_absolute():
@@ -238,7 +239,8 @@ def ensure_project_licence_file_conforms(create_if_missing: bool) -> Path:
     fetched = fetch_project_licence_text(identifier)
     if not fetched:
         raise ValueError(
-            f"Could not fetch licence text for {identifier} from ScanCode LicenseDB, SPDX.org, GitHub API, or choosealicense.com."
+            f"Could not fetch licence text for {identifier} from ScanCode LicenseDB, SPDX.org, "
+            "GitHub API, or choosealicense.com."
         )
     if licence_file.exists():
         if not licence_file.is_file():
@@ -302,9 +304,7 @@ def describe_licence_obligations(identifier: Optional[str] = None) -> str:
             "is_osi_approved": (
                 "yes"
                 if spdx_details.get(SPDX_IS_OSI_APPROVED_KEY) is True
-                else "no"
-                if spdx_details.get(SPDX_IS_OSI_APPROVED_KEY) is False
-                else None
+                else "no" if spdx_details.get(SPDX_IS_OSI_APPROVED_KEY) is False else None
             ),
             "summary": choosealicense.summary if choosealicense else None,
             "permissions": choosealicense.permissions if choosealicense else (),
@@ -410,7 +410,7 @@ def _read_text(url: str, headers: Optional[Dict[str, str]] = None) -> str:
         payload = response.read(MAX_RESPONSE_SIZE + 1)
     if len(payload) > MAX_RESPONSE_SIZE:
         raise ValueError(f"Response from {url} exceeds the maximum supported size")
-    return payload.decode("utf8")
+    return cast(str, payload.decode("utf8"))
 
 
 def _read_json(url: str, headers: Optional[Dict[str, str]] = None) -> Dict[str, object]:
@@ -462,4 +462,4 @@ def _get_report_jinja2_env() -> jinja2.Environment:
 
 def _render_licence_obligations_report(arguments: Dict[str, object]) -> str:
     template = _get_report_jinja2_env().get_template(JINJA_TEMPLATE_LICENCE_OBLIGATIONS_TEXT)
-    return template.render(**arguments)
+    return cast(str, template.render(**arguments))

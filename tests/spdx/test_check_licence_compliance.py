@@ -48,7 +48,9 @@ class TestCheckLicenceCompliance(TestCase):
             configuration, "get_value", side_effect=lambda key: overrides.get(key, get_value(key))
         ), patch(
             "continuous_delivery_scripts.check_licence_compliance.get_language_specifics", return_value=self.plugin
-        ), patch("sys.argv", ["cd-check-licence-compliance", *args]):
+        ), patch(
+            "sys.argv", ["cd-check-licence-compliance", *args]
+        ):
             project_licence_context = (
                 patch(
                     "continuous_delivery_scripts.check_licence_compliance.ensure_project_licence_file_conforms",
@@ -97,7 +99,9 @@ class TestCheckLicenceCompliance(TestCase):
             "continuous_delivery_scripts.check_licence_compliance.ensure_project_licence_file_conforms"
         ) as ensure:
             self.assertEqual(
-                self._run_command(config_overrides={ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "MIT OR Apache-2.0"}),
+                self._run_command(
+                    config_overrides={ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "MIT OR Apache-2.0"}
+                ),
                 0,
             )
 

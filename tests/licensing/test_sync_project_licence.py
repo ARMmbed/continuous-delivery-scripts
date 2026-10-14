@@ -114,7 +114,9 @@ class TestSyncProjectLicence(unittest.TestCase):
                     source="SPDX.org",
                     url="https://spdx.org/licenses/Apache-2.0.json",
                 ),
-            ), self.assertLogs("continuous_delivery_scripts.spdx_report.project_licensing", level="WARNING") as logs:
+            ), self.assertLogs(
+                "continuous_delivery_scripts.spdx_report.project_licensing", level="WARNING"
+            ) as logs:
                 with self.assertRaisesRegex(ValueError, "does not match the contents"):
                     sync_project_licence_file()
 

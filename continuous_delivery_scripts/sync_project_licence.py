@@ -19,7 +19,10 @@ logger = logging.getLogger(__name__)
 def main() -> int:
     """Create a CLI for syncing the project's top-level licence file."""
     parser = argparse.ArgumentParser(
-        description="Create the configured project licence file when it is missing and check it matches the configured SPDX identifier."
+        description=(
+            "Create the configured project licence file when it is missing and check it matches "
+            "the configured SPDX identifier."
+        )
     )
     parser.add_argument("-v", "--verbose", action="count", default=0, help="Increase logging verbosity.")
     args = parser.parse_args()

@@ -229,7 +229,7 @@ class StaticConfig(GenericConfig):
     DEPENDENCY_UPDATE_NEWS_MESSAGE = "Dependency upgrade: {message}"
     DEPENDENCY_UPDATE_NEWS_TYPE = NewsType.bugfix
     DEPENDENCY_UPDATE_BRANCH_PATTERN = r"^\s*[Dd]ependabot\/.+\/(?P<DEPENDENCY>.+)"
-    LICENCE_FILE_PATH = "License.txt"
+    LICENCE_FILE_PATH = "LICENSE"
     ACCEPTED_THIRD_PARTY_LICENCES = [
         "Apache-2.0",
         "BSD*",
