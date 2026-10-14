@@ -6,6 +6,11 @@ Use `cd-check-licence-compliance` as a CI gate or local check when you need to
 assess the project and its dependencies against the configured licence policy
 without generating SPDX documents. The command writes no files by default.
 
+When `FILE_LICENCE_IDENTIFIER` is one exact SPDX identifier, CDS also checks
+that the configured project licence file exists and matches that identifier
+before dependency compliance runs. Compound licence expressions skip this
+project-file check.
+
 ## Inputs and example
 
 Select a language plugin that provides project metadata. Configure
@@ -54,5 +59,7 @@ for the limits and report provenance.
 To generate SPDX tag-value documents as well as reports, use
 [`cd-generate-spdx`](generating-an-spdx-sbom.md). See
 [third-party IP reporting](third-party-ip-reporting.md) for more on reviewing
-the summaries and [project configuration](reading-project-configuration.md)
-for the shared settings.
+the summaries, [project configuration](reading-project-configuration.md)
+for the shared settings, and
+[syncing the project licence file](syncing-project-licence.md) for the
+top-level project licence workflow.

@@ -14,6 +14,8 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 
 - [Assess dependency licence risks](assessing-dependency-licences.md): Review directional, explainable licence screening and optional project policy overrides.
 - [Check licence compliance](checking-licence-compliance.md): Gate a project without generating SPDX files; optionally write reports.
+- [Sync the project licence file](syncing-project-licence.md): Create or refresh the top-level project licence file from the configured SPDX identifier.
+- [Describe project licence obligations](describing-project-licence-obligations.md): Summarise obligations for the configured project licence.
 - [Generate an SPDX SBOM](generating-an-spdx-sbom.md): Produce project and dependency SPDX tag-value documents.
 - [Generate a third-party IP / TPIP report](third-party-ip-reporting.md): Review dependency licences and compliance summaries.
 - [Manage licence headers](licence-header-management.md): Apply copyright and SPDX headers to source files.
@@ -29,6 +31,7 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 ## Other project checks
 
 - [Generate code documentation](generating-code-documentation.md): Build the API reference.
+- [Check project configuration](checking-project-configuration.md): Validate CDS `ProjectConfig` values before running other commands.
 - [Read project configuration](reading-project-configuration.md): Reuse values in scripts and CI.
 - [Record accepted secret findings](recording-secrets.md): Maintain the detect-secrets baseline.
 - [Check for new secrets](checking-for-secrets.md): Scan Git-tracked files in CI.
