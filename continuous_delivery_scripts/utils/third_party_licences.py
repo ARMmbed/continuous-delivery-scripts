@@ -312,6 +312,11 @@ def normalise_proprietary_licence(licence_expression: str) -> str:
     )
 
 
+def is_proprietary_licence(licence_expression: str) -> bool:
+    """Return whether a licence declaration resolves to the proprietary SPDX reference."""
+    return normalise_proprietary_licence(licence_expression.strip()) == LICENSE_REF_PROPRIETARY
+
+
 def cleanse_licence_expression(licence_expression: str) -> str:
     """Cleanses a licence expression by using SPDX identifiers when possible.
 
@@ -334,7 +339,7 @@ def cleanse_licence_expression(licence_expression: str) -> str:
 
 
 def _iter_matching_licences(desc: str) -> Iterable[Licence]:
-    if normalise_proprietary_licence(desc.strip()) == LICENSE_REF_PROPRIETARY:
+    if is_proprietary_licence(desc):
         yield PROPRIETARY_LICENCE
         return
     licence = OPENSOURCE_LICENCES.get_licence(desc)

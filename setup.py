@@ -49,6 +49,8 @@ setup(
             f"cd-tag-and-release={SOURCE_DIR}.tag_and_release:main",
             f"cd-get-config={SOURCE_DIR}.get_config:main",
             f"cd-license-files={SOURCE_DIR}.license_files:main",
+            f"cd-sync-project-licence={SOURCE_DIR}.sync_project_licence:main",
+            f"cd-describe-licence-obligations={SOURCE_DIR}.describe_licence_obligations:main",
             f"cd-generate-spdx={SOURCE_DIR}.report_third_party_ip:main",
             f"cd-check-licence-compliance={SOURCE_DIR}.check_licence_compliance:main",
             f"cd-detect-secrets={SOURCE_DIR}.detect_secrets:main",

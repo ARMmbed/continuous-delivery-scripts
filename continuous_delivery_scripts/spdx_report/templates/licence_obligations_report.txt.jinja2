@@ -1,0 +1,24 @@
+SPDX identifier: {{ identifier }}
+{% if is_proprietary %}
+
+This project uses a proprietary licence.
+The author must provide the full licence text, and redistribution, modification, notice, source, and patent obligations must be reviewed against the custom terms.
+{% else %}
+{% if name %}Name: {{ name }}
+{% endif %}{% if is_osi_approved %}OSI approved: {{ is_osi_approved }}
+{% endif %}{% if summary %}
+{{ summary }}
+{% endif %}{% if permissions %}
+Permissions:
+{% for item in permissions %}- {{ item }}
+{% endfor %}{% endif %}{% if conditions %}
+Conditions:
+{% for item in conditions %}- {{ item }}
+{% endfor %}{% endif %}{% if limitations %}
+Limitations:
+{% for item in limitations %}- {{ item }}
+{% endfor %}{% endif %}
+OSADL obligations:
+{% if osadl_obligations %}{% for line in osadl_obligations %}{{ line }}
+{% endfor %}{% else %}OSADL checklist unavailable for this SPDX identifier.
+{% endif %}{% endif %}

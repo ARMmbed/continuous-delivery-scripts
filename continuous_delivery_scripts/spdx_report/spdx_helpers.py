@@ -14,9 +14,8 @@ Examples:
     - https://github.com/spdx/tools/blob/master/Examples/SPDXTagExample-v2.1.spdx
 """
 
-import re
-
 import logging
+import re
 import toml
 from dataclasses import dataclass
 from pathlib import Path
@@ -89,8 +88,6 @@ PATHS_TO_EXCLUDE = [
     "**/__pycache__/**",
     "**/*.egg-info/**",
 ]
-
-
 def determine_file_licence(path: Path) -> Optional[str]:
     """Determines the licence of a file based on the SPDX identifier."""
     licence = None

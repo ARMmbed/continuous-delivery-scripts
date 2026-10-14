@@ -19,6 +19,7 @@ from continuous_delivery_scripts.utils.third_party_licences import (
     determine_allowed_opensource_licences_from_string,
     cleanse_licence_expression,
     cleanse_licence_descriptor,
+    is_proprietary_licence,
     normalise_proprietary_licence,
     LICENSE_REF_PROPRIETARY,
 )
@@ -129,6 +130,9 @@ class TestLicences(unittest.TestCase):
         )
 
     def test_proprietary_licence_is_not_fuzzily_matched_to_an_open_source_licence(self):
+        self.assertTrue(is_proprietary_licence("proprietary"))
+        self.assertTrue(is_proprietary_licence("LicenseRef-Proprietary"))
+        self.assertFalse(is_proprietary_licence("MIT"))
         self.assertEqual(normalise_proprietary_licence("proprietary"), LICENSE_REF_PROPRIETARY)
         self.assertEqual(normalise_proprietary_licence("Proprietary Licence AND MIT"), "LicenseRef-Proprietary AND MIT")
         self.assertEqual(cleanse_licence_expression("Proprietary"), LICENSE_REF_PROPRIETARY)

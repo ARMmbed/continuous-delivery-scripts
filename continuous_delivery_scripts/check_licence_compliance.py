@@ -12,6 +12,10 @@ from typing import TYPE_CHECKING
 
 from continuous_delivery_scripts.language_specifics import get_language_specifics
 from continuous_delivery_scripts.spdx_report.licence_assessment import LicenceAssessment
+from continuous_delivery_scripts.spdx_report.project_licensing import (
+    ensure_project_licence_file_conforms,
+    has_single_project_licence_identifier,
+)
 from continuous_delivery_scripts.spdx_report.spdx_summary import _configured_licence_policy
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 from continuous_delivery_scripts.utils.logging import log_exception, set_log_level
@@ -100,6 +104,8 @@ def main() -> int:
     set_log_level(args.verbose)
 
     try:
+        if has_single_project_licence_identifier():
+            ensure_project_licence_file_conforms(create_if_missing=False)
         plugin = get_language_specifics()
         if not plugin.can_get_project_metadata():
             raise ValueError("The selected language plugin cannot provide metadata for licence compliance checks.")
