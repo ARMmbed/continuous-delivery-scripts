@@ -68,10 +68,10 @@ class TestSyncProjectLicence(unittest.TestCase):
 
         fetch.assert_called_once_with("Apache-2.0")
 
-    def test_existing_project_licence_file_must_match_configured_identifier(self):
+    def test_existing_project_licence_file_is_resynced_when_mismatched(self):
         get_value = configuration.get_value
         with TemporaryDirectory() as directory:
-            licence_file = directory / "License.txt"
+            licence_file = directory / "LICENSE"
             licence_file.write_text("Different licence text\n", encoding="utf8")
             with patch.object(
                 configuration,
@@ -79,7 +79,7 @@ class TestSyncProjectLicence(unittest.TestCase):
                 side_effect=lambda key: {
                     ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "Apache-2.0",
                     ConfigurationVariable.PROJECT_ROOT: str(directory),
-                    ConfigurationVariable.LICENCE_FILE_PATH: "License.txt",
+                    ConfigurationVariable.LICENCE_FILE_PATH: "LICENSE",
                 }.get(key, get_value(key)),
             ), patch(
                 "continuous_delivery_scripts.spdx_report.project_licensing.fetch_project_licence_text",
@@ -90,13 +90,16 @@ class TestSyncProjectLicence(unittest.TestCase):
                     url="https://spdx.org/licenses/Apache-2.0.json",
                 ),
             ):
-                with self.assertRaisesRegex(ValueError, "does not match the contents"):
-                    sync_project_licence_file()
+                resolved = sync_project_licence_file()
+                contents = licence_file.read_text(encoding="utf8")
+
+                self.assertEqual(licence_file, resolved)
+                self.assertEqual("Apache License 2.0\n", contents)
 
     def test_verbose_mismatch_logs_licence_diff(self):
         get_value = configuration.get_value
         with TemporaryDirectory() as directory:
-            licence_file = directory / "License.txt"
+            licence_file = directory / "LICENSE"
             licence_file.write_text("Line one\nDifferent line\n", encoding="utf8")
             with patch.object(
                 configuration,
@@ -104,7 +107,7 @@ class TestSyncProjectLicence(unittest.TestCase):
                 side_effect=lambda key: {
                     ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "Apache-2.0",
                     ConfigurationVariable.PROJECT_ROOT: str(directory),
-                    ConfigurationVariable.LICENCE_FILE_PATH: "License.txt",
+                    ConfigurationVariable.LICENCE_FILE_PATH: "LICENSE",
                 }.get(key, get_value(key)),
             ), patch(
                 "continuous_delivery_scripts.spdx_report.project_licensing.fetch_project_licence_text",
@@ -117,13 +120,40 @@ class TestSyncProjectLicence(unittest.TestCase):
             ), self.assertLogs(
                 "continuous_delivery_scripts.spdx_report.project_licensing", level="WARNING"
             ) as logs:
-                with self.assertRaisesRegex(ValueError, "does not match the contents"):
-                    sync_project_licence_file()
+                resolved = sync_project_licence_file()
+                contents = licence_file.read_text(encoding="utf8")
+                self.assertEqual(licence_file, resolved)
+                self.assertEqual("Line one\nCanonical line\n", contents)
 
         rendered = "\n".join(logs.output)
         self.assertIn("Project licence file differs from canonical text:", rendered)
         self.assertIn("---", rendered)
         self.assertIn("+++ canonical (SPDX.org)", rendered)
+
+    def test_validation_mode_fails_when_project_licence_file_does_not_match_identifier(self):
+        get_value = configuration.get_value
+        with TemporaryDirectory() as directory:
+            licence_file = directory / "LICENSE"
+            licence_file.write_text("Different licence text\n", encoding="utf8")
+            with patch.object(
+                configuration,
+                "get_value",
+                side_effect=lambda key: {
+                    ConfigurationVariable.FILE_LICENCE_IDENTIFIER: "Apache-2.0",
+                    ConfigurationVariable.PROJECT_ROOT: str(directory),
+                    ConfigurationVariable.LICENCE_FILE_PATH: "LICENSE",
+                }.get(key, get_value(key)),
+            ), patch(
+                "continuous_delivery_scripts.spdx_report.project_licensing.fetch_project_licence_text",
+                return_value=RetrievedProjectLicenceText(
+                    identifier="Apache-2.0",
+                    text="Apache License 2.0",
+                    source="SPDX.org",
+                    url="https://spdx.org/licenses/Apache-2.0.json",
+                ),
+            ):
+                with self.assertRaisesRegex(ValueError, "does not match the contents"):
+                    ensure_project_licence_file_conforms(create_if_missing=False)
 
     def test_validation_mode_fails_when_licence_file_is_missing(self):
         get_value = configuration.get_value

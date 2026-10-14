@@ -222,7 +222,7 @@ def fetch_choosealicense_metadata(identifier: str) -> Optional[ChooseALicenseMet
     return None
 
 
-def ensure_project_licence_file_conforms(create_if_missing: bool) -> Path:
+def ensure_project_licence_file_conforms(create_if_missing: bool, update_if_mismatched: bool = False) -> Path:
     """Ensure the configured project licence file exists and matches the configured SPDX identifier.
 
     For non-proprietary single-identifier projects, the file content is checked
@@ -248,6 +248,10 @@ def ensure_project_licence_file_conforms(create_if_missing: bool) -> Path:
         actual_text = licence_file.read_text(encoding="utf8")
         if _normalise_licence_text_for_comparison(actual_text) != _normalise_licence_text_for_comparison(fetched.text):
             _log_licence_text_diff(actual_text, fetched.text, licence_file, fetched.source)
+            if update_if_mismatched:
+                licence_file.write_text(fetched.text.rstrip() + "\n", encoding="utf8")
+                print(f"Updated {licence_file} from {fetched.source}: {fetched.url}")
+                return licence_file
             raise ValueError(f"Configured SPDX identifier {identifier} does not match the contents of {licence_file}.")
         return licence_file
     if not create_if_missing:
@@ -264,7 +268,7 @@ def sync_project_licence_file() -> Path:
     This workflow only supports projects configured with one exact SPDX licence
     identifier.
     """
-    return ensure_project_licence_file_conforms(create_if_missing=True)
+    return ensure_project_licence_file_conforms(create_if_missing=True, update_if_mismatched=True)
 
 
 def describe_licence_obligations(identifier: Optional[str] = None) -> str:
