@@ -264,12 +264,48 @@ class TestSpdxFile(TestCase):
             self.assertEqual(html.count('href="third_party_IP_report.html"'), 1)
             self.assertLess(html.index("third-party-ip-report"), html.index("</main>"))
             report = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
-            self.assertIn("<p>The project is licensed under the <strong>MIT</strong> licence.</p>", report)
+            expected_licence_link = (
+                '<p>The project is licensed under the '
+                '<a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/LICENSE">'
+                '<strong>MIT</strong></a> licence.</p>'
+            )
+            self.assertIn(
+                expected_licence_link,
+                report,
+            )
             self.assertIn("<p>The project and all assessed dependencies meet the configured licence policy, ", report)
             text_report = Path(output_dir, "third_party_IP_report.txt").read_text(encoding="utf8")
             self.assertIn("The project is licensed under the MIT licence.", text_report)
             self.assertIn("Audit gaps highlight missing or uncertain dependency licence information", report)
             self.assertIn("No dependencies were included in this report.", report)
+
+    def test_html_report_links_project_licence_to_repository_file(self):
+        metadata = ProjectMetadata("test_package")
+        metadata.project_metadata = PackageMetadata({"Name": "test_package", "License": "MIT"})
+        parser = Mock()
+        parser.project_metadata = metadata
+        get_value = configuration.get_value
+
+        with TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            (root / "docs").mkdir()
+            overrides = {
+                ConfigurationVariable.PROJECT_ROOT: root,
+                ConfigurationVariable.LICENCE_FILE_PATH: "legal/LICENSE.txt",
+                ConfigurationVariable.MASTER_BRANCH: "main",
+            }
+            with patch.object(
+                configuration, "get_value", side_effect=lambda key: overrides.get(key, get_value(key))
+            ), patch(
+                "continuous_delivery_scripts.spdx_report.spdx_summary.get_project_remote_url",
+                return_value="https://github.com/acme/example.git",
+            ):
+                SpdxProject(parser).generate_licensing_summary(root / "docs")
+                html = Path(root / "docs" / "third_party_IP_report.html").read_text(encoding="utf8")
+
+        self.assertIn(
+            '<a href="https://github.com/acme/example/blob/main/legal/LICENSE.txt"><strong>MIT</strong></a>', html
+        )
 
     def test_missing_dependency_is_reported_and_can_fail_the_audit(self):
         metadata = ProjectMetadata("test_package")

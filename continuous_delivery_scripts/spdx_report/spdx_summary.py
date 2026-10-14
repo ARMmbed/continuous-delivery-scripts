@@ -15,6 +15,8 @@ from continuous_delivery_scripts.spdx_report.spdx_helpers import (
     get_package_manual_check,
     get_package_manual_licence,
 )
+from continuous_delivery_scripts.utils.git_helpers import get_project_remote_url
+from continuous_delivery_scripts.utils.github_helpers import github_blob_url
 from continuous_delivery_scripts.spdx_report.spdx_package import SpdxPackage
 from continuous_delivery_scripts.spdx_report.licence_assessment import (
     LicenceAssessment,
@@ -104,6 +106,20 @@ def generate_file_based_on_template(
     output_filename.write_text(rendered, encoding="utf8")
 
 
+def _project_licence_href() -> Optional[str]:
+    project_root = Path(str(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))).resolve()
+    remote = get_project_remote_url(project_root)
+    if not remote:
+        return None
+    licence_path = Path(str(configuration.get_value(ConfigurationVariable.LICENCE_FILE_PATH)))
+    try:
+        relative_path = licence_path.relative_to(project_root) if licence_path.is_absolute() else licence_path
+    except ValueError:
+        return None
+    branch = str(configuration.get_value(ConfigurationVariable.MASTER_BRANCH))
+    return github_blob_url(remote, branch, str(relative_path).replace("\\", "/"))
+
+
 class SummaryGenerator:
     """Licensing summary generator."""
 
@@ -154,6 +170,7 @@ class SummaryGenerator:
         arguments["project"] = {
             "name": self.project.name,
             "licence": self.project.main_licence,
+            "licence_href": _project_licence_href(),
             "accepted_licences": _configured_licence_policy(),
             "compliance": global_compliance,
             "compliance_points": compliance_points,
