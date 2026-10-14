@@ -265,9 +265,9 @@ class TestSpdxFile(TestCase):
             self.assertLess(html.index("third-party-ip-report"), html.index("</main>"))
             report = Path(output_dir, "third_party_IP_report.html").read_text(encoding="utf8")
             expected_licence_link = (
-                '<p>The project is licensed under the '
+                "<p>The project is licensed under the "
                 '<a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/LICENSE">'
-                '<strong>MIT</strong></a> licence.</p>'
+                "<strong>MIT</strong></a> licence.</p>"
             )
             self.assertIn(
                 expected_licence_link,
