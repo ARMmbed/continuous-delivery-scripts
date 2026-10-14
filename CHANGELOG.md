@@ -17,6 +17,20 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.6.0 (2026-10-14)
+
+## Features
+
+- :page_facing_up: Add `cd-sync-project-licence` to fetch, create, and validate a configured single project licence file. (#202610141745000000001)
+- :books: Add `cd-describe-licence-obligations` to report obligations for a configured single SPDX licence using SPDX, choosealicense.com, and OSADL data. (#202610141745000000002)
+
+## Bugfixes
+
+- :hammer_and_wrench: Make `cd-check-licence-compliance` validate a configured single project licence file before dependency compliance checks. (#202610141745000000003)
+- Dependency upgrade: codeql-action-4.38.3 (#20261012200235030049504)
+- Dependency upgrade: upload-artifact-7.0.2 (#20261012200454195538682)
+
+
 # 4.5.0 (2026-10-12)
 
 ## Features

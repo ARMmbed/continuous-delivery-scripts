@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-12 16:08:08.094597
+                                         2026-10-14 13:06:55.520518
 
 # Summary:
     Licence compliance: Compliant
@@ -57,7 +57,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.111.dist-info/LICENSE; notice: boto3-1.43.111.dist-info/NOTICE
+    Evidence: licence: boto3-1.43.113.dist-info/LICENSE; notice: boto3-1.43.113.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -75,7 +75,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.111.dist-info/LICENSE.txt; notice: botocore-1.43.111.dist-info/NOTICE
+    Evidence: licence: botocore-1.43.113.dist-info/LICENSE.txt; notice: botocore-1.43.113.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -184,7 +184,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.4.4.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.5.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 
@@ -282,12 +282,12 @@
 - GitPython:
     [X] Compliant?
     [X] Dependency?
-    URL: https://gitpython.readthedocs.io/en/stable/
+    URL: https://github.com/gitpython-developers/GitPython/blob/main/doc/source/changes.rst
     Licence: BSD-3-Clause
     Licence source: License
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: gitpython-3.2.0.dist-info/licenses/AUTHORS; licence: gitpython-3.2.0.dist-info/licenses/LICENSE
+    Evidence: licence: gitpython-3.2.1.dist-info/licenses/AUTHORS; licence: gitpython-3.2.1.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -539,7 +539,7 @@
     Licence source: License-Expression
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: markdown-3.11.dist-info/licenses/LICENSE.md
+    Evidence: licence: markdown-3.11.1.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -611,7 +611,7 @@
     Licence source: License-Expression
     Declared licence: MIT
     Licence classifiers: None
-    Evidence: licence: more_itertools-11.1.0.dist-info/licenses/LICENSE
+    Evidence: licence: more_itertools-11.2.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 

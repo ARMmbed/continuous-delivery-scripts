@@ -1,0 +1,599 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>continuous_delivery_scripts.spdx_report.project_licensing API documentation</title>
+<meta name="description" content="Project-level licence fetching, validation, and obligations reporting …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>continuous_delivery_scripts.spdx_report.project_licensing</code></h1>
+</header>
+<section id="section-intro">
+<p>Project-level licence fetching, validation, and obligations reporting.</p>
+<p>References:
+- SPDX licence list and JSON details: <a href="https://spdx.org/licenses/">https://spdx.org/licenses/</a>
+- SPDX licence expression guidance: <a href="https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/">https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/</a>
+- SPDX matching guidance: <a href="https://spdx.github.io/spdx-spec/v2.3/license-matching-guidelines-and-templates/">https://spdx.github.io/spdx-spec/v2.3/license-matching-guidelines-and-templates/</a>
+- ScanCode LicenseDB: <a href="https://scancode-licensedb.aboutcode.org/">https://scancode-licensedb.aboutcode.org/</a>
+- GitHub licences API: <a href="https://docs.github.com/en/rest/licenses/licenses">https://docs.github.com/en/rest/licenses/licenses</a>
+- choosealicense.com: <a href="https://choosealicense.com/">https://choosealicense.com/</a>
+- OSADL licence obligations checklists: <a href="https://www.osadl.org/License-Checklists.oss-compliance-lists.0.html">https://www.osadl.org/License-Checklists.oss-compliance-lists.0.html</a></p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.describe_licence_obligations"><code class="name flex">
+<span>def <span class="ident">describe_licence_obligations</span></span>(<span>identifier: str | None = None) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def describe_licence_obligations(identifier: Optional[str] = None) -&gt; str:
+    &#34;&#34;&#34;Return a human-readable obligations summary for one project licence.
+
+    The rendered report combines:
+    - SPDX.org licence metadata
+    - choosealicense.com summary data
+    - OSADL obligations text
+
+    This workflow only supports projects configured with one exact SPDX licence
+    identifier.
+    &#34;&#34;&#34;
+    resolved_identifier = get_project_licence_identifier(identifier)
+    if is_proprietary_licence(resolved_identifier):
+        return _render_licence_obligations_report(
+            {
+                &#34;identifier&#34;: LICENSE_REF_PROPRIETARY,
+                &#34;name&#34;: None,
+                &#34;is_osi_approved&#34;: None,
+                &#34;summary&#34;: None,
+                &#34;permissions&#34;: (),
+                &#34;conditions&#34;: (),
+                &#34;limitations&#34;: (),
+                &#34;osadl_obligations&#34;: None,
+                &#34;is_proprietary&#34;: True,
+            }
+        )
+
+    spdx_details = fetch_spdx_licence_details(resolved_identifier) or {}
+    choosealicense = fetch_choosealicense_metadata(resolved_identifier)
+    osadl = fetch_osadl_obligations(resolved_identifier)
+    return _render_licence_obligations_report(
+        {
+            &#34;identifier&#34;: resolved_identifier,
+            &#34;name&#34;: spdx_details.get(SPDX_NAME_KEY) if isinstance(spdx_details.get(SPDX_NAME_KEY), str) else None,
+            &#34;is_osi_approved&#34;: (
+                &#34;yes&#34;
+                if spdx_details.get(SPDX_IS_OSI_APPROVED_KEY) is True
+                else &#34;no&#34; if spdx_details.get(SPDX_IS_OSI_APPROVED_KEY) is False else None
+            ),
+            &#34;summary&#34;: choosealicense.summary if choosealicense else None,
+            &#34;permissions&#34;: choosealicense.permissions if choosealicense else (),
+            &#34;conditions&#34;: choosealicense.conditions if choosealicense else (),
+            &#34;limitations&#34;: choosealicense.limitations if choosealicense else (),
+            &#34;osadl_obligations&#34;: osadl.splitlines() if osadl else None,
+            &#34;is_proprietary&#34;: False,
+        }
+    )</code></pre>
+</details>
+<div class="desc"><p>Return a human-readable obligations summary for one project licence.</p>
+<p>The rendered report combines:
+- SPDX.org licence metadata
+- choosealicense.com summary data
+- OSADL obligations text</p>
+<p>This workflow only supports projects configured with one exact SPDX licence
+identifier.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ensure_project_licence_file_conforms"><code class="name flex">
+<span>def <span class="ident">ensure_project_licence_file_conforms</span></span>(<span>create_if_missing: bool, update_if_mismatched: bool = False) ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ensure_project_licence_file_conforms(create_if_missing: bool, update_if_mismatched: bool = False) -&gt; Path:
+    &#34;&#34;&#34;Ensure the configured project licence file exists and matches the configured SPDX identifier.
+
+    For non-proprietary single-identifier projects, the file content is checked
+    against canonical public licence text fetched from the supported services.
+    For proprietary projects, this helper only verifies presence because CDS has
+    no public canonical reference text to compare against.
+    &#34;&#34;&#34;
+    identifier = get_project_licence_identifier()
+    licence_file = get_project_licence_file_path()
+    if is_proprietary_licence(identifier):
+        if licence_file.exists() and licence_file.is_file():
+            return licence_file
+        raise ValueError(f&#34;The project uses a proprietary licence. The author must provide {licence_file} manually.&#34;)
+    fetched = fetch_project_licence_text(identifier)
+    if not fetched:
+        raise ValueError(
+            f&#34;Could not fetch licence text for {identifier} from ScanCode LicenseDB, SPDX.org, &#34;
+            &#34;GitHub API, or choosealicense.com.&#34;
+        )
+    if licence_file.exists():
+        if not licence_file.is_file():
+            raise ValueError(f&#34;Configured licence path exists but is not a file: {licence_file}&#34;)
+        actual_text = licence_file.read_text(encoding=&#34;utf8&#34;)
+        if _normalise_licence_text_for_comparison(actual_text) != _normalise_licence_text_for_comparison(fetched.text):
+            _log_licence_text_diff(actual_text, fetched.text, licence_file, fetched.source)
+            if update_if_mismatched:
+                licence_file.write_text(fetched.text.rstrip() + &#34;\n&#34;, encoding=&#34;utf8&#34;)
+                print(f&#34;Updated {licence_file} from {fetched.source}: {fetched.url}&#34;)
+                return licence_file
+            raise ValueError(f&#34;Configured SPDX identifier {identifier} does not match the contents of {licence_file}.&#34;)
+        return licence_file
+    if not create_if_missing:
+        raise ValueError(f&#34;Configured SPDX identifier {identifier} requires a project licence file at {licence_file}.&#34;)
+    licence_file.parent.mkdir(parents=True, exist_ok=True)
+    licence_file.write_text(fetched.text.rstrip() + &#34;\n&#34;, encoding=&#34;utf8&#34;)
+    print(f&#34;Created {licence_file} from {fetched.source}: {fetched.url}&#34;)
+    return licence_file</code></pre>
+</details>
+<div class="desc"><p>Ensure the configured project licence file exists and matches the configured SPDX identifier.</p>
+<p>For non-proprietary single-identifier projects, the file content is checked
+against canonical public licence text fetched from the supported services.
+For proprietary projects, this helper only verifies presence because CDS has
+no public canonical reference text to compare against.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.fetch_choosealicense_metadata"><code class="name flex">
+<span>def <span class="ident">fetch_choosealicense_metadata</span></span>(<span>identifier: str) ‑> <a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata">ChooseALicenseMetadata</a> | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_choosealicense_metadata(identifier: str) -&gt; Optional[ChooseALicenseMetadata]:
+    &#34;&#34;&#34;Fetch descriptive choosealicense.com metadata when supported.
+
+    This is used for the user-facing permissions/conditions/limitations summary.
+
+    Reference: https://choosealicense.com/
+    &#34;&#34;&#34;
+    for slug in _choosealicense_slugs(identifier):
+        url = f&#34;https://choosealicense.com/licenses/{slug}/&#34;
+        try:
+            page = _read_text(url)
+            return ChooseALicenseMetadata(
+                summary=_extract_choosealicense_summary(page),
+                permissions=tuple(_extract_choosealicense_list(page, &#34;license-permissions&#34;)),
+                conditions=tuple(_extract_choosealicense_list(page, &#34;license-conditions&#34;)),
+                limitations=tuple(_extract_choosealicense_list(page, &#34;license-limitations&#34;)),
+                text=_extract_choosealicense_text(page),
+                url=url,
+            )
+        except Exception as error:
+            logger.debug(&#34;choosealicense.com metadata unavailable for %s at %s: %s&#34;, identifier, url, error)
+    return None</code></pre>
+</details>
+<div class="desc"><p>Fetch descriptive choosealicense.com metadata when supported.</p>
+<p>This is used for the user-facing permissions/conditions/limitations summary.</p>
+<p>Reference: <a href="https://choosealicense.com/">https://choosealicense.com/</a></p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.fetch_osadl_obligations"><code class="name flex">
+<span>def <span class="ident">fetch_osadl_obligations</span></span>(<span>identifier: str) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_osadl_obligations(identifier: str) -&gt; Optional[str]:
+    &#34;&#34;&#34;Fetch the OSADL checklist text for one identifier when available.
+
+    Reference: https://www.osadl.org/License-Checklists.oss-compliance-lists.0.html
+    &#34;&#34;&#34;
+    try:
+        return normalise_licence_text(
+            _read_text(f&#34;https://www.osadl.org/fileadmin/checklists/unreflicenses/{identifier}.txt&#34;)
+        )
+    except Exception as error:
+        logger.debug(&#34;OSADL obligations unavailable for %s: %s&#34;, identifier, error)
+        return None</code></pre>
+</details>
+<div class="desc"><p>Fetch the OSADL checklist text for one identifier when available.</p>
+<p>Reference: <a href="https://www.osadl.org/License-Checklists.oss-compliance-lists.0.html">https://www.osadl.org/License-Checklists.oss-compliance-lists.0.html</a></p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.fetch_project_licence_text"><code class="name flex">
+<span>def <span class="ident">fetch_project_licence_text</span></span>(<span>identifier: str) ‑> <a title="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText" href="#continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText">RetrievedProjectLicenceText</a> | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_project_licence_text(identifier: str) -&gt; Optional[RetrievedProjectLicenceText]:
+    &#34;&#34;&#34;Fetch canonical licence text for one SPDX identifier from public sources.
+
+    Source order:
+    1. ScanCode LicenseDB
+    2. SPDX.org
+    3. GitHub licences API
+    4. choosealicense.com
+    &#34;&#34;&#34;
+    for fetcher in (
+        _fetch_scancode_licence_text,
+        _fetch_spdx_licence_text,
+        _fetch_github_licence_text,
+        _fetch_choosealicense_licence_text,
+    ):
+        try:
+            result = fetcher(identifier)
+        except Exception as error:
+            logger.debug(&#34;Could not fetch %s from %s: %s&#34;, identifier, fetcher.__name__, error)
+            continue
+        if result and result.text.strip():
+            return result
+    return None</code></pre>
+</details>
+<div class="desc"><p>Fetch canonical licence text for one SPDX identifier from public sources.</p>
+<p>Source order:
+1. ScanCode LicenseDB
+2. SPDX.org
+3. GitHub licences API
+4. choosealicense.com</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.fetch_spdx_licence_details"><code class="name flex">
+<span>def <span class="ident">fetch_spdx_licence_details</span></span>(<span>identifier: str) ‑> Dict[str, object] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_spdx_licence_details(identifier: str) -&gt; Optional[Dict[str, object]]:
+    &#34;&#34;&#34;Fetch SPDX licence metadata for one identifier.
+
+    Reference: https://spdx.org/licenses/
+    &#34;&#34;&#34;
+    try:
+        return _read_json(f&#34;https://spdx.org/licenses/{identifier}.json&#34;)
+    except Exception as error:
+        logger.debug(&#34;SPDX licence details unavailable for %s: %s&#34;, identifier, error)
+        return None</code></pre>
+</details>
+<div class="desc"><p>Fetch SPDX licence metadata for one identifier.</p>
+<p>Reference: <a href="https://spdx.org/licenses/">https://spdx.org/licenses/</a></p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.get_project_licence_file_path"><code class="name flex">
+<span>def <span class="ident">get_project_licence_file_path</span></span>(<span>) ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_project_licence_file_path() -&gt; Path:
+    &#34;&#34;&#34;Resolve the configured path of the project licence file.
+
+    The default configuration is ``LICENSE`` at the project root.
+    &#34;&#34;&#34;
+    configured_path = Path(str(configuration.get_value(ConfigurationVariable.LICENCE_FILE_PATH)).strip())
+    if configured_path.is_absolute():
+        return configured_path
+    return Path(str(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))).joinpath(configured_path)</code></pre>
+</details>
+<div class="desc"><p>Resolve the configured path of the project licence file.</p>
+<p>The default configuration is <code>LICENSE</code> at the project root.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.get_project_licence_identifier"><code class="name flex">
+<span>def <span class="ident">get_project_licence_identifier</span></span>(<span>identifier: str | None = None) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_project_licence_identifier(identifier: Optional[str] = None) -&gt; str:
+    &#34;&#34;&#34;Return the project&#39;s single SPDX licence identifier.
+
+    This helper accepts one exact SPDX identifier only. Compound expressions are
+    intentionally rejected for commands whose output assumes one canonical text
+    or one obligations profile.
+
+    References:
+    - https://spdx.org/licenses/
+    - https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/
+    &#34;&#34;&#34;
+    raw_identifier: str = identifier or str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
+    normalised_identifier: str = normalise_proprietary_licence(raw_identifier.strip())
+    if is_proprietary_licence(raw_identifier):
+        return normalised_identifier
+    if not has_single_project_licence_identifier(raw_identifier):
+        raise ValueError(
+            &#34;This command only covers one exact SPDX licence identifier and does not cover &#34;
+            &#34;compound licence expressions such as AND, OR, or WITH.&#34;
+        )
+    licence = OPENSOURCE_LICENCES.get_licence(normalised_identifier, allow_fuzzy=False)
+    if not licence or licence.identifier != normalised_identifier:
+        raise ValueError(f&#34;&#39;{normalised_identifier}&#39; is not a recognised SPDX licence identifier.&#34;)
+    return normalised_identifier</code></pre>
+</details>
+<div class="desc"><p>Return the project's single SPDX licence identifier.</p>
+<p>This helper accepts one exact SPDX identifier only. Compound expressions are
+intentionally rejected for commands whose output assumes one canonical text
+or one obligations profile.</p>
+<p>References:
+- <a href="https://spdx.org/licenses/">https://spdx.org/licenses/</a>
+- <a href="https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/">https://spdx.github.io/spdx-spec/v2.3/SPDX-license-expressions/</a></p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.has_single_project_licence_identifier"><code class="name flex">
+<span>def <span class="ident">has_single_project_licence_identifier</span></span>(<span>identifier: str | None = None) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def has_single_project_licence_identifier(identifier: Optional[str] = None) -&gt; bool:
+    &#34;&#34;&#34;Return whether the configured project licence is one exact identifier.
+
+    This excludes compound SPDX expressions such as ``AND``, ``OR``, and
+    ``WITH`` because the project-level licence-file and obligations workflows
+    in this module only cover one canonical licence at a time.
+    &#34;&#34;&#34;
+    raw_identifier: str = identifier or str(configuration.get_value(ConfigurationVariable.FILE_LICENCE_IDENTIFIER))
+    normalised_identifier: str = normalise_proprietary_licence(raw_identifier.strip())
+    if is_proprietary_licence(raw_identifier):
+        return True
+    return not any(token in normalised_identifier for token in (&#34; AND &#34;, &#34; OR &#34;, &#34; WITH &#34;, &#34;(&#34;, &#34;)&#34;))</code></pre>
+</details>
+<div class="desc"><p>Return whether the configured project licence is one exact identifier.</p>
+<p>This excludes compound SPDX expressions such as <code>AND</code>, <code>OR</code>, and
+<code>WITH</code> because the project-level licence-file and obligations workflows
+in this module only cover one canonical licence at a time.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.normalise_licence_text"><code class="name flex">
+<span>def <span class="ident">normalise_licence_text</span></span>(<span>text: str) ‑> str</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def normalise_licence_text(text: str) -&gt; str:
+    &#34;&#34;&#34;Normalise licence text while preserving meaningful formatting.
+
+    This is a lightweight normalization step used before comparison against
+    canonical public licence texts. It is intentionally simpler than the full
+    SPDX matching guidelines.
+
+    Reference:
+    - https://spdx.github.io/spdx-spec/v2.3/license-matching-guidelines-and-templates/
+    &#34;&#34;&#34;
+    lines = [line.rstrip() for line in html.unescape(text).replace(&#34;\r\n&#34;, &#34;\n&#34;).replace(&#34;\r&#34;, &#34;\n&#34;).split(&#34;\n&#34;)]
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    return &#34;\n&#34;.join(lines)</code></pre>
+</details>
+<div class="desc"><p>Normalise licence text while preserving meaningful formatting.</p>
+<p>This is a lightweight normalization step used before comparison against
+canonical public licence texts. It is intentionally simpler than the full
+SPDX matching guidelines.</p>
+<p>Reference:
+- <a href="https://spdx.github.io/spdx-spec/v2.3/license-matching-guidelines-and-templates/">https://spdx.github.io/spdx-spec/v2.3/license-matching-guidelines-and-templates/</a></p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.sync_project_licence_file"><code class="name flex">
+<span>def <span class="ident">sync_project_licence_file</span></span>(<span>) ‑> pathlib.Path</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sync_project_licence_file() -&gt; Path:
+    &#34;&#34;&#34;Create the configured project licence file when it is missing.
+
+    This workflow only supports projects configured with one exact SPDX licence
+    identifier.
+    &#34;&#34;&#34;
+    return ensure_project_licence_file_conforms(create_if_missing=True, update_if_mismatched=True)</code></pre>
+</details>
+<div class="desc"><p>Create the configured project licence file when it is missing.</p>
+<p>This workflow only supports projects configured with one exact SPDX licence
+identifier.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata"><code class="flex name class">
+<span>class <span class="ident">ChooseALicenseMetadata</span></span>
+<span>(</span><span>summary: str | None,<br>permissions: tuple[str, ...],<br>conditions: tuple[str, ...],<br>limitations: tuple[str, ...],<br>text: str | None,<br>url: str | None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(frozen=True)
+class ChooseALicenseMetadata:
+    &#34;&#34;&#34;Summary information exposed by choosealicense.com.
+
+    Reference: https://choosealicense.com/
+    &#34;&#34;&#34;
+
+    summary: Optional[str]
+    permissions: tuple[str, ...]
+    conditions: tuple[str, ...]
+    limitations: tuple[str, ...]
+    text: Optional[str]
+    url: Optional[str]</code></pre>
+</details>
+<div class="desc"><p>Summary information exposed by choosealicense.com.</p>
+<p>Reference: <a href="https://choosealicense.com/">https://choosealicense.com/</a></p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.conditions"><code class="name">var <span class="ident">conditions</span> : tuple[str, ...]</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.limitations"><code class="name">var <span class="ident">limitations</span> : tuple[str, ...]</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.permissions"><code class="name">var <span class="ident">permissions</span> : tuple[str, ...]</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.summary"><code class="name">var <span class="ident">summary</span> : str | None</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.text"><code class="name">var <span class="ident">text</span> : str | None</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.url"><code class="name">var <span class="ident">url</span> : str | None</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText"><code class="flex name class">
+<span>class <span class="ident">RetrievedProjectLicenceText</span></span>
+<span>(</span><span>identifier: str, text: str, source: str, url: str)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclass(frozen=True)
+class RetrievedProjectLicenceText:
+    &#34;&#34;&#34;Text fetched for a project licence file from a public source.
+
+    The text may come from ScanCode LicenseDB, SPDX.org, the GitHub licences
+    API, or choosealicense.com.
+    &#34;&#34;&#34;
+
+    identifier: str
+    text: str
+    source: str
+    url: str</code></pre>
+</details>
+<div class="desc"><p>Text fetched for a project licence file from a public source.</p>
+<p>The text may come from ScanCode LicenseDB, SPDX.org, the GitHub licences
+API, or choosealicense.com.</p></div>
+<h3>Instance variables</h3>
+<dl>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.identifier"><code class="name">var <span class="ident">identifier</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.source"><code class="name">var <span class="ident">source</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.text"><code class="name">var <span class="ident">text</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.url"><code class="name">var <span class="ident">url</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The type of the None singleton.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar"><a href="../guides/index.html">Task guides</a> · 
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="continuous_delivery_scripts.spdx_report" href="index.html">continuous_delivery_scripts.spdx_report</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.describe_licence_obligations" href="#continuous_delivery_scripts.spdx_report.project_licensing.describe_licence_obligations">describe_licence_obligations</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ensure_project_licence_file_conforms" href="#continuous_delivery_scripts.spdx_report.project_licensing.ensure_project_licence_file_conforms">ensure_project_licence_file_conforms</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.fetch_choosealicense_metadata" href="#continuous_delivery_scripts.spdx_report.project_licensing.fetch_choosealicense_metadata">fetch_choosealicense_metadata</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.fetch_osadl_obligations" href="#continuous_delivery_scripts.spdx_report.project_licensing.fetch_osadl_obligations">fetch_osadl_obligations</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.fetch_project_licence_text" href="#continuous_delivery_scripts.spdx_report.project_licensing.fetch_project_licence_text">fetch_project_licence_text</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.fetch_spdx_licence_details" href="#continuous_delivery_scripts.spdx_report.project_licensing.fetch_spdx_licence_details">fetch_spdx_licence_details</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.get_project_licence_file_path" href="#continuous_delivery_scripts.spdx_report.project_licensing.get_project_licence_file_path">get_project_licence_file_path</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.get_project_licence_identifier" href="#continuous_delivery_scripts.spdx_report.project_licensing.get_project_licence_identifier">get_project_licence_identifier</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.has_single_project_licence_identifier" href="#continuous_delivery_scripts.spdx_report.project_licensing.has_single_project_licence_identifier">has_single_project_licence_identifier</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.normalise_licence_text" href="#continuous_delivery_scripts.spdx_report.project_licensing.normalise_licence_text">normalise_licence_text</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.sync_project_licence_file" href="#continuous_delivery_scripts.spdx_report.project_licensing.sync_project_licence_file">sync_project_licence_file</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata">ChooseALicenseMetadata</a></code></h4>
+<ul class="two-column">
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.conditions" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.conditions">conditions</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.limitations" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.limitations">limitations</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.permissions" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.permissions">permissions</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.summary" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.summary">summary</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.text" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.text">text</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.url" href="#continuous_delivery_scripts.spdx_report.project_licensing.ChooseALicenseMetadata.url">url</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText" href="#continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText">RetrievedProjectLicenceText</a></code></h4>
+<ul class="">
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.identifier" href="#continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.identifier">identifier</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.source" href="#continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.source">source</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.text" href="#continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.text">text</a></code></li>
+<li><code><a title="continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.url" href="#continuous_delivery_scripts.spdx_report.project_licensing.RetrievedProjectLicenceText.url">url</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>

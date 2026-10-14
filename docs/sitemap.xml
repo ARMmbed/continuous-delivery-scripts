@@ -17,6 +17,9 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/create_news_file.html</loc>
   </url>
   <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/describe_licence_obligations.html</loc>
+  </url>
+  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/detect_secrets.html</loc>
   </url>
   <url>
@@ -119,6 +122,9 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/spdx_report/licence_assessment.html</loc>
   </url>
   <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/spdx_report/project_licensing.html</loc>
+  </url>
+  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/spdx_report/scancode_licence_db.html</loc>
   </url>
   <url>
@@ -141,6 +147,9 @@
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/spdx_report/spdx_summary.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/sync_project_licence.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/tag_and_release.html</loc>

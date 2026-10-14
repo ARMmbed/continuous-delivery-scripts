@@ -81,6 +81,8 @@ el.replaceWith(d);
     set_log_level(args.verbose)
 
     try:
+        if has_single_project_licence_identifier():
+            ensure_project_licence_file_conforms(create_if_missing=False)
         plugin = get_language_specifics()
         if not plugin.can_get_project_metadata():
             raise ValueError(&#34;The selected language plugin cannot provide metadata for licence compliance checks.&#34;)

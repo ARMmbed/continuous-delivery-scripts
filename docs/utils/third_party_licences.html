@@ -213,6 +213,20 @@ The idea is to return an equivalent expression but using SPDX identifiers when p
 </details>
 <div class="desc"><p>Determines whether the licence expressed is valid with regards to project's accepted licences.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.third_party_licences.is_proprietary_licence"><code class="name flex">
+<span>def <span class="ident">is_proprietary_licence</span></span>(<span>licence_expression: str) ‑> bool</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def is_proprietary_licence(licence_expression: str) -&gt; bool:
+    &#34;&#34;&#34;Return whether a licence declaration resolves to the proprietary SPDX reference.&#34;&#34;&#34;
+    return normalise_proprietary_licence(licence_expression.strip()) == LICENSE_REF_PROPRIETARY</code></pre>
+</details>
+<div class="desc"><p>Return whether a licence declaration resolves to the proprietary SPDX reference.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.third_party_licences.iter_licenses"><code class="name flex">
 <span>def <span class="ident">iter_licenses</span></span>(<span>licence_info: dict) ‑> Iterable[<a title="continuous_delivery_scripts.utils.third_party_licences.Licence" href="#continuous_delivery_scripts.utils.third_party_licences.Licence">Licence</a>]</span>
 </code></dt>
@@ -552,6 +566,7 @@ class Licence:
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.determine_whether_licence_expression_is_compliant" href="#continuous_delivery_scripts.utils.third_party_licences.determine_whether_licence_expression_is_compliant">determine_whether_licence_expression_is_compliant</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.get_allowed_opensource_licences" href="#continuous_delivery_scripts.utils.third_party_licences.get_allowed_opensource_licences">get_allowed_opensource_licences</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.is_licence_accepted" href="#continuous_delivery_scripts.utils.third_party_licences.is_licence_accepted">is_licence_accepted</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.third_party_licences.is_proprietary_licence" href="#continuous_delivery_scripts.utils.third_party_licences.is_proprietary_licence">is_proprietary_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.iter_licenses" href="#continuous_delivery_scripts.utils.third_party_licences.iter_licenses">iter_licenses</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.normalise_proprietary_licence" href="#continuous_delivery_scripts.utils.third_party_licences.normalise_proprietary_licence">normalise_proprietary_licence</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.third_party_licences.parse_licence" href="#continuous_delivery_scripts.utils.third_party_licences.parse_licence">parse_licence</a></code></li>

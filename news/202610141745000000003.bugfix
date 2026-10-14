@@ -1,1 +1,0 @@
-:hammer_and_wrench: Make `cd-check-licence-compliance` validate a configured single project licence file before dependency compliance checks.
