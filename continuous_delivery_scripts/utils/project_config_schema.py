@@ -10,7 +10,7 @@ import uuid
 from dataclasses import dataclass
 from importlib import resources
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, Optional
+from typing import Any, Callable, Dict, Optional
 
 import toml
 
