@@ -1,0 +1,50 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Check CDS project configuration</title>
+  <meta name="description" content="Check CDS project configuration — Continuous Delivery Scripts.">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "Check CDS project configuration", "description": "Check CDS project configuration \u2014 Continuous Delivery Scripts.", "url": "https://armmbed.github.io/continuous-delivery-scripts/guides/checking-project-configuration.html"}</script>
+</head>
+<body>
+  <nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav>
+  <main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Check CDS project configuration</h1>
+<h2>Problem and when to use it</h2>
+<p>Use <code>cd-check-project-config</code> when you want to validate the CDS-specific
+<code>[ProjectConfig]</code> section in <code>pyproject.toml</code> before running other delivery
+commands. It is useful when setting up a project, reviewing configuration
+changes, or debugging why another CDS command fails early.</p>
+<p>The command checks the configuration keys CDS understands, validates expected
+types, verifies some formats such as regexes, URLs and UUIDs, and reuses the
+existing validation for licence-assessment policy overrides.</p>
+<h2>Inputs and example</h2>
+<p>Run the command in a repository with <code>pyproject.toml</code>:</p>
+<pre><code class="language-bash">cd-check-project-config
+</code></pre>
+<p>To validate a specific file path instead of the nearest project config:</p>
+<pre><code class="language-bash">cd-check-project-config --config-file path/to/pyproject.toml
+</code></pre>
+<h2>Output</h2>
+<p>The command prints <code>Project configuration is valid.</code> when the configuration
+passes validation. It fails if CDS finds unknown <code>ProjectConfig</code> keys, invalid
+types, malformed values, or invalid licence-assessment policy settings.</p>
+<p>Use it before <a href="checking-licence-compliance.html"><code>cd-check-licence-compliance</code></a>,
+<a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a> or
+<a href="automating-releases.html"><code>cd-tag-and-release</code></a> when configuration changes are
+part of the work.</p></main>
+</body>
+</html>

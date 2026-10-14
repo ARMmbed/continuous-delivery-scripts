@@ -14,6 +14,9 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/check_licence_compliance.html</loc>
   </url>
   <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/check_project_config.html</loc>
+  </url>
+  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/create_news_file.html</loc>
   </url>
   <url>
@@ -50,7 +53,13 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/checking-news-fragments.html</loc>
   </url>
   <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/checking-project-configuration.html</loc>
+  </url>
+  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/creating-news-fragments.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/describing-project-licence-obligations.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html</loc>
@@ -75,6 +84,9 @@
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/recording-secrets.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/syncing-project-licence.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html</loc>
@@ -207,6 +219,9 @@
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/package_helpers.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/project_config_schema.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/utils/python/index.html</loc>

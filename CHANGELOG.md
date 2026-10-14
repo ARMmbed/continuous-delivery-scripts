@@ -17,6 +17,21 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.7.0 (2026-10-14)
+
+## Features
+
+- :mag: Add `cd-check-project-config` to validate CDS `ProjectConfig` values and licence-assessment policy settings. (#202610141910000000001)
+
+## Bugfixes
+
+- :link: Link the project licence shown in the HTML third-party report to the configured repository licence file. (#202610142015000000001)
+
+## Improved Documentation
+
+- :books: Add guides for checking project configuration and for the project licence sync and obligations commands. (#202610142140000000001)
+
+
 # 4.6.0 (2026-10-14)
 
 ## Features

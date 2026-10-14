@@ -27,6 +27,10 @@ SPDX-License-Identifier: Apache-2.0
 <p>Use <code>cd-check-licence-compliance</code> as a CI gate or local check when you need to
 assess the project and its dependencies against the configured licence policy
 without generating SPDX documents. The command writes no files by default.</p>
+<p>When <code>FILE_LICENCE_IDENTIFIER</code> is one exact SPDX identifier, CDS also checks
+that the configured project licence file exists and matches that identifier
+before dependency compliance runs. Compound licence expressions skip this
+project-file check.</p>
 <h2>Inputs and example</h2>
 <p>Select a language plugin that provides project metadata. Configure
 <code>ACCEPTED_THIRD_PARTY_LICENCES</code> and any documented manual reviews in
@@ -64,7 +68,9 @@ for the limits and report provenance.</p>
 <p>To generate SPDX tag-value documents as well as reports, use
 <a href="generating-an-spdx-sbom.html"><code>cd-generate-spdx</code></a>. See
 <a href="third-party-ip-reporting.html">third-party IP reporting</a> for more on reviewing
-the summaries and <a href="reading-project-configuration.html">project configuration</a>
-for the shared settings.</p></main>
+the summaries, <a href="reading-project-configuration.html">project configuration</a>
+for the shared settings, and
+<a href="syncing-project-licence.html">syncing the project licence file</a> for the
+top-level project licence workflow.</p></main>
 </body>
 </html>

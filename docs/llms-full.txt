@@ -24,6 +24,8 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 
 - [Assess dependency licence risks](https://armmbed.github.io/continuous-delivery-scripts/guides/assessing-dependency-licences.html): Review directional, explainable licence screening and optional project policy overrides.
 - [Check licence compliance](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html): Gate a project without generating SPDX files; optionally write reports.
+- [Sync the project licence file](https://armmbed.github.io/continuous-delivery-scripts/guides/syncing-project-licence.html): Create or refresh the top-level project licence file from the configured SPDX identifier.
+- [Describe project licence obligations](https://armmbed.github.io/continuous-delivery-scripts/guides/describing-project-licence-obligations.html): Summarise obligations for the configured project licence.
 - [Generate an SPDX SBOM](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html): Produce project and dependency SPDX tag-value documents.
 - [Generate a third-party IP / TPIP report](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html): Review dependency licences and compliance summaries.
 - [Manage licence headers](https://armmbed.github.io/continuous-delivery-scripts/guides/licence-header-management.html): Apply copyright and SPDX headers to source files.
@@ -39,6 +41,7 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 ### Other project checks
 
 - [Generate code documentation](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-code-documentation.html): Build the API reference.
+- [Check project configuration](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-project-configuration.html): Validate CDS `ProjectConfig` values before running other commands.
 - [Read project configuration](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html): Reuse values in scripts and CI.
 - [Record accepted secret findings](https://armmbed.github.io/continuous-delivery-scripts/guides/recording-secrets.html): Maintain the detect-secrets baseline.
 - [Check for new secrets](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-for-secrets.html): Scan Git-tracked files in CI.
@@ -450,6 +453,11 @@ Use `cd-check-licence-compliance` as a CI gate or local check when you need to
 assess the project and its dependencies against the configured licence policy
 without generating SPDX documents. The command writes no files by default.
 
+When `FILE_LICENCE_IDENTIFIER` is one exact SPDX identifier, CDS also checks
+that the configured project licence file exists and matches that identifier
+before dependency compliance runs. Compound licence expressions skip this
+project-file check.
+
 ### Inputs and example
 
 Select a language plugin that provides project metadata. Configure
@@ -498,8 +506,10 @@ for the limits and report provenance.
 To generate SPDX tag-value documents as well as reports, use
 [`cd-generate-spdx`](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html). See
 [third-party IP reporting](https://armmbed.github.io/continuous-delivery-scripts/guides/third-party-ip-reporting.html) for more on reviewing
-the summaries and [project configuration](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html)
-for the shared settings.
+the summaries, [project configuration](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html)
+for the shared settings, and
+[syncing the project licence file](https://armmbed.github.io/continuous-delivery-scripts/guides/syncing-project-licence.html) for the
+top-level project licence workflow.
 
 
 ## Require a valid news fragment on a branch
@@ -588,6 +598,50 @@ See the repository's [CI example](https://github.com/ARMmbed/continuous-delivery
 for the branch argument and token configuration.
 
 
+## Check CDS project configuration
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+### Problem and when to use it
+
+Use `cd-check-project-config` when you want to validate the CDS-specific
+`[ProjectConfig]` section in `pyproject.toml` before running other delivery
+commands. It is useful when setting up a project, reviewing configuration
+changes, or debugging why another CDS command fails early.
+
+The command checks the configuration keys CDS understands, validates expected
+types, verifies some formats such as regexes, URLs and UUIDs, and reuses the
+existing validation for licence-assessment policy overrides.
+
+### Inputs and example
+
+Run the command in a repository with `pyproject.toml`:
+
+```bash
+cd-check-project-config
+```
+
+To validate a specific file path instead of the nearest project config:
+
+```bash
+cd-check-project-config --config-file path/to/pyproject.toml
+```
+
+### Output
+
+The command prints `Project configuration is valid.` when the configuration
+passes validation. It fails if CDS finds unknown `ProjectConfig` keys, invalid
+types, malformed values, or invalid licence-assessment policy settings.
+
+Use it before [`cd-check-licence-compliance`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html),
+[`cd-generate-spdx`](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html) or
+[`cd-tag-and-release`](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) when configuration changes are
+part of the work.
+
+
 ## Create a news fragment for a change
 
 <!--
@@ -636,6 +690,52 @@ create one for an automated change after checkout and installation:
 
 The workflow must commit and push the file if it should appear in a PR.
 Related command: [`cd-assert-news`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-news-fragments.html).
+
+
+## Describe project licence obligations
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+### Problem and when to use it
+
+Use `cd-describe-licence-obligations` when you want a quick human-readable
+summary of the obligations attached to the project's configured licence.
+
+The command resolves the project licence from `FILE_LICENCE_IDENTIFIER` and
+combines data from SPDX.org, choosealicense.com and OSADL to explain the
+licence in practical terms.
+
+This command only covers projects configured with one exact SPDX identifier. It
+does not cover compound expressions such as `Apache-2.0 OR MIT`.
+
+### Inputs and example
+
+Configure `FILE_LICENCE_IDENTIFIER` in `[ProjectConfig]` and run:
+
+```bash
+cd-describe-licence-obligations
+```
+
+### Output
+
+The command prints a text report including:
+
+- the SPDX identifier and licence name
+- OSI approval when available
+- choosealicense.com summary information
+- permissions, conditions and limitations when available
+- OSADL checklist obligations when available
+
+For proprietary projects, CDS reports that the author must provide the full
+licence text and that obligations need manual review against the custom terms.
+
+Related commands:
+
+- [`cd-sync-project-licence`](https://armmbed.github.io/continuous-delivery-scripts/guides/syncing-project-licence.html)
+- [`cd-check-licence-compliance`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html)
 
 
 ## Generate an SPDX SBOM for a software project
@@ -1012,6 +1112,62 @@ For a reviewed baseline refresh, after checkout and installation:
 ```
 
 Commit the change only after reviewing accepted findings.
+
+
+## Sync the top-level project licence file
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+### Problem and when to use it
+
+Use `cd-sync-project-licence` when a project has one exact SPDX licence
+identifier in `FILE_LICENCE_IDENTIFIER` and you want CDS to create or refresh
+the repository's top-level licence file from canonical public licence text.
+
+This is useful when bootstrapping a project, standardising an existing
+`LICENSE` file, or correcting drift before a release or compliance check.
+
+The command only covers projects configured with one exact SPDX identifier. It
+does not cover compound expressions such as `MIT OR Apache-2.0`.
+
+### Inputs and example
+
+Configure:
+
+- `FILE_LICENCE_IDENTIFIER`
+- `LICENCE_FILE_PATH` (defaults to `LICENSE`)
+
+Then run:
+
+```bash
+cd-sync-project-licence
+```
+
+CDS fetches canonical text in this order when needed:
+
+1. [ScanCode LicenseDB](https://scancode-licensedb.aboutcode.org/)
+2. [SPDX.org](https://spdx.org/licenses/)
+3. GitHub licences API
+4. [choosealicense.com](https://choosealicense.com/)
+
+### Output
+
+If the file is missing, CDS creates it. If the file exists but differs from the
+canonical text, CDS shows a diff in verbose mode and rewrites it. If the file
+already matches, the command reports success without changing it.
+
+For a proprietary project, CDS cannot fetch canonical text and instead requires
+the author to provide the licence file manually.
+
+Related commands:
+
+- [`cd-check-licence-compliance`](https://armmbed.github.io/continuous-delivery-scripts/guides/checking-licence-compliance.html) for strict
+  project and dependency licence checks
+- [`cd-describe-licence-obligations`](https://armmbed.github.io/continuous-delivery-scripts/guides/describing-project-licence-obligations.html)
+  for a summary of obligations
 
 
 ## Generate a third-party IP (TPIP) and licence report

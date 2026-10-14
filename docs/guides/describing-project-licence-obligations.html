@@ -1,0 +1,55 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Describe project licence obligations</title>
+  <meta name="description" content="Describe project licence obligations — Continuous Delivery Scripts.">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "Describe project licence obligations", "description": "Describe project licence obligations \u2014 Continuous Delivery Scripts.", "url": "https://armmbed.github.io/continuous-delivery-scripts/guides/describing-project-licence-obligations.html"}</script>
+</head>
+<body>
+  <nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav>
+  <main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Describe project licence obligations</h1>
+<h2>Problem and when to use it</h2>
+<p>Use <code>cd-describe-licence-obligations</code> when you want a quick human-readable
+summary of the obligations attached to the project's configured licence.</p>
+<p>The command resolves the project licence from <code>FILE_LICENCE_IDENTIFIER</code> and
+combines data from SPDX.org, choosealicense.com and OSADL to explain the
+licence in practical terms.</p>
+<p>This command only covers projects configured with one exact SPDX identifier. It
+does not cover compound expressions such as <code>Apache-2.0 OR MIT</code>.</p>
+<h2>Inputs and example</h2>
+<p>Configure <code>FILE_LICENCE_IDENTIFIER</code> in <code>[ProjectConfig]</code> and run:</p>
+<pre><code class="language-bash">cd-describe-licence-obligations
+</code></pre>
+<h2>Output</h2>
+<p>The command prints a text report including:</p>
+<ul>
+<li>the SPDX identifier and licence name</li>
+<li>OSI approval when available</li>
+<li>choosealicense.com summary information</li>
+<li>permissions, conditions and limitations when available</li>
+<li>OSADL checklist obligations when available</li>
+</ul>
+<p>For proprietary projects, CDS reports that the author must provide the full
+licence text and that obligations need manual review against the custom terms.</p>
+<p>Related commands:</p>
+<ul>
+<li><a href="syncing-project-licence.html"><code>cd-sync-project-licence</code></a></li>
+<li><a href="checking-licence-compliance.html"><code>cd-check-licence-compliance</code></a></li>
+</ul></main>
+</body>
+</html>

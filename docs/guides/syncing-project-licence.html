@@ -1,0 +1,64 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sync the top-level project licence file</title>
+  <meta name="description" content="Sync the top-level project licence file — Continuous Delivery Scripts.">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "Sync the top-level project licence file", "description": "Sync the top-level project licence file \u2014 Continuous Delivery Scripts.", "url": "https://armmbed.github.io/continuous-delivery-scripts/guides/syncing-project-licence.html"}</script>
+</head>
+<body>
+  <nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav>
+  <main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Sync the top-level project licence file</h1>
+<h2>Problem and when to use it</h2>
+<p>Use <code>cd-sync-project-licence</code> when a project has one exact SPDX licence
+identifier in <code>FILE_LICENCE_IDENTIFIER</code> and you want CDS to create or refresh
+the repository's top-level licence file from canonical public licence text.</p>
+<p>This is useful when bootstrapping a project, standardising an existing
+<code>LICENSE</code> file, or correcting drift before a release or compliance check.</p>
+<p>The command only covers projects configured with one exact SPDX identifier. It
+does not cover compound expressions such as <code>MIT OR Apache-2.0</code>.</p>
+<h2>Inputs and example</h2>
+<p>Configure:</p>
+<ul>
+<li><code>FILE_LICENCE_IDENTIFIER</code></li>
+<li><code>LICENCE_FILE_PATH</code> (defaults to <code>LICENSE</code>)</li>
+</ul>
+<p>Then run:</p>
+<pre><code class="language-bash">cd-sync-project-licence
+</code></pre>
+<p>CDS fetches canonical text in this order when needed:</p>
+<ol>
+<li><a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a></li>
+<li><a href="https://spdx.org/licenses/">SPDX.org</a></li>
+<li>GitHub licences API</li>
+<li><a href="https://choosealicense.com/">choosealicense.com</a></li>
+</ol>
+<h2>Output</h2>
+<p>If the file is missing, CDS creates it. If the file exists but differs from the
+canonical text, CDS shows a diff in verbose mode and rewrites it. If the file
+already matches, the command reports success without changing it.</p>
+<p>For a proprietary project, CDS cannot fetch canonical text and instead requires
+the author to provide the licence file manually.</p>
+<p>Related commands:</p>
+<ul>
+<li><a href="checking-licence-compliance.html"><code>cd-check-licence-compliance</code></a> for strict
+  project and dependency licence checks</li>
+<li><a href="describing-project-licence-obligations.html"><code>cd-describe-licence-obligations</code></a>
+  for a summary of obligations</li>
+</ul></main>
+</body>
+</html>
