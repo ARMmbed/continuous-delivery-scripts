@@ -48,6 +48,7 @@ setup(
             f"cd-generate-docs={SOURCE_DIR}.generate_docs:main",
             f"cd-tag-and-release={SOURCE_DIR}.tag_and_release:main",
             f"cd-get-config={SOURCE_DIR}.get_config:main",
+            f"cd-check-project-config={SOURCE_DIR}.check_project_config:main",
             f"cd-license-files={SOURCE_DIR}.license_files:main",
             f"cd-sync-project-licence={SOURCE_DIR}.sync_project_licence:main",
             f"cd-describe-licence-obligations={SOURCE_DIR}.describe_licence_obligations:main",
