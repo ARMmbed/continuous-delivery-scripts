@@ -7,7 +7,7 @@
 import re
 from functools import lru_cache
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 
@@ -73,3 +73,15 @@ def github_pages_url(remote: str) -> str | None:
     """Find a verified public Pages site, including a redirected custom domain."""
     candidate = github_pages_candidate(remote)
     return _verified_pages_url(candidate) if candidate else None
+
+
+def github_blob_url(remote: str, branch: str, path: str) -> str | None:
+    """Build a GitHub blob URL for a repository-relative file path."""
+    repository = _github_repository_path(remote)
+    if not repository:
+        return None
+    cleaned = path.replace("\\", "/").strip("/")
+    if not cleaned:
+        return None
+    encoded_path = "/".join(quote(part, safe="") for part in cleaned.split("/"))
+    return f"https://github.com/{repository}/blob/{quote(branch, safe='')}/{encoded_path}"

@@ -145,7 +145,11 @@
             <span class="status status--error">Not compliant</span>
             {% endif %}
             <div class="summary-copy">
+              {% if project.licence_href %}
+              <p>The project is licensed under the <a href="{{ project.licence_href }}"><strong>{{ project.licence }}</strong></a> licence.</p>
+              {% else %}
               <p>The project is licensed under the <strong>{{ project.licence }}</strong> licence.</p>
+              {% endif %}
               {% for point in project.compliance_points %}
               <p>{{ point }}</p>
               {% else %}
