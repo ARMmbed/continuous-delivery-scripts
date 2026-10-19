@@ -68,6 +68,9 @@
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/generating-code-documentation.html</loc>
   </url>
   <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/go-multi-module.html</loc>
+  </url>
+  <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/index.html</loc>
   </url>
   <url>
@@ -75,6 +78,30 @@
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-basic.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-ci.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-docker.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-github-actions.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-golang.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-guides.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-noop.html</loc>
+  </url>
+  <url>
+    <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-python.html</loc>
   </url>
   <url>
     <loc>https://armmbed.github.io/continuous-delivery-scripts/guides/previewing-versions.html</loc>

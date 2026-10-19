@@ -119,6 +119,10 @@ el.replaceWith(d);
         &#34;&#34;&#34;States whether the repository must be cleaned before packaging happens.&#34;&#34;&#34;
         return False
 
+    def prepare_release(self, root: Path, version: str, is_new_version: bool) -&gt; List[Path]:
+        &#34;&#34;&#34;Prepare language-specific files for a new release; return paths to stage.&#34;&#34;&#34;
+        return []
+
     def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -&gt; None:
         &#34;&#34;&#34;Tags release commit.&#34;&#34;&#34;
         logger.info(f&#34;Tagging commit as release {version}&#34;)
@@ -331,6 +335,20 @@ def package_software(self, mode: CommitType, version: str) -&gt; None:
 </details>
 <div class="desc"><p>Package the software so that it can get released.</p></div>
 </dd>
+<dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.prepare_release"><code class="name flex">
+<span>def <span class="ident">prepare_release</span></span>(<span>self, root: pathlib.Path, version: str, is_new_version: bool) ‑> List[pathlib.Path]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_release(self, root: Path, version: str, is_new_version: bool) -&gt; List[Path]:
+    &#34;&#34;&#34;Prepare language-specific files for a new release; return paths to stage.&#34;&#34;&#34;
+    return []</code></pre>
+</details>
+<div class="desc"><p>Prepare language-specific files for a new release; return paths to stage.</p></div>
+</dd>
 <dt id="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository"><code class="name flex">
 <span>def <span class="ident">release_package_to_repository</span></span>(<span>self,<br>mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>,<br>version: str) ‑> None</span>
 </code></dt>
@@ -430,6 +448,7 @@ def release_package_to_repository(self, mode: CommitType, version: str) -&gt; No
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_secret_registry_exclude_files" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_secret_registry_exclude_files">get_secret_registry_exclude_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.package_software">package_software</a></code></li>
+<li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.prepare_release" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.prepare_release">prepare_release</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.release_package_to_repository">release_package_to_repository</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_clean_before_packaging" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_clean_before_packaging">should_clean_before_packaging</a></code></li>
 <li><code><a title="continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package" href="#continuous_delivery_scripts.utils.language_specifics_base.BaseLanguage.should_include_spdx_in_package">should_include_spdx_in_package</a></code></li>

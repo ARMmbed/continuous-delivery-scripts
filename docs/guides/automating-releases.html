@@ -35,7 +35,7 @@ news fragments used to calculate release versions.</p>
 <h2>Inputs and example</h2>
 <p>Run from a configured Git checkout with installed dependencies, a writable
 remote and the credentials required by the selected language plugin. The
-<a href="https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins">plugin documentation</a>
+<a href="plugin-guides.html">plugin guide index</a>
 describes packaging, publication and credential requirements for each language.
 Use a release type of <code>development</code>, <code>beta</code> or <code>release</code>:</p>
 <pre><code class="language-bash">cd-determine-version --release-type release
@@ -47,7 +47,9 @@ does not publish a production release.</p>
 <h2>Output</h2>
 <p>A production release updates release notes, documentation and tags, and the
 plugin publishes its package or other configured output. The exact output
-varies by plugin; see the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/release.yml">release workflow</a>.</p>
+varies by plugin; see the <a href="https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/release.yml">release workflow</a>.
+For Go repositories with several modules, see the
+<a href="plugin-golang.html">Go plugin guides</a>.</p>
 <h2>GitHub Actions example</h2>
 <p>After checkout and installing the project's release dependencies:</p>
 <pre><code class="language-yaml">- run: cd-tag-and-release --release-type release --current-branch &quot;$GITHUB_REF_NAME&quot;

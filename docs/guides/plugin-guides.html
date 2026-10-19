@@ -1,0 +1,42 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Language and project plugin guides</title>
+  <meta name="description" content="Language and project plugin guides — Continuous Delivery Scripts.">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "Language and project plugin guides", "description": "Language and project plugin guides \u2014 Continuous Delivery Scripts.", "url": "https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-guides.html"}</script>
+</head>
+<body>
+  <nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav>
+  <main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Language and project plugin guides</h1>
+<p>CDS uses the project's <code>PROGRAMMING_LANGUAGE</code> setting to select a plugin.
+Start with the landing page for your plugin, then follow its topic guides:</p>
+<ul>
+<li><a href="plugin-basic.html">Basic</a> — Git-based releases without a language-specific package.</li>
+<li><a href="plugin-ci.html">CI</a> — Releases for CI configuration projects.</li>
+<li><a href="plugin-docker.html">Docker</a> — Docker project integration.</li>
+<li><a href="plugin-github-actions.html">GitHub Actions</a> — CI workflow releases with GitHub integration.</li>
+<li><a href="plugin-golang.html">Go</a> — Go releases, modules and dependency preparation.</li>
+<li><a href="plugin-noop.html">No-op</a> — Projects that do not need language-specific steps.</li>
+<li><a href="plugin-python.html">Python</a> — Python package releases and dependency metadata.</li>
+</ul>
+<p>The <a href="automating-releases.html">general release guide</a> describes the shared CDS
+workflow. Add future plugin-specific topic guides as Markdown files under
+<code>guides/</code> and link them from the appropriate plugin landing page; the
+documentation generator publishes these pages alongside the API reference.</p></main>
+</body>
+</html>

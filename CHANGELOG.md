@@ -17,6 +17,22 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.8.0 (2026-10-19)
+
+## Features
+
+- :sparkles: [GO plugin] Update locally resolved internal module requirements to the coordinated project release version before publication. (#20261019)
+
+## Bugfixes
+
+- Dependency upgrade: scorecard-action-2.5.0 (#20261014161739179934764)
+- Dependency upgrade: codeql-action-4.39.0 (#20261019063906245242966)
+
+## Improved Documentation
+
+- :books: Add landing pages for CDS plugins and an index linking their task guides. (#20261019)
+
+
 # 4.7.0 (2026-10-14)
 
 ## Features

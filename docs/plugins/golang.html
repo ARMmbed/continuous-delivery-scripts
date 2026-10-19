@@ -71,6 +71,12 @@ el.replaceWith(d);
         cleansed_version = version.strip().lstrip(&#34;v&#34;)
         return f&#34;v{cleansed_version}&#34;
 
+    def prepare_release(self, root: Path, version: str, is_new_version: bool) -&gt; List[Path]:
+        &#34;&#34;&#34;Synchronise internal requirements only for a new project release.&#34;&#34;&#34;
+        if not is_new_version:
+            return []
+        return _prepare_go_module_requirements(root, self.get_version_tag(version))
+
     def package_software(self, mode: CommitType, version: str) -&gt; None:
         &#34;&#34;&#34;No operation.&#34;&#34;&#34;
         super().package_software(mode, version)
@@ -269,6 +275,22 @@ el.replaceWith(d);
     _call_goreleaser_check(version)</code></pre>
 </details>
 <div class="desc"><p>No operation.</p></div>
+</dd>
+<dt id="continuous_delivery_scripts.plugins.golang.Go.prepare_release"><code class="name flex">
+<span>def <span class="ident">prepare_release</span></span>(<span>self, root: pathlib.Path, version: str, is_new_version: bool) ‑> List[pathlib.Path]</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare_release(self, root: Path, version: str, is_new_version: bool) -&gt; List[Path]:
+    &#34;&#34;&#34;Synchronise internal requirements only for a new project release.&#34;&#34;&#34;
+    if not is_new_version:
+        return []
+    return _prepare_go_module_requirements(root, self.get_version_tag(version))</code></pre>
+</details>
+<div class="desc"><p>Synchronise internal requirements only for a new project release.</p></div>
 </dd>
 <dt id="continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository"><code class="name flex">
 <span>def <span class="ident">release_package_to_repository</span></span>(<span>self,<br>mode: <a title="continuous_delivery_scripts.utils.definitions.CommitType" href="../utils/definitions.html#continuous_delivery_scripts.utils.definitions.CommitType">CommitType</a>,<br>version: str) ‑> None</span>
@@ -469,6 +491,7 @@ el.replaceWith(d);
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.get_secret_registry_exclude_files" href="#continuous_delivery_scripts.plugins.golang.Go.get_secret_registry_exclude_files">get_secret_registry_exclude_files</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.get_version_tag" href="#continuous_delivery_scripts.plugins.golang.Go.get_version_tag">get_version_tag</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.package_software" href="#continuous_delivery_scripts.plugins.golang.Go.package_software">package_software</a></code></li>
+<li><code><a title="continuous_delivery_scripts.plugins.golang.Go.prepare_release" href="#continuous_delivery_scripts.plugins.golang.Go.prepare_release">prepare_release</a></code></li>
 <li><code><a title="continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository" href="#continuous_delivery_scripts.plugins.golang.Go.release_package_to_repository">release_package_to_repository</a></code></li>
 </ul>
 </li>

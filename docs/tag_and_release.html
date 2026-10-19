@@ -119,6 +119,9 @@ success code (0) if successful; failure code otherwise.</p></div>
         raise ValueError(&#34;Undefined version.&#34;)
     if mode == CommitType.DEVELOPMENT:
         return
+    files_changed_by_release_preparation = get_language_specifics().prepare_release(
+        Path(str(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))), version, is_new_version
+    )
     # The documentation folder will be emptied when the documentation is updated
     _update_documentation()
     spdx_project: Optional[&#34;SpdxProject&#34;] = None
@@ -129,7 +132,9 @@ success code (0) if successful; failure code otherwise.</p></div>
         # Add summaries after the documentation output has been cleared and regenerated.
         spdx_project = _update_licensing_summary()
     insert_licence_header(0)
-    _update_repository(mode, is_new_version, version, current_branch, version_elements)
+    _update_repository(
+        mode, is_new_version, version, current_branch, version_elements, files_changed_by_release_preparation
+    )
     if is_new_version:
         if get_language_specifics().should_clean_before_packaging():
             _clean_repository()

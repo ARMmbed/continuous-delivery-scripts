@@ -17,8 +17,8 @@ the ecosystem tools used for project-specific steps. The tools run in a Git
 checkout with a Python environment; they are not tied to one CI provider.
 The [API reference](https://armmbed.github.io/continuous-delivery-scripts/api.html) covers
 the implementation, while these pages focus on inputs, outputs and examples.
-For language-specific packaging, credentials and metadata support, consult
-the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins).
+For language-specific packaging, credentials and metadata support, start with
+the [plugin guide index](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-guides.html).
 
 ### Dependency licences and OpenChain workflows
 
@@ -37,6 +37,10 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 - [Preview a version](https://armmbed.github.io/continuous-delivery-scripts/guides/previewing-versions.html): Calculate a proposed project version.
 - [Generate a changelog](https://armmbed.github.io/continuous-delivery-scripts/guides/managing-changelogs.html): Build release notes from news fragments.
 - [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html): Tag and publish with a language plugin.
+
+### Plugin guides
+
+- [Browse plugin guides](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-guides.html): Select the landing page for your plugin and its topic guides.
 
 ### Other project checks
 
@@ -354,7 +358,7 @@ news fragments used to calculate release versions.
 
 Run from a configured Git checkout with installed dependencies, a writable
 remote and the credentials required by the selected language plugin. The
-[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+[plugin guide index](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-guides.html)
 describes packaging, publication and credential requirements for each language.
 Use a release type of `development`, `beta` or `release`:
 
@@ -372,6 +376,8 @@ does not publish a production release.
 A production release updates release notes, documentation and tags, and the
 plugin publishes its package or other configured output. The exact output
 varies by plugin; see the [release workflow](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/release.yml).
+For Go repositories with several modules, see the
+[Go plugin guides](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-golang.html).
 
 ### GitHub Actions example
 
@@ -876,6 +882,233 @@ After installing the project and its documentation dependencies:
 Related configuration: [`cd-get-config`](https://armmbed.github.io/continuous-delivery-scripts/guides/reading-project-configuration.html).
 
 
+## Go multi-module projects with CDS
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+[Go plugin guides](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-golang.html) · [All plugin guides](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-guides.html)
+
+### Overview
+
+Continuous Delivery Scripts (CDS) releases a **project**, not individual modules.
+One repository can contain several independently consumable Go modules; they all
+share the version calculated by CDS and are released together. The model follows
+[go-openapi/swag](https://github.com/go-openapi/swag): versioned internal
+requirements describe published dependencies, while local replacements support
+development before those versions exist. See also the
+[go-openapi CI workflows](https://github.com/go-openapi/ci-workflows).
+
+### Split a monolithic project
+
+For a project currently using `module github.com/example/my-project`, extract
+packages into their own module directories and give each its own `go.mod`:
+
+```text
+my-project/
+├── go.mod                 # optional root compatibility module
+├── go.work                # optional workspace
+├── core/go.mod
+├── parser/go.mod
+└── validator/go.mod
+```
+
+For example, run `go mod init github.com/example/my-project/core` from `core/`.
+Repeat in each directory, using its actual published module path. A root module
+can remain as a compatibility layer if it still provides the old packages; it
+is not required. Update imports of moved packages yourself, or maintain
+compatibility packages at the old paths. CDS does not rewrite source imports.
+Check the [Go module reference](https://go.dev/ref/mod) and
+[go.mod reference](https://go.dev/doc/modules/gomod-ref) when designing paths.
+
+At the existing release `v1.2.0`, `core/go.mod` could contain:
+
+```go
+module github.com/example/my-project/core
+
+go 1.24
+```
+
+`parser/go.mod` declares the published dependency and a local development path:
+
+```go
+module github.com/example/my-project/parser
+
+go 1.24
+
+require github.com/example/my-project/core v1.2.0
+
+replace github.com/example/my-project/core => ../core
+```
+
+Go uses the local source from `../core` during module-mode development; the
+`require` version describes what an external consumer will resolve. Replacements
+in a dependency's `go.mod` are **not** inherited by that consumer. CDS preserves
+both grouped and individual `replace` directives, and never adds or removes them.
+For independent module-mode builds, provide local replacements for unpublished
+internal versions. Ensure their directories exist and contain the expected
+module's `go.mod`.
+
+Alternatively, create `go.work` at the repository root:
+
+```go
+go 1.24
+
+use (
+    .
+    ./core
+    ./parser
+    ./validator
+)
+```
+
+Omit `.` if there is no root module. An active workspace resolves its listed
+modules locally, even without module-level replacements. Workspace-level
+replacements take precedence over conflicting module-level replacements. CDS
+reads and checks local replacements in `go.work` but does not modify it.
+See the [Go workspace tutorial](https://go.dev/doc/tutorial/workspaces).
+To test a module without workspace resolution, run `GOWORK=off go test ./...`
+from that module's directory; module-level replacements remain active.
+
+### Coordinated release: v1.2.0 → v1.3.0
+
+Suppose `parser` depends on `core`, and `validator` depends on both. Before
+release preparation, `validator/go.mod` contains:
+
+```go
+module github.com/example/my-project/validator
+
+go 1.24
+
+require (
+    github.com/example/my-project/core v1.2.0
+    github.com/example/my-project/parser v1.2.0 // indirect
+    github.com/external/library v1.4.0
+)
+
+replace (
+    github.com/example/my-project/core => ../core
+    github.com/example/my-project/parser => ../parser
+)
+```
+
+CDS calculates the next **project** version `1.3.0` using its existing release
+process.
+
+#### Module selection and eligibility
+
+For a new version, the Go plugin uses the same module selection as
+Go release tagging: the configured `SOURCE_DIR` and project root, plus modules
+listed in `go.work` if present; otherwise, nested modules under `SOURCE_DIR`.
+Set `SOURCE_DIR = "."` for the layout above, or list modules outside the source
+directory in a root or source `go.work`. CDS does not scan other project-root
+subdirectories for modules. It reads each selected `module` declaration using
+Go tooling and matches `require` paths **exactly** against those declarations.
+Modules need not be named after their directories or share a path prefix. A
+duplicate declaration or malformed file among selected modules stops
+preparation with an error.
+
+CDS updates an internal requirement only when the requiring module has a
+`replace` pointing to that exact module **inside this repository**, or the
+requiring module is listed in `go.work use` and the dependency is either also
+listed there or mapped to a repository-local module by a workspace `replace`.
+A version-specific replacement must cover the upcoming version. Otherwise the
+requirement stays unchanged, even if its module path is internal. Add local
+resolution and rerun preparation before publication if that requirement must
+reference the new release version.
+
+#### Result
+
+After preparation, `parser/go.mod` requires `core v1.3.0`; the two internal
+requirements in `validator/go.mod` become:
+
+```go
+require (
+    github.com/example/my-project/core v1.3.0
+    github.com/example/my-project/parser v1.3.0 // indirect
+    github.com/external/library v1.4.0
+)
+```
+
+The local replacements, external dependency, annotations, module and Go
+directives remain intact. Files without eligible outdated requirements are not
+rewritten. CDS stages only changed `go.mod` files with its normal release
+changes. The existing tagging, changelog, versioning and publication steps
+continue without module-specific release scheduling. The project release tag
+is `v1.3.0`; subdirectory modules can also receive path-prefixed tags such as
+`core/v1.3.0`, `parser/v1.3.0` and `validator/v1.3.0`, all on the same commit.
+
+Go's `go mod edit` changes `require` versions without downloading the new
+module versions. Local replacements or the active workspace allow testing
+before those versions are published. CDS does not run `go get` or `go mod tidy`
+and does not fabricate `go.sum` entries. If release validation runs outside
+workspace mode, ensure each unpublished dependency has a local replacement.
+
+### Validate development and publication
+
+From each relevant module, run `go test ./...` with the workspace or valid
+local replacements enabled. Inspect requirements and replacements with
+[`go mod edit -json`](https://go.dev/ref/mod#go-mod-edit); from the workspace
+directory, inspect its configuration with
+[`go work edit -json`](https://go.dev/ref/mod#go-work-edit).
+
+After publication, test actual published resolution in a **separate** consumer
+directory, outside the original workspace and without local replacements:
+
+```bash
+mkdir release-check
+cd release-check
+go mod init example.com/release-check
+go get github.com/example/my-project/validator@v1.3.0
+go mod verify
+go list -m all
+go test ./...
+```
+
+`go test ./...` is meaningful once the consumer contains a Go package that
+imports the released module. This check catches issues hidden by local source
+resolution.
+
+### Major-version migration
+
+Go generally requires a matching `/v2` (or higher) suffix on module paths
+and imports for major version 2 and above. For example:
+
+```go
+module github.com/example/my-project/core/v2
+```
+
+CDS updates eligible, compatible internal dependencies, such as `v2.1.0` →
+`v2.2.0` for `core/v2`. A transition from an unsuffixed `core` at `v1` to `v2.0.0`
+requires manual migration: change module declarations, source imports,
+internal requirement paths and relevant replacements before preparing the
+release. For an eligible internal requirement, CDS warns when it detects a
+major-version transition requiring this migration and refuses to write an
+incompatible version to `go.mod`. It does not migrate source code or release
+modules independently. See
+[Developing a major version update](https://go.dev/doc/modules/major-version).
+
+### Troubleshooting
+
+- **A future version cannot be fetched:** Use a valid local `replace` or a
+  workspace listing the sibling module during preparation and testing.
+- **A `go.mod` was not changed:** Check that CDS selects both module directories,
+  that the `require` path matches the sibling's declaration exactly, and that
+  its replacement or workspace resolution stays inside the repository.
+- **A local replacement fails:** Confirm the target directory contains the
+  correct module's `go.mod`. Workspace `use` entries also need existing
+  module directories.
+- **A consumer fails after publishing:** Local replacements do not propagate
+  to consumers. Test with the isolated consumer above and inspect the released
+  requirements and module tags.
+- **A major-version release fails:** Update semantic import paths and imports
+  manually before running CDS again.
+
+Additional reading: [Go module version numbering](https://go.dev/doc/modules/version-numbers).
+
+
 ## Apply copyright and source licence headers
 
 <!--
@@ -968,6 +1201,138 @@ After checkout with Git history and installing the project's dependencies:
 
 In a release pipeline, give subsequent steps access to the modified files
 and push only with the team's chosen release permissions.
+
+
+## Basic plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "basic"` for a project that needs CDS versioning,
+changelog commits and Git tags without language-specific packaging.
+
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) — The shared release workflow.
+- [Preview a version](https://armmbed.github.io/continuous-delivery-scripts/guides/previewing-versions.html) — Inspect the proposed project version.
+- [Basic plugin reference](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/BASIC.MD) — Plugin behaviour.
+
+
+## CI plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "ci"` for CI configuration projects. The plugin
+uses the shared Git release steps and does not package software.
+
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) — The shared release workflow.
+- [CI plugin reference](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/CI.MD) — Plugin behaviour.
+
+
+## Docker plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "docker"` for a Docker project. The current
+plugin supports CDS release orchestration; Docker image build and publication
+are not implemented by this plugin.
+
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) — The shared release workflow.
+- [Docker plugin API](https://armmbed.github.io/continuous-delivery-scripts/plugins/docker.html) — Current plugin capabilities.
+
+
+## GitHub Actions plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "github_actions"` for GitHub Actions workflow
+projects. This plugin extends the CI release steps with GitHub release actions
+and requires the GitHub CLI.
+
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) — The shared release workflow.
+- [GitHub Actions plugin reference](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/GITHUB_ACTIONS.MD) — Prerequisites and behaviour.
+
+
+## Go plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "golang"` for a Go project. The plugin uses
+GoReleaser for packaging and supports Go module discovery, documentation and
+dependency licence reporting.
+
+- [Go multi-module projects](https://armmbed.github.io/continuous-delivery-scripts/guides/go-multi-module.html) — Split a project into modules and prepare coordinated internal dependency versions for one CDS release.
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) — The shared release workflow.
+- [Generate code documentation](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-code-documentation.html) — Generate Go API pages with doc2go.
+- [Generate an SPDX SBOM](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-an-spdx-sbom.html) — Report Go dependency metadata.
+- [Go plugin reference](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/GOLAND.MD) — Go-specific prerequisites and configuration.
+
+
+## Language and project plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+CDS uses the project's `PROGRAMMING_LANGUAGE` setting to select a plugin.
+Start with the landing page for your plugin, then follow its topic guides:
+
+- [Basic](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-basic.html) — Git-based releases without a language-specific package.
+- [CI](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-ci.html) — Releases for CI configuration projects.
+- [Docker](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-docker.html) — Docker project integration.
+- [GitHub Actions](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-github-actions.html) — CI workflow releases with GitHub integration.
+- [Go](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-golang.html) — Go releases, modules and dependency preparation.
+- [No-op](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-noop.html) — Projects that do not need language-specific steps.
+- [Python](https://armmbed.github.io/continuous-delivery-scripts/guides/plugin-python.html) — Python package releases and dependency metadata.
+
+The [general release guide](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) describes the shared CDS
+workflow. Add future plugin-specific topic guides as Markdown files under
+`guides/` and link them from the appropriate plugin landing page; the
+documentation generator publishes these pages alongside the API reference.
+
+
+## No-op plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "noop"` when language-specific release or
+documentation actions are not needed. The shared CDS commands remain available.
+
+- [Preview a version](https://armmbed.github.io/continuous-delivery-scripts/guides/previewing-versions.html) — Inspect the proposed project version.
+- [No-op plugin reference](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/NOOP.MD) — Plugin behaviour.
+
+
+## Python plugin guides
+
+<!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+
+Select `PROGRAMMING_LANGUAGE = "python"` for Python projects. The plugin uses
+wheel and Twine for package releases, pdoc for API documentation and installed
+distribution metadata for dependency licence reporting.
+
+- [Automate releases](https://armmbed.github.io/continuous-delivery-scripts/guides/automating-releases.html) — The shared release workflow.
+- [Generate code documentation](https://armmbed.github.io/continuous-delivery-scripts/guides/generating-code-documentation.html) — Produce Python API pages.
+- [Assess dependency licences](https://armmbed.github.io/continuous-delivery-scripts/guides/assessing-dependency-licences.html) — Review installed dependency metadata.
+- [Python plugin reference](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/continuous_delivery_scripts/plugins/PYTHON.MD) — Packaging credentials and audit details.
 
 
 ## Preview a semantic release version

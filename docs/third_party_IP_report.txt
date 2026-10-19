@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-14 14:15:30.366826
+                                         2026-10-19 13:43:38.315656
 
 # Summary:
     Licence compliance: Compliant
@@ -57,7 +57,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.113.dist-info/LICENSE; notice: boto3-1.43.113.dist-info/NOTICE
+    Evidence: licence: boto3-1.43.114.dist-info/LICENSE; notice: boto3-1.43.114.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -75,7 +75,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.113.dist-info/LICENSE.txt; notice: botocore-1.43.113.dist-info/NOTICE
+    Evidence: licence: botocore-1.43.114.dist-info/LICENSE.txt; notice: botocore-1.43.114.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -111,7 +111,7 @@
     Licence source: License
     Declared licence: MPL-2.0
     Licence classifiers: Mozilla Public License 2.0 (MPL 2.0)
-    Evidence: licence: certifi-2026.7.22.dist-info/licenses/LICENSE
+    Evidence: licence: certifi-2026.10.18.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: MANUALLY_REVIEWED (automatic: REVIEW) — Weak copyleft obligations depend on modification, linking and how the work is distributed.
 
@@ -184,7 +184,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.6.0.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.7.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 
@@ -413,7 +413,7 @@
     Licence source: License-Classifier
     Declared licence: MIT License
     Licence classifiers: MIT License
-    Evidence: licence: jellyfish-1.2.1.dist-info/licenses/LICENSE
+    Evidence: licence: jellyfish-1.3.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -611,7 +611,7 @@
     Licence source: License-Expression
     Declared licence: MIT
     Licence classifiers: None
-    Evidence: licence: more_itertools-11.2.0.dist-info/licenses/LICENSE
+    Evidence: licence: more_itertools-11.2.1.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 

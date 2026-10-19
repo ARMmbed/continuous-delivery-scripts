@@ -1,0 +1,201 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go multi-module projects with CDS</title>
+  <meta name="description" content="Go multi-module projects with CDS — Continuous Delivery Scripts.">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "Go multi-module projects with CDS", "description": "Go multi-module projects with CDS \u2014 Continuous Delivery Scripts.", "url": "https://armmbed.github.io/continuous-delivery-scripts/guides/go-multi-module.html"}</script>
+</head>
+<body>
+  <nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav>
+  <main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Go multi-module projects with CDS</h1>
+<p><a href="plugin-golang.html">Go plugin guides</a> · <a href="plugin-guides.html">All plugin guides</a></p>
+<h2>Overview</h2>
+<p>Continuous Delivery Scripts (CDS) releases a <strong>project</strong>, not individual modules.
+One repository can contain several independently consumable Go modules; they all
+share the version calculated by CDS and are released together. The model follows
+<a href="https://github.com/go-openapi/swag">go-openapi/swag</a>: versioned internal
+requirements describe published dependencies, while local replacements support
+development before those versions exist. See also the
+<a href="https://github.com/go-openapi/ci-workflows">go-openapi CI workflows</a>.</p>
+<h2>Split a monolithic project</h2>
+<p>For a project currently using <code>module github.com/example/my-project</code>, extract
+packages into their own module directories and give each its own <code>go.mod</code>:</p>
+<pre><code class="language-text">my-project/
+├── go.mod                 # optional root compatibility module
+├── go.work                # optional workspace
+├── core/go.mod
+├── parser/go.mod
+└── validator/go.mod
+</code></pre>
+<p>For example, run <code>go mod init github.com/example/my-project/core</code> from <code>core/</code>.
+Repeat in each directory, using its actual published module path. A root module
+can remain as a compatibility layer if it still provides the old packages; it
+is not required. Update imports of moved packages yourself, or maintain
+compatibility packages at the old paths. CDS does not rewrite source imports.
+Check the <a href="https://go.dev/ref/mod">Go module reference</a> and
+<a href="https://go.dev/doc/modules/gomod-ref">go.mod reference</a> when designing paths.</p>
+<p>At the existing release <code>v1.2.0</code>, <code>core/go.mod</code> could contain:</p>
+<pre><code class="language-go">module github.com/example/my-project/core
+
+go 1.24
+</code></pre>
+<p><code>parser/go.mod</code> declares the published dependency and a local development path:</p>
+<pre><code class="language-go">module github.com/example/my-project/parser
+
+go 1.24
+
+require github.com/example/my-project/core v1.2.0
+
+replace github.com/example/my-project/core =&gt; ../core
+</code></pre>
+<p>Go uses the local source from <code>../core</code> during module-mode development; the
+<code>require</code> version describes what an external consumer will resolve. Replacements
+in a dependency's <code>go.mod</code> are <strong>not</strong> inherited by that consumer. CDS preserves
+both grouped and individual <code>replace</code> directives, and never adds or removes them.
+For independent module-mode builds, provide local replacements for unpublished
+internal versions. Ensure their directories exist and contain the expected
+module's <code>go.mod</code>.</p>
+<p>Alternatively, create <code>go.work</code> at the repository root:</p>
+<pre><code class="language-go">go 1.24
+
+use (
+    .
+    ./core
+    ./parser
+    ./validator
+)
+</code></pre>
+<p>Omit <code>.</code> if there is no root module. An active workspace resolves its listed
+modules locally, even without module-level replacements. Workspace-level
+replacements take precedence over conflicting module-level replacements. CDS
+reads and checks local replacements in <code>go.work</code> but does not modify it.
+See the <a href="https://go.dev/doc/tutorial/workspaces">Go workspace tutorial</a>.
+To test a module without workspace resolution, run <code>GOWORK=off go test ./...</code>
+from that module's directory; module-level replacements remain active.</p>
+<h2>Coordinated release: v1.2.0 → v1.3.0</h2>
+<p>Suppose <code>parser</code> depends on <code>core</code>, and <code>validator</code> depends on both. Before
+release preparation, <code>validator/go.mod</code> contains:</p>
+<pre><code class="language-go">module github.com/example/my-project/validator
+
+go 1.24
+
+require (
+    github.com/example/my-project/core v1.2.0
+    github.com/example/my-project/parser v1.2.0 // indirect
+    github.com/external/library v1.4.0
+)
+
+replace (
+    github.com/example/my-project/core =&gt; ../core
+    github.com/example/my-project/parser =&gt; ../parser
+)
+</code></pre>
+<p>CDS calculates the next <strong>project</strong> version <code>1.3.0</code> using its existing release
+process.</p>
+<h3>Module selection and eligibility</h3>
+<p>For a new version, the Go plugin uses the same module selection as
+Go release tagging: the configured <code>SOURCE_DIR</code> and project root, plus modules
+listed in <code>go.work</code> if present; otherwise, nested modules under <code>SOURCE_DIR</code>.
+Set <code>SOURCE_DIR = "."</code> for the layout above, or list modules outside the source
+directory in a root or source <code>go.work</code>. CDS does not scan other project-root
+subdirectories for modules. It reads each selected <code>module</code> declaration using
+Go tooling and matches <code>require</code> paths <strong>exactly</strong> against those declarations.
+Modules need not be named after their directories or share a path prefix. A
+duplicate declaration or malformed file among selected modules stops
+preparation with an error.</p>
+<p>CDS updates an internal requirement only when the requiring module has a
+<code>replace</code> pointing to that exact module <strong>inside this repository</strong>, or the
+requiring module is listed in <code>go.work use</code> and the dependency is either also
+listed there or mapped to a repository-local module by a workspace <code>replace</code>.
+A version-specific replacement must cover the upcoming version. Otherwise the
+requirement stays unchanged, even if its module path is internal. Add local
+resolution and rerun preparation before publication if that requirement must
+reference the new release version.</p>
+<h3>Result</h3>
+<p>After preparation, <code>parser/go.mod</code> requires <code>core v1.3.0</code>; the two internal
+requirements in <code>validator/go.mod</code> become:</p>
+<pre><code class="language-go">require (
+    github.com/example/my-project/core v1.3.0
+    github.com/example/my-project/parser v1.3.0 // indirect
+    github.com/external/library v1.4.0
+)
+</code></pre>
+<p>The local replacements, external dependency, annotations, module and Go
+directives remain intact. Files without eligible outdated requirements are not
+rewritten. CDS stages only changed <code>go.mod</code> files with its normal release
+changes. The existing tagging, changelog, versioning and publication steps
+continue without module-specific release scheduling. The project release tag
+is <code>v1.3.0</code>; subdirectory modules can also receive path-prefixed tags such as
+<code>core/v1.3.0</code>, <code>parser/v1.3.0</code> and <code>validator/v1.3.0</code>, all on the same commit.</p>
+<p>Go's <code>go mod edit</code> changes <code>require</code> versions without downloading the new
+module versions. Local replacements or the active workspace allow testing
+before those versions are published. CDS does not run <code>go get</code> or <code>go mod tidy</code>
+and does not fabricate <code>go.sum</code> entries. If release validation runs outside
+workspace mode, ensure each unpublished dependency has a local replacement.</p>
+<h2>Validate development and publication</h2>
+<p>From each relevant module, run <code>go test ./...</code> with the workspace or valid
+local replacements enabled. Inspect requirements and replacements with
+<a href="https://go.dev/ref/mod#go-mod-edit"><code>go mod edit -json</code></a>; from the workspace
+directory, inspect its configuration with
+<a href="https://go.dev/ref/mod#go-work-edit"><code>go work edit -json</code></a>.</p>
+<p>After publication, test actual published resolution in a <strong>separate</strong> consumer
+directory, outside the original workspace and without local replacements:</p>
+<pre><code class="language-bash">mkdir release-check
+cd release-check
+go mod init example.com/release-check
+go get github.com/example/my-project/validator@v1.3.0
+go mod verify
+go list -m all
+go test ./...
+</code></pre>
+<p><code>go test ./...</code> is meaningful once the consumer contains a Go package that
+imports the released module. This check catches issues hidden by local source
+resolution.</p>
+<h2>Major-version migration</h2>
+<p>Go generally requires a matching <code>/v2</code> (or higher) suffix on module paths
+and imports for major version 2 and above. For example:</p>
+<pre><code class="language-go">module github.com/example/my-project/core/v2
+</code></pre>
+<p>CDS updates eligible, compatible internal dependencies, such as <code>v2.1.0</code> →
+<code>v2.2.0</code> for <code>core/v2</code>. A transition from an unsuffixed <code>core</code> at <code>v1</code> to <code>v2.0.0</code>
+requires manual migration: change module declarations, source imports,
+internal requirement paths and relevant replacements before preparing the
+release. For an eligible internal requirement, CDS warns when it detects a
+major-version transition requiring this migration and refuses to write an
+incompatible version to <code>go.mod</code>. It does not migrate source code or release
+modules independently. See
+<a href="https://go.dev/doc/modules/major-version">Developing a major version update</a>.</p>
+<h2>Troubleshooting</h2>
+<ul>
+<li><strong>A future version cannot be fetched:</strong> Use a valid local <code>replace</code> or a
+  workspace listing the sibling module during preparation and testing.</li>
+<li><strong>A <code>go.mod</code> was not changed:</strong> Check that CDS selects both module directories,
+  that the <code>require</code> path matches the sibling's declaration exactly, and that
+  its replacement or workspace resolution stays inside the repository.</li>
+<li><strong>A local replacement fails:</strong> Confirm the target directory contains the
+  correct module's <code>go.mod</code>. Workspace <code>use</code> entries also need existing
+  module directories.</li>
+<li><strong>A consumer fails after publishing:</strong> Local replacements do not propagate
+  to consumers. Test with the isolated consumer above and inspect the released
+  requirements and module tags.</li>
+<li><strong>A major-version release fails:</strong> Update semantic import paths and imports
+  manually before running CDS again.</li>
+</ul>
+<p>Additional reading: <a href="https://go.dev/doc/modules/version-numbers">Go module version numbering</a>.</p></main>
+</body>
+</html>
