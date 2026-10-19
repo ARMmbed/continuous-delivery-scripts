@@ -9,7 +9,7 @@ import datetime
 import logging
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Optional, Tuple, Dict
+from typing import TYPE_CHECKING, Optional, Tuple, Dict, List
 
 from continuous_delivery_scripts.generate_docs import generate_documentation
 from continuous_delivery_scripts.generate_news import version_project
@@ -57,6 +57,9 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
         raise ValueError("Undefined version.")
     if mode == CommitType.DEVELOPMENT:
         return
+    files_changed_by_release_preparation = get_language_specifics().prepare_release(
+        Path(str(configuration.get_value(ConfigurationVariable.PROJECT_ROOT))), version, is_new_version
+    )
     # The documentation folder will be emptied when the documentation is updated
     _update_documentation()
     spdx_project: Optional["SpdxProject"] = None
@@ -67,7 +70,9 @@ def tag_and_release(mode: CommitType, current_branch: Optional[str] = None) -> N
         # Add summaries after the documentation output has been cleared and regenerated.
         spdx_project = _update_licensing_summary()
     insert_licence_header(0)
-    _update_repository(mode, is_new_version, version, current_branch, version_elements)
+    _update_repository(
+        mode, is_new_version, version, current_branch, version_elements, files_changed_by_release_preparation
+    )
     if is_new_version:
         if get_language_specifics().should_clean_before_packaging():
             _clean_repository()
@@ -118,6 +123,7 @@ def _update_repository(
     version: str,
     current_branch: Optional[str],
     version_elements: Dict[str, str],
+    files_changed_by_release_preparation: List[Path],
 ) -> None:
     """Update repository with changes that happened."""
     with ProjectTempClone(desired_branch_name=current_branch) as git:
@@ -125,7 +131,7 @@ def _update_repository(
         time_str = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M")
         commit_message = f"🚀 releasing version {version} @ {time_str}" if is_new_version else "📰 Automatic changes ⚙"
         if mode == CommitType.RELEASE:
-            _commit_release_changes(git, version, commit_message)
+            _commit_release_changes(git, version, commit_message, files_changed_by_release_preparation)
         if is_new_version:
             get_language_specifics().tag_release(
                 git,
@@ -165,8 +171,12 @@ def _add_version_changes(git: GitWrapper) -> None:
     git.add(configuration.get_value(ConfigurationVariable.NEWS_DIR))
 
 
-def _commit_release_changes(git: GitWrapper, version: str, commit_message: str) -> None:
+def _commit_release_changes(
+    git: GitWrapper, version: str, commit_message: str, files_changed_by_release_preparation: List[Path]
+) -> None:
     logger.info(f"Committing release [{version}]...")
+    for path in files_changed_by_release_preparation:
+        git.add(path)
     git.add(configuration.get_value(ConfigurationVariable.DOCUMENTATION_PRODUCTION_OUTPUT_PATH))
     _add_version_changes(git)
     _commit_changes(commit_message, git)

@@ -15,7 +15,7 @@ news fragments used to calculate release versions.
 
 Run from a configured Git checkout with installed dependencies, a writable
 remote and the credentials required by the selected language plugin. The
-[plugin documentation](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins)
+[plugin guide index](plugin-guides.md)
 describes packaging, publication and credential requirements for each language.
 Use a release type of `development`, `beta` or `release`:
 
@@ -33,6 +33,8 @@ does not publish a production release.
 A production release updates release notes, documentation and tags, and the
 plugin publishes its package or other configured output. The exact output
 varies by plugin; see the [release workflow](https://github.com/ARMmbed/continuous-delivery-scripts/blob/main/.github/workflows/release.yml).
+For Go repositories with several modules, see the
+[Go plugin guides](plugin-golang.md).
 
 ## GitHub Actions example
 

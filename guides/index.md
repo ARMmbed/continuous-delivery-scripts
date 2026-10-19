@@ -7,8 +7,8 @@ the ecosystem tools used for project-specific steps. The tools run in a Git
 checkout with a Python environment; they are not tied to one CI provider.
 The [API reference](https://armmbed.github.io/continuous-delivery-scripts/api.html) covers
 the implementation, while these pages focus on inputs, outputs and examples.
-For language-specific packaging, credentials and metadata support, consult
-the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/main/continuous_delivery_scripts/plugins).
+For language-specific packaging, credentials and metadata support, start with
+the [plugin guide index](plugin-guides.md).
 
 ## Dependency licences and OpenChain workflows
 
@@ -27,6 +27,10 @@ the [plugin guides](https://github.com/ARMmbed/continuous-delivery-scripts/tree/
 - [Preview a version](previewing-versions.md): Calculate a proposed project version.
 - [Generate a changelog](managing-changelogs.md): Build release notes from news fragments.
 - [Automate releases](automating-releases.md): Tag and publish with a language plugin.
+
+## Plugin guides
+
+- [Browse plugin guides](plugin-guides.md): Select the landing page for your plugin and its topic guides.
 
 ## Other project checks
 

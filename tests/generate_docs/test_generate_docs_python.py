@@ -80,6 +80,16 @@ class TestGenerateDocs(TestCase):
             output = pathlib.Path(temporary_root, "site")
             generate_documentation(output, "continuous_delivery_scripts")
 
+            plugin_index = (output / "guides" / "plugin-guides.html").read_text(encoding="utf8")
+            for plugin in ("basic", "ci", "docker", "github-actions", "golang", "noop", "python"):
+                with self.subTest(plugin=plugin):
+                    self.assertIn(f'href="plugin-{plugin}.html"', plugin_index)
+            self.assertIn(
+                'href="go-multi-module.html"',
+                (output / "guides" / "plugin-golang.html").read_text(encoding="utf8"),
+            )
+            self.assertIn('href="plugin-guides.html"', (output / "guides" / "index.html").read_text(encoding="utf8"))
+
             for page in output.rglob("*.html"):
                 html = page.read_text(encoding="utf8")
                 for href in re.findall(r'href="([^"]+)"', html):

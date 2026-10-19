@@ -69,12 +69,12 @@ class TestGoModuleTags(TestCase):
             root.joinpath("go.work").touch()
             source_dir.joinpath("go.work").touch()
 
-            def check_output_side_effect(command, cwd=None, encoding=None):
-                if Path(str(cwd)) == source_dir:
+            def check_output_side_effect(command, encoding=None, stderr=None):
+                if Path(command[-1]) == source_dir / "go.work":
                     return '{"Use": [{"DiskPath": "./app1"}]}'
-                if Path(str(cwd)) == root:
+                if Path(command[-1]) == root / "go.work":
                     return '{"Use": [{"DiskPath": "./shared"}, {"DiskPath": "./root-app"}]}'
-                raise AssertionError(f"Unexpected cwd: {cwd}")
+                raise AssertionError(f"Unexpected workspace: {command[-1]}")
 
             with mock.patch.object(golang, "ROOT_DIR", root), mock.patch.object(
                 golang, "SRC_DIR", source_dir
@@ -111,6 +111,15 @@ class TestGoWorkIntegration(TestCase):
             directories = golang._determine_go_work_module_directories_from_json(root.joinpath("go.work"))
 
             self.assertEqual(directories, [root.joinpath("app1")])
+
+    def test_workspace_tag_discovery_uses_shared_metadata_reader(self):
+        workspace = Path("project/go.work")
+        with mock.patch.object(
+            golang, "_read_go_workspace_metadata", return_value={"Use": [{"DiskPath": "./app1"}]}
+        ) as read_metadata:
+            directories = golang._determine_go_work_module_directories_from_json(workspace)
+        self.assertEqual(directories, [workspace.parent / "app1"])
+        read_metadata.assert_called_once_with(workspace)
 
     def test_doc2go_discovers_actual_go_work_modules(self):
         with TemporaryDirectory() as temp_dir:
