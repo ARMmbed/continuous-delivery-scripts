@@ -79,10 +79,15 @@ def _go_edit_command(file: Path, subcommand: str, flags: List[str]) -> List[str]
 def _read_go_metadata_with_edit_command(file: Path, subcommand: str) -> dict:
     """Use Go's parser to inspect directives without resolving unpublished modules."""
     try:
-        return json.loads(check_output(_go_edit_command(file, subcommand, ["-json"]), encoding="utf8", stderr=STDOUT))
+        metadata = json.loads(
+            check_output(_go_edit_command(file, subcommand, ["-json"]), encoding="utf8", stderr=STDOUT)
+        )
     except (CalledProcessError, ValueError, OSError) as error:
         detail = error.output if isinstance(error, CalledProcessError) else str(error)
         raise ValueError(f"Cannot parse {file} with Go tooling: {detail}") from error
+    if not isinstance(metadata, dict):
+        raise ValueError(f"Expected a JSON object from Go tooling for {file}")
+    return metadata
 
 
 def _read_go_module_metadata(go_mod_file: Path) -> dict:
@@ -137,7 +142,7 @@ def _release_workspaces(root: Path) -> List[Path]:
 def _go_major(version: str) -> int:
     """Parse the major component of CDS or Go semver, including pseudo-versions."""
     try:
-        return semver.VersionInfo.parse(version.removeprefix("v")).major
+        return int(semver.VersionInfo.parse(version.removeprefix("v")).major)
     except ValueError as error:
         raise ValueError(f"Invalid Go module version: {version!r}") from error
 
