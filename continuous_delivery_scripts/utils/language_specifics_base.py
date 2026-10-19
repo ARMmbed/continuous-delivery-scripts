@@ -87,6 +87,10 @@ class BaseLanguage(ABC):
         """States whether the repository must be cleaned before packaging happens."""
         return False
 
+    def prepare_release(self, root: Path, version: str, is_new_version: bool) -> List[Path]:
+        """Prepare language-specific files for a new release; return paths to stage."""
+        return []
+
     def tag_release(self, git: GitWrapper, version: str, shortcuts: Dict[str, bool]) -> None:
         """Tags release commit."""
         logger.info(f"Tagging commit as release {version}")

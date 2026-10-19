@@ -35,8 +35,9 @@ including paths, versioning rules and the selected `PROGRAMMING_LANGUAGE`,
 regardless of the project's language or CI system. The selected plugin then
 uses appropriate ecosystem tools: for example, GoReleaser for Go releases or
 wheel and Twine for Python packages. Consult the
-[plugin guides](./continuous_delivery_scripts/plugins) for language-specific
-requirements; native build manifests and credentials may still be needed. See
+[plugin guides](./guides/plugin-guides.md) for language-specific
+requirements, including the [Go plugin guides](./guides/plugin-golang.md);
+native build manifests and credentials may still be needed. See
 the [project configuration guide](./DEVELOPMENT.md#project-configuration) for
 the `pyproject.toml` fields required by each workflow.
 
