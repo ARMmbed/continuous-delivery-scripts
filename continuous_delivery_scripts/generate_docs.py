@@ -12,6 +12,7 @@ import re
 import shutil
 import sys
 from pathlib import Path
+from urllib.parse import SplitResult, urlsplit
 
 import markdown
 
@@ -28,9 +29,50 @@ from continuous_delivery_scripts.utils.logging import log_exception
 logger = logging.getLogger(__name__)
 
 
-def _html_guide_link(match: re.Match[str]) -> str:
-    """Link to the rendered HTML page instead of its Markdown source."""
-    return f'href="{match.group(1)}.html{match.group(2) or ""}"'
+def _guide_html_path(source: Path, guide_sources: Path) -> Path:
+    """Map a guide source file to its published HTML path beneath the guide output."""
+    return source.relative_to(guide_sources).with_suffix(".html")
+
+
+def _guide_sort_key(source: Path, guide_sources: Path) -> tuple[bool, str]:
+    """Keep the top-level index first and sort the rest by relative path."""
+    relative = source.relative_to(guide_sources)
+    return relative != Path("index.md"), relative.as_posix()
+
+
+def _rewrite_guide_link_target(parts: SplitResult, source: Path, guide_sources: Path) -> str | None:
+    """Rewrite only relative Markdown links that point to published guides."""
+    if (
+        parts.scheme
+        or parts.netloc
+        or not parts.path
+        or parts.path.startswith("/")
+        or not parts.path.lower().endswith(".md")
+    ):
+        return None
+    target = (source.parent / Path(parts.path)).resolve()
+    root = guide_sources.resolve()
+    if not target.is_file() or not target.is_relative_to(root):
+        return None
+    return parts._replace(path=f"{parts.path[:-3]}.html").geturl()
+
+
+def _rewrite_rendered_guide_links(body: str, source: Path, guide_sources: Path) -> str:
+    """Retarget rendered guide links to the published HTML pages."""
+
+    def replace(match: re.Match[str]) -> str:
+        href = match.group(1)
+        rewritten = _rewrite_guide_link_target(urlsplit(href), source, guide_sources)
+        if rewritten is None:
+            return match.group(0)
+        return f'href="{escape(rewritten, quote=True)}"'
+
+    return re.sub(r'href="([^"]+)"', replace, body)
+
+
+def _guide_navigation_prefix(guide_folder: Path, relative_html_path: Path) -> str:
+    """Build the route from a guide page back to the documentation root."""
+    return "/".join(".." for _ in (guide_folder / relative_html_path.parent).parts)
 
 
 def _html_page(
@@ -127,15 +169,32 @@ def _guide_settings() -> tuple[Path, Path, Path, str] | None:
 
 
 def _render_guide(
-    source: Path, destination: Path, project_name: str, nav_prefix: str, has_api_index: bool, page_url: str | None
+    source: Path,
+    destination: Path,
+    guide_sources: Path,
+    guide_folder: Path,
+    project_name: str,
+    has_api_index: bool,
+    page_url: str | None,
 ) -> str:
     """Render one Markdown guide to an HTML page and return its title."""
     text = source.read_text(encoding="utf8")
     title = next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), source.stem)
     body: str = markdown.markdown(text, extensions=["fenced_code", "tables"])
-    body = re.sub(r'href="([a-z0-9-]+)\.md(#[^"]*)?"', _html_guide_link, body)
+    body = _rewrite_rendered_guide_links(body, source, guide_sources)
     description = f"{title} — {project_name}."
-    destination.write_text(_html_page(title, description, body, nav_prefix, has_api_index, page_url), encoding="utf8")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(
+        _html_page(
+            title,
+            description,
+            body,
+            _guide_navigation_prefix(guide_folder, _guide_html_path(source, guide_sources)),
+            has_api_index,
+            page_url,
+        ),
+        encoding="utf8",
+    )
     return title
 
 
@@ -144,16 +203,22 @@ def _render_guides(
 ) -> list[tuple[str, str]]:
     """Render all guides and return links for the documentation landing page."""
     guide_output.mkdir(parents=True, exist_ok=True)
-    navigation_prefix = "/".join(".." for _ in guide_folder.parts)
     site_url = documentation_site_url()
     links = []
-    for source in sorted(guide_sources.glob("*.md")):
-        page_url = f"{site_url}{guide_folder.as_posix()}/{source.stem}.html" if site_url else None
+    for source in sorted(guide_sources.rglob("*.md"), key=lambda path: _guide_sort_key(path, guide_sources)):
+        relative_html_path = _guide_html_path(source, guide_sources)
+        page_url = f"{site_url}{(guide_folder / relative_html_path).as_posix()}" if site_url else None
         title = _render_guide(
-            source, guide_output / f"{source.stem}.html", project_name, navigation_prefix, has_api_index, page_url
+            source,
+            guide_output / relative_html_path,
+            guide_sources,
+            guide_folder,
+            project_name,
+            has_api_index,
+            page_url,
         )
-        if source.stem != "index":
-            links.append((title, source.stem))
+        if source.relative_to(guide_sources) != Path("index.md"):
+            links.append((title, relative_html_path.as_posix()))
     return links
 
 

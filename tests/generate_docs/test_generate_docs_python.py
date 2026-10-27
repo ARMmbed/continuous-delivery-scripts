@@ -198,6 +198,81 @@ class TestGenerateDocs(TestCase):
             )
             self.assertEqual((output / "llms.txt").read_text(encoding="utf8"), "# Tool map\n")
 
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
+    def test_publishes_nested_guides_and_rewrites_relative_markdown_links(
+        self, get_value_or_default, get_language_specifics
+    ):
+        with SystemTemporaryDirectory() as temporary_root:
+            project_root = pathlib.Path(temporary_root, "project")
+            guides = project_root / "guides"
+            migrations = guides / "migrations"
+            migrations.mkdir(parents=True)
+            (guides / "index.md").write_text(
+                "# Guides\n\n"
+                "## Overview\n\n"
+                "[Migration guide](migrations/index.md#section)\n\n"
+                "[External](https://example.com/migrations/index.md#section)\n\n"
+                "[Asset](assets/diagram.svg)\n",
+                encoding="utf8",
+            )
+            (guides / "go-modules.md").write_text(
+                "# Go modules\n\n[Refactoring](migrations/refactoring-go-modules.md)\n", encoding="utf8"
+            )
+            (migrations / "index.md").write_text(
+                "# Migrations\n\n"
+                "[Refactoring](refactoring-go-modules.md#details)\n\n"
+                "[Go modules](../go-modules.md)\n",
+                encoding="utf8",
+            )
+            (migrations / "refactoring-go-modules.md").write_text(
+                "# Refactoring Go modules\n\n[Overview](../index.md#overview)\n", encoding="utf8"
+            )
+            get_value_or_default.side_effect = lambda key, _default: {
+                ConfigurationVariable.PROJECT_ROOT: str(project_root),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_DIR: str(guides),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER: "docs/guides",
+                ConfigurationVariable.PROJECT_NAME: "Nested Project",
+            }.get(key)
+            output = pathlib.Path(temporary_root, "site")
+
+            def generate_api(output_directory, _module):
+                (output_directory / "index.html").write_text(
+                    "<html><body><h1>API reference</h1></body></html>", encoding="utf8"
+                )
+
+            get_language_specifics.return_value.generate_code_documentation.side_effect = generate_api
+
+            generate_documentation(output, "continuous_delivery_scripts")
+
+            self.assertTrue((output / "docs" / "guides" / "index.html").is_file())
+            self.assertTrue((output / "docs" / "guides" / "go-modules.html").is_file())
+            self.assertTrue((output / "docs" / "guides" / "migrations" / "index.html").is_file())
+            self.assertTrue((output / "docs" / "guides" / "migrations" / "refactoring-go-modules.html").is_file())
+
+            root_guide = (output / "docs" / "guides" / "index.html").read_text(encoding="utf8")
+            self.assertIn('href="migrations/index.html#section"', root_guide)
+            self.assertIn('href="https://example.com/migrations/index.md#section"', root_guide)
+            self.assertIn('href="assets/diagram.svg"', root_guide)
+
+            modules_guide = (output / "docs" / "guides" / "go-modules.html").read_text(encoding="utf8")
+            self.assertIn('href="migrations/refactoring-go-modules.html"', modules_guide)
+
+            nested_index = (output / "docs" / "guides" / "migrations" / "index.html").read_text(encoding="utf8")
+            self.assertIn('href="refactoring-go-modules.html#details"', nested_index)
+            self.assertIn('href="../go-modules.html"', nested_index)
+            self.assertIn('href="../../../index.html"', nested_index)
+            self.assertIn('href="../../../api.html"', nested_index)
+
+            nested_guide = (output / "docs" / "guides" / "migrations" / "refactoring-go-modules.html").read_text(
+                encoding="utf8"
+            )
+            self.assertIn('href="../index.html#overview"', nested_guide)
+
+            landing = (output / "index.html").read_text(encoding="utf8")
+            self.assertIn('href="docs/guides/go-modules.html"', landing)
+            self.assertIn('href="docs/guides/migrations/index.html"', landing)
+
     def test_clear_previous_docs(self):
         with Patcher() as patcher:
             fake_output_dir = pathlib.Path("local_docs")
