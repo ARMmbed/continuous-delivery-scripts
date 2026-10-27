@@ -54,10 +54,11 @@ including after the delivery workflow has been defined.
 CDS takes a different approach to release automation by deliberately separating
 development history from consumer-facing release information.
 
-Unlike commit-driven tools such as release-please or semantic-release, CDS
-follows Towncrier's philosophy: Git commits document technical changes for
-maintainers, while explicit news fragments describe their significance to
-consumers.
+Unlike commit-driven tools such as
+[release-please](https://github.com/googleapis/release-please) or
+[semantic-release](https://semantic-release.gitbook.io/), CDS follows
+Towncrier's philosophy: Git commits document technical changes for maintainers,
+while explicit news fragments describe their significance to consumers.
 
 Beyond changelog generation, CDS provides composable, CI-agnostic tools for
 versioning, coordinated releases, licensing, SBOM generation, documentation and
