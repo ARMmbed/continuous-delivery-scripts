@@ -42,7 +42,13 @@ def _guide_sort_key(source: Path, guide_sources: Path) -> tuple[bool, str]:
 
 def _rewrite_guide_link_target(parts: SplitResult, source: Path, guide_sources: Path) -> str | None:
     """Rewrite only relative Markdown links that point to published guides."""
-    if parts.scheme or parts.netloc or not parts.path or parts.path.startswith("/") or not parts.path.lower().endswith(".md"):
+    if (
+        parts.scheme
+        or parts.netloc
+        or not parts.path
+        or parts.path.startswith("/")
+        or not parts.path.lower().endswith(".md")
+    ):
         return None
     target = (source.parent / Path(parts.path)).resolve()
     root = guide_sources.resolve()

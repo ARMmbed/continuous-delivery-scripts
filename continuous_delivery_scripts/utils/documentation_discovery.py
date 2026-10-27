@@ -48,7 +48,9 @@ def structured_data_script(title: str, description: str, url: str, schema_type: 
     return f'<script type="application/ld+json">{encoded}</script>'
 
 
-def _annotate_existing_pages(output: Path, site_url: str, guides: list[tuple[Path, str, str]], folder: Path | None) -> None:
+def _annotate_existing_pages(
+    output: Path, site_url: str, guides: list[tuple[Path, str, str]], folder: Path | None
+) -> None:
     """Annotate already-rendered landing and guide pages without rebuilding the API."""
     if not guides or folder is None:
         return
@@ -89,10 +91,11 @@ def _guide_sort_key(source: Path, sources: Path) -> tuple[bool, str]:
 def _published_guides(output: Path, sources: Path | None, folder: Path | None) -> list[tuple[Path, str, str]]:
     if sources is None or folder is None:
         return []
+    guide_sources = sources
     return [
         (source, _guide_title(source), relative_html_path.as_posix())
-        for source in sorted(sources.rglob("*.md"), key=lambda path: _guide_sort_key(path, sources))
-        for relative_html_path in [_guide_html_path(source, sources)]
+        for source in sorted(guide_sources.rglob("*.md"), key=lambda path: _guide_sort_key(path, guide_sources))
+        for relative_html_path in [_guide_html_path(source, guide_sources)]
         if (output / folder / relative_html_path).is_file()
     ]
 

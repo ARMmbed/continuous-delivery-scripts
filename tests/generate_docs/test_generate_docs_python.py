@@ -237,7 +237,9 @@ class TestGenerateDocs(TestCase):
             output = pathlib.Path(temporary_root, "site")
 
             def generate_api(output_directory, _module):
-                (output_directory / "index.html").write_text("<html><body><h1>API reference</h1></body></html>", encoding="utf8")
+                (output_directory / "index.html").write_text(
+                    "<html><body><h1>API reference</h1></body></html>", encoding="utf8"
+                )
 
             get_language_specifics.return_value.generate_code_documentation.side_effect = generate_api
 
