@@ -1,6 +1,6 @@
                                 3rd party IP report for continuous-delivery-scripts
 
-                                         2026-10-19 13:43:38.315656
+                                         2026-10-27 17:28:02.627018
 
 # Summary:
     Licence compliance: Compliant
@@ -57,7 +57,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: boto3-1.43.114.dist-info/LICENSE; notice: boto3-1.43.114.dist-info/NOTICE
+    Evidence: licence: boto3-1.43.119.dist-info/LICENSE; notice: boto3-1.43.119.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -75,7 +75,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: botocore-1.43.114.dist-info/LICENSE.txt; notice: botocore-1.43.114.dist-info/NOTICE
+    Evidence: licence: botocore-1.43.119.dist-info/LICENSE.txt; notice: botocore-1.43.119.dist-info/NOTICE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -93,7 +93,7 @@
     Licence source: License-Expression
     Declared licence: MIT
     Licence classifiers: MIT License
-    Evidence: licence: bracex-3.1.dist-info/licenses/LICENSE.md
+    Evidence: licence: bracex-3.2.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -111,7 +111,7 @@
     Licence source: License
     Declared licence: MPL-2.0
     Licence classifiers: Mozilla Public License 2.0 (MPL 2.0)
-    Evidence: licence: certifi-2026.10.18.dist-info/licenses/LICENSE
+    Evidence: licence: certifi-2026.10.23.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: MANUALLY_REVIEWED (automatic: REVIEW) — Weak copyleft obligations depend on modification, linking and how the work is distributed.
 
@@ -184,7 +184,7 @@
     Licence source: License
     Declared licence: Apache-2.0
     Licence classifiers: None
-    Evidence: licence: continuous_delivery_scripts-4.7.0.dist-info/licenses/LICENSE
+    Evidence: licence: continuous_delivery_scripts-4.8.0.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
 
 
@@ -539,7 +539,7 @@
     Licence source: License-Expression
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: markdown-3.11.1.dist-info/licenses/LICENSE.md
+    Evidence: licence: markdown-3.11.2.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -720,7 +720,7 @@
     Licence source: License-Expression
     Declared licence: BSD-3-Clause
     Licence classifiers: None
-    Evidence: licence: pycparser-3.11.dist-info/licenses/LICENSE
+    Evidence: licence: pycparser-3.12.dist-info/licenses/LICENSE
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -956,7 +956,7 @@
     Licence source: License
     Declared licence: Apache License 2.0
     Licence classifiers: Apache Software License
-    Evidence: licence: s3transfer-0.19.2.dist-info/LICENSE.txt; notice: s3transfer-0.19.2.dist-info/NOTICE.txt
+    Evidence: licence: s3transfer-0.19.3.dist-info/LICENSE.txt; notice: s3transfer-0.19.3.dist-info/NOTICE.txt
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 
@@ -1190,7 +1190,7 @@
     Licence source: License-Expression
     Declared licence: MIT
     Licence classifiers: MIT License
-    Evidence: licence: wcmatch-11.1.dist-info/licenses/LICENSE.md
+    Evidence: licence: wcmatch-11.2.dist-info/licenses/LICENSE.md
     Licence compliance: Automatic licence assessment meets the configured policy.
     Licence assessment: ALLOW (automatic: ALLOW) — A permissive dependency generally permits redistribution; retain its notices and conditions.
 

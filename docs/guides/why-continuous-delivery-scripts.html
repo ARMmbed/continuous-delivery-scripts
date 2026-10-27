@@ -1,0 +1,159 @@
+<!--
+-- Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why choose Continuous Delivery Scripts?</title>
+  <meta name="description" content="Why choose Continuous Delivery Scripts? — Continuous Delivery Scripts.">
+  <style>
+    body{font:1.1rem/1.6 system-ui,sans-serif;max-width:76ch;margin:2rem auto;padding:0 1rem}
+    a{color:#075985}pre{overflow:auto;background:#f3f4f6;padding:1rem}code{overflow-wrap:anywhere}
+    nav{border-bottom:1px solid #ccc;padding-bottom:1rem}li{margin:.4rem 0}
+  </style>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "name": "Why choose Continuous Delivery Scripts?", "description": "Why choose Continuous Delivery Scripts? \u2014 Continuous Delivery Scripts.", "url": "https://armmbed.github.io/continuous-delivery-scripts/guides/why-continuous-delivery-scripts.html"}</script>
+</head>
+<body>
+  <nav><a href="../index.html">Overview</a> · <a href="../api.html">API reference</a></nav>
+  <main><!--
+Copyright (C) 2020-2026 Arm Limited or its affiliates and Contributors. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+-->
+<h1>Why choose Continuous Delivery Scripts?</h1>
+<h2>Problem and when to read this</h2>
+<p>Read this guide when you are deciding whether CDS fits a project's release and
+delivery workflow, or when you need to explain why CDS exists alongside other
+release automation tools.</p>
+<p>CDS is not primarily trying to infer releases from Git history or prescribe one
+CI/CD platform. It tries to answer a different question: how can a project keep
+consumer-facing release information, delivery policy and automation consistent
+without coupling them to one commit convention, language ecosystem or CI system?</p>
+<h2>What CDS is trying to solve</h2>
+<p>CDS provides reusable commands for software delivery tasks such as changelog
+generation, version calculation, release orchestration, SPDX SBOM generation,
+licence reporting, documentation publishing and secret checks.</p>
+<p>The tools share one project configuration in <code>[ProjectConfig]</code> and can be run
+locally or from different CI systems. Language plugins then use the most
+appropriate ecosystem tools for project-specific work.</p>
+<h2>Design principles</h2>
+<h3>Separate development history from consumer-facing changes</h3>
+<p>Git commits and release notes serve different audiences.</p>
+<ul>
+<li>Git history records implementation details for maintainers.</li>
+<li>Release notes explain user-visible impact for consumers.</li>
+</ul>
+<p>Following <a href="https://towncrier.readthedocs.io/">Towncrier's philosophy</a>, CDS uses
+explicit news fragments rather than deriving release notes from commit messages.
+This avoids forcing one commit message to serve both maintainers and consumers.</p>
+<h3>Keep release management independent of CI/CD platforms</h3>
+<p>CDS provides command-line tools that can be invoked from GitHub Actions,
+Jenkins, GitLab CI or other automation environments. The delivery policy lives
+in project configuration and scripts, not in one CI provider's release model.</p>
+<h3>Prefer composable tools over monolithic workflows</h3>
+<p>CDS follows a small-tools approach. Projects can adopt only the commands they
+need instead of taking an all-or-nothing release framework.</p>
+<p>Examples include:</p>
+<ul>
+<li>validating news fragments and generating changelogs</li>
+<li>determining versions and coordinating releases</li>
+<li>generating SPDX SBOMs and third-party IP reports</li>
+<li>managing licence files and source headers</li>
+<li>generating project documentation</li>
+<li>checking Git-tracked files for new secrets</li>
+</ul>
+<h3>Treat software delivery as more than versioning and tagging</h3>
+<p>Releases often involve documentation, provenance, licensing, dependency review,
+packaging and publication. CDS brings those concerns into one delivery toolkit
+instead of treating a release as only version calculation and Git tagging.</p>
+<h3>Support coordinated project releases</h3>
+<p>CDS takes a project-oriented approach. A repository may contain several
+packages, modules or deliverables but still share one project version,
+changelog and release flow. This is particularly useful for coordinated
+multi-module Go releases.</p>
+<h2>CDS often uses specialised tools rather than replacing them</h2>
+<p>CDS is often a coordinator around established tools instead of a reimplementation
+of them. In this repository and its plugins, that includes:</p>
+<ul>
+<li><a href="https://towncrier.readthedocs.io/">Towncrier</a> for consumer-facing changelog generation from news fragments</li>
+<li><a href="https://goreleaser.com/">GoReleaser</a> in the Go plugin for packaging and publication steps</li>
+<li>Python build tools such as wheel and <a href="https://twine.readthedocs.io/">Twine</a> in the Python plugin</li>
+<li><a href="https://pdoc.dev/">pdoc</a> and doc2go through the documentation workflow</li>
+<li><a href="https://github.com/Yelp/detect-secrets">detect-secrets</a> for reviewed secret scanning baselines</li>
+<li>SPDX data and optional <a href="https://scancode-licensedb.aboutcode.org/">ScanCode LicenseDB</a> lookups for licensing workflows</li>
+</ul>
+<p>This is an important distinction: CDS aims to give projects a consistent command
+surface and shared delivery policy, while still relying on specialised tooling
+where that tooling is the best fit.</p>
+<h2>How CDS compares with other approaches</h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Primary focus</th>
+<th>Key distinction from CDS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/googleapis/release-please">release-please</a></td>
+<td>Conventional Commits, release PRs and GitHub Releases</td>
+<td>Derives release information mainly from commit history and is closely integrated with GitHub workflows.</td>
+</tr>
+<tr>
+<td><a href="https://semantic-release.gitbook.io/">semantic-release</a></td>
+<td>Fully automated semantic releases</td>
+<td>Uses commit conventions to determine release significance and automate publishing.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/changesets/changesets">Changesets</a></td>
+<td>Explicit change declarations and package versioning</td>
+<td>Shares explicit change tracking, but focuses more on package-level versioning and monorepo publishing flows.</td>
+</tr>
+<tr>
+<td><a href="https://towncrier.readthedocs.io/">Towncrier</a></td>
+<td>Consumer-focused changelog generation</td>
+<td>Shares CDS's news-fragment philosophy but does not provide the broader release, documentation and compliance command set.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/release-it/release-it">release-it</a></td>
+<td>Configurable release automation</td>
+<td>Provides an extensible release engine rather than CDS's wider collection of delivery and compliance utilities.</td>
+</tr>
+<tr>
+<td><a href="https://goreleaser.com/">GoReleaser</a></td>
+<td>Building, packaging and distributing Go applications</td>
+<td>Focuses on release artefact production and distribution rather than defining a project-wide delivery policy.</td>
+</tr>
+</tbody>
+</table>
+<p>These approaches are not mutually exclusive. CDS can complement specialised
+tools when their strengths match part of a project's workflow.</p>
+<h2>When CDS is a good fit</h2>
+<p>CDS is particularly suitable when:</p>
+<ul>
+<li>you want release notes to describe consumer impact independently of commit history</li>
+<li>you need consistent release practices across multiple projects or languages</li>
+<li>you want release tooling that is portable across CI/CD platforms</li>
+<li>you prefer composable commands over one monolithic workflow</li>
+<li>you need licensing, SBOM, documentation and release tasks in one toolkit</li>
+<li>you want to coordinate several deliverables as one project release</li>
+</ul>
+<p>Other approaches may be more suitable when:</p>
+<ul>
+<li>the project already relies on Conventional Commits and wants releases derived directly from them</li>
+<li>you want a ready-made GitHub-native release PR workflow with minimal orchestration</li>
+<li>you need independently versioned packages inside a monorepo</li>
+<li>you mainly need artefact building and distribution rather than broader delivery policy and compliance workflows</li>
+</ul>
+<h2>Summary</h2>
+<p>CDS treats release management as a distinct concern from development history and
+provides reusable building blocks for implementing consistent, portable software
+delivery processes.</p>
+<p>Its purpose is not to replace every specialised tool, but to avoid coupling
+release communication, project policy and delivery automation to one commit
+convention, programming language or CI/CD platform.</p></main>
+</body>
+</html>

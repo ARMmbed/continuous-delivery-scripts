@@ -17,6 +17,18 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.8.1 (2026-10-27)
+
+## Bugfixes
+
+- Publish nested documentation guides and rewrite relative guide links to their HTML pages. (#20261027155800)
+- Dependency upgrade: codeql-action-4.39.1 (#20261026073558277574632)
+
+## Improved Documentation
+
+- Document CDS philosophy, external tool integrations, and the full command list in the README. (#20261027164000)
+
+
 # 4.8.0 (2026-10-19)
 
 ## Features
