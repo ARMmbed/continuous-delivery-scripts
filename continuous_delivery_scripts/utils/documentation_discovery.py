@@ -48,14 +48,14 @@ def structured_data_script(title: str, description: str, url: str, schema_type: 
     return f'<script type="application/ld+json">{encoded}</script>'
 
 
-def _annotate_existing_pages(output: Path, site_url: str, guides: list[tuple[Path, str]], folder: Path | None) -> None:
+def _annotate_existing_pages(output: Path, site_url: str, guides: list[tuple[Path, str, str]], folder: Path | None) -> None:
     """Annotate already-rendered landing and guide pages without rebuilding the API."""
     if not guides or folder is None:
         return
     pages = [(output / "index.html", site_url, "WebSite")]
     pages.extend(
-        (output / folder / f"{source.stem}.html", f"{site_url}{folder.as_posix()}/{source.stem}.html", "TechArticle")
-        for source, _ in guides
+        (output / folder / relative_html_path, f"{site_url}{folder.as_posix()}/{relative_html_path}", "TechArticle")
+        for _source, _title, relative_html_path in guides
     )
     for page, url, schema_type in pages:
         text = page.read_text(encoding="utf8")
@@ -75,13 +75,25 @@ def _guide_title(source: Path) -> str:
     )
 
 
-def _published_guides(output: Path, sources: Path | None, folder: Path | None) -> list[tuple[Path, str]]:
+def _guide_html_path(source: Path, sources: Path) -> Path:
+    """Map a guide source file to its published HTML path beneath the guide folder."""
+    return source.relative_to(sources).with_suffix(".html")
+
+
+def _guide_sort_key(source: Path, sources: Path) -> tuple[bool, str]:
+    """Keep the guide overview first and sort all nested guides by path."""
+    relative = source.relative_to(sources)
+    return relative != Path("index.md"), relative.as_posix()
+
+
+def _published_guides(output: Path, sources: Path | None, folder: Path | None) -> list[tuple[Path, str, str]]:
     if sources is None or folder is None:
         return []
     return [
-        (source, _guide_title(source))
-        for source in sorted(sources.glob("*.md"), key=lambda path: (path.name != "index.md", path.name))
-        if (output / folder / f"{source.stem}.html").is_file()
+        (source, _guide_title(source), relative_html_path.as_posix())
+        for source in sorted(sources.rglob("*.md"), key=lambda path: _guide_sort_key(path, sources))
+        for relative_html_path in [_guide_html_path(source, sources)]
+        if (output / folder / relative_html_path).is_file()
     ]
 
 
@@ -100,7 +112,7 @@ def _render_sitemap(output: Path, site_url: str) -> str:
 
 
 def _render_llms_index(
-    output: Path, site_url: str, name: str, guides: list[tuple[Path, str]], folder: Path | None
+    output: Path, site_url: str, name: str, guides: list[tuple[Path, str, str]], folder: Path | None
 ) -> str:
     """Render the concise index from pages that were actually published."""
     rendered = str(
@@ -111,19 +123,24 @@ def _render_llms_index(
     return rendered.rstrip() + "\n"
 
 
-def _render_llms_full(output: Path, site_url: str, name: str, guides: list[tuple[Path, str]], folder: Path) -> str:
+def _render_llms_full(output: Path, site_url: str, name: str, guides: list[tuple[Path, str, str]], folder: Path) -> str:
     """Consolidate only the Markdown guides which have corresponding published pages."""
-    published = {source.stem for source, _ in guides}
-
-    def published_link(match: re.Match[str]) -> str:
-        stem, fragment = match.group(1), match.group(2) or ""
-        return f"]({site_url}{folder.as_posix()}/{stem}.html{fragment})" if stem in published else match.group(0)
+    published = {source.resolve(): relative_html_path for source, _title, relative_html_path in guides}
 
     sections: list[tuple[str, str]] = []
-    for source, title in guides:
+    for source, title, _relative_html_path in guides:
         text = source.read_text(encoding="utf8")
         text = re.sub(r"^# .*(?:\n|$)", "", text, count=1, flags=re.MULTILINE)
-        text = re.sub(r"\]\(([a-z0-9-]+)\.md(#[^)]*)?\)", published_link, text)
+
+        def published_link(match: re.Match[str]) -> str:
+            destination = match.group(1)
+            fragment = match.group(2) or ""
+            target = (source.parent / Path(destination)).resolve()
+            if target not in published:
+                return match.group(0)
+            return f"]({site_url}{folder.as_posix()}/{published[target]}{fragment})"
+
+        text = re.sub(r"\]\(([^)#]+\.md)(#[^)]*)?\)", published_link, text)
         in_code = False
         body = []
         for line in text.strip().splitlines():

@@ -202,6 +202,62 @@ class TestDocumentationDiscovery(TestCase):
 
     @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
     @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
+    def test_nested_published_guides_appear_in_discovery_outputs(self, get_config, plugin):
+        with TemporaryDirectory() as temporary_root:
+            root = Path(temporary_root)
+            guides = root / "guides"
+            nested = guides / "migrations"
+            nested.mkdir(parents=True)
+            (guides / "index.md").write_text("# Guides\n\n[Migrations](migrations/index.md)\n", encoding="utf8")
+            (nested / "index.md").write_text(
+                "# Migrations\n\n[Refactoring](refactoring-go-modules.md#details)\n", encoding="utf8"
+            )
+            (nested / "refactoring-go-modules.md").write_text(
+                "# Refactoring\n\n[Overview](../index.md#intro)\n", encoding="utf8"
+            )
+            settings = {
+                ConfigurationVariable.PROJECT_ROOT: str(root),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_DIR: str(guides),
+                ConfigurationVariable.DOCUMENTATION_GUIDES_OUTPUT_FOLDER: "guides",
+                ConfigurationVariable.PROJECT_NAME: "Example Project",
+                ConfigurationVariable.DOCUMENTATION_SITE_URL: "https://example.org/project/",
+            }
+            get_config.side_effect = lambda key, default: settings.get(key, default)
+
+            def generate_api(output, _module):
+                (output / "index.html").write_text("<html><body>API</body></html>", encoding="utf8")
+
+            plugin.return_value.generate_code_documentation.side_effect = generate_api
+            output = root / "published"
+            generate_documentation(output, "module")
+
+            sitemap = ElementTree.parse(output / "sitemap.xml")
+            urls = [element.text for element in sitemap.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")]
+            self.assertEqual(
+                urls,
+                [
+                    "https://example.org/project/api.html",
+                    "https://example.org/project/guides/index.html",
+                    "https://example.org/project/guides/migrations/index.html",
+                    "https://example.org/project/guides/migrations/refactoring-go-modules.html",
+                    "https://example.org/project/",
+                ],
+            )
+
+            index = (output / "llms.txt").read_text(encoding="utf8")
+            self.assertIn("[Migrations](https://example.org/project/guides/migrations/index.html)", index)
+            self.assertIn(
+                "[Refactoring](https://example.org/project/guides/migrations/refactoring-go-modules.html)", index
+            )
+
+            full = (output / "llms-full.txt").read_text(encoding="utf8")
+            self.assertIn(
+                "[Refactoring](https://example.org/project/guides/migrations/refactoring-go-modules.html#details)", full
+            )
+            self.assertIn("[Overview](https://example.org/project/guides/index.html#intro)", full)
+
+    @mock.patch("continuous_delivery_scripts.generate_docs.get_language_specifics")
+    @mock.patch("continuous_delivery_scripts.generate_docs.configuration.get_value_or_default")
     def test_does_not_invent_site_urls_and_respects_existing_files(self, get_config, plugin):
         with TemporaryDirectory() as temporary_root:
             root = Path(temporary_root)
