@@ -10,6 +10,10 @@ the implementation, while these pages focus on inputs, outputs and examples.
 For language-specific packaging, credentials and metadata support, start with
 the [plugin guide index](plugin-guides.md).
 
+## Choosing CDS
+
+- [Why choose Continuous Delivery Scripts?](why-continuous-delivery-scripts.md): Understand CDS design goals, the specialised tools it uses, and when another approach may fit better.
+
 ## Dependency licences and OpenChain workflows
 
 - [Assess dependency licence risks](assessing-dependency-licences.md): Review directional, explainable licence screening and optional project policy overrides.

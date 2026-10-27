@@ -21,7 +21,8 @@ SPDX-License-Identifier: Apache-2.0
 `continuous-delivery-scripts` provides Git-based CI/CD commands for release
 automation, semantic versioning, changelog generation, SPDX SBOMs,
 third-party IP (TPIP) and licence reports, source licence headers and secret
-checks.
+checks. It is designed as a CI-agnostic set of composable delivery tools rather
+than a Git-history-driven release system.
 
 ## Overview
 
@@ -34,7 +35,9 @@ a release. The shared project delivery definition lives in one place:
 including paths, versioning rules and the selected `PROGRAMMING_LANGUAGE`,
 regardless of the project's language or CI system. The selected plugin then
 uses appropriate ecosystem tools: for example, GoReleaser for Go releases or
-wheel and Twine for Python packages. Consult the
+wheel and Twine for Python packages. CDS also builds on tools such as
+Towncrier, pdoc, detect-secrets and SPDX data sources where they are the best
+fit for a specific delivery task. Consult the
 [plugin guides](./guides/plugin-guides.md) for language-specific
 requirements, including the [Go plugin guides](./guides/plugin-golang.md);
 native build manifests and credentials may still be needed. See
@@ -45,6 +48,29 @@ Run the same commands locally or in any CI system that can check out
 the project's Git repository and install the required tools. This avoids
 infrastructure lock-in: the team can decide which CI system suits its project,
 including after the delivery workflow has been defined.
+
+## Why Continuous Delivery Scripts?
+
+CDS takes a different approach to release automation by deliberately separating
+development history from consumer-facing release information.
+
+Unlike commit-driven tools such as release-please or semantic-release, CDS
+follows Towncrier's philosophy: Git commits document technical changes for
+maintainers, while explicit news fragments describe their significance to
+consumers.
+
+Beyond changelog generation, CDS provides composable, CI-agnostic tools for
+versioning, coordinated releases, licensing, SBOM generation, documentation and
+other delivery responsibilities. CDS often uses specialised tools rather than
+replacing them outright: for example, Towncrier for release notes, GoReleaser
+for Go packaging, wheel and Twine for Python publication, pdoc for Python API
+documentation, and detect-secrets for secret scanning.
+
+This makes it particularly suitable for projects seeking consistent release
+practices across languages and CI/CD platforms without imposing a particular
+commit convention or release workflow.
+
+Learn more in [Why choose Continuous Delivery Scripts?](./guides/why-continuous-delivery-scripts.md).
 
 ## Usage and documentation
 
@@ -184,11 +210,14 @@ same commands whichever CI system the team chooses.
 | [`cd-determine-version`](./guides/previewing-versions.md) | Calculates and prints the **project's prospective release version** without generating a changelog. | Required `--release-type` (`-t`) | Developer preview or CI |
 | [`cd-generate-news`](./guides/managing-changelogs.md) | Updates the project version and, for beta or production releases, builds the changelog from news fragments; prints the resulting version. | Required `--release-type` (`-t`) | CI release flow |
 | [`cd-get-config`](./guides/reading-project-configuration.md) | Prints a project configuration value. | Either `--key` (`-k`) or `--config-variable` (`-c`) | Developer or CI |
+| [`cd-check-project-config`](./guides/checking-project-configuration.md) | Validates CDS-specific `ProjectConfig` values before other commands run. | Optional `--config-file` (`-f`), `--verbose` (`-v`) | Developer setup or CI gate |
 | [`cd-tag-and-release`](./guides/automating-releases.md) | Runs the release flow, including documentation, licensing summaries, Git tagging, packaging and publication through the selected [language plugin](./continuous_delivery_scripts/plugins). | Required `--release-type` (`-t`); optional `--current-branch` (`-b`) | CI release flow |
 | [`cd-generate-docs`](./guides/generating-code-documentation.md) | Generates code documentation in the configured output directory (or one specified on the command line). | `--output_directory` | Developer preview or CI |
 | [`cd-generate-spdx`](./guides/generating-an-spdx-sbom.md) | Generates SPDX documents and third-party licence summaries, then checks licence compliance when project metadata is available. | Required `--output-dir` (`-o`); optional `--lookup-scancode`, `--skip-dependency-download` | CI audit; developer review also possible |
 | [`cd-check-licence-compliance`](./guides/checking-licence-compliance.md) | Checks project and dependency licences without creating SPDX documents; optionally writes third-party IP summaries. | Optional `--output-dir` (`-o`) for reports, `--lookup-scancode`, `--skip-dependency-download` | CI gate or developer review |
 | [`cd-license-files`](./guides/licence-header-management.md) | Adds or updates source-file licence and copyright headers when the language plugin supports them. | `--verbose` (`-v`) | Developer or CI |
+| [`cd-sync-project-licence`](./guides/syncing-project-licence.md) | Creates or refreshes the top-level project licence file from the configured SPDX identifier. | `--verbose` (`-v`) | Developer setup or CI compliance prep |
+| [`cd-describe-licence-obligations`](./guides/describing-project-licence-obligations.md) | Prints a human-readable summary of obligations for the configured project licence. | `--verbose` (`-v`) | Developer review or CI reporting |
 | [`cd-record-secrets`](./guides/recording-secrets.md) | Records accepted findings in the project's [detect-secrets](https://github.com/Yelp/detect-secrets) registry. | `--registry-file` (`-r`); defaults to the configured registry | Developer (registry maintenance) |
 | [`cd-detect-secrets`](./guides/checking-for-secrets.md) | Checks Git-tracked files against that registry and fails if new secrets are found. | `--registry-file` (`-r`); defaults to the configured registry | CI; developer checks also possible |
 
