@@ -210,6 +210,26 @@ class TestGitTempClone(TestCase):
             uncommitted_changes = clone.uncommitted_changes
             self.assertTrue(len(uncommitted_changes) == 0)
 
+    def test_uncommitted_changes_with_spaces_or_non_ascii_names(self):
+        """Uncommitted files whose names contain spaces or non-ASCII characters are copied to the clone."""
+        git = ProjectGitWrapper()
+        test_files = [
+            Path(git.root).joinpath(f"a test file-{uuid4()}.txt"),
+            Path(git.root).joinpath(f"t\u00e9st-{uuid4()}.txt"),
+        ]
+        for test_file in test_files:
+            test_file.write_text("test")
+        try:
+            uncommitted_changes = git.uncommitted_changes
+            for test_file in test_files:
+                self.assertTrue(test_file in uncommitted_changes)
+            with GitTempClone(repository_to_clone=git, desired_branch_name="main") as clone:
+                for test_file in test_files:
+                    self.assertTrue(clone.get_corresponding_path(test_file).exists())
+        finally:
+            for test_file in test_files:
+                test_file.unlink()
+
     def test_file_addition_with_paths_to_initial_repository(self):
         """Test basic git add on the clone."""
         git = ProjectGitWrapper()
