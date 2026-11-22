@@ -632,11 +632,21 @@ class GitWrapper:
         Returns:
              list of uncommitted
         """
-        status = self.repo.git.status(porcelain=True, untracked_files=True)
+        # -z keeps paths verbatim: without it, git quotes paths containing spaces or non-ASCII characters.
+        status = self.repo.git.status(porcelain=True, untracked_files=True, z=True)
         if not status:
             return []
 
-        return [Path(self.root).joinpath(line.strip().split(" ")[-1]) for line in status.splitlines()]
+        changes = []
+        entries = iter(status.split("\0"))
+        for entry in entries:
+            if not entry:
+                continue
+            # Each entry is "XY <path>". For renames and copies, the original path follows as a separate entry.
+            changes.append(Path(self.root).joinpath(entry[3:]))
+            if entry[0] in ("R", "C"):
+                next(entries, None)
+        return changes
 
     @property
     def uncommitted_staged_changes(self) -> List[Path]:
@@ -645,11 +655,11 @@ class GitWrapper:
         Returns:
              list of uncommitted staged changes
         """
-        staged = self.repo.git.diff(staged=True, name_only=True)
+        staged = self.repo.git.diff(staged=True, name_only=True, z=True)
         if not staged:
             return []
 
-        return [Path(self.root).joinpath(line.strip()) for line in staged.splitlines()]
+        return [Path(self.root).joinpath(path) for path in staged.split("\0") if path]
 
     @staticmethod
     def _apply_modifications(destination: Path, modified_file: Path) -> None:
