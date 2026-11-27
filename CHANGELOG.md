@@ -17,6 +17,17 @@ This project was forked from version 1.7.4 of [mbed-tools-ci-scripts](https://gi
 
 [//]: # (begin_release_notes)
 
+# 4.8.2 (2026-11-27)
+
+## Bugfixes
+
+- Dependency upgrade: codeql-action-4.39.2 (#20261106073318184964262)
+- Dependency upgrade: codeql-action-4.39.3 (#20261116073210202083653)
+- Dependency upgrade: scorecard-action-2.6.0 (#20261123073737291628905)
+- Dependency upgrade: codeql-action-4.39.4 (#20261124073317024678489)
+- :bug: Skip licence-header insertion for opencode skill files named `SKILL.md`. (#20261127120000000000000)
+
+
 # 4.8.1 (2026-10-27)
 
 ## Bugfixes
