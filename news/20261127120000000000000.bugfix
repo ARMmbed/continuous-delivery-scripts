@@ -1,0 +1,1 @@
+:bug: Skip licence-header insertion for opencode skill files named `SKILL.md`.

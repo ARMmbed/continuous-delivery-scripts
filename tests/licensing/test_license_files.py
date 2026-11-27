@@ -3,17 +3,46 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from datetime import datetime
 
 from continuous_delivery_scripts.license_files import _to_copyright_date_string
-from continuous_delivery_scripts.license_files import add_licence_header
+from continuous_delivery_scripts.license_files import add_licence_header, get_tool_config
 from continuous_delivery_scripts.utils.filesystem_helpers import TemporaryDirectory
 from continuous_delivery_scripts.utils.configuration import configuration, ConfigurationVariable
 
 
 class TestLicenceHeader(unittest.TestCase):
+    def test_skill_markdown_files_are_excluded_from_licence_header_insertion(self):
+        with TemporaryDirectory() as directory:
+            skill_file = directory / "nested" / "SKILL.md"
+            skill_file.parent.mkdir()
+            contents = "---\nname: Example skill\n---\n\nBody\n"
+            skill_file.write_text(contents, encoding="utf8")
+
+            add_licence_header(0, directory)
+
+            self.assertEqual(contents, skill_file.read_text(encoding="utf8"))
+
+    def test_other_markdown_files_still_receive_licence_headers(self):
+        with TemporaryDirectory() as directory:
+            markdown_file = directory / "guide.md"
+            markdown_file.write_text("# Guide\n", encoding="utf8")
+
+            add_licence_header(0, directory)
+
+            contents = markdown_file.read_text(encoding="utf8")
+            self.assertIn("SPDX-License-Identifier: Apache-2.0", contents)
+            self.assertNotEqual("# Guide\n", contents)
+
+    def test_skill_markdown_filename_is_present_in_licenseheaders_excludes(self):
+        config = get_tool_config(Path("template.tmpl"), Path("src"))
+
+        self.assertIn("SKILL.md", config["exclude"])
+        self.assertIn("**/SKILL.md", config["exclude"])
+
     def test_proprietary_header_uses_spdx_licence_reference(self):
         get_value = configuration.get_value
         with TemporaryDirectory() as directory, patch.object(
