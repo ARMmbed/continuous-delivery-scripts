@@ -10,6 +10,7 @@ https://github.com/OpenChain-Project/Curriculum/blob/master/guides/reusing_softw
 
 import argparse
 import logging
+import os
 import subprocess
 import sys
 import tempfile
@@ -53,6 +54,22 @@ def add_licence_header(verbose_count: int, src: Path) -> None:
         template_file.close()
         copyright_config = get_tool_config(template_file_path, src)
         _call_licensehearders(copyright_config, verbose_count)
+    _normalise_markdown_copyright_spacing(src)
+
+
+def _normalise_markdown_copyright_spacing(src: Path) -> None:
+    """Separates a leading Markdown copyright comment from the document body."""
+    for path in src.rglob("*.md"):
+        if not path.is_file() or not os.access(path, os.W_OK):
+            continue
+        content = path.read_bytes()
+        header, closing, body = content.partition(b"-->")
+        if not header.startswith(b"<!--") or b"copyright" not in header.lower() or not closing:
+            continue
+        newline = b"\r\n" if body.startswith(b"\r\n") else b"\n"
+        if not body.startswith(newline) or body == newline or body.startswith(newline * 2):
+            continue
+        path.write_bytes(header + closing + newline + body)
 
 
 def _call_licensehearders(config: dict, verbose_count: int) -> None:
