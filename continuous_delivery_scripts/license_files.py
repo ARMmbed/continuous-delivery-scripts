@@ -22,7 +22,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-FILES_TO_IGNORE = ["*.yml", "*.yaml"]
+FILES_TO_IGNORE = ["*.yml", "*.yaml", "SKILL.md", "**/SKILL.md"]
 ADDITIONAL_EXTENSIONS = ["python=.toml", "c=.go"]
 
 
